@@ -1,0 +1,3 @@
+ innewmarcs grid file: 'grid.mod'
+ innewmarcs output file: 'modeles.mod'
+ innewmarcs indexes: '  16  17  23  24 100 101 108 109'
