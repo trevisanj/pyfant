@@ -49,6 +49,7 @@ git clone https://github.com/trevisanj/pyfant
 ## 2.2 Run the setup script
 
 ```shell
+cd pyfant
 sudo python setup.py develop
 ```
 
