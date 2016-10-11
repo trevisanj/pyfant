@@ -78,10 +78,7 @@ if __name__ == "__main__":
     if args.path:
         dir_ = args.directory
     else:
-        dir_ = os.path.abspath(os.path.join(
-         os.path.dirname(os.path.realpath(sys.argv[0])),
-         '..', '..', 'data', args.directory
-         ))
+        dir_ = get_pfant_dir('data', args.directory)
 
     if len(sys.argv) == 1:
         while True:

@@ -339,13 +339,26 @@ def get_pfant_dir(*args):
     """
     Returns absolute path to the "PFANT" directory.
 
+    PFANT binaries must be in PATH,
+    otherwise it will not work
+
     Arguments passed will be incorporated into path
     """
-    return os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', *args))
+    p = os.getenv("PATH")
+    pos1 = p.rfind("PFANT")
+    pos0 = p.rfind(os.pathsep, 0, pos1)
+
+    # works even if pos0 == -1
+    path_prefix = p[pos0 + 1:pos1+5]
+
+    return os.path.abspath(os.path.join(path_prefix, *args))
 
 
 def get_data_dir():
-    """returns absolute path to PFANT/data."""
+    """
+    Returns absolute path to PFANT/data
+    """
+
     return get_pfant_dir("data")
 
 
