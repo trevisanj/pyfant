@@ -1,8 +1,8 @@
 # pyfant
 
-Python interface for PFANT Spectral Synthesis Software 
+Welcome!! `pyfant` is a Python interface for the PFANT Spectral Synthesis Software for use in Astronomy. 
 
-# Welcome
+PFANT project: http://github.com/trevisanj/PFANT
 
 # Table of contents
 
@@ -15,7 +15,6 @@ Python interface for PFANT Spectral Synthesis Software
   6. [Library](#S6)
   7. [Troubleshooting](#S7)
 
-PFANT project: http://github.com/trevisanj/PFANT
 
 # <a name=S1></a>1 Introduction
 
