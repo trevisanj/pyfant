@@ -1,8 +1,13 @@
 # pyfant
 
-Welcome!! `pyfant` is a Python interface for the PFANT Spectral Synthesis Software for use in Astronomy. 
+Welcome!!
 
-PFANT project: http://github.com/trevisanj/PFANT
+pyfant is a Python interface for the 
+[PFANT Spectral Synthesis Software](PFANT project: http://github.com/trevisanj/PFANT)
+for use in Astronomy.
+
+Appart from spectral synthesis, it provides tools of conversion, data editing,
+and visualization, and a programming library to embed spectral synthesis into your code.
 
 # Table of contents
 
@@ -17,6 +22,9 @@ PFANT project: http://github.com/trevisanj/PFANT
 
 
 # <a name=S1></a>1 Introduction
+
+
+TODO ja coloca figura aqui mesmo, sem ladainha
 
 Some features:
   - graphical user interfaces ([see screenshots](screenshots.md)):
@@ -46,6 +54,12 @@ pyfant was developed for Python 2.7.xx
 git clone https://github.com/trevisanj/pyfant
 ```
 
+or
+
+```shell
+git clone ssh://git@github.com/trevisanj/pyfant.git
+```
+
 ## 2.2 Run the setup script
 
 ```shell
@@ -53,8 +67,7 @@ cd pyfant
 sudo python setup.py develop
 ```
 
-:notes: The above may not work, or work even if you don't have all the required
-Python packages installed. Please make sure you have all the packages below
+:notes: Please make sure you have all the packages below
 installed on your system.
 
 ## 2.3 Required Python packages
@@ -63,54 +76,59 @@ installed on your system.
 Package name  | Possible way to install
 ------------- | ---
 matplotlib    | apt-Linux: `sudo apt-get install python-matplotlib`
+              |
 scipy         | apt-Linux: `sudo apt-get install python-scipy`
+              |
 pyqt4         | apt-Linux: `sudo apt-get install python-qt4`
               | Windows: download Python 2.7 installer at https://riverbankcomputing.com/software/pyqt/download
+              |
 fortranformat | All systems: `[sudo] pip install fortranformat`
+              |
 astropy       | apt-Linux: `sudo apt-get install python-astropy`
               | All systems: `[sudo] pip install astropy`
 
-**Linux users:** you may have to `sudo` your `pip` commands.
+:notes: **Linux users** may have to `sudo` your `pip` commands.
 
 
+# <a name=S3></a>3 Command-line tools
 
-# <a name=S3></a> Command-line tools
+:bulb: To print a list of all command-line tools, run `programs.py`.
 
-To get an updated list of available tools, run `programs.py`.
+# <a name=S4></a>4 Graphical interfaces
 
-# <a name=S4></a> Graphical interfaces
+## 4.1 Using ```x.py``` ("PFANT launcher") for spectral synthesis
 
-#### 3.3.1 ```x.py```: PFANT launcher
-
-  1. Starting again from scratch:
+First create a new case:
 
 ```shell
 mkdir mystar
 cd mystar
-copy-star.py sun
+copy-star.py
 link.py common
 ```
 
-then
+Then, run
 
 ```shell
 x.py
 ```
 
-Now, for example:
+This application is organized in four tabs. Each tab stores its configuration in a different disk file
 
-  2. Take some time to explore Tabs 1, 2 and 3 (Alt+1, Alt+2, Alt+3). Tab 4 ("multi mode") will be explained later.
+Tab # | Default filename | Description
+------|------------------|-------------
+    1 | main.dat         | Stellar parameters (temperature, gravity etc.) and other configuration options
+    2 | abond.dat        | Chemical abundances ([Hydrogen]=12)
+    3 | options.py       | Command-line options for the Fortran binaries
+    4 | abxfwhms.py      | "Multi-session" mode
 
-  3. Once you are done making changes, click on "Submit single job" button. A new window named "Runnables Manager" opens.
-
-  4. When the "Status" column shows "nulbad finished", double-click on the table item
-     ("PFANT explorer" window opens).
-
-  5. Double-click on "flux.norm". Note that it turns green.
-
-  6. Double-click on "Plot spectrum" (spectrum appears).
+  1. To practice a bit, change the wavelength range at Tab 1 ("llzero" and "llfin") to 6590 - 6600 angstrom 
+  2. Click on the "Submit single job" button. A new window named "Runnables Manager" opens
+  3. When the "Status" column shows "nulbad finished", double-click on the table item ("PFANT explorer" window opens)
+  4. Double-click on "flux.norm". Note that it turns green
+  5. Double-click on "Plot spectrum" (spectrum appears)
  
-#### 3.3.2 `explorer.py`: PFANT Explorer
+## 4.2 `explorer.py`: PFANT Explorer
 
 ```shell
 explorer.py
@@ -150,6 +168,8 @@ For more information, see help for `vald3-to-atoms.py`, `tune-zinf.py`,
 
 
 # <a name=S6></a> Library
+
+pyfant provides a library ...
 
 ## Minimal example
 
@@ -194,3 +214,4 @@ debug/info/warning/error messages from Python.
 
 (**new!**) Now `explorer.py` has a "Collect Fortran errors" button, which opens
 all files names `fortran.log` in search of errors.
+

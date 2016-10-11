@@ -249,7 +249,7 @@ def multirow_str_vector(f, n, r=0):
 
 def path_to_default(fn):
   """Returns full path to default data file."""
-  p = os.path.join(os.path.dirname(os.path.realpath(__file__)), "data", "default", fn)
+  p = os.path.join(os.path.dirname(os.path.realpath(__file__)), "datatypes", "default", fn)
   return p
 
 
