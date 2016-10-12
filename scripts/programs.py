@@ -18,7 +18,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     scriptinfo = get_script_info(get_pyfant_scripts_path())
-    linesp, module_len = format_script_info(scriptinfo, format=args.format, flag_header=False)
+    linesp, module_len = format_script_info(scriptinfo, format=args.format)
     linesf = get_fortrans(module_len)
 
     print fmt_ascii_h1("Fortran")

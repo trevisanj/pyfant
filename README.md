@@ -92,6 +92,8 @@ astropy       | apt-Linux: `sudo apt-get install python-astropy`
 
 # <a name=S3></a>3 Command-line tools
 
+Script name         | Purpose
+--------------------|----------
 `abed.py`           | Abundances file editor
 `ated.py`           | Atomic lines file editor
 `copy-star.py`      | Copies stellar data files (such as main.dat, abonds.dat, dissoc.dat) to local directory.
@@ -112,7 +114,6 @@ astropy       | apt-Linux: `sudo apt-get install python-astropy`
 `tune-zinf.py`      | Tunes the zinf parameter for each atomic line in atomic lines file.
 `vald3-to-atoms.py` | Converts VALD3 atomic/molecular lines file to PFANT atomic lines file.
 `x.py`              | PFANT Launcher
-
 
 
 :bulb: To print a list of all command-line tools, run `programs.py`.

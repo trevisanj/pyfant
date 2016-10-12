@@ -295,7 +295,7 @@ def get_script_info(dir_):
     return ret
 
 
-def format_script_info(scriptinfo, format="text", flag_header=True):
+def format_script_info(scriptinfo, format="text"):
     """
     Generates listing of all Python scripts available as command-line programs.
 
@@ -306,9 +306,6 @@ def format_script_info(scriptinfo, format="text", flag_header=True):
         "text" -- generates plain text for printing at the console
         "markdown-list" -- generates MarkDown as a list
         "markdown-table" -- generates MarkDown as a table
-
-      flag_header -- whether or not to include a header. Applies to formats
-        "text" and "markdown-table"
 
     Returns: (list of strings, maximum filename size)
       list of strings -- can be joined with a "\n"
@@ -325,9 +322,8 @@ def format_script_info(scriptinfo, format="text", flag_header=True):
     elif format == "markdown-table":
         mask = "%%-%ds | %%s" % (py_len+2, )
 
-        if flag_header:
-            ret.append(mask % ("Script name", "Purpose"))
-            ret.append("-" * (py_len + 1) + "|" + "-" * 10)
+        ret.append(mask % ("Script name", "Purpose"))
+        ret.append("-" * (py_len + 3) + "|" + "-" * 10)
 
         for si in scriptinfo:
             ret.append(mask % ("`%s`" % si.filename, si.description))
