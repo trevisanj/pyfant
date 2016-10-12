@@ -3,7 +3,7 @@
 """Data Cube Editor, import/export WebSim-COMPASS data cubes"""
 
 from pyfant import *
-from pyfant.gui.pymos import XFileDCube
+from pyfant.gui.pymos import XFileSparseCube
 import sys
 import argparse
 import logging
@@ -16,14 +16,14 @@ if __name__ == "__main__":
     formatter_class=SmartFormatter
     )
     parser.add_argument('fn', type=str, nargs='?',
-     #default=FileDCube.default_filename,
+                        #default=FileSparseCube.default_filename,
      help="file name, supports '%s' and '%s'" %
-          (FileDCube.description, FileWebsimCube.description))
+          (FileSparseCube.description, FileFullCube.description))
 
     args = parser.parse_args()
 
     app = get_QApplication([])
-    form = XFileDCube()
+    form = XFileSparseCube()
 
     if args.fn is not None:
         form.load_filename(args.fn)

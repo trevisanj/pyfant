@@ -1,27 +1,28 @@
-""""
-Spectral cube allocated in a way that will take less space.
-
-Saved in FITS format, as it is small and can be opened by other programs
-
-Based on IDL source file chris_J4000.pro
-"""
-
-__all__ = ["DataCube", "FileDCube"]
+__all__ = ["SparseCube", "FileSparseCube"]
 
 from .filesplist import *
 from . import DataFile, Spectrum
-from .fileccube import *
+from .filefullcube import *
 from ..misc import *
 import numpy as np
 import os
 from scipy.interpolate import interp1d
 from astropy.io import fits
 
-# headers to care about when importing from a WebsimCube HDU
+# headers to care about when importing from a FullCube HDU
 _HEADERS_COMPASS_CUBE = ["CDELT1", "HRFACTOR", "R"]
 
 
-class DataCube(SpectrumCollection):
+class SparseCube(SpectrumCollection):
+    """
+    Spectral cube allocated in a way that will take less space.
+
+    Each spectrum has its (x, y, z) coordinate for placement inside the cube
+    and is layed from this point along the z-axis (i.e., wavelength axis)
+
+    Saved in FITS format, as it is small and can be opened by other programs
+    """
+
     attrs = SpectrumCollection.attrs+["R", "hrfactor", "hr_pix_size"]
 
     @property
@@ -183,14 +184,14 @@ class DataCube(SpectrumCollection):
 
 
     # def to_hdulist(self):
-    #     """Inherited to add FileDCube-specific header marker"""
+    #     """Inherited to add FileSparseCube-specific header marker"""
     #     hdul = SpectrumCollection.to_hdulist(self)
     #     hdul[0].header["TAINHA"] = 26.9752
     #     return hdul
     #
-    def from_websim_cube(self, wcube):
-        assert isinstance(wcube, WebsimCube)
-        hdu = wcube.hdu
+    def from_full_cube(self, full_cube):
+        assert isinstance(full_cube, FullCube)
+        hdu = full_cube.hdu
         assert isinstance(hdu, fits.PrimaryHDU)
         data = hdu.data
         nlambda, nY, nX = data.shape
@@ -207,7 +208,7 @@ class DataCube(SpectrumCollection):
                     Yi = j + 1
                     flux0 = data[:, j, i]
                     if np.any(flux0 > 0):
-                        sp = wcube.get_spectrum(i, j)
+                        sp = full_cube.get_spectrum(i, j)
                         # discards edges that are zeros
                         where_positive = np.where(sp.flux > 0)[0]
                         sp.cut_idxs(where_positive[0], where_positive[-1]+1)
@@ -219,11 +220,11 @@ class DataCube(SpectrumCollection):
         finally:
             self.enable_update()
 
-    def to_websim_cube(self):
-        """Creates WebsimCube object"""
+    def to_full_cube(self):
+        """Creates FullCube object"""
         assert len(self.spectra) > 0, "No spectra added"
 
-        wcube = WebsimCube()
+        wcube = FullCube()
         wl_new = wcube.wavelength = self.wavelength.copy()
         dims = len(wl_new), self.height, self.width
         wcube.create1(self.R, dims, self.hr_pix_size, self.hrfactor)
@@ -260,38 +261,6 @@ class DataCube(SpectrumCollection):
             weights *= 1./max_area
             im *= weights
         return im
-
-#    def to_hdulist(self):
-#        if len(self.spectra) == 0:
-#            raise RuntimeError("At the moment, saving file with no spectra is not supported")
-#            # ... because it uses the 
-#
-#        dl = self.reference.delta_lambda
-#
-#        hdul = fits.HDUList()
-#
-#        hdu = fits.PrimaryHDU()
-#        hdu.header["CDELT1"] = self.hr_pix_size
-#        hdu.header["CDELT2"] = self.hr_pix_size
-#        hdu.header["CDELT3"] = dl
-#        hdu.header["CRVAL3"] = self.wavelength[0]-dl
-#        hdu.header["HRFACTOR"] = self.hrfactor
-#        hdu.header["R"] = self.R
-#        hdu.header["TAINHA"] = 26.9752
-#
-#        hdul.append(hdu)
-#
-#        for item in self.spectra:
-#            hdul.append(item.sp.to_hdu())
-#            # hdu = fits.PrimaryHDU()
-#            # hdu.header["PIXEL-X"] = item.x
-#            # hdu.header["PIXEL-Y"] = item.y
-#            # hdu.header["CDELT1"] = dl
-#            # hdu.header["CRVAL1"] = item.sp.x[0]  # **note** not subtracting dl as required in WebSimCompass format
-#            # hdu.data = item.sp.y
-#            # hdul.append(hdu)
-#
-#        return hdul
 
 
     def add_spectrum(self, sp):
@@ -390,7 +359,7 @@ class DataCube(SpectrumCollection):
             sp.z_start = i0
 
 
-class FileDCube(DataFile):
+class FileSparseCube(DataFile):
     """Represents a Compass data cube file, which is also a FITS file"""
     attrs = ['dcube']
     description = "Data Cube (FITS file)"
@@ -398,11 +367,11 @@ class FileDCube(DataFile):
 
     def __init__(self):
         DataFile.__init__(self)
-        self.dcube = DataCube()
+        self.dcube = SparseCube()
 
     def _do_load(self, filename):
         fits_obj = fits.open(filename)
-        self.dcube = DataCube()
+        self.dcube = SparseCube()
         self.dcube.from_hdulist(fits_obj)
         self.filename = filename
 

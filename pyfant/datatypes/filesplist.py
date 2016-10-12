@@ -6,7 +6,7 @@ __all__ = ["SpectrumList", "FileSpectrumList", "SpectrumCollection"]
 
 from ..misc import *
 from .spectrum import *
-from .fileccube import *
+from .filefullcube import *
 from . import DataFile, Spectrum
 from astropy.io import fits
 import os

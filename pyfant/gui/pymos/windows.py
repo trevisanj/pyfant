@@ -1,6 +1,6 @@
-"""Widget to edit a FileDCube object."""
+"""Widget to edit a FileSparseCube object."""
 
-__all__ = ["WSpectrumTable", "XQuery", "XFileSpectrumList", "XFileDCube"]
+__all__ = ["WSpectrumTable", "XQuery", "XFileSpectrumList", "XFileSparseCube"]
 
 import collections
 import copy
@@ -49,7 +49,7 @@ def _str_exc(E):
 
 class WSpectrumTable(WBase):
     """
-    FileDCube editor widget.
+    FileSparseCube editor widget.
 
     Arguments:
       parent=None
@@ -1078,7 +1078,7 @@ class WFileSpectrumList(WBase):
         self.flag_valid = self.update_splist_headers(self.f.splist)
 
     def __new_window(self, clone):
-        """Opens new FileDCube in new window"""
+        """Opens new FileSparseCube in new window"""
         form1 = self.keep_ref(self.parent_form.__class__())
         form1.load(clone)
         form1.show()
@@ -1130,7 +1130,7 @@ class XFileSpectrumList(XFileMainWindow):
         self.save_as_texts[0] = "Save %s as..." % _VVV
         self.open_texts[0] = "Load %s" % _VVV
         self.clss[0] = FileSpectrumList
-        self.clsss[0] = (FileSpectrumList, FileWebsimCube)  # file types that can be opened
+        self.clsss[0] = (FileSpectrumList, FileFullCube)  # file types that can be opened
         self.wilds[0] = "*.splist"
 
         lv = keep_ref(QVBoxLayout(self.gotting))
@@ -1209,17 +1209,17 @@ class XFileSpectrumList(XFileMainWindow):
         self._update_tab_texts()
 
     def _filter_on_load(self, f):
-        """Converts from FileWebsimCube to FileSpectrumList format, if necessary"""
-        if isinstance(f, FileWebsimCube):
+        """Converts from FileFullCube to FileSpectrumList format, if necessary"""
+        if isinstance(f, FileFullCube):
             f1 = FileSpectrumList()
-            f1.dcube.from_websim_cube(f.wcube)
+            f1.dcube.from_full_cube(f.wcube)
             f = f1
         return f
 
 
-class WFileDCube(WBase):
+class WFileSparseCube(WBase):
     """
-    FileDCube editor widget.
+    FileSparseCube editor widget.
 
     Arguments:
       parent=None
@@ -1243,7 +1243,7 @@ class WFileDCube(WBase):
         self.map_update_vis = [self.plot_spectra, self.plot_colors]
         # Whether there is sth in yellow background in the Headers tab
         self.flag_header_changed = False
-        self.f = None  # FileDCube object
+        self.f = None  # FileSparseCube object
         self.obj_square = None
 
         # # Central layout
@@ -1374,7 +1374,7 @@ class WFileDCube(WBase):
         spp.addWidget(sa0)
         spp.addWidget(wex)
 
-        # #### Second tab (NEW FileDCube)
+        # #### Second tab (NEW FileSparseCube)
         sa1 = keep_ref(QScrollArea())
         tt0.addTab(sa1, "&Header")
         sa1.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
@@ -1492,7 +1492,7 @@ class WFileDCube(WBase):
         lwset.addWidget(b)
         b.clicked.connect(self.crop_clicked)
         ###
-        b = keep_ref(QPushButton("E&xport %s ..." % FileWebsimCube.description))
+        b = keep_ref(QPushButton("E&xport %s ..." % FileFullCube.description))
         lwset.addWidget(b)
         b.clicked.connect(self.export_ccube_clicked)
         ###
@@ -1575,7 +1575,7 @@ class WFileDCube(WBase):
     # # Interface
 
     def load(self, x):
-        assert isinstance(x, FileDCube)
+        assert isinstance(x, FileSparseCube)
         self.f = x
         self.wsptable.set_collection(x.dcube)
         self.__update_gui(True)
@@ -1706,13 +1706,13 @@ class WFileDCube(WBase):
             raise
 
     def export_ccube_clicked(self):
-        fn = QFileDialog.getSaveFileName(self, "Save file in %s format" % FileWebsimCube.description,
-                                         FileWebsimCube.default_filename, "*.fits")
+        fn = QFileDialog.getSaveFileName(self, "Save file in %s format" % FileFullCube.description,
+                                         FileFullCube.default_filename, "*.fits")
         if fn:
             try:
                 fn = str(fn)
-                wcube = self.f.dcube.to_websim_cube()
-                fccube = FileWebsimCube()
+                wcube = self.f.dcube.to_full_cube()
+                fccube = FileFullCube()
                 fccube.wcube = wcube
                 fccube.save_as(fn)
             except Exception as E:
@@ -1806,7 +1806,7 @@ class WFileDCube(WBase):
         self.flag_valid = self.__update_f_header(sky)
 
     def __update_f_header(self, sky):
-        """Updates headers of a DataCube objects using contents of the Headers tab"""
+        """Updates headers of a SparseCube objects using contents of the Headers tab"""
         emsg, flag_error = "", False
         ss = ""
         try:
@@ -1896,7 +1896,7 @@ class WFileDCube(WBase):
 #                               #####################################################
 #                                           ##############################
 
-class XFileDCube(XFileMainWindow):
+class XFileSparseCube(XFileMainWindow):
     def __init__(self, parent=None, fileobj=None):
         XFileMainWindow.__init__(self, parent)
 
@@ -1908,24 +1908,24 @@ class XFileDCube(XFileMainWindow):
 
 
         # # Synchronized sequences
-        _VVV = FileDCube.description
-        self.tab_texts[0] =  "FileDCube editor (Alt+&1)"
+        _VVV = FileSparseCube.description
+        self.tab_texts[0] =  "FileSparseCube editor (Alt+&1)"
         self.tabWidget.setTabText(0, self.tab_texts[0])
         self.save_as_texts[0] = "Save %s as..." % _VVV
         self.open_texts[0] = "Load %s" % _VVV
-        self.clss[0] = FileDCube
-        self.clsss[0] = (FileDCube, FileWebsimCube)  # file types that can be opened
+        self.clss[0] = FileSparseCube
+        self.clsss[0] = (FileSparseCube, FileFullCube)  # file types that can be opened
         self.wilds[0] = "*.fits"
 
         lv = keep_ref(QVBoxLayout(self.gotting))
-        ce = self.ce = WFileDCube(self)
+        ce = self.ce = WFileSparseCube(self)
         lv.addWidget(ce)
         ce.edited.connect(self.on_tab0_file_edited)
         self.editors[0] = ce
 
         # # # Loads default file by default ... SQN
-        # if os.path.isfile(FileDCube.default_filename):
-        #     f = FileDCube()
+        # if os.path.isfile(FileSparseCube.default_filename):
+        #     f = FileSparseCube()
         #     f.load()
         #     self.ce.load(f)
 
@@ -1994,9 +1994,9 @@ class XFileDCube(XFileMainWindow):
         self._update_tab_texts()
 
     def _filter_on_load(self, f):
-        """Converts from FileWebsimCube to FileDCube format, if necessary"""
-        if isinstance(f, FileWebsimCube):
-            f1 = FileDCube()
-            f1.dcube.from_websim_cube(f.wcube)
+        """Converts from FileFullCube to FileSparseCube format, if necessary"""
+        if isinstance(f, FileFullCube):
+            f1 = FileSparseCube()
+            f1.dcube.from_full_cube(f.wcube)
             f = f1
         return f

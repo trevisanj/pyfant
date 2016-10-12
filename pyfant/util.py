@@ -32,7 +32,7 @@ _classes_txt = [FileAbsoru2, FileHmap, FileMain, FileDissoc,
                 FileSpectrumXY, FileAtoms, FileMolecules,
                 FileOpa, FileModTxt]
 
-_classes_bin = [FileModBin, FileSpectrumFits, FileMoo, FileWebsimCube, FileDCube, FileSpectrumList]
+_classes_bin = [FileModBin, FileSpectrumFits, FileMoo, FileFullCube, FileSparseCube, FileSpectrumList]
 
 _classes_sp = [FileModBin, FileSpectrumNulbad, FileSpectrumPfant, FileSpectrumXY,
                FileSpectrumFits]
@@ -167,7 +167,7 @@ def setup_inputs(dest_dir='.', star='sun-asplund-2009', common='common', h=True,
     """
     
     logger = get_python_logger()    
-    dd = get_data_dir()
+    dd = get_pfant_data_dir()
 
     # Functions that return full path, given a filename, to ...
     fd = lambda filename: os.path.join(dest_dir, filename)  # ... Destination directory

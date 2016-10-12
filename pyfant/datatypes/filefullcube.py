@@ -1,10 +1,4 @@
-""""
-Support for WebSim-Compass FITS spectral cubes
-
-Based on IDL source file chris_J4000.pro
-"""
-
-__all__ = ["WebsimCube", "FileWebsimCube"]
+__all__ = ["FullCube", "FileFullCube"]
 
 from pyfant import AttrsPart, get_python_logger, overwrite_fits
 from .datafile import DataFile
@@ -13,8 +7,11 @@ import numpy as np
 from astropy.io import fits
 import os
 
-class WebsimCube(AttrsPart):
-    """X-Y-wavelength cube compliant with WebSim-Compass specs
+class FullCube(AttrsPart):
+    """
+    X-Y-wavelength cube
+
+    Based on IDL source file chris_J4000.pro
 
     Data is stored primarily in self.hdu, with a few other relevant attributes
 
@@ -88,7 +85,7 @@ class WebsimCube(AttrsPart):
         raise NotImplementedError()
 
     def __repr__(self):
-        return "Please implement WebsimCube.__repr__()"
+        return "Please implement FullCube.__repr__()"
 
     def create1(self, R, dims, hr_pix_size, hrfactor):
         """Creates FITS HDU, including the cube full with zeros 
@@ -130,7 +127,7 @@ class WebsimCube(AttrsPart):
         self.wavelength = w
 
 
-class FileWebsimCube(DataFile):
+class FileFullCube(DataFile):
     """Represents a Compass data cube file, which is also a FITS file
 
     **Note** normally, the DataFile classes load operation reads all contents
@@ -145,12 +142,12 @@ class FileWebsimCube(DataFile):
 
     def __init__(self):
         DataFile.__init__(self)
-        self.wcube = WebsimCube()
+        self.wcube = FullCube()
         self.hdulist = None
 
     def _do_load(self, filename):
         self.hdulist = fits.open(filename)
-        self.wcube = WebsimCube(self.hdulist[0])
+        self.wcube = FullCube(self.hdulist[0])
         self.filename = filename
 
     def _do_save_as(self, filename):

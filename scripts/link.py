@@ -51,7 +51,7 @@ if __name__ == "__main__":
         formatter_class=SmartFormatter
     )
     parser.add_argument('-l', '--list', action='store_true',
-      help='lists subdirectories of '+get_data_dir())
+      help='lists subdirectories of '+get_pfant_data_dir())
     parser.add_argument('-p', '--path', action='store_true',
       help='system path mode')
     parser.add_argument('directory', type=str, nargs="?", default="common",
@@ -70,8 +70,8 @@ if __name__ == "__main__":
 
     # "-l" mode
     if args.list:
-        print fmt_ascii_h1("Subdirectories of '%s" % get_data_dir())
-        for dirname in get_data_subdirs():
+        print fmt_ascii_h1("Subdirectories of '%s" % get_pfant_data_dir())
+        for dirname in get_pfant_data_subdirs():
             print dirname
         sys.exit()
 

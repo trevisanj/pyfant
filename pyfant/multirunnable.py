@@ -8,7 +8,7 @@ __all__ = ["MultiRunnable"]
 from pyfant import *
 import copy
 import os
-from .misc import MULTISESSION_PREFIX
+from .constants import *
 import logging
 
 

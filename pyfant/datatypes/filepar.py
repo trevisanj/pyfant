@@ -4,9 +4,9 @@ from .datafile import DataFile
 from collections import OrderedDict
 
 class FilePar(DataFile):
-    """Represents a ".par" (Websim-Compass session specification) file in memory"""
+    """Represents a ".par" file in memory"""
 
-    description = "Websim-Compass session parameters"
+    description = "Session parameters"
     default_filename = None
     attrs = ["params"]
 

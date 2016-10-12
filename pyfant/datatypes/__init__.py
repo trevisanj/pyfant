@@ -15,8 +15,8 @@ from .filemolecules import *
 from .fileatoms import *
 from .fileabxfwhm import *
 from .fileoptions import *
-from .fileccube import *
-from .filedcube import *
+from .filefullcube import *
+from .filesparsecube import *
 from .filesplist import *
 from .filefits import *
 from .filepar import *

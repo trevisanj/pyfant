@@ -443,12 +443,12 @@ class VisAbonds(Vis):
 
 class VisCube(Vis):
     """Opens the Data Cube Editor window."""
-    input_classes = (FileWebsimCube, FileDCube)
+    input_classes = (FileFullCube, FileSparseCube)
     action = "Edit using Data Cube Editor"
 
     def _do_use(self, r):
-        from pyfant.gui.pymos import XFileDCube
-        form = XFileDCube(self.parent_form, r)
+        from pyfant.gui.pymos import XFileSparseCube
+        form = XFileSparseCube(self.parent_form, r)
         _forms.append(form)
         form.show()
 

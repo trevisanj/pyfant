@@ -100,7 +100,7 @@ def plot_spectra_pieces_pdf(ss, aint=10, pdf_filename='pieces.pdf', ymin=None):
     # num_spectra = len(ss)
 
     format_BLB()
-    pdf = matplotlib.backends.backend_pdf.PdfPages(pdf_filename)
+    pdf = plotaux.backends.backend_pdf.PdfPages(pdf_filename)
     logger = get_python_logger()
 
     for h in range(num_pages):
@@ -145,7 +145,7 @@ def plot_spectra_pages_pdf(ss, pdf_filename='pages.pdf', ymin=None):
         ymin = ymin_
     num_pages = len(ss)
     format_BLB()
-    pdf = matplotlib.backends.backend_pdf.PdfPages(pdf_filename)
+    pdf = plotaux.backends.backend_pdf.PdfPages(pdf_filename)
     for i, s in enumerate(ss):
         title = s.title
         fig = plt.figure()

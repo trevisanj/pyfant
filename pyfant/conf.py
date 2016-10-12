@@ -13,6 +13,8 @@ from .misc import *
 import logging
 import subprocess
 from threading import Lock
+from .constants import *
+
 
 # Indexes to use in Conf.sequence property
 FOR_INNEWMARCS = 0

@@ -237,7 +237,7 @@ class Spectrum(object):
         hdu.header["XUNIT"] = "A"
         for key, value in self.more_headers.iteritems():
             try:
-                # Strips line feed which were present in some of the Websim-Compass fits files
+                # Strips line feeds eventually present in header data
                 if isinstance(value, str):
                     value = value.replace("\n", "")
                 hdu.header[key] = value

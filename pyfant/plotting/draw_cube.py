@@ -25,7 +25,7 @@ def draw_cube_3d(ax, dcube, height_threshold=15):
     Y pixel coordinate   z
     Z wavelength         y
     """
-    assert isinstance(dcube, DataCube)
+    assert isinstance(dcube, SparseCube)
 
     flag_segments = dcube.height > height_threshold
     flag_empty = len(dcube.spectra) == 0
@@ -86,7 +86,7 @@ def draw_cube_3d(ax, dcube, height_threshold=15):
     ax.zaxis.set_major_locator(MaxNLocator(integer=True))
 
 
-def draw_cube_colors(ax, datacube, vrange, sqx=None, sqy=None, flag_scale=False, method=0):
+def draw_cube_colors(ax, sparsecube, vrange, sqx=None, sqy=None, flag_scale=False, method=0):
     """
     Plots image on existing axis
 
@@ -99,8 +99,8 @@ def draw_cube_colors(ax, datacube, vrange, sqx=None, sqy=None, flag_scale=False,
 
     Returns: matplotlib plot object representing square, or None
     """
-    assert isinstance(datacube, DataCube)
-    im = datacube.to_colors(vrange, flag_scale, method)
+    assert isinstance(sparsecube, SparseCube)
+    im = sparsecube.to_colors(vrange, flag_scale, method)
     ax.imshow(im, interpolation="nearest")
     ax.invert_yaxis()
     obj_square = None
@@ -109,6 +109,6 @@ def draw_cube_colors(ax, datacube, vrange, sqx=None, sqy=None, flag_scale=False,
         x0, x1, y0, y1 = sqx - K, sqx + K, sqy - K, sqy + K
         obj_square = ax.plot([x0, x1, x1, x0, x0], [y0, y0, y1, y1, y0],
                              c='w', ls='solid', lw=3, alpha=0.5, zorder=99999)
-    ax.set_xlim([-K, datacube.width - .5])
-    ax.set_ylim([-K, datacube.height - .5])
+    ax.set_xlim([-K, sparsecube.width - .5])
+    ax.set_ylim([-K, sparsecube.height - .5])
     return obj_square
