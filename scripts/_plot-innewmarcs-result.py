@@ -51,7 +51,6 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-
     tokens = parse_explain_file(FN_EXPLAIN)
     fn_grid = tokens['innewmarcs grid file']
     fn_output = tokens['innewmarcs output file']

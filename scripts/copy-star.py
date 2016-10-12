@@ -35,7 +35,7 @@ if __name__ == "__main__":
         formatter_class=SmartFormatter
     )
     parser.add_argument('-l', '--list', action='store_true',
-      help='lists subdirectories of '+get_pfant_data_dir())
+      help='lists subdirectories of '+get_pfant_data_path())
     parser.add_argument('-p', '--path', action='store_true',
       help='system path mode')
     parser.add_argument('directory', type=str, nargs="?",
@@ -47,7 +47,7 @@ if __name__ == "__main__":
 
     # "-l" mode
     if args.list:
-        print fmt_ascii_h1("Subdirectories of '%s" % get_pfant_data_dir())
+        print fmt_ascii_h1("Subdirectories of '%s" % get_pfant_data_path())
         for dirname in get_pfant_data_subdirs():
             print dirname
         sys.exit()
@@ -59,12 +59,12 @@ if __name__ == "__main__":
                       cancel_label="quit", flag_allow_empty=True, flag_cancel=False)
         if choice <= 0:
             sys.exit()
-        dir_ = os.path.join(get_pfant_data_dir(), dirnames[choice-1])
+        dir_ = os.path.join(get_pfant_data_path(), dirnames[choice-1])
     else:
         if args.path:
             dir_ = args.directory
         else:
-            dir_ = os.path.join(get_pfant_data_dir(), args.directory)
+            dir_ = os.path.join(get_pfant_data_path(), args.directory)
             
     if not os.path.isdir(dir_):
         print "'%s' is not a directory" % dir_

@@ -1,14 +1,24 @@
 #!/usr/bin/python
 
 """
-Lists all Fortran/Python programs available with PFANT.
+Lists all Fortran/Python programs available (PFANT + pyfant).
 """
 
 from pyfant import *
+import argparse
 import os
 
 if __name__ == "__main__":
-    linesp, module_len = get_scripts(flag_header=False)
+    parser = argparse.ArgumentParser(
+    description=__doc__,
+    formatter_class=SmartFormatter
+    )
+    parser.add_argument('format', type=str, help='Print format', nargs="?", default="text",
+                        choices=["text", "markdown-list", "markdown-table"])
+    args = parser.parse_args()
+
+    scriptinfo = get_script_info(get_pyfant_scripts_path())
+    linesp, module_len = format_script_info(scriptinfo, format=args.format, flag_header=False)
     linesf = get_fortrans(module_len)
 
     print fmt_ascii_h1("Fortran")
@@ -18,9 +28,8 @@ if __name__ == "__main__":
     print fmt_ascii_h1("Python")
     print "\n".join(linesp)
 
-
     print ""
     print "Search directories:"
-    print "  Fortran: %s" % os.path.join(get_pfant_dir(), "fortran", "bin")
-    print "  Python: %s" % os.path.join(get_pfant_dir(), "pyfant", "scripts")
+    print "  Fortran: %s" % os.path.join(get_pfant_path(), "fortran", "bin")
+    print "  Python: %s" % os.path.join(get_pyfant_path(), "scripts")
 

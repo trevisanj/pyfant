@@ -1,9 +1,9 @@
 __all__ = ["str_vector", "float_vector", "int_vector", "readline_strip", "multirow_str_vector",
- "get_pyfant_default_data_dir", "new_filename", "_rename_to_temp_lock", "rename_to_temp", "overwrite_fits",
- "write_lf", "slugify", "copy_default_file", "get_pfant_dir", "get_pfant_data_dir",
-           "get_pfant_data_subdirs",
- "get_pfant_star_subdirs", "symlink", "print_skipped", "crunch_dir", "get_scripts", "get_fortrans",
- "load_with_classes", "is_text_file"]
+"get_pyfant_default_data_path", "new_filename", "_rename_to_temp_lock", "rename_to_temp",
+"overwrite_fits", "write_lf", "slugify", "copy_default_file", "get_pfant_path", "get_pfant_data_path",
+"get_pfant_data_subdirs", "get_pyfant_path", "get_pfant_star_subdirs", "symlink", "print_skipped",
+"crunch_dir", "get_fortrans", "load_with_classes", "is_text_file",
+"get_pyfant_scripts_path", "get_script_info", "format_script_info"]
 
 
 import os.path
@@ -21,6 +21,7 @@ from .loggingaux import *
 
 # #################################################################################################
 # # I/O routines
+
 
 def str_vector(f):
     """Reads next line of file and makes it a vector of strings
@@ -162,17 +163,26 @@ def slugify(value, flagLower=True):
 
 def copy_default_file(filename):
     """Copies file from pyfant/data/default directory to local directory."""
-    fullpath = get_pyfant_default_data_dir(filename)
+    fullpath = get_pyfant_default_data_path(filename)
     shutil.copy(fullpath, ".")
 
 
-def get_pyfant_default_data_dir(fn):
-  """Returns full path to default data file."""
-  p = os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", "datatypes", "default", fn)
+def get_pyfant_path(*args):
+  """Returns full path pyfant package. Arguments are added at the end of os.path.join()"""
+  p = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", *args))
   return p
 
 
-def get_pfant_dir(*args):
+def get_pyfant_default_data_path(fn):
+  """Returns full path to default data file."""
+  p = os.path.join(get_pyfant_path(), "datatypes", "default", fn)
+  return p
+
+def get_pyfant_scripts_path(*args):
+    """Returns path to pyfant scripts. Arguments are added to the end os os.path.join()"""
+    return get_pyfant_path("..", "scripts", *args)
+
+def get_pfant_path(*args):
     """
     Returns absolute path to the "PFANT" directory.
 
@@ -191,17 +201,14 @@ def get_pfant_dir(*args):
     return os.path.abspath(os.path.join(path_prefix, *args))
 
 
-def get_pfant_data_dir():
-    """
-    Returns absolute path to PFANT/data
-    """
-
-    return get_pfant_dir("data")
+def get_pfant_data_path():
+    """Returns absolute path to PFANT/data"""
+    return get_pfant_path("data")
 
 
 def get_pfant_data_subdirs():
     """returns a list containing all subdirectories of PFANT/data (their names only, not full path)."""
-    dd = glob.glob(os.path.join(get_pfant_data_dir(), "*"))
+    dd = glob.glob(os.path.join(get_pfant_data_path(), "*"))
     ret = []
     for d in dd:
         if os.path.isdir(d):
@@ -211,7 +218,7 @@ def get_pfant_data_subdirs():
 
 def get_pfant_star_subdirs():
     """Returns only subdirectories of PFANT/data that contain file main.dat."""
-    dd = glob.glob(os.path.join(get_pfant_data_dir(), "*"))
+    dd = glob.glob(get_pfant_data_path(), "*")
     ret = []
     for d in dd:
         if os.path.isdir(d) and os.path.isfile(os.path.join(d, 'main.dat')):
@@ -250,64 +257,93 @@ def crunch_dir(name, n=50):
     return name
 
 
-def get_scripts(flag_header=True, flag_markdown=False):
+class ScriptInfo(object):
+    def __init__(self, filename, description, flag_error):
+        self.filename = filename
+        self.description = description
+        self.flag_error = flag_error
+
+
+def get_script_info(dir_):
+    """
+    Returns a list of ScriptInfo objects
+
+    The ScriptInfo objects represent the ".py" files in directory dir_,
+    except those starting with a "_"
+    """
+
+    ret = []
+    # gets all scripts in script directory
+    ff = glob.glob(os.path.join(dir_, "*.py"))
+    # discards scripts whose file name starts with a "_"
+    ff = [f for f in ff if not os.path.basename(f).startswith("_")]
+    ff.sort()
+
+    for f in ff:
+        _, filename = os.path.split(f)
+        flag_error = False
+        try:
+            script_ = imp.load_source('script_', f)  # module object
+            descr = script_.__doc__.strip()
+            descr = descr.split("\n")[0]  # first line of docstring
+        except Exception as e:
+            flag_error = True
+            descr = "*%s*: %s" % (e.__class__.__name__, str(e))
+
+        ret.append(ScriptInfo(filename, descr, flag_error))
+
+    return ret
+
+
+def format_script_info(scriptinfo, format="text", flag_header=True):
     """
     Generates listing of all Python scripts available as command-line programs.
 
     Arguments:
-      flag_header=True -- whether or not to include a header at the beginning of
-                          the text.
-      flag_markdown=False -- if set, will generate MarkDown, otherwise plain text.
+      infolist -- list of ScriptInfo objects
+
+      format -- One of the options below:
+        "text" -- generates plain text for printing at the console
+        "markdown-list" -- generates MarkDown as a list
+        "markdown-table" -- generates MarkDown as a table
+
+      flag_header -- whether or not to include a header. Applies to formats
+        "text" and "markdown-table"
 
     Returns: (list of strings, maximum filename size)
       list of strings -- can be joined with a "\n"
       maximum filename size
     """
 
+    py_len = max([len(si.filename) for si in scriptinfo])
     ret = []
-    base_dir = get_pfant_dir("pyfant", "scripts")
-    # gets all scripts in script directory
-    ff = glob.glob(os.path.join(base_dir, "*.py"))
-    # discards scripts whose file name starts with a "_"
-    ff = [f for f in ff if not os.path.basename(f).startswith("_")]
-    ff.sort()
-    py_len = max([len(os.path.split(f)[1]) for f in ff])
-    if flag_markdown:
-        mask = "%%-%ds | %%s" % py_len
-        ret.append(mask % ("Script name", "Purpose"))
-        ret.append( "-" * (py_len + 1) + "|" + "-" * 10)
-        for f in ff:
-            _, filename = os.path.split(f)
-            try:
-                script_ = imp.load_source('script_', f)  # module object
-                descr = script_.__doc__.strip()
-                descr = descr.split("\n")[0]  # first line of docstring
-            except Exception as e:
-                descr = "*%s*: %s" % (e.__class__.__name__, str(e))
-            ret.append(mask % (filename, descr))
-    else:
+    if format == "markdown-list":
+        mask = "  - `%%%s -- %%s"
+        for si in scriptinfo:
+            ret.append("  - `%s` -- %s" % (si.filename, si.description))
+
+    elif format == "markdown-table":
+        mask = "%%-%ds | %%s" % (py_len+2, )
+
         if flag_header:
-            s = "Scripts in " + crunch_dir(base_dir)
-            ret.append(fmt_ascii_h1(s))
-        for f in ff:
-            _, filename = os.path.split(f)
+            ret.append(mask % ("Script name", "Purpose"))
+            ret.append("-" * (py_len + 1) + "|" + "-" * 10)
 
-            piece = filename + " " + ("." * (py_len - len(filename)))
-            flag_error = False
-            try:
-                script_ = imp.load_source('script_', f)  # module object
-            except Exception as e:
-                flag_error = True
-                ret.append("%s*%s*: %s" % (piece, e.__class__.__name__, str(e)))
+        for si in scriptinfo:
+            ret.append(mask % ("`%s`" % si.filename, si.description))
+    elif format == "text":
+        for si in scriptinfo:
 
-            if not flag_error:
-                descr = script_.__doc__.strip()
-                descr = descr.split("\n")[0]  # first line of docstring
-                ss = textwrap.wrap(descr, 79 - py_len - 1)
-
+            piece = si.filename + " " + ("." * (py_len - len(si.filename)))
+            if si.flag_error:
+                ret.append(piece+si.description)
+            else:
+                # ret.append(piece)
+                ss = textwrap.wrap(si.description, 79 - py_len - 1)
                 ret.append(piece+" "+(ss[0] if ss and len(ss) > 0 else "no doc"))
                 for i in range(1, len(ss)):
                     ret.append((" " * (py_len + 2))+ss[i])
+
     return ret, py_len
 
 
@@ -323,7 +359,7 @@ def get_fortrans(max_len=None):
     """
 
     ret = []
-    bindir = os.path.join(get_pfant_dir(), "fortran", "bin")
+    bindir = os.path.join(get_pfant_path(), "fortran", "bin")
     ihpn = ["innewmarcs", "hydro2", "pfant", "nulbad"]
     if max_len is None:
         max_len = max(len(x) for x in ihpn)

@@ -167,7 +167,7 @@ def setup_inputs(dest_dir='.', star='sun-asplund-2009', common='common', h=True,
     """
     
     logger = get_python_logger()    
-    dd = get_pfant_data_dir()
+    dd = get_pfant_path("data")
 
     # Functions that return full path, given a filename, to ...
     fd = lambda filename: os.path.join(dest_dir, filename)  # ... Destination directory

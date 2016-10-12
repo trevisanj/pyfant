@@ -1,13 +1,13 @@
 #!/usr/bin/python
 
 """
-Model Grid Creator
+Model Grid Creator from MARCS atmospheric models
 
 "Collects" several files in current directory and creates a single file
 containing atmospheric model grid.
 
 Working modes (option "-m"):
- "opa" (default mode): looks for MARCS ".mod" and ".opa" text file pairs and
+ "opa" (default mode): looks for MARCS[1] ".mod" and ".opa" text file pairs and
                        creates a *big* binary file containing *all* model
                        information including opacities.
                        Output will be in ".moo" format.
@@ -20,6 +20,9 @@ Working modes (option "-m"):
  "modbin": looks for binary-format ".mod" files. Resulting grid will not contain
            opacity information.
            Output will be in binary ".mod" format.
+
+References:
+  [1] http://marcs.astro.uu.se/
 
 .
 .

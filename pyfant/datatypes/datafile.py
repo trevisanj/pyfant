@@ -68,6 +68,6 @@ class DataFile(AttrsPart):
         For safety, filename is reset to None so that it doesn't point to the
         original file.
         """
-        fullpath = get_pyfant_default_data_dir(self.default_filename)
+        fullpath = get_pyfant_default_data_path(self.default_filename)
         self.load(fullpath)
         self.filename = None
