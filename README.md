@@ -152,53 +152,42 @@ Command-line tools:
 
 :bulb: To print a list of all command-line tools, run `programs.py`.
 
-# <a name=S4></a>4 Graphical interfaces
+# <a name=S4></a>Use Cases
 
-## 4.1 Using ```x.py``` ("PFANT launcher") for spectral synthesis
+This section briefly describes some tasks that can be performed with `pyfant` applications.
 
-First create a new case:
+## 4.1 Spectral Synthesis from Scratch
 
+Shell commands:
 ```shell
 mkdir mystar
 cd mystar
 copy-star.py
 link.py common
-```
-
-Then, run
-
-```shell
 x.py
 ```
 
-This application is organized in four tabs. Each tab stores its configuration in a different disk file
+The last command will invoke the PFANT Launcher: 
 
-Tab # | Default filename | Description
-------|------------------|-------------
-    1 | main.dat         | Stellar parameters (temperature, gravity etc.) and other configuration options
-    2 | abond.dat        | Chemical abundances ([Hydrogen]=12)
-    3 | options.py       | Command-line options for the Fortran binaries
-    4 | abxfwhms.py      | "Multi-session" mode
+  1. Change parameters in Tab 1/2/3 (Tab 4 is a different story) 
+  2. Click on the "Submit single job" button: a new window named "Runnables Manager" opens
+  3. When the "Status" column shows "nulbad finished", double-click on the table item: "PFANT Explorer" window opens
+  4. Double-click on "flux.norm": turns green (if wasn't so)
+  5. Double-click on "Plot spectrum": spectrum appears
 
-  1. To practice a bit, change the wavelength range at Tab 1 ("llzero" and "llfin") to 6590 - 6600 angstrom 
-  2. Click on the "Submit single job" button. A new window named "Runnables Manager" opens
-  3. When the "Status" column shows "nulbad finished", double-click on the table item ("PFANT explorer" window opens)
-  4. Double-click on "flux.norm". Note that it turns green
-  5. Double-click on "Plot spectrum" (spectrum appears)
- 
-## 4.2 `explorer.py`: PFANT Explorer
+## 4.2 Browsing files with PFANT Explorer
 
 ```shell
 explorer.py
 ```
 
-This file-explorer-like application provides visualization/editing abilities for a number
-of relevant file types.
+This application allows you to navigate through your file system and visualize/edit files,
+depending on their type. 
 
+You can select several spectral files and plot them all at once (stacked in different sub-plots,
+or overlapped in a single plot).
 
-## 5 <a name=S5></a> Miscellanea how-to
-
-### 5.1 <a name=S5_1></a> Converting "VALD3 extended" format atomic lines
+## 4.3 <a name=S4_3></a> Converting "VALD3 extended" format atomic lines
 
 The Vienna Atomic Line Database (VALD) is "a 
 collection of atomic and molecular transition parameters of astronomical interest"
@@ -225,9 +214,7 @@ For more information, see help for `vald3-to-atoms.py`, `tune-zinf.py`,
 `cut-atoms.py` (call these scripts with `--help` option).
 
 
-# <a name=S6></a> Library
-
-pyfant provides a library ...
+# <a name=S6></a> Programming using `pyfant`
 
 ## Minimal example
 
@@ -251,8 +238,7 @@ obj.run()
   - The _demos_ directory contains a few (non-exhaustive) examples of how
     to use pyfant to perform different tasks. [](demos/README.md).
 
-  - The _scripts_ directory, which contains tools, is also a good source of
-    examples.
+  - [`run4.py` source code](scripts/run4.py)
   
 
 # <a name=S7></a>7 Troubleshooting
@@ -270,6 +256,13 @@ Commonly, inspecting these files will be enough to figure out what happened.
 Your current directory will also have a file named _python.log_, containing
 debug/info/warning/error messages from Python.
 
-(**new!**) Now `explorer.py` has a "Collect Fortran errors" button, which opens
-all files names `fortran.log` in search of errors.
+:bulb: `explorer.py` has a "Collect Fortran errors" button, which
+recurses directories in search for error/warning messages in all files named `fortran.log`
 
+## Metallicity/temperature/gravity of star is outside range in the grid of models
+  
+You can activate option "--allow True" to make bypass this check, but beware that the calculation
+may be incorrect.
+
+This can be done in the command line, _e.g._, `run4.py --allow T`, or check option "--alow"
+in Tab 3 of `x.py`.
