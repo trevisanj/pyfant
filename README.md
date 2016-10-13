@@ -92,50 +92,58 @@ astropy       | apt-Linux: `sudo apt-get install python-astropy`
 
 # <a name=S3></a>3 Command-line tools
 
+Graphical applications:
   - `abed.py` -- Abundances file editor
   - `ated.py` -- Atomic lines file editor
+  - `cubeed.py` -- Data Cube Editor, import/export WebSim-COMPASS data cubes
+  - `explorer.py` -- PFANT Explorer - list, visualize and edit data files.
+  - `mained.py` -- Main configuration file editor.
+  - `mled.py` -- Molecular lines file editor.
+  - `splisted.py` -- FileSpectrumList editor with import/export FileFullCube
+  - `tune-zinf.py` -- Tunes the zinf parameter for each atomic line in atomic lines file.
+  - `x.py` -- PFANT Launcher
+
+Command-line tools:
   - `copy-star.py` -- Copies stellar data files (such as main.dat, abonds.dat, dissoc.dat) to local directory.
   - `create-grid.py` -- Model Grid Creator from MARCS atmospheric models
-  - `cubeed.py` -- Data Cube Editor, import/export WebSim-COMPASS data cubes
   - `cut-atoms.py` -- Cuts atomic lines file to wavelength interval specified.
   - `cut-molecules.py` -- Cuts molecular lines file to wavelength interval specified.
   - `cut-spectrum.py` -- Cuts spectrum file to wavelength interval specified. Saved in 2-column format.
-  - `explorer.py` -- PFANT Explorer - list, visualize and edit data files.
   - `link.py` -- Creates symbolic links to PFANT data files as an alternative to copying these (sometimes large) files into local directory.
-  - `mained.py` -- Main configuration file editor.
-  - `mled.py` -- Molecular lines file editor.
   - `plot-spectra.py` -- Plot spectra to screen or PDF.
   - `programs.py` -- Lists all Fortran/Python programs available (PFANT + pyfant).
   - `run4.py` -- Runs the four Fortran binaries in sequence: innewmarcs, hydro2, pfant, nulbad.
   - `save-pdf.py` -- Looks for file "flux.norm" inside directories session-* and saves one figure per page in a PDF file.
-  - `splisted.py` -- FileSpectrumList editor with import/export FileFullCube
-  - `tune-zinf.py` -- Tunes the zinf parameter for each atomic line in atomic lines file.
   - `vald3-to-atoms.py` -- Converts VALD3 atomic/molecular lines file to PFANT atomic lines file.
-  - `x.py` -- PFANT Launcher
 
 
+Graphical applications:
 Script name         | Purpose
 --------------------|----------
 `abed.py`           | Abundances file editor
 `ated.py`           | Atomic lines file editor
+`cubeed.py`         | Data Cube Editor, import/export WebSim-COMPASS data cubes
+`explorer.py`       | PFANT Explorer - list, visualize and edit data files.
+`mained.py`         | Main configuration file editor.
+`mled.py`           | Molecular lines file editor.
+`splisted.py`       | FileSpectrumList editor with import/export FileFullCube
+`tune-zinf.py`      | Tunes the zinf parameter for each atomic line in atomic lines file.
+`x.py`              | PFANT Launcher
+
+Command-line tools:
+Script name         | Purpose
+--------------------|----------
 `copy-star.py`      | Copies stellar data files (such as main.dat, abonds.dat, dissoc.dat) to local directory.
 `create-grid.py`    | Model Grid Creator from MARCS atmospheric models
-`cubeed.py`         | Data Cube Editor, import/export WebSim-COMPASS data cubes
 `cut-atoms.py`      | Cuts atomic lines file to wavelength interval specified.
 `cut-molecules.py`  | Cuts molecular lines file to wavelength interval specified.
 `cut-spectrum.py`   | Cuts spectrum file to wavelength interval specified. Saved in 2-column format.
-`explorer.py`       | PFANT Explorer - list, visualize and edit data files.
 `link.py`           | Creates symbolic links to PFANT data files as an alternative to copying these (sometimes large) files into local directory.
-`mained.py`         | Main configuration file editor.
-`mled.py`           | Molecular lines file editor.
 `plot-spectra.py`   | Plot spectra to screen or PDF.
 `programs.py`       | Lists all Fortran/Python programs available (PFANT + pyfant).
 `run4.py`           | Runs the four Fortran binaries in sequence: innewmarcs, hydro2, pfant, nulbad.
 `save-pdf.py`       | Looks for file "flux.norm" inside directories session-* and saves one figure per page in a PDF file.
-`splisted.py`       | FileSpectrumList editor with import/export FileFullCube
-`tune-zinf.py`      | Tunes the zinf parameter for each atomic line in atomic lines file.
 `vald3-to-atoms.py` | Converts VALD3 atomic/molecular lines file to PFANT atomic lines file.
-`x.py`              | PFANT Launcher
 
 
 :bulb: To print a list of all command-line tools, run `programs.py`.

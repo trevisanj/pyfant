@@ -71,3 +71,4 @@ class DataFile(AttrsPart):
         fullpath = get_pyfant_default_data_path(self.default_filename)
         self.load(fullpath)
         self.filename = None
+

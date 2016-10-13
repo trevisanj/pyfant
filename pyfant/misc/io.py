@@ -24,9 +24,11 @@ from .loggingaux import *
 
 
 def str_vector(f):
-    """Reads next line of file and makes it a vector of strings
+    """
+    Reads next line of file and makes it a vector of strings
 
-    Note that each str.split() already strips each resulting string of any whitespaces."""
+    Note that each str.split() already strips each resulting string of any whitespaces.
+    """
     return f.readline().split()
 
 
@@ -258,10 +260,11 @@ def crunch_dir(name, n=50):
 
 
 class ScriptInfo(object):
-    def __init__(self, filename, description, flag_error):
+    def __init__(self, filename, description, flag_error, flag_gui):
         self.filename = filename
         self.description = description
         self.flag_error = flag_error
+        self.flag_gui = flag_gui
 
 
 def get_script_info(dir_):
@@ -282,16 +285,53 @@ def get_script_info(dir_):
     for f in ff:
         _, filename = os.path.split(f)
         flag_error = False
+        flag_gui = None
         try:
+            # Checks if it is a graphical application
+
+            with open(f, "r") as h:
+                flag_gui = "QApplication" in h.read()
+
             script_ = imp.load_source('script_', f)  # module object
             descr = script_.__doc__.strip()
             descr = descr.split("\n")[0]  # first line of docstring
         except Exception as e:
             flag_error = True
             descr = "*%s*: %s" % (e.__class__.__name__, str(e))
+            raise
 
-        ret.append(ScriptInfo(filename, descr, flag_error))
+        ret.append(ScriptInfo(filename, descr, flag_error, flag_gui))
 
+    return ret
+
+
+def _format_script_info(py_len, title, scriptinfo, format):
+    ret = []
+    if format == "markdown-list":
+        ret.append("\n%s:" % title)
+        for si in scriptinfo:
+            ret.append("  - `%s` -- %s" % (si.filename, si.description))
+
+    elif format == "markdown-table":
+        ret.append("\n%s:" % title)
+        mask = "%%-%ds | %%s" % (py_len+2, )
+        ret.append(mask % ("Script name", "Purpose"))
+        ret.append("-" * (py_len + 3) + "|" + "-" * 10)
+        for si in scriptinfo:
+            ret.append(mask % ("`%s`" % si.filename, si.description))
+    elif format == "text":
+        hr = "*"*(len(title)+2)
+        ret.append("\n%s\n*%s*\n%s" % (hr, title, hr))
+        for si in scriptinfo:
+            piece = si.filename + " " + ("." * (py_len - len(si.filename)))
+            if si.flag_error:
+                ret.append(piece+si.description)
+            else:
+                # ret.append(piece)
+                ss = textwrap.wrap(si.description, 79 - py_len - 1)
+                ret.append(piece+" "+(ss[0] if ss and len(ss) > 0 else "no doc"))
+                for i in range(1, len(ss)):
+                    ret.append((" " * (py_len + 2))+ss[i])
     return ret
 
 
@@ -313,32 +353,17 @@ def format_script_info(scriptinfo, format="text"):
     """
 
     py_len = max([len(si.filename) for si in scriptinfo])
+
+    sisi_gra = [si for si in scriptinfo if si.flag_gui]
+    sisi_cmd = [si for si in scriptinfo if not si.flag_gui]
+    sisi_gra.sort(cmp=lambda x, y: x.filename < y.filename)
+    sisi_cmd.sort(cmp=lambda x, y: x.filename < y.filename)
+
     ret = []
-    if format == "markdown-list":
-        mask = "  - `%%%s -- %%s"
-        for si in scriptinfo:
-            ret.append("  - `%s` -- %s" % (si.filename, si.description))
-
-    elif format == "markdown-table":
-        mask = "%%-%ds | %%s" % (py_len+2, )
-
-        ret.append(mask % ("Script name", "Purpose"))
-        ret.append("-" * (py_len + 3) + "|" + "-" * 10)
-
-        for si in scriptinfo:
-            ret.append(mask % ("`%s`" % si.filename, si.description))
-    elif format == "text":
-        for si in scriptinfo:
-
-            piece = si.filename + " " + ("." * (py_len - len(si.filename)))
-            if si.flag_error:
-                ret.append(piece+si.description)
-            else:
-                # ret.append(piece)
-                ss = textwrap.wrap(si.description, 79 - py_len - 1)
-                ret.append(piece+" "+(ss[0] if ss and len(ss) > 0 else "no doc"))
-                for i in range(1, len(ss)):
-                    ret.append((" " * (py_len + 2))+ss[i])
+    if len(sisi_gra) > 0:
+        ret.extend(_format_script_info(py_len, "Graphical applications", sisi_gra, format))
+    if len(sisi_cmd) > 0:
+        ret.extend(_format_script_info(py_len, "Command-line tools", sisi_cmd, format))
 
     return ret, py_len
 
