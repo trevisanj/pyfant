@@ -118,6 +118,7 @@ Command-line tools:
 
 
 Graphical applications:
+
 Script name         | Purpose
 --------------------|----------
 `abed.py`           | Abundances file editor
@@ -131,6 +132,7 @@ Script name         | Purpose
 `x.py`              | PFANT Launcher
 
 Command-line tools:
+
 Script name         | Purpose
 --------------------|----------
 `copy-star.py`      | Copies stellar data files (such as main.dat, abonds.dat, dissoc.dat) to local directory.
