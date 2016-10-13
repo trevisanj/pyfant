@@ -480,7 +480,7 @@ class FileSpectrumNulbad(FileSpectrum):
 
 class FileSpectrumXY(FileSpectrum):
     """
-    "Lambda-flux" Spectrum (text file with two columns)
+    "Lambda-flux" Spectrum (2-column text file)
 
     File may have comment lines; these will be ignored altogether, because the file
     is read with numpy.loadtxt()

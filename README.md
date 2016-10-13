@@ -23,9 +23,8 @@ and visualization, and a programming library to embed spectral synthesis into yo
 
 # <a name=S1></a>1 Introduction
 
-The `pyfant` Python package was created as a Python interface for PFANT -- (a Fortran-developed
-Spectral Synthesis Software for use in Astronomy), _i.e._, allowing to use Python calculate synthetic
-spectra of stars without having to invoke the Fortran command-line applications directly.
+The `pyfant` Python package was created as a Python interface for PFANT, a Fortran-developed
+Spectral Synthesis Software for use in Astronomy (http://github.com/trevisanj/PFANT).
 
 Spectral Synthesis Softwares (SSS) have several applications in Astronomy. Spectral synthesis is a
 crucial step in optimization algorithms, in which the synthetic spectrum is compared with the
@@ -43,7 +42,7 @@ many convenient tasks:
   - plotting tools
   - conversion of atomic and molecular lines from/to standards from other research groups
 
-`pyfant` is under active development (this comment was written in 2016/Oct), and we hope that you
+`pyfant` is under active development, and we hope that you
 will find it useful. If you would like to contribute or have any issues or suggestions, please send
 a message to juliotrevisan@gmail.com
 
@@ -78,9 +77,32 @@ PFANT Spectrum (`pfant` output)                                     | flux.norm
 
 # 2 <a name=S2></a>Installation
 
-## 2.0 Required Python version
+## 2.1 Required Software
 
-pyfant was developed for Python 2.7.xx
+**Python version:** Python 2.7.xx
+
+## 2.1.1 Python Packages
+
+Please make sure you have all the packages below
+installed on your system.
+
+Package name  | Possible way to install
+------------- | ---
+matplotlib    | apt-Linux: `sudo apt-get install python-matplotlib`
+              |
+scipy         | apt-Linux: `sudo apt-get install python-scipy`
+              |
+pyqt4         | apt-Linux: `sudo apt-get install python-qt4`
+
+              | Windows: download Python 2.7 installer at https://riverbankcomputing.com/software/pyqt/download
+              |
+fortranformat | All systems: `[sudo] pip install fortranformat`
+              |
+astropy       | apt-Linux: `sudo apt-get install python-astropy`
+              | All systems: `[sudo] pip install astropy`
+
+:notes: **Linux users** may have to `sudo` your `pip` commands.
+
 
 ## 2.1 Clone the repository 
 
@@ -101,27 +123,7 @@ cd pyfant
 sudo python setup.py develop
 ```
 
-:notes: Please make sure you have all the packages below
-installed on your system.
 
-## 2.3 Required Python packages
-
-
-Package name  | Possible way to install
-------------- | ---
-matplotlib    | apt-Linux: `sudo apt-get install python-matplotlib`
-              |
-scipy         | apt-Linux: `sudo apt-get install python-scipy`
-              |
-pyqt4         | apt-Linux: `sudo apt-get install python-qt4`
-              | Windows: download Python 2.7 installer at https://riverbankcomputing.com/software/pyqt/download
-              |
-fortranformat | All systems: `[sudo] pip install fortranformat`
-              |
-astropy       | apt-Linux: `sudo apt-get install python-astropy`
-              | All systems: `[sudo] pip install astropy`
-
-:notes: **Linux users** may have to `sudo` your `pip` commands.
 
 
 # <a name=S3></a>3 Command-line tools
