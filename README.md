@@ -23,24 +23,58 @@ and visualization, and a programming library to embed spectral synthesis into yo
 
 # <a name=S1></a>1 Introduction
 
+The `pyfant` Python package was created as a Python interface for PFANT -- (a Fortran-developed
+Spectral Synthesis Software for use in Astronomy), _i.e._, allowing to use Python calculate synthetic
+spectra of stars without having to invoke the Fortran command-line applications directly.
 
-TODO ja coloca figura aqui mesmo, sem ladainha
+Spectral Synthesis Softwares (SSS) have several applications in Astronomy. Spectral synthesis is a
+crucial step in optimization algorithms, in which the synthetic spectrum is compared with the
+measure spectrum of a star, in order to determine stellar properties -- such as temperature,
+metallicity, and chemical abundances -- in an iterative fashion.
 
-Some features:
-  - graphical user interfaces ([see screenshots](screenshots.md)):
-    - run Fortran binaries in parallel: `x.py`
-    - file explorer: `explorer.py`
-    - edit data files: `ated.py`, `mled.py`, `mained.py`, `abed.py`
-    - etc
-  - handles some types of FITS files (_e.g._, spectrum, data cube)
-  - command-line tools for
-    - plotting, PDF generation: `plot-spectra.py`, `save-pdf.py`
-    - cutting: `cut-atoms.py`, `cut-molecules.py`, `cut-spectra.py`
-    - running: `run4.py`
-    - VALD3 conversion: `vald3-to-atoms.py`
-    - etc
-  - object-oriented library for Python coding
-     
+`pyfant` was first created with the intention to provide an object-oriented library to develop such
+algorithms in Python. It allows one to create several "spectral synthesis cases" (_e.g._ similar
+calculations where only the chemical abundance of one element will vary slightly) and run these cases
+in parallel.
+
+The package has since evolved to provide many graphical and command-line applications to perform
+many convenient tasks:
+  - editors for many of the file types involved
+  - plotting tools
+  - conversion of atomic and molecular lines from/to standards from other research groups
+
+`pyfant` is under active development (this comment was written in 2016/Oct), and we hope that you
+will find it useful. If you would like to contribute or have any issues or suggestions, please send
+a message to juliotrevisan@gmail.com
+
+
+Handled file types:
+
+File type                                                     | Default filename (for all purposes)
+------------------------------------------------------------- | -----------------------------------
+"Lambda-flux" Spectrum (text file with two columns)           | -
+FITS Data Cube                                                | default.fullcube
+FITS Sparse Data Cube (storage to take less disk space)       | default.sparsecube
+FITS Spectrum                                                 | -
+FITS Spectrum List                                            | default.splist
+MARCS Opacity Model                                           | modeles.opa
+MARCS Atmospheric Model                                       | -
+                                                              |
+PFANT Stellar Main Configuration                              | main.dat
+PFANT Stellar Chemical Abundances                             | abonds.dat
+PFANT Stellar Dissociation Equilibrium Information            | dissoc.dat
+PFANT Atomic Lines                                            | atoms.dat
+PFANT Molecular Lines                                         | molecules.dat
+PFANT Hydrogen Line Profile                                   | thalpha
+PFANT Hygrogen Lines Map                                      | hmap.dat
+PFANT Partition Function                                      | partit.dat
+PFANT Atmospheric Model or grid of models (binary file)             | modeles.mod
+PFANT Atmospheric model or grid of models (with opacities included) | grid.moo
+PFANT Spectrum (`nulbad` output)                                    | -
+PFANT Spectrum (`pfant` output)                                     | flux.norm
+`x.py` Command-line Options                                         | options.py
+`x.py` Differential Abundances and FWHMs (Python source)            | abxfwhm.py
+
 
 # 2 <a name=S2></a>Installation
 

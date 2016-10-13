@@ -9,6 +9,8 @@ from ..misc import SYMBOLS
 
 
 class FileAbonds(DataFile):
+    """PFANT Stellar Chemical Abundances"""
+
     description = "chemical abundances"
     default_filename = "abonds.dat"
     attrs = ["ele", "abol", "notes"]

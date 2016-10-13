@@ -24,7 +24,7 @@ class HmapRow(AttrsPart):
 
 class FileHmap(DataFile):
     """
-    Represents hygrogen lines map file.
+    PFANT Hygrogen Lines Map
 
     Imitates the logic of reader_hmap.f90::read_hmap().
 

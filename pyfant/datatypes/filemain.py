@@ -7,7 +7,7 @@ NINE_HUNDRED = 900
 
 class FileMain(DataFile):
   """
-  Represents PFANT main configuration file.
+  PFANT Stellar Main Configuration
   
   Imitates the logic of reader_main.f90::read_main().
   

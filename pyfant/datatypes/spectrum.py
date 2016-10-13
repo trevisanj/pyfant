@@ -334,7 +334,7 @@ class FileSpectrum(DataFile):
 
 class FileSpectrumPfant(FileSpectrum):
     """
-    Represents a pfant output spectrum file.
+    PFANT Spectrum (`pfant` output)
 
     This file alternates a "header" line where most of the information is
     repeated, and a "values" line, with the values of the flux
@@ -418,7 +418,7 @@ class FileSpectrumPfant(FileSpectrum):
 
 class FileSpectrumNulbad(FileSpectrum):
     """
-    Represents a file created by nulbad.
+    PFANT Spectrum (`nulbad` output)
 
     This file alternates a "header" line where most of the information is
     repeated, and a "values" line, with the values of the flux
@@ -480,7 +480,7 @@ class FileSpectrumNulbad(FileSpectrum):
 
 class FileSpectrumXY(FileSpectrum):
     """
-    Represents a file with two columns: first is lambda (x), second is flux (y)
+    "Lambda-flux" Spectrum (text file with two columns)
 
     File may have comment lines; these will be ignored altogether, because the file
     is read with numpy.loadtxt()
@@ -508,9 +508,7 @@ class FileSpectrumXY(FileSpectrum):
 
 
 class FileSpectrumFits(FileSpectrum):
-    """
-    Represents a FITS file with a spectrum inside
-    """
+    """FITS Spectrum"""
 
     def _do_load(self, filename):
         fits_obj = fits.open(filename)

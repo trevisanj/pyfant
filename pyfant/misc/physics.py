@@ -113,7 +113,7 @@ def ufunc_gauss(x0, fwhm):
 
 class Band(object):
     """
-    Represents wavelength filter band, containing a few tools
+    Wavelength filter band, with class tools
 
     This class is kept clean whereas Bands has examples and deeper documentation on parameters
 

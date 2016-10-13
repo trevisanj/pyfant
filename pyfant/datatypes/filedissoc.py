@@ -5,6 +5,7 @@ from ..misc import *
 
 
 class FileDissoc(DataFile):
+    """PFANT Stellar Dissociation Equilibrium Information"""
     default_filename = "dissoc.dat"
 
     attrs = ['nmetal', 'nimax', 'elems', 'nelemx', 'ip', 'ig0', 'ig1', 'cclog',

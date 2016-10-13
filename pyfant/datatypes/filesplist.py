@@ -347,7 +347,7 @@ class SpectrumList(SpectrumCollection):
 
 
 class FileSpectrumList(DataFile):
-    """Represents a Spectrum List file, which is also a FITS file"""
+    """FITS Spectrum List"""
     attrs = ['splist']
     description = "Spectrum List"
     default_filename = "default.splist"

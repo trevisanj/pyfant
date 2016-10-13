@@ -13,7 +13,7 @@ _logger.addHandler(logging.NullHandler())
 
 class Atom(AttrsPart):
     """
-    Represents element with its atomic lines.
+    Element with its atomic lines
 
     Atom is identified by key symbol+ionization
     """
@@ -90,7 +90,7 @@ class AtomicLine(AttrsPart):
 
 class FileAtoms(DataFile):
     """
-    Represents file with atomic lines.
+    PFANT Atomic Lines
     """
 
     default_filename = "atoms.dat"

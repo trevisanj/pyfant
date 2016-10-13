@@ -4,7 +4,7 @@ from .datafile import DataFile
 from collections import OrderedDict
 
 class FilePar(DataFile):
-    """Represents a ".par" file in memory"""
+    """".par" (parameters)file"""
 
     description = "Session parameters"
     default_filename = None

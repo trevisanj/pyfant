@@ -87,7 +87,7 @@ class Molecule(AttrsPart):
 
 class FileMolecules(DataFile):
     """
-    Represents file with molecular lines.
+    PFANT Molecular Lines
 
     Rather than as read_molecules() in readers.f90, this class stores
     information for each molecule inside a Molecule object.

@@ -1,4 +1,4 @@
-__all__ = ["fmt_ascii_h1", "fmt_error", "print_error", "menu", "format_progress"]
+__all__ = ["fmt_ascii_h1", "fmt_error", "print_error", "menu", "format_progress", "markdown_table"]
 
 
 # #################################################################################################
@@ -90,3 +90,27 @@ def format_progress(i, n):
     s_plus = '+'*num_plus
     s_point = '.'*(LEN_BAR-num_plus)
     return '[%s%s] %d/%d - %.1f%%' % (s_plus, s_point, i, n, fraction*100)
+
+
+
+def markdown_table(headers, data):
+    """
+    Creates MarkDown table. Returns list of strings
+
+    Arguments:
+      headers -- sequence of strings: (header0, header1, ...)
+      data -- [(cell00, cell01, ...), (cell10, cell11, ...), ...]
+    """
+
+    maxx = [max([len(x) for x in column]) for column in zip(*data)]
+    maxx = [max(ll) for ll in zip(maxx, [len(x) for x in headers])]
+    mask = " | ".join(["%%-%ds" % n for n in maxx])
+
+    ret = [mask % headers]
+
+
+
+    ret.append(" | ".join(["-"*n for n in maxx]))
+    for line in data:
+        ret.append(mask % line)
+    return ret

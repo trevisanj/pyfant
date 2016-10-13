@@ -10,7 +10,7 @@ import fortranformat as ff
 
 class FileToH(DataFile):
     """
-    Represents single-band hydrogen lines file.
+    PFANT Hydrogen Line Profile
 
     Imitates the logic of reader_filetoh.f90::read_filetoh(). Difference: pfant
     reads second row as single character-variable "ttt", but hydro2 saves 5 values

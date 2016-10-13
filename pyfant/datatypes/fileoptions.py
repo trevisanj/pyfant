@@ -8,7 +8,8 @@ __all__ = ["FileOptions"]
 
 @froze_it
 class FileOptions(DataFile):
-    """Stores the command-line options.
+    """
+    `x.py` Command-line Options
 
     For each xxxx attribute not starting with "_" there exists
     a variable in config.f90 named config_xxxx, and

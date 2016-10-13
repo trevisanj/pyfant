@@ -360,10 +360,10 @@ class SparseCube(SpectrumCollection):
 
 
 class FileSparseCube(DataFile):
-    """Represents a Compass data cube file, which is also a FITS file"""
+    """FITS Sparse Data Cube (storage to take less disk space)"""
     attrs = ['dcube']
     description = "Data Cube (FITS file)"
-    default_filename = "default.dcube"
+    default_filename = "default.sparsecube"
 
     def __init__(self):
         DataFile.__init__(self)

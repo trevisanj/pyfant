@@ -7,7 +7,7 @@ Rule: no pyfant module can import util!!!
 __all__ = ["run_parallel",
            "load_any_file", "load_spectrum",
             "setup_inputs", "link_to_data", "copy_star",
-           "load_spectrum_fits_messed_x"]
+           "load_spectrum_fits_messed_x", "list_data_types"]
 
 # from pyfant.misc import *
 from pyfant import *
@@ -47,6 +47,7 @@ def load_any_file(filename):
         return load_with_classes(filename, _classes_txt)
     else:
         return load_with_classes(filename, _classes_bin)
+
 
 def load_spectrum(filename):
     """
@@ -269,7 +270,6 @@ def create_or_replace_or_skip_links(ff, dest_dir="."):
                 print_error("Error creating link: %s" % str(e))
 
 
-
 def copy_or_skip_files(ff, dest_dir="."):
     """Copies a series of files, skipping those which already exist.
     
@@ -300,3 +300,27 @@ def copy_or_skip_files(ff, dest_dir="."):
                 print "   ... file copied"
             except Exception as e:
                 print_error("Error copying file: %s" % str(e))
+
+
+def list_data_types():
+    """Prints a list with all data types, in Markdown table format"""
+    ll = []  # [(description, default filename), ...]
+    for item in dir(datatypes):
+        attr = datatypes.__getattribute__(item)
+        goes = False
+        try:
+            goes = issubclass(attr, DataFile) and (attr != DataFile)
+        except TypeError:
+            pass
+
+        if goes:
+            doc = attr.__doc__
+            doc = attr.__name__ if doc is None else doc.strip().split("\n")[0]
+
+            def_ = attr.default_filename
+            def_ = def_ if def_ is not None else "-"
+            ll.append((doc, def_))
+
+    ll.sort(key=lambda x: x[0])
+
+    return markdown_table(("File type", "Default filename (for all purposes)"), ll)

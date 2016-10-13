@@ -21,8 +21,7 @@ _COMMENT2 = """# Convolutions specification for fwhm parameter:
 
 
 class FileAbXFwhm(DataFile):
-    __doc__ = """
-Represents file containing lists of differential abundances and FWHMs.
+    __doc__ = """`x.py` Differential Abundances and FWHMs (Python source)
 
 This file is actually Python source. Here is a sample:
 

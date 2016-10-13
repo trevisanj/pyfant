@@ -4,8 +4,11 @@ from .datafile import *
 
 
 class FilePartit(DataFile):
-    """Partition function. Reader/writes not implemented (will be implemented
-    when there is the need for so."""
+    """
+    PFANT Partition Function
+
+    Reader/writer not implemented (will be implemented  when there is the need for so)
+    """
 
     default_filename = "partit.dat"
 

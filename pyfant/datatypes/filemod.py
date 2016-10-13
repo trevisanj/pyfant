@@ -9,7 +9,7 @@ import os
 
 class ModRecord(AttrsPart):
     """
-    Represents a single record from an atmospheric model file
+    Single record from an atmospheric model file
 
     Note: while a infile:modeles may have several 1200-byte records stored in it,
     this class only stores one of these records, specified by "inum"  argument
@@ -49,7 +49,7 @@ MOD_REC_SIZE = 1200
 
 class FileModBin(DataFile):
   """
-  Represents atmospheric model file, e.g. "modeles.mod" (infile:modeles)
+  PFANT Atmospheric Model (binary file)
 
   File may have several 1200-byte records.
 
@@ -109,7 +109,10 @@ class FileModBin(DataFile):
 
 class FileModTxt(DataFile):
     """
-    Represents *ASCII* file (althought ".mod" extension) from MARCS homepage.
+    MARCS Atmospheric Model (text file)
+
+    Not to be confused with PFANT Atmospheric Model (binary file), as
+    both share the same ".mod" extension
 
     http://marcs.astro.uu.se/
 
@@ -287,7 +290,7 @@ class FileOpa(DataFile):
 
 class MooRecord(AttrsPart):
     """
-    Represents a single record of a ".mog" file
+    Single record from a ".moo" file
 
     The attributes are almost a concatenation of ModRecord with FileOpa
     attributes, except for redundant attributes, i.e.:
@@ -362,7 +365,7 @@ NWAV = 1071  # must be 1071
 
 class FileMoo(DataFile):
     """
-    Represents a ".moo" (model, including opacities) file.
+    Atmospheric model or grid of models (with opacities included)
 
     This file contains all the fields in modeles.mod, plus the opacity information
     """

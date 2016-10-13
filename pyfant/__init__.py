@@ -18,3 +18,7 @@ from .util import *
 from .from_vald import *
 from .multirunnable import *
 from .blocks import *
+import datatypes
+import misc
+import plotting
+# note that gui is not imported automatically

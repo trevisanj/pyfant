@@ -220,7 +220,7 @@ def get_pfant_data_subdirs():
 
 def get_pfant_star_subdirs():
     """Returns only subdirectories of PFANT/data that contain file main.dat."""
-    dd = glob.glob(get_pfant_data_path(), "*")
+    dd = glob.glob(os.path.join(get_pfant_data_path(), "*"))
     ret = []
     for d in dd:
         if os.path.isdir(d) and os.path.isfile(os.path.join(d, 'main.dat')):
@@ -298,7 +298,6 @@ def get_script_info(dir_):
         except Exception as e:
             flag_error = True
             descr = "*%s*: %s" % (e.__class__.__name__, str(e))
-            raise
 
         ret.append(ScriptInfo(filename, descr, flag_error, flag_gui))
 
@@ -311,7 +310,6 @@ def _format_script_info(py_len, title, scriptinfo, format):
         ret.append("\n%s:" % title)
         for si in scriptinfo:
             ret.append("  - `%s` -- %s" % (si.filename, si.description))
-
     elif format == "markdown-table":
         ret.append("\n%s:\n" % title)
         mask = "%%-%ds | %%s" % (py_len+2, )
