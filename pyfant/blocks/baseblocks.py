@@ -7,8 +7,6 @@ from pyfant import *
 from pyfant.datatypes.filesplist import SpectrumList
 import copy
 
-# All values in CGS
-_C = 299792458*100  # light speed in cm/s
 
 ########################################################################################################################
 
@@ -35,7 +33,7 @@ class SBlock(BaseBlock):
                 assert output._flag_created_by_block
             # Automatically assigns output wavelength vector if applicable
             if isinstance(output, Spectrum) and output.wavelength is None and len(output.y) == len(input.y):
-                output.wavelength = np.copy(input.wavelength) if self.flag_copy_wavelength else input.wavelength
+                output.wavelength = np.copy(input.wavelength)  # TODO this may slow down things... or not ... if self.flag_copy_wavelength else input.wavelength
             return output
         finally:
             self._input = None
@@ -46,7 +44,7 @@ class SBlock(BaseBlock):
         Never create spectrum directly because we want to keep certain attributes, such as more_headers"""
         output = Spectrum()
         output._flag_created_by_block = True  # assertion
-        output.more_headers = copy.deepcopy(self._input.more_headers_)
+        output.more_headers = copy.deepcopy(self._input.more_headers)
         return output
 
     def _copy_input(self, input):

@@ -124,13 +124,15 @@ sudo python setup.py develop
 
 
 
-# <a name=S3></a>3 Applications Available
+# <a name=S3></a>3 Programs Available
+
+:bulb: To print a list of all command-line tools, run `programs.py`
 
 Graphical applications:
   - `abed.py` -- Abundances file editor
   - `ated.py` -- Atomic lines file editor
   - `cubeed.py` -- Data Cube Editor
-  - **`explorer.py`** -- PFANT Explorer --  list, visualize, and edit data files (_à la_ File Manager)
+  - `explorer.py` -- PFANT Explorer --  list, visualize, and edit data files (_à la_ File Manager)
   - `mained.py` -- Main configuration file editor
   - `mled.py` -- Molecular lines file editor
   - `splisted.py` -- FileSpectrumList editor with import/export FileFullCube
@@ -149,8 +151,6 @@ Command-line tools:
   - `run4.py` -- Runs the four Fortran binaries in sequence: innewmarcs, hydro2, pfant, nulbad.
   - `save-pdf.py` -- Looks for file "flux.norm" inside directories session-* and saves one figure per page in a PDF file.
   - `vald3-to-atoms.py` -- Converts VALD3 atomic/molecular lines file to PFANT atomic lines file.
-
-:bulb: To print a list of all command-line tools, run `programs.py`.
 
 # <a name=S4></a>Use Cases
 

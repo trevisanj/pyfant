@@ -1,6 +1,8 @@
-"""Window to edit both main and abundances"""
 
-__all__ = ["XLogMainWindow", "XLogDialog", "XFileMainWindow", "NullEditor", "WBase"]
+
+__all__ = ["XLogMainWindow", "XLogDialog", "XFileMainWindow", "NullEditor", "WBase",
+"str_exc", "get_window_title", "style_widget"]
+
 
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
@@ -10,6 +12,28 @@ from pyfant import *
 from pyfant.gui import *
 import os
 from matplotlib import pyplot as plt
+import collections
+
+
+def style_widget(w, flag_changed):
+    """(Paints background yellow)/(removes stylesheet)"""
+    w.setStyleSheet("QWidget {background-color: #FFFF00}" if flag_changed else "")
+
+# Because several windows of the same class may be created, we'll give them different titles to help avoid confusion
+_window_titles = collections.Counter()
+def get_window_title(prefix):
+    _window_titles[prefix] += 1
+    i = _window_titles[prefix]
+    if i == 1:
+        return prefix
+    else:
+        return "%s #%d" % (prefix, i)
+
+
+def str_exc(E):
+    """Generates a string from an Exception"""
+    return "%s: %s" % (E.__class__.__name__, str(E))
+
 
 class _LogPart(object):
     # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * #

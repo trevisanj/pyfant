@@ -447,7 +447,7 @@ class VisCube(Vis):
     action = "Edit using Data Cube Editor"
 
     def _do_use(self, r):
-        from pyfant.gui.pymos import XFileSparseCube
+        from pyfant.gui.ao3s import XFileSparseCube
         form = XFileSparseCube(self.parent_form, r)
         _forms.append(form)
         form.show()
@@ -459,7 +459,7 @@ class VisSpectrumList(Vis):
     action = "Edit using Spectrum List Editor"
 
     def _do_use(self, r):
-        from pyfant.gui.pymos import XFileSpectrumList
+        from pyfant.gui.ao3s import XFileSpectrumList
         form = XFileSpectrumList(self.parent_form, r)
         _forms.append(form)
         form.show()

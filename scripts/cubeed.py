@@ -3,7 +3,7 @@
 """Data Cube Editor, import/export WebSim-COMPASS data cubes"""
 
 from pyfant import *
-from pyfant.gui.pymos import XFileSparseCube
+from pyfant.gui.ao3s import XFileSparseCube
 import sys
 import argparse
 import logging

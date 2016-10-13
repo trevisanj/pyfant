@@ -11,6 +11,8 @@ from matplotlib.ticker import AutoMinorLocator
 def set_facecolor_white():
     rc("figure", facecolor="white")
 
+set_facecolor_white()
+
 def format_BLB():
     """Sets some formatting options in Matplotlib."""
     rc("figure", facecolor="white")

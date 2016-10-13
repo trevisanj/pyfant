@@ -13,7 +13,7 @@ import os
 import numpy as np
 from scipy.interpolate import interp1d
 import numbers
-#from pymos.misc import *
+#from ao3s.misc import *
 # from ..blocks import *
 import copy
 
@@ -285,7 +285,7 @@ class SpectrumList(SpectrumCollection):
 
         # Creates the block
         try:
-            from pyfant.blocks import *  # TODO make it locals to pass to eval()
+            from pyfant.blocks.slblocks import *  # TODO make it locals to pass to eval()
             block = eval(expr)  # , {}, {})
             if not isinstance(block, SLB_MergeDownBlock):
                 raise RuntimeError("Must evaluate to a MergeDownBlock, but evaluated to a %s" % (block.__class__.__name__))

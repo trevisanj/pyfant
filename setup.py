@@ -1,10 +1,12 @@
+#!/usr/bin/python
+
 from setuptools import setup, find_packages
 from glob import glob
 
 setup(
     name = 'pyfant',
     packages = find_packages(),
-    version = '0.16.10.8beta',
+    version = '0.16.10.13',
     license = 'GNU GPLv3',
     platforms = 'any',
     description = 'Tools for Astronomy: Spectral Synthesis; Spectrograph Simulation Support; FITS files editors; and more.\n(1) Python interface for the PFANT spectral synthesis software (github.com/trevisanj/PFANT);\n (2) Support tools for Websim-Compass MOSAIC-E-ELT web-based simulator',

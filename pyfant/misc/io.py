@@ -180,9 +180,11 @@ def get_pyfant_default_data_path(fn):
   p = os.path.join(get_pyfant_path(), "datatypes", "default", fn)
   return p
 
+
 def get_pyfant_scripts_path(*args):
     """Returns path to pyfant scripts. Arguments are added to the end os os.path.join()"""
     return get_pyfant_path("..", "scripts", *args)
+
 
 def get_pfant_path(*args):
     """

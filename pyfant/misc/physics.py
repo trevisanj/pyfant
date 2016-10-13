@@ -92,7 +92,7 @@ def ufunc_gauss(x0, fwhm):
 
     Test code:
 
-      >> from pymos import *
+      >> from ao3s import *
       >> import matplotlib.pyplot as plt
       >> import numpy as np
       >> f = ufunc_gauss(0, 5.)
@@ -168,7 +168,7 @@ class Bands(object):
     #
     # The following code should get a plot of these tabulated bands:
     #
-    #   >> from pymos import *
+    #   >> from ao3s import *
     #   >> import matplotlib.pyplot as plt
     #   >> import numpy as np
     #   >> band_names = "UBVRI"
@@ -257,7 +257,7 @@ class Bands(object):
 
 
         Test code:
-          >> from pymos import *
+          >> from ao3s import *
           >> import matplotlib.pyplot as plt
           >> import numpy as np
           >> l0, lf = 3000, 250000

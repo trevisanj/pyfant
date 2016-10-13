@@ -3,7 +3,7 @@
 """Spectrum List Editor"""
 
 from pyfant import *
-from pyfant.gui.pymos import XFileSpectrumList
+from pyfant.gui.ao3s import XFileSpectrumList
 import sys
 import argparse
 import logging
