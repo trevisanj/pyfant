@@ -313,7 +313,7 @@ def _format_script_info(py_len, title, scriptinfo, format):
             ret.append("  - `%s` -- %s" % (si.filename, si.description))
 
     elif format == "markdown-table":
-        ret.append("\n%s:" % title)
+        ret.append("\n%s:\n" % title)
         mask = "%%-%ds | %%s" % (py_len+2, )
         ret.append(mask % ("Script name", "Purpose"))
         ret.append("-" * (py_len + 3) + "|" + "-" * 10)
