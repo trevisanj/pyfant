@@ -93,8 +93,8 @@ matplotlib    | apt-Linux: `sudo apt-get install python-matplotlib`
 scipy         | apt-Linux: `sudo apt-get install python-scipy`
               |
 pyqt4         | apt-Linux: `sudo apt-get install python-qt4`
-
               | Windows: download Python 2.7 installer at https://riverbankcomputing.com/software/pyqt/download
+              |
               |
 fortranformat | All systems: `[sudo] pip install fortranformat`
               |
