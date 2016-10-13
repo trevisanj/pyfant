@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 """
-Model Grid Creator from MARCS atmospheric models
+Merges several atmospheric models into a single file (_i.e._, the "grid")
 
 "Collects" several files in current directory and creates a single file
 containing atmospheric model grid.

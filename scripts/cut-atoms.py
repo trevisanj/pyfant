@@ -1,6 +1,6 @@
 #!/usr/bin/python
 """
-Cuts atomic lines file to wavelength interval specified.
+Cuts atomic lines file to wavelength interval specified
 
 The interval is [llzero, llfin]
 """

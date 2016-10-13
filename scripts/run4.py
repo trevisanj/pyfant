@@ -1,6 +1,6 @@
 #!/usr/bin/python
 """
-Runs the four Fortran binaries in sequence: innewmarcs, hydro2, pfant, nulbad.
+Runs the four Fortran binaries in sequence: `innewmarcs`, `hydro2`, `pfant`, `nulbad`
 
 Check session directory "session-<number>" for log files.
 """

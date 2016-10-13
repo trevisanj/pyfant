@@ -1,8 +1,7 @@
 #!/usr/bin/python
 
 """
-Looks for file "flux.norm" inside directories session-* and saves one figure per page in a PDF file.
-
+Looks for file "flux.norm" inside directories session-* and saves one figure per page in a PDF file
 """
 """
 References:

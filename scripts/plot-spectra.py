@@ -1,6 +1,6 @@
 #!/usr/bin/python
 """
-Plot spectra to screen or PDF.
+Plots spectra on screen or creates PDF file
 
 It can work in four different modes:
 

@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-"""FileSpectrumList editor with import/export FileFullCube"""
+"""Spectrum List Editor"""
 
 from pyfant import *
 from pyfant.gui.pymos import XFileSpectrumList

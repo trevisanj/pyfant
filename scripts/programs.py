@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 """
-Lists all Fortran/Python programs available (PFANT + pyfant).
+Lists all Fortran/Python programs available (PFANT + pyfant)
 """
 
 from pyfant import *

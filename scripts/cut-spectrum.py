@@ -1,9 +1,10 @@
 #!/usr/bin/python
 """
-Cuts spectrum file to wavelength interval specified. Saved in 2-column format.
+Cuts spectrum file to wavelength interval specified
+
+Resulting spectrum Saved in 2-column ASCII format
 
 The interval is [llzero, llfin]
-
 """
 
 import argparse

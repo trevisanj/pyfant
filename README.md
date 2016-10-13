@@ -77,6 +77,10 @@ PFANT Spectrum (`pfant` output)                                     | flux.norm
 
 # 2 <a name=S2></a>Installation
 
+  - Install required software
+  - Clone the repository
+  - Run the setup script
+
 ## 2.1 Required Software
 
 **Python version:** Python 2.7.xx
@@ -99,7 +103,7 @@ astropy       | apt-Linux: `sudo apt-get install python-astropy`
 :notes: **Linux users** may have to `sudo` your `pip` commands.
 
 
-## 2.1 Clone the repository 
+## 2.2 Clone the repository 
 
 ```shell
 git clone https://github.com/trevisanj/pyfant
@@ -111,7 +115,7 @@ or
 git clone ssh://git@github.com/trevisanj/pyfant.git
 ```
 
-## 2.2 Run the setup script
+## 2.3 Run the setup script
 
 ```shell
 cd pyfant
@@ -120,23 +124,22 @@ sudo python setup.py develop
 
 
 
-
-# <a name=S3></a>3 Command-line tools
+# <a name=S3></a>3 Applications Available
 
 Graphical applications:
   - `abed.py` -- Abundances file editor
   - `ated.py` -- Atomic lines file editor
-  - `cubeed.py` -- Data Cube Editor, import/export WebSim-COMPASS data cubes
-  - `explorer.py` -- PFANT Explorer - list, visualize and edit data files.
-  - `mained.py` -- Main configuration file editor.
-  - `mled.py` -- Molecular lines file editor.
+  - `cubeed.py` -- Data Cube Editor
+  - **`explorer.py`** -- PFANT Explorer --  list, visualize, and edit data files (_à la_ File Manager)
+  - `mained.py` -- Main configuration file editor
+  - `mled.py` -- Molecular lines file editor
   - `splisted.py` -- FileSpectrumList editor with import/export FileFullCube
   - `tune-zinf.py` -- Tunes the zinf parameter for each atomic line in atomic lines file.
   - `x.py` -- PFANT Launcher
 
 Command-line tools:
-  - `copy-star.py` -- Copies stellar data files (such as main.dat, abonds.dat, dissoc.dat) to local directory.
-  - `create-grid.py` -- Model Grid Creator from MARCS atmospheric models
+  - `copy-star.py` -- Copies stellar data files to local directory.
+  - `create-grid.py` -- Model Grid Creator from MARCS atmospheric models 
   - `cut-atoms.py` -- Cuts atomic lines file to wavelength interval specified.
   - `cut-molecules.py` -- Cuts molecular lines file to wavelength interval specified.
   - `cut-spectrum.py` -- Cuts spectrum file to wavelength interval specified. Saved in 2-column format.

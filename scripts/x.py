@@ -9,7 +9,7 @@ import argparse
 import logging
 
 
-__doc__ = """PFANT Launcher\n\nSingle and multi modes.\n\n
+__doc__ = """PFANT Launcher -- Graphical Interface for Spectral Synthesis\n\nSingle and multi modes.\n\n
 Multi mode
 ----------
 """+guiaux.DESCR_MULTI+\

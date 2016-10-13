@@ -1,6 +1,6 @@
 #!/usr/bin/python
 """
-Tunes the zinf parameter for each atomic line in atomic lines file.
+Tunes the "zinf" parameter for each atomic line in atomic lines file
 
 The "zinf" parameter is a distance in angstrom from the centre of an atomic
 line. It specifies the calculation range for the line:

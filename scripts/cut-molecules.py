@@ -1,6 +1,6 @@
 #!/usr/bin/python
 """
-Cuts molecular lines file to wavelength interval specified.
+Cuts molecular lines file to wavelength interval specified
 
 The interval is [llzero, llfin]
 """

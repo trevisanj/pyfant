@@ -1,6 +1,6 @@
 #!/usr/bin/python
 """
-Creates symbolic links to PFANT data files as an alternative to copying these (sometimes large) files into local directory.
+Creates symbolic links to PFANT data files as an alternative to copying these (sometimes large) files into local directory
 
 A star is specified by three data files whose typical names are:
 main.dat, abonds.dat, and dissoc.dat .

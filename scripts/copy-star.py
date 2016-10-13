@@ -1,6 +1,6 @@
 #!/usr/bin/python
 """
-Copies stellar data files (such as main.dat, abonds.dat, dissoc.dat) to local directory.
+Copies stellar data files (such as main.dat, abonds.dat, dissoc.dat) to local directory
 
 examples of usage:
   > copy-star.py
