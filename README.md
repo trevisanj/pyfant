@@ -13,12 +13,10 @@ and visualization, and a programming library to embed spectral synthesis into yo
 
   1. [Introduction](#S1)
   2. [Installation](#S2)
-  3. [Command-line tools](#S3)
-  4. [Graphical interfaces](#S4)
-  5. [Miscellanea how-to](#S5)
-     5.1 [Converting atomic lines from VALD3](#S5_1)
-  6. [Library](#S6)
-  7. [Troubleshooting](#S7)
+  3. [Handled file types](#S3)
+  4. [Tasks](#S4)
+  5. [Programming with `pyfant`](#S5)
+  6. [Troubleshooting](#S6)
 
 
 # <a name=S1></a>1 Introduction
@@ -45,35 +43,6 @@ many convenient tasks:
 `pyfant` is under active development, and we hope that you
 will find it useful. If you would like to contribute or have any issues or suggestions, please send
 a message to juliotrevisan@gmail.com
-
-
-Handled file types:
-
-File type                                                     | Default filename (for all purposes)
-------------------------------------------------------------- | -----------------------------------
-"Lambda-flux" Spectrum (text file with two columns)           | -
-FITS Data Cube                                                | default.fullcube
-FITS Sparse Data Cube (storage to take less disk space)       | default.sparsecube
-FITS Spectrum                                                 | -
-FITS Spectrum List                                            | default.splist
-MARCS Opacity Model                                           | modeles.opa
-MARCS Atmospheric Model                                       | -
-                                                              |
-PFANT Stellar Main Configuration                              | main.dat
-PFANT Stellar Chemical Abundances                             | abonds.dat
-PFANT Stellar Dissociation Equilibrium Information            | dissoc.dat
-PFANT Atomic Lines                                            | atoms.dat
-PFANT Molecular Lines                                         | molecules.dat
-PFANT Hydrogen Line Profile                                   | thalpha
-PFANT Hygrogen Lines Map                                      | hmap.dat
-PFANT Partition Function                                      | partit.dat
-PFANT Atmospheric Model or grid of models (binary file)             | modeles.mod
-PFANT Atmospheric model or grid of models (with opacities included) | grid.moo
-PFANT Spectrum (`nulbad` output)                                    | -
-PFANT Spectrum (`pfant` output)                                     | flux.norm
-`x.py` Command-line Options                                         | options.py
-`x.py` Differential Abundances and FWHMs (Python source)            | abxfwhm.py
-
 
 # 2 <a name=S2></a>Installation
 
@@ -152,7 +121,38 @@ Command-line tools:
   - `save-pdf.py` -- Looks for file "flux.norm" inside directories session-* and saves one figure per page in a PDF file.
   - `vald3-to-atoms.py` -- Converts VALD3 atomic/molecular lines file to PFANT atomic lines file.
 
-# <a name=S4></a>Use Cases
+
+# <a name=S3></a>3 Handled file types
+
+Handled file types:
+
+File type                                                     | Default filename (for all purposes)
+------------------------------------------------------------- | -----------------------------------
+"Lambda-flux" Spectrum (text file with two columns)           | -
+FITS Data Cube                                                | default.fullcube
+FITS Sparse Data Cube (storage to take less disk space)       | default.sparsecube
+FITS Spectrum                                                 | -
+FITS Spectrum List                                            | default.splist
+MARCS Opacity Model                                           | modeles.opa
+MARCS Atmospheric Model                                       | -
+                                                              |
+PFANT Stellar Main Configuration                              | main.dat
+PFANT Stellar Chemical Abundances                             | abonds.dat
+PFANT Stellar Dissociation Equilibrium Information            | dissoc.dat
+PFANT Atomic Lines                                            | atoms.dat
+PFANT Molecular Lines                                         | molecules.dat
+PFANT Hydrogen Line Profile                                   | thalpha
+PFANT Hygrogen Lines Map                                      | hmap.dat
+PFANT Partition Function                                      | partit.dat
+PFANT Atmospheric Model or grid of models (binary file)             | modeles.mod
+PFANT Atmospheric model or grid of models (with opacities included) | grid.moo
+PFANT Spectrum (`nulbad` output)                                    | -
+PFANT Spectrum (`pfant` output)                                     | flux.norm
+`x.py` Command-line Options                                         | options.py
+`x.py` Differential Abundances and FWHMs (Python source)            | abxfwhm.py
+
+
+# <a name=S4></a>4 Tasks
 
 This section briefly describes some tasks that can be performed with `pyfant` applications.
 
@@ -192,7 +192,6 @@ or overlapped in a single plot).
 The Vienna Atomic Line Database (VALD) is "a 
 collection of atomic and molecular transition parameters of astronomical interest"
 (http://vald.astro.uu.se/).
-
 
 To convert from the "VALD3 extended" to a "PFANT atomic lines" file:
 

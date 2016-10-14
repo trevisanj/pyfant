@@ -97,7 +97,7 @@
       <file leaf-file-name="a_XFileSpectrumList.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/pyfant/gui/ao3s/a_XFileSpectrumList.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="214">
+            <state relative-caret-position="1872">
               <caret line="121" column="45" selection-start-line="121" selection-start-column="45" selection-end-line="121" selection-end-column="45" />
               <folding>
                 <element signature="e#33#51#0" expanded="true" />
@@ -109,18 +109,8 @@
       <file leaf-file-name="basewindows.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/pyfant/gui/ao3s/basewindows.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="157">
+            <state relative-caret-position="7362">
               <caret line="417" column="81" selection-start-line="417" selection-start-column="81" selection-end-line="417" selection-end-column="81" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="draw_cube.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/pyfant/plotting/draw_cube.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1782">
-              <caret line="105" column="17" selection-start-line="105" selection-start-column="17" selection-end-line="105" selection-end-column="17" />
               <folding />
             </state>
           </provider>
@@ -129,7 +119,7 @@
       <file leaf-file-name="a_WSpectrumCollection.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/pyfant/gui/ao3s/a_WSpectrumCollection.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="338">
+            <state relative-caret-position="8856">
               <caret line="509" column="0" selection-start-line="509" selection-start-column="0" selection-end-line="509" selection-end-column="0" />
               <folding>
                 <element signature="e#35#53#0" expanded="true" />
@@ -153,27 +143,43 @@
       <file leaf-file-name="filesparsecube.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/pyfant/datatypes/filesparsecube.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="450">
+            <state relative-caret-position="3726">
               <caret line="214" column="27" selection-start-line="214" selection-start-column="27" selection-end-line="214" selection-end-column="27" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="filesplist.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="filesplist.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/pyfant/datatypes/filesplist.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="108">
-              <caret line="111" column="91" selection-start-line="111" selection-start-column="91" selection-end-line="111" selection-end-column="91" />
+            <state relative-caret-position="252">
+              <caret line="119" column="0" selection-start-line="119" selection-start-column="0" selection-end-line="119" selection-end-column="0" />
               <folding />
             </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="README.md" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/README.md">
+          <provider selected="true" editor-type-id="split-provider[text-editor;MarkdownPreviewEditor]">
+            <state split_layout="FIRST">
+              <first_editor relative-caret-position="324">
+                <caret line="18" column="26" selection-start-line="18" selection-start-column="26" selection-end-line="18" selection-end-column="26" />
+                <folding />
+              </first_editor>
+              <second_editor />
+            </state>
+          </provider>
+          <provider editor-type-id="MarkdownFxPreviewEditor">
+            <state />
           </provider>
         </entry>
       </file>
       <file leaf-file-name="spectrum.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/pyfant/datatypes/spectrum.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="374">
+            <state relative-caret-position="5490">
               <caret line="316" column="17" selection-start-line="316" selection-start-column="17" selection-end-line="316" selection-end-column="17" />
               <folding />
             </state>
@@ -183,7 +189,7 @@
       <file leaf-file-name="function_base.py" pinned="false" current-in-tab="false">
         <entry file="file:///usr/lib/python2.7/dist-packages/numpy/lib/function_base.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="554">
+            <state relative-caret-position="28278">
               <caret line="1600" column="4" selection-start-line="1600" selection-start-column="4" selection-end-line="1600" selection-end-column="4" />
               <folding />
             </state>
@@ -230,7 +236,6 @@
         <option value="$PROJECT_DIR$/scripts/run4.py" />
         <option value="$PROJECT_DIR$/scripts/save-pdf.py" />
         <option value="$PROJECT_DIR$/pyfant/misc/io.py" />
-        <option value="$PROJECT_DIR$/README.md" />
         <option value="$PROJECT_DIR$/setup.py" />
         <option value="$PROJECT_DIR$/pyfant/constants.py" />
         <option value="$PROJECT_DIR$/pyfant/blocks/slblocks.py" />
@@ -253,6 +258,7 @@
         <option value="$PROJECT_DIR$/pyfant/gui/ao3s/a_XFileSpectrumList.py" />
         <option value="$PROJECT_DIR$/pyfant/gui/ao3s/a_WSpectrumCollection.py" />
         <option value="$PROJECT_DIR$/pyfant/datatypes/filesplist.py" />
+        <option value="$PROJECT_DIR$/README.md" />
       </list>
     </option>
   </component>
@@ -532,7 +538,6 @@
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2492647" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.28756058" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -546,6 +551,7 @@
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.28756058" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
     </layout>
@@ -639,7 +645,7 @@
         <state relative-caret-position="126">
           <caret line="11" column="10" selection-start-line="11" selection-start-column="10" selection-end-line="11" selection-end-column="10" />
           <folding>
-            <element signature="e#0#22#0" expanded="true" />
+            <element signature="e#0#22#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -747,7 +753,7 @@
         <state relative-caret-position="216">
           <caret line="172" column="0" selection-start-line="172" selection-start-column="0" selection-end-line="172" selection-end-column="0" />
           <folding>
-            <element signature="e#525#539#0" expanded="true" />
+            <element signature="e#525#539#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -769,26 +775,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/README.md">
-      <provider editor-type-id="MarkdownFxPreviewEditor">
-        <state />
-      </provider>
-      <provider editor-type-id="text-editor">
-        <state relative-caret-position="126">
-          <caret line="58" column="30" selection-start-line="58" selection-start-column="30" selection-end-line="58" selection-end-column="30" />
-          <folding />
-        </state>
-      </provider>
-      <provider selected="true" editor-type-id="split-provider[text-editor;MarkdownPreviewEditor]">
-        <state split_layout="FIRST">
-          <first_editor relative-caret-position="144">
-            <caret line="129" column="0" selection-start-line="128" selection-start-column="0" selection-end-line="129" selection-end-column="0" />
-            <folding />
-          </first_editor>
-          <second_editor />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/pyfant/misc/matplotlibaux.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="54">
@@ -802,7 +788,7 @@
         <state relative-caret-position="576">
           <caret line="152" column="65" selection-start-line="152" selection-start-column="65" selection-end-line="152" selection-end-column="65" />
           <folding>
-            <element signature="e#107#125#0" expanded="true" />
+            <element signature="e#107#125#0" expanded="false" />
             <element signature="e#350#444#0" expanded="false" />
             <element signature="e#484#694#0" expanded="false" />
             <element signature="e#728#1027#0" expanded="false" />
@@ -840,7 +826,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -856,9 +841,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1440">
           <caret line="84" column="25" selection-start-line="84" selection-start-column="25" selection-end-line="84" selection-end-column="25" />
-          <folding>
-            <element signature="e#66#92#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -867,7 +849,7 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#103#121#0" expanded="true" />
+            <element signature="e#103#121#0" expanded="false" />
             <element signature="e#369#420#0" expanded="false" />
             <element signature="e#460#609#0" expanded="false" />
             <element signature="e#652#1140#0" expanded="false" />
@@ -898,7 +880,7 @@
         <state relative-caret-position="522">
           <caret line="32" column="52" selection-start-line="32" selection-start-column="52" selection-end-line="32" selection-end-column="52" />
           <folding>
-            <element signature="e#218#236#0" expanded="true" />
+            <element signature="e#218#236#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -916,7 +898,7 @@
           <caret line="36" column="0" selection-start-line="36" selection-start-column="0" selection-end-line="36" selection-end-column="0" />
           <folding>
             <element signature="e#0#109#1" expanded="false" />
-            <element signature="e#343#363#0" expanded="true" />
+            <element signature="e#343#363#0" expanded="false" />
             <element signature="e#489#568#0" expanded="false" />
             <element signature="e#777#993#0" expanded="false" />
             <element signature="e#1220#1315#1" expanded="false" />
@@ -972,9 +954,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1638">
           <caret line="108" column="43" selection-start-line="108" selection-start-column="43" selection-end-line="108" selection-end-column="43" />
-          <folding>
-            <element signature="e#22#40#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -982,64 +961,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="9504">
           <caret line="687" column="58" selection-start-line="687" selection-start-column="58" selection-end-line="687" selection-end-column="58" />
-          <folding>
-            <element signature="e#31#49#0" expanded="false" />
-            <element signature="e#619#698#1" expanded="false" />
-            <element signature="e#809#854#0" expanded="false" />
-            <element signature="e#1094#1180#0" expanded="false" />
-            <element signature="e#2921#2948#0" expanded="false" />
-            <element signature="e#3459#3462#0" expanded="false" />
-            <element signature="e#3672#3756#0" expanded="false" />
-            <element signature="e#4822#4846#0" expanded="false" />
-            <element signature="e#5286#5645#0" expanded="false" />
-            <element signature="e#7671#7838#0" expanded="false" />
-            <element signature="e#9963#10322#0" expanded="false" />
-            <element signature="e#11829#11852#0" expanded="false" />
-            <element signature="e#13545#13555#0" expanded="false" />
-            <element signature="e#13933#14010#0" expanded="false" />
-            <element signature="e#14353#14381#0" expanded="false" />
-            <element signature="e#14387#14464#0" expanded="false" />
-            <element signature="e#14531#14635#0" expanded="false" />
-            <element signature="e#14641#14718#0" expanded="false" />
-            <element signature="e#14780#14856#0" expanded="false" />
-            <element signature="e#14898#15282#0" expanded="false" />
-            <element signature="e#14940#15282#0" expanded="false" />
-            <element signature="e#15072#15236#0" expanded="false" />
-            <element signature="e#15325#15375#0" expanded="false" />
-            <element signature="e#15425#15505#0" expanded="false" />
-            <element signature="e#15962#16016#0" expanded="false" />
-            <element signature="e#16108#16134#0" expanded="false" />
-            <element signature="e#16302#16336#0" expanded="false" />
-            <element signature="e#16389#16393#0" expanded="false" />
-            <element signature="e#16432#16617#0" expanded="false" />
-            <element signature="e#16464#16617#0" expanded="false" />
-            <element signature="e#16556#16617#0" expanded="false" />
-            <element signature="e#16718#16960#0" expanded="false" />
-            <element signature="e#17337#17593#0" expanded="false" />
-            <element signature="e#17653#17752#0" expanded="false" />
-            <element signature="e#18081#18176#0" expanded="false" />
-            <element signature="e#18326#18347#0" expanded="false" />
-            <element signature="e#18489#18563#0" expanded="false" />
-            <element signature="e#19064#19144#0" expanded="false" />
-            <element signature="e#19183#19201#0" expanded="false" />
-            <element signature="e#19651#19728#0" expanded="false" />
-            <element signature="e#19785#19845#0" expanded="false" />
-            <element signature="e#20306#20652#0" expanded="false" />
-            <element signature="e#20420#20590#0" expanded="false" />
-            <element signature="e#20694#21054#0" expanded="false" />
-            <element signature="e#20805#21054#0" expanded="false" />
-            <element signature="e#20922#20985#0" expanded="false" />
-            <element signature="e#21101#21330#0" expanded="false" />
-            <element signature="e#21855#22149#0" expanded="false" />
-            <element signature="e#22007#22149#0" expanded="false" />
-            <element signature="e#22329#23411#0" expanded="false" />
-            <element signature="e#22487#23102#0" expanded="false" />
-            <element signature="e#23146#23330#0" expanded="false" />
-            <element signature="e#23464#23633#0" expanded="false" />
-            <element signature="e#23557#23633#0" expanded="false" />
-            <element signature="e#24006#24104#0" expanded="false" />
-            <element signature="e#25116#25213#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1047,7 +968,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1890">
           <caret line="122" column="15" selection-start-line="122" selection-start-column="15" selection-end-line="122" selection-end-column="15" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1063,7 +983,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="137">
           <caret line="134" column="4" selection-start-line="134" selection-start-column="4" selection-end-line="134" selection-end-column="4" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1144,7 +1063,7 @@
     </entry>
     <entry file="file:///usr/lib/python2.7/dist-packages/numpy/lib/function_base.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="554">
+        <state relative-caret-position="28278">
           <caret line="1600" column="4" selection-start-line="1600" selection-start-column="4" selection-end-line="1600" selection-end-column="4" />
           <folding />
         </state>
@@ -1152,7 +1071,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/pyfant/datatypes/spectrum.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="374">
+        <state relative-caret-position="5490">
           <caret line="316" column="17" selection-start-line="316" selection-start-column="17" selection-end-line="316" selection-end-column="17" />
           <folding />
         </state>
@@ -1160,7 +1079,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/pyfant/gui/ao3s/basewindows.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="157">
+        <state relative-caret-position="7362">
           <caret line="417" column="81" selection-start-line="417" selection-start-column="81" selection-end-line="417" selection-end-column="81" />
           <folding />
         </state>
@@ -1168,7 +1087,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/pyfant/gui/ao3s/a_XFileSpectrumList.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="214">
+        <state relative-caret-position="1872">
           <caret line="121" column="45" selection-start-line="121" selection-start-column="45" selection-end-line="121" selection-end-column="45" />
           <folding>
             <element signature="e#33#51#0" expanded="true" />
@@ -1178,7 +1097,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/pyfant/datatypes/filesparsecube.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="450">
+        <state relative-caret-position="3726">
           <caret line="214" column="27" selection-start-line="214" selection-start-column="27" selection-end-line="214" selection-end-column="27" />
           <folding />
         </state>
@@ -1186,7 +1105,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/pyfant/gui/ao3s/a_WSpectrumCollection.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="338">
+        <state relative-caret-position="8856">
           <caret line="509" column="0" selection-start-line="509" selection-start-column="0" selection-end-line="509" selection-end-column="0" />
           <folding>
             <element signature="e#35#53#0" expanded="true" />
@@ -1196,9 +1115,29 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/pyfant/datatypes/filesplist.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="108">
-          <caret line="111" column="91" selection-start-line="111" selection-start-column="91" selection-end-line="111" selection-end-column="91" />
+        <state relative-caret-position="252">
+          <caret line="119" column="0" selection-start-line="119" selection-start-column="0" selection-end-line="119" selection-end-column="0" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider editor-type-id="text-editor">
+        <state relative-caret-position="126">
+          <caret line="58" column="30" selection-start-line="58" selection-start-column="30" selection-end-line="58" selection-end-column="30" />
+          <folding />
+        </state>
+      </provider>
+      <provider editor-type-id="MarkdownFxPreviewEditor">
+        <state />
+      </provider>
+      <provider selected="true" editor-type-id="split-provider[text-editor;MarkdownPreviewEditor]">
+        <state split_layout="FIRST">
+          <first_editor relative-caret-position="324">
+            <caret line="18" column="26" selection-start-line="18" selection-start-column="26" selection-end-line="18" selection-end-column="26" />
+            <folding />
+          </first_editor>
+          <second_editor />
         </state>
       </provider>
     </entry>
