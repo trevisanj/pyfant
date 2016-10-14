@@ -128,10 +128,14 @@ class WSpectrumCollection(WBase):
         b.clicked.connect(self.plot_overlapped_clicked)
         lh.addWidget(b)
         ###
-        b = keep_ref(QPushButton("Calc.Mag."))
-        b.clicked.connect(self.calc_mag_clicked)
+        # b = keep_ref(QPushButton("Calc.Mag."))
+        # b.clicked.connect(self.calc_mag_clicked)
+        # lh.addWidget(b)
+        # ###
+        b = keep_ref(QPushButton("&Extract Scalar..."))
+        b.clicked.connect(self.extract_scalar_clicked)
         lh.addWidget(b)
-        ###
+        # ###
         b = keep_ref(QPushButton("Open in new window"))
         b.clicked.connect(self.open_in_new_clicked)
         lh.addWidget(b)
@@ -358,51 +362,82 @@ class WSpectrumCollection(WBase):
         if len(sspp) > 0:
             plot_spectra_overlapped(sspp)
 
-    def calc_mag_clicked(self):
+
+    def extract_scalar_clicked(self):
         sspp = self.get_selected_spectra()
         flag_emit, flag_changed_header = False, False
         if len(sspp) > 0:
+            from a_XApplySB_scalar import XApplySB_scalar
+
+            form = self.keep_ref(XApplySB_scalar())
+            if not form.exec_():
+                return
+
+            # It sth fails, will restore original
+            save = copy.deepcopy(self.collection)
 
             try:
-                specs = (("band_name", {"value": "V", "labelText": "Band name (%s)" % ("/".join(Bands.bands.keys()),)}),
-                         ("flag_force_parametric", {"value": False, "labelText": "Always use parametric band form?",
-                                                    "toolTip": "Use (center, FWHM) to calculate the band even if tabular data is available"}),
-                        )
-                form = XParametersEditor(specs=specs, title="Calculate magnitudee")
-                while True:
-                    r = form.exec_()
-                    if not r:
-                        break
-                    kk = form.get_kwargs()
-                    band_name = kk["band_name"].upper()
+                for sp in sspp:
+                    sp.more_headers[form.fieldname] = form.block.use(sp)
 
-                    if not band_name in Bands.bands.keys():
-                        show_error("Invalid band name")
-                        continue
-
-                    for sp in sspp:
-                        dict_ = sp.calculate_magnitude(band_name, kk["flag_force_parametric"])
-
-                    # appends field names so that newly calculated magnitude will appear in the table
-                    for fn in dict_["fieldnames"]:
-                        if fn not in self.collection.fieldnames:
-                            self.collection.fieldnames.append(fn)
-                            flag_changed_header = True
-                        if fn not in self.collection.fieldnames_visible:
-                            self.collection.fieldnames_visible.append(fn)
-                            flag_changed_header = True
-
-                    self.__update_gui()
-                    flag_emit = True
-                    break
+                self.__update_gui()
+                flag_emit = True
 
             except Exception as E:
-                self.add_log_error("Magnitude calculation: %s" % str(E), True)
+                self.add_log_error("Failed to extract scalar: %s" % str(E), True)
                 raise
 
         if flag_emit:
-            self.edited.emit(flag_changed_header)
+            self.edited.emit(True)
 
+
+
+
+    # def calc_mag_clicked(self):
+    #     sspp = self.get_selected_spectra()
+    #     flag_emit, flag_changed_header = False, False
+    #     if len(sspp) > 0:
+    #
+    #         try:
+    #             specs = (("band_name", {"value": "V", "labelText": "Band name (%s)" % ("/".join(Bands.bands.keys()),)}),
+    #                      ("flag_force_parametric", {"value": False, "labelText": "Always use parametric band form?",
+    #                                                 "toolTip": "Use (center, FWHM) to calculate the band even if tabular data is available"}),
+    #                     )
+    #             form = XParametersEditor(specs=specs, title="Calculate magnitudee")
+    #             while True:
+    #                 r = form.exec_()
+    #                 if not r:
+    #                     break
+    #                 kk = form.get_kwargs()
+    #                 band_name = kk["band_name"].upper()
+    #
+    #                 if not band_name in Bands.bands.keys():
+    #                     show_error("Invalid band name")
+    #                     continue
+    #
+    #                 for sp in sspp:
+    #                     dict_ = sp.calculate_magnitude(band_name, kk["flag_force_parametric"])
+    #
+    #                 # appends field names so that newly calculated magnitude will appear in the table
+    #                 for fn in dict_["fieldnames"]:
+    #                     if fn not in self.collection.fieldnames:
+    #                         self.collection.fieldnames.append(fn)
+    #                         flag_changed_header = True
+    #                     if fn not in self.collection.fieldnames_visible:
+    #                         self.collection.fieldnames_visible.append(fn)
+    #                         flag_changed_header = True
+    #
+    #                 self.__update_gui()
+    #                 flag_emit = True
+    #                 break
+    #
+    #         except Exception as E:
+    #             self.add_log_error("Magnitude calculation: %s" % str(E), True)
+    #             raise
+    #
+    #     if flag_emit:
+    #         self.edited.emit(flag_changed_header)
+    #
     def open_in_new_clicked(self):
         from .a_XFileSpectrumList import *
         ii = self.get_selected_spectrum_indexes()

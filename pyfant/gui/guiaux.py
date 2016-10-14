@@ -223,11 +223,19 @@ def place_left_top(window, width=None, height=None):
 
     window.setGeometry(_DESKTOP_OFFSET_LEFT, _DESKTOP_OFFSET_TOP, width, height)
 
-def place_center(window):
+def place_center(window, width=None, height=None):
     """Places window in the center of the screen."""
     screenGeometry = QApplication.desktop().screenGeometry()
-    x = (screenGeometry.width() - window.width()) / 2
-    y = (screenGeometry.height() - window.height()) / 2
+
+    w, h = window.width(), window.height()
+
+    if width is not None or height is not None:
+        w = width if width is not None else w
+        h = height if height is not None else h
+        window.setGeometry(0, 0, w, h)
+
+    x = (screenGeometry.width() - w) / 2
+    y = (screenGeometry.height() - h) / 2
     window.move(x, y)
 
 def snap_left(window, width=None):

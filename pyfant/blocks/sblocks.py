@@ -1,5 +1,5 @@
 __all__ = [
-"SB_Rubberband", "SB_AddNoise", "SB_FNuToFLambda", "SB_ElementWise", "SB_Extend", "SB_SNR"
+"SB_Rubberband", "SB_AddNoise", "SB_FNuToFLambda", "SB_ElementWise", "SB_Extend", "SB_scalar", "SB_scalar_SNR"
 ]
 
 
@@ -125,7 +125,7 @@ class SB_Extend(SBlock):
 class SB_scalar(SBlock):
     """Ancestor for Spectrum Blocks whose output is a scalar"""
 
-class SB_scalar_SNR(SBlock):
+class SB_scalar_SNR(SB_scalar):
     """
     Calculates Signal-to-noise ratio (SNR) using a part of the "signal" (i.e. the spectrum)
 

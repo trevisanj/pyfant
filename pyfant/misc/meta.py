@@ -1,7 +1,7 @@
 """Class & metaclass stuff"""
 
 
-__all__ = ["AttrsPart", "froze_it"]
+__all__ = ["AttrsPart", "froze_it", "collect_doc"]
 
 
 from functools import wraps
@@ -78,3 +78,28 @@ class AttrsPart(object):
         s_format = "{}={}"
         s = "; ".join([s_format.format(x, self.__getattribute__(x)) for x in self.less_attrs])
         return s
+
+
+def collect_doc(module, prefix=None, flag_exclude_prefix=True):
+    """
+    Collects class names and docstrings in module for classes starting with prefix
+
+    Arguments:
+        module -- Python module
+        prefix -- argument for str.startswith(); if not passed, does not filter (not recommended)
+        flag_exclude_prefix -- whether or not to exclude prefix from class name in result
+
+    Returns: [(classname0, docstring0), ...]
+    """
+
+    assert not (prefix is None and flag_exclude_prefix), "Cannot exclude prefix if prefix was not passed"
+
+    ret = []
+    for attrname in dir(module):
+        if not (prefix is None or attrname.startswith(prefix)):
+            continue
+
+        attr = module.__getattribute__(attrname)
+        ret.append((attrname if not flag_exclude_prefix else attrname[len(prefix):], attr.__doc__))
+
+    return ret

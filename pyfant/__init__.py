@@ -7,6 +7,7 @@ def init_agg():
 
 init_agg()
 
+from .constants import *
 from .errors import *
 from .misc import *
 from .datatypes import *
@@ -21,4 +22,5 @@ from .blocks import *
 import datatypes
 import misc
 import plotting
+import blocks
 # note that gui is not imported automatically
