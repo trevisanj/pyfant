@@ -415,7 +415,7 @@ class XFileMainWindow(XLogMainWindow):
             d = self.load_dir if self.load_dir is not None \
                 else self.save_dir if self.save_dir is not None \
                 else "."
-            new_filename = QFileDialog.getOpenFileName(self, text, d, wild)
+            new_filename = QFileDialog.getOpenFileName(self, text, d, wild+";;*.*")
             if new_filename:
                 self.load_filename(new_filename)
         except Exception as e:

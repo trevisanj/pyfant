@@ -77,72 +77,73 @@ class WFileSpectrumList(WBase):
         spp = QSplitter(Qt.Vertical)
         tt0.addTab(spp, "&Spectra")
 
-        # ##### Place Spectrum area
-        # Widget that will be handled by the scrollable area
-        sa0 = keep_ref(QScrollArea())
-        sa0.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
-        sa0.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
-        wscrw = keep_ref(QWidget())
-        sa0.setWidget(wscrw)
-        sa0.setWidgetResizable(True)
-        ###
-        lscrw = QVBoxLayout(wscrw)
-        lscrw.setMargin(3)
-        ###
-        alabel = keep_ref(QLabel("<b>Add spectrum</b>"))
-        lscrw.addWidget(alabel)
-        ###
-        # Place Spectrum variables & button
-        lg = keep_ref(QGridLayout())
-        lscrw.addLayout(lg)
-        lg.setMargin(0)
-        lg.setVerticalSpacing(4)
-        lg.setHorizontalSpacing(5)
-        # lscrw.addSpacerItem(QSpacerItem(0, 0, QSizePolicy.Minimum, QSizePolicy.Expanding))
+        # # ##### Place Spectrum area
+        # # Widget that will be handled by the scrollable area
+        # sa0 = keep_ref(QScrollArea())
+        # sa0.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
+        # sa0.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
+        # wscrw = keep_ref(QWidget())
+        # sa0.setWidget(wscrw)
+        # sa0.setWidgetResizable(True)
+        # ###
+        # lscrw = QVBoxLayout(wscrw)
+        # lscrw.setMargin(3)
+        # ###
+        # alabel = keep_ref(QLabel("<b>Add spectrum</b>"))
+        # lscrw.addWidget(alabel)
+        # ###
+        # # Place Spectrum variables & button
+        # lg = keep_ref(QGridLayout())
+        # lscrw.addLayout(lg)
+        # lg.setMargin(0)
+        # lg.setVerticalSpacing(4)
+        # lg.setHorizontalSpacing(5)
+        # # lscrw.addSpacerItem(QSpacerItem(0, 0, QSizePolicy.Minimum, QSizePolicy.Expanding))
+        #
+        # # field map: [(label widget, edit widget, field name, short description, long description), ...]
+        # pp = self._map0 = []
+        # ###
+        # x = self.label_sp = QLabel()
+        # y = self.choosesp = WChooseSpectrum()
+        # y.installEventFilter(self)
+        # y.edited.connect(self.on_colors_setup_edited)
+        # # y.setValidator(QIntValidator())
+        # x.setBuddy(y)
+        # pp.append((x, y, "&spectrum", ".dat, .fits ...", ""))
+        #
+        # for i, (label, edit, name, short_descr, long_descr) in enumerate(pp):
+        #     # label.setStyleSheet("QLabel {text-align: right}")
+        #     assert isinstance(label, QLabel)
+        #     label.setText(enc_name_descr(name, short_descr))
+        #     label.setAlignment(Qt.AlignRight)
+        #     lg.addWidget(label, i, 0)
+        #     lg.addWidget(edit, i, 1)
+        #     label.setToolTip(long_descr)
+        #     edit.setToolTip(long_descr)
+        #
+        # # button
+        # l = QHBoxLayout()
+        # lscrw.addLayout(l)
+        # l.setMargin(0)
+        # l.addSpacerItem(QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum))
+        # b = QPushButton("&Place spectrum")
+        # l.addWidget(b)
+        # b.clicked.connect(self.add_spectrum_clicked)
 
-        # field map: [(label widget, edit widget, field name, short description, long description), ...]
-        pp = self._map0 = []
-        ###
-        x = self.label_sp = QLabel()
-        y = self.choosesp = WChooseSpectrum()
-        y.installEventFilter(self)
-        y.edited.connect(self.on_colors_setup_edited)
-        # y.setValidator(QIntValidator())
-        x.setBuddy(y)
-        pp.append((x, y, "&spectrum", ".dat, .fits ...", ""))
 
-        for i, (label, edit, name, short_descr, long_descr) in enumerate(pp):
-            # label.setStyleSheet("QLabel {text-align: right}")
-            assert isinstance(label, QLabel)
-            label.setText(enc_name_descr(name, short_descr))
-            label.setAlignment(Qt.AlignRight)
-            lg.addWidget(label, i, 0)
-            lg.addWidget(edit, i, 1)
-            label.setToolTip(long_descr)
-            edit.setToolTip(long_descr)
-
-        # button
-        l = QHBoxLayout()
-        lscrw.addLayout(l)
-        l.setMargin(0)
-        l.addSpacerItem(QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum))
-        b = QPushButton("&Place spectrum")
-        l.addWidget(b)
-        b.clicked.connect(self.add_spectrum_clicked)
-
-        # ##### Existing Spectra area
+        # ##### Spectrum Collection Editor area
         wex = QWidget()
         lwex = QVBoxLayout(wex)
         lwex.setMargin(3)
-        ###
-        lwex.addWidget(keep_ref(QLabel("<b>Existing spectra</b>")))
+        # ###
+        # lwex.addWidget(keep_ref(QLabel("<b>Existing spectra</b>")))
         ###
         w = self.wsptable = WSpectrumCollection(self.parent_form)
         w.edited.connect(self.on_spectra_edited)
         lwex.addWidget(w)
 
         # ##### Finally...
-        spp.addWidget(sa0)
+        # spp.addWidget(sa0)
         spp.addWidget(wex)
 
         # #### Headers tab

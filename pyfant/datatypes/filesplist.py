@@ -107,9 +107,15 @@ class SpectrumCollection(AttrsPart):
     def add_spectrum(self, sp):
         """Adds spectrum, no content check
 
-        **Note** updates self.fieldnames to expose sp.more_headers
+        Updates self.fieldnames to expose sp.more_headers
+
+        Nullifies spectrum filename and assigns the file basename to more_headers["ORIGIN"]
         """
         assert isinstance(sp, Spectrum)
+
+        if sp.filename is not None:
+            sp.more_headers["ORIGIN"] = os.path.basename(sp.filename)
+            sp.filename = None
         self.spectra.append(sp)
 
         for name in sp.more_headers:
@@ -239,16 +245,69 @@ class SpectrumList(SpectrumCollection):
         finally:
             self.enable_update()
 
+    def from_full_cube(self, full_cube):
+        """
+        Adds all cube "pixels" (i.e., spectra) that are not all zero
+
+        Very similar to SparseCube.from_full_cube() (bit simpler)
+        """
+
+        assert isinstance(full_cube, FullCube)
+        hdu = full_cube.hdu
+        assert isinstance(hdu, fits.PrimaryHDU)
+        data = hdu.data
+        nlambda, nY, nX = data.shape
+
+        for i in range(nX):
+            for j in range(nY):
+                Yi = j + 1
+                flux0 = data[:, j, i]
+                if np.any(flux0 > 0):
+                    sp = full_cube.get_spectrum(i, j)
+                    sp.pixel_x, sp.pixel_y = i, j
+                    self.add_spectrum(sp)
+
+
     def add_spectrum(self, sp):
-        """Adds spectrum, checks if wavelengths match first"""
+        """Adds spectrum. Updates internal wavelength vector to maximum possible
+
+        If wavelength vectors do not match, it will resample the new spectrum,
+        and may expand self.wavelength, but will not shift the x-position of existing
+        points
+        """
         assert isinstance(sp, Spectrum)
         if len(sp.x) < 2:
             raise RuntimeError("Spectrum must have at least two points")
+
         if not self.flag_wled:
             self.wavelength = np.copy(sp.wavelength)
         else:
             if not np.all(self.wavelength == sp.wavelength):
-                raise RuntimeError("Cannot add spectrum, wavelength vector does not match existing")
+                print "VAI TER QUE RESAMPLEAR ALGO"
+                xcur0, xcur1 = self.wavelength[0], self.wavelength[-1]
+                xsp0, xsp1 = sp.x[0], sp.x[-1]
+
+                # quantizes new wavelength interval to current delta_lambda step
+                dl = self.delta_lambda
+
+                xnew0 = xcur0 if xcur0 <= xsp0 else xcur0-np.floor((xcur0-xsp0)*dl)/dl
+                xnew1 = xcur1 if xcur1 >= xsp1 else xcur1+np.floor((xsp1-xcur1)*dl)/dl
+
+                n = int(np.round((xnew1-xnew0)/dl))+1
+                self.wavelength = np.arange(n)*dl+xnew0
+
+                if not (xnew0 == xcur0 and xnew1 == xcur1):
+                    print "RESAMPLEANDO EXISTING"
+                    for sp_existing in self.spectra:
+                        sp_existing.resample(self.wavelength)
+
+                if not(xnew0 == xsp0 and xnew1 == xsp1 and dl == sp.delta_lambda):
+                    print "RESAMPLING NEWCOMER"
+                    sp.resample(self.wavelength)
+                else:
+                    print "NO NEED TO RESAMPLE NEWCOMER"
+
+                # raise RuntimeError("Cannot add spectrum, wavelength vector does not match existing")
 
         SpectrumCollection.add_spectrum(self, sp)
         self.__update()

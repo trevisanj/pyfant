@@ -119,7 +119,7 @@ class XFileSpectrumList(XFileMainWindow):
         """Converts from FileFullCube to FileSpectrumList format, if necessary"""
         if isinstance(f, FileFullCube):
             f1 = FileSpectrumList()
-            f1.dcube.from_full_cube(f.wcube)
+            f1.splist.from_full_cube(f.wcube)
             f = f1
         return f
 

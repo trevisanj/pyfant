@@ -7,7 +7,7 @@ Rule: no pyfant module can import util!!!
 __all__ = ["run_parallel",
            "load_any_file", "load_spectrum",
             "setup_inputs", "link_to_data", "copy_star",
-           "load_spectrum_fits_messed_x", "list_data_types"]
+           "load_spectrum_fits_messed_x", "list_data_types", "classes_sp"]
 
 # from pyfant.misc import *
 from pyfant import *
@@ -34,8 +34,7 @@ _classes_txt = [FileAbsoru2, FileHmap, FileMain, FileDissoc,
 
 _classes_bin = [FileModBin, FileSpectrumFits, FileMoo, FileFullCube, FileSparseCube, FileSpectrumList]
 
-_classes_sp = [FileModBin, FileSpectrumNulbad, FileSpectrumPfant, FileSpectrumXY,
-               FileSpectrumFits]
+classes_sp = [FileSpectrumNulbad, FileSpectrumPfant, FileSpectrumXY, FileSpectrumFits]
 
 def load_any_file(filename):
     """
@@ -53,7 +52,7 @@ def load_spectrum(filename):
     """
     Attempts to load spectrum as one of the supported types. Returns a Spectrum, or None
     """
-    f = load_with_classes(filename, _classes_sp)
+    f = load_with_classes(filename, classes_sp)
     if f:
         return f.spectrum
     return None

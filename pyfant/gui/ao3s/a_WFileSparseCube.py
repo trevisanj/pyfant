@@ -216,7 +216,7 @@ class WFileSparseCube(WBase):
         y = self.edit_fieldnames = QPlainTextEdit()
         y.textChanged.connect(self.on_header_edited)
         x.setBuddy(y)
-        pp.append((x, y, "&Field names", "'header' information for each spectrum", "", lambda: self.f.dcube.fieldnames,
+        pp.append((x, y, "&Field names", "'header' information for each spectrum", "", lambda: self.f.sparsecube.fieldnames,
                    lambda: self.edit_fieldnames.toPlainText()))
         ###
         x = self.label_width = QLabel()
@@ -225,7 +225,7 @@ class WFileSparseCube(WBase):
         y.setMinimum(1)
         y.setMaximum(1000)
         x.setBuddy(y)
-        pp.append((x, y, "&width", "hi-resolution (HR) width (pixels)", "", lambda: self.f.dcube.width,
+        pp.append((x, y, "&width", "hi-resolution (HR) width (pixels)", "", lambda: self.f.sparsecube.width,
                    lambda: self.spinbox_width.value()))
         ###
         x = self.label_height = QLabel()
@@ -235,7 +235,7 @@ class WFileSparseCube(WBase):
         y.setMaximum(1000)
         x.setBuddy(y)
         pp.append(
-            (x, y, "&height", "HR height (pixels)", "", lambda: self.f.dcube.height, lambda: self.spinbox_height.value()))
+            (x, y, "&height", "HR height (pixels)", "", lambda: self.f.sparsecube.height, lambda: self.spinbox_height.value()))
         ###
         x = self.label_hrfactor = QLabel()
         y = self.spinbox_hrfactor = QSpinBox()
@@ -243,7 +243,7 @@ class WFileSparseCube(WBase):
         y.setMinimum(1)
         y.setMaximum(100)
         x.setBuddy(y)
-        pp.append((x, y, "&hrfactor", "(HR width)/(ifu width)", "", lambda: self.f.dcube.hrfactor,
+        pp.append((x, y, "&hrfactor", "(HR width)/(ifu width)", "", lambda: self.f.sparsecube.hrfactor,
                    lambda: self.spinbox_hrfactor.value()))
         ###
         x = self.label_hr_pix_size = QLabel()
@@ -252,7 +252,7 @@ class WFileSparseCube(WBase):
         y.textEdited.connect(self.on_header_edited)
         y.setValidator(QDoubleValidator(0, 1, 7))
         x.setBuddy(y)
-        pp.append((x, y, "&hr_pix_size", "HR pixel width/height (arcsec)", "", lambda: self.f.dcube.hr_pix_size,
+        pp.append((x, y, "&hr_pix_size", "HR pixel width/height (arcsec)", "", lambda: self.f.sparsecube.hr_pix_size,
                    lambda: float(self.lineEdit_hr_pix_size.text())))
         ###
         x = self.label_hrfactor = QLabel()
@@ -263,7 +263,7 @@ class WFileSparseCube(WBase):
         y.setSingleStep(100)
         x.setBuddy(y)
         pp.append(
-            (x, y, "&R", "resolution (delta lambda)/lambda", "", lambda: self.f.dcube.R, lambda: self.spinbox_R.value()))
+            (x, y, "&R", "resolution (delta lambda)/lambda", "", lambda: self.f.sparsecube.R, lambda: self.spinbox_R.value()))
 
         for i, (label, edit, name, short_descr, long_descr, f_from_f, f_from_edit) in enumerate(pp):
             # label.setStyleSheet("QLabel {text-align: right}")
@@ -383,7 +383,7 @@ class WFileSparseCube(WBase):
     def load(self, x):
         assert isinstance(x, FileSparseCube)
         self.f = x
-        self.wsptable.set_collection(x.dcube)
+        self.wsptable.set_collection(x.sparsecube)
         self.__update_gui(True)
         self.flag_valid = True  # assuming that file does not come with errors
         self.setEnabled(True)
@@ -433,7 +433,7 @@ class WFileSparseCube(WBase):
             if not sp:
                 raise RuntimeError("Spectrum not loaded")
             sp.pixel_x, sp.pixel_y = x, y
-            self.f.dcube.add_spectrum(sp)
+            self.f.sparsecube.add_spectrum(sp)
             self.__update_gui()
             flag_emit = True
         except Exception as E:
@@ -446,7 +446,7 @@ class WFileSparseCube(WBase):
         self.__update_gui_header()
 
     def header_apply(self):
-        if self.__update_f_header(self.f.dcube):
+        if self.__update_f_header(self.f.sparsecube):
             self.__update_gui(True)
 
     def current_tab_changed_vis(self):
@@ -464,7 +464,7 @@ class WFileSparseCube(WBase):
 
     def crop_clicked(self):
         try:
-            sky = self.f.dcube
+            sky = self.f.sparsecube
 
             specs = (("x_range", {"value": "[%d, %d]" % (0, sky.width - 1)}),
                      ("y_range", {"value": "[%d, %d]" % (0, sky.height - 1)}),
@@ -493,7 +493,7 @@ class WFileSparseCube(WBase):
                 clone = copy.deepcopy(self.f)
                 clone.filename = None
                 try:
-                    clone.dcube.crop(x0, x1, y0, y1, lambda0, lambda1)
+                    clone.sparsecube.crop(x0, x1, y0, y1, lambda0, lambda1)
                 except Exception as E:
                     self.add_log_error("Crop operation failed: %s" % str_exc(E), True)
                     continue
@@ -517,7 +517,7 @@ class WFileSparseCube(WBase):
         if fn:
             try:
                 fn = str(fn)
-                wcube = self.f.dcube.to_full_cube()
+                wcube = self.f.sparsecube.to_full_cube()
                 fccube = FileFullCube()
                 fccube.wcube = wcube
                 fccube.save_as(fn)
@@ -530,14 +530,14 @@ class WFileSparseCube(WBase):
 
     def on_colors_click(self, event):
         x, y = int(event.xdata + .5), int(event.ydata + .5)
-        if 0 <= x < self.f.dcube.width and 0 <= y < self.f.dcube.height:
+        if 0 <= x < self.f.sparsecube.width and 0 <= y < self.f.sparsecube.height:
             self.spinbox_X.setValue(x)
             self.spinbox_Y.setValue(y)
             self.plot_colors()
 
     def on_collect_fieldnames(self):
         # TODO confirmation
-        self.edit_fieldnames.setPlainText(str(self.f.dcube.collect_fieldnames()))
+        self.edit_fieldnames.setPlainText(str(self.f.sparsecube.collect_fieldnames()))
 
     # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * #
     # # Internal gear
@@ -548,11 +548,11 @@ class WFileSparseCube(WBase):
 
     def get_place_spectrum_xy(self):
         x = int(self.spinbox_X.value())
-        if not (0 <= x < self.f.dcube.width):
-            raise RuntimeError("x must be in [0, %s)" % self.f.dcube.width)
+        if not (0 <= x < self.f.sparsecube.width):
+            raise RuntimeError("x must be in [0, %s)" % self.f.sparsecube.width)
         y = int(self.spinbox_Y.value())
-        if not (0 <= y < self.f.dcube.height):
-            raise RuntimeError("y must be in [0, %s)" % self.f.dcube.height)
+        if not (0 <= y < self.f.sparsecube.height):
+            raise RuntimeError("y must be in [0, %s)" % self.f.sparsecube.height)
         return x, y
 
     def __update_gui(self, flag_header=False):
@@ -588,7 +588,7 @@ class WFileSparseCube(WBase):
 
     def __update_gui_header(self):
         """Updates header controls only"""
-        sky = self.f.dcube
+        sky = self.f.sparsecube
         self.spinbox_width.setValue(sky.width)
         self.spinbox_height.setValue(sky.height)
         self.spinbox_hrfactor.setValue(sky.hrfactor)
@@ -608,7 +608,7 @@ class WFileSparseCube(WBase):
 
     def __update_f(self):
         o = self.f
-        sky = self.f.dcube
+        sky = self.f.sparsecube
         self.flag_valid = self.__update_f_header(sky)
 
     def __update_f_header(self, sky):
@@ -657,7 +657,7 @@ class WFileSparseCube(WBase):
             fig = self.figure0
             fig.clear()
             ax = fig.gca(projection='3d')
-            draw_cube_3d(ax, self.f.dcube)
+            draw_cube_3d(ax, self.f.sparsecube)
             fig.tight_layout()
             self.canvas0.draw()
 
@@ -685,7 +685,7 @@ class WFileSparseCube(WBase):
                 sqx, sqy = self.get_place_spectrum_xy()
             except:
                 pass  # Nevermind (does not draw square)
-            self.obj_square = draw_cube_colors(ax, self.f.dcube, vrange, sqx, sqy, flag_scale, method)
+            self.obj_square = draw_cube_colors(ax, self.f.sparsecube, vrange, sqx, sqy, flag_scale, method)
 
             fig.tight_layout()
             self.canvas1.draw()

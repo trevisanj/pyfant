@@ -9,12 +9,12 @@ import numpy as np
 from itertools import product, combinations, cycle
 
 _ZERO_OFFSET = 0.
-def draw_cube_3d(ax, dcube, height_threshold=15):
+def draw_cube_3d(ax, sparsecube, height_threshold=15):
     """
     Plots front and back grid, scaled fluxes, into existing axis
 
     Arguments:
-        dcube -- DataCube instance
+        sparsecube -- SparseCube instance
         height_threshold -- maximum cube height to plot actual spectra.
          If the cube height is greated than this, line segments will be drawn
          instead of plotting the spectra (for speed)
@@ -25,17 +25,17 @@ def draw_cube_3d(ax, dcube, height_threshold=15):
     Y pixel coordinate   z
     Z wavelength         y
     """
-    assert isinstance(dcube, SparseCube)
+    assert isinstance(sparsecube, SparseCube)
 
-    flag_segments = dcube.height > height_threshold
-    flag_empty = len(dcube.spectra) == 0
-    r0 = [_ZERO_OFFSET, dcube.width +_ZERO_OFFSET]
-    r2 = [_ZERO_OFFSET, dcube.height +_ZERO_OFFSET]
+    flag_segments = sparsecube.height > height_threshold
+    flag_empty = len(sparsecube.spectra) == 0
+    r0 = [_ZERO_OFFSET, sparsecube.width +_ZERO_OFFSET]
+    r2 = [_ZERO_OFFSET, sparsecube.height +_ZERO_OFFSET]
     if flag_empty:
         r1 = [_ZERO_OFFSET, 1+_ZERO_OFFSET]
     else:
-        max_flux = max([max(sp.flux) for sp in dcube.spectra])
-        _y = dcube.wavelength
+        max_flux = max([max(sp.flux) for sp in sparsecube.spectra])
+        _y = sparsecube.wavelength
         dlambda = _y[1] - _y[0]
         r1 = [_y[0] - dlambda / 2, _y[-1] + dlambda / 2]
         scale = 1. / max_flux
@@ -55,14 +55,14 @@ def draw_cube_3d(ax, dcube, height_threshold=15):
                 draw_line(*zip(s, e), lw=2)
 
     # draws grids
-    for i in range(dcube.width):
+    for i in range(sparsecube.width):
         draw_line([i + _ZERO_OFFSET] * 2, [r1[0]] * 2, r2)
         draw_line([i + _ZERO_OFFSET] * 2, [r1[1]] * 2, r2)
-    for i in range(dcube.height):
+    for i in range(sparsecube.height):
         draw_line(r0, [r1[0]] * 2, [i + _ZERO_OFFSET] * 2)
         draw_line(r0, [r1[1]] * 2, [i + _ZERO_OFFSET] * 2)
 
-    for sp in dcube.spectra:
+    for sp in sparsecube.spectra:
         if flag_segments:
             flux1 = sp.flux[(0, -1),] * scale + sp.pixel_y + _ZERO_OFFSET
             ax.plot(np.array([1, 1]) * sp.pixel_x + _ZERO_OFFSET + .5,
@@ -80,9 +80,9 @@ def draw_cube_3d(ax, dcube, height_threshold=15):
     ax.set_ylabel('wavelength ($\AA$)')  # ax.set_ylabel('wavelength ($\AA$)')
     ax.set_zlabel('y (pixel)')
 
-    ax.set_ylim([dcube.wavelength[0], dcube.wavelength[-1]])
-    ax.set_zlim([_ZERO_OFFSET, _ZERO_OFFSET+dcube.height])
-    ax.set_xlim([_ZERO_OFFSET, _ZERO_OFFSET+dcube.width])
+    ax.set_ylim([sparsecube.wavelength[0], sparsecube.wavelength[-1]])
+    ax.set_zlim([_ZERO_OFFSET, _ZERO_OFFSET+sparsecube.height])
+    ax.set_xlim([_ZERO_OFFSET, _ZERO_OFFSET+sparsecube.width])
     ax.zaxis.set_major_locator(MaxNLocator(integer=True))
 
 
@@ -92,7 +92,7 @@ def draw_cube_colors(ax, sparsecube, vrange, sqx=None, sqy=None, flag_scale=Fals
 
     Arguments
       ax -- matplotlib axis
-      sky -- DataCube instance
+      sparsecube -- SparseCube instance
       vrange -- visible range
       sqx -- "place spectrum" x
       sqy -- "place spectrum" y

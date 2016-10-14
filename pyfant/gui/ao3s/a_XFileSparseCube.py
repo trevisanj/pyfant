@@ -120,6 +120,6 @@ class XFileSparseCube(XFileMainWindow):
         """Converts from FileFullCube to FileSparseCube format, if necessary"""
         if isinstance(f, FileFullCube):
             f1 = FileSparseCube()
-            f1.dcube.from_full_cube(f.wcube)
+            f1.sparsecube.from_full_cube(f.wcube)
             f = f1
         return f

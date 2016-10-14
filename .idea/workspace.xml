@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="BookmarkManager">
+    <bookmark url="file://$PROJECT_DIR$/pyfant/gui/ao3s/a_WSpectrumCollection.py" line="223" mnemonic="3" />
+    <bookmark url="file://$PROJECT_DIR$/pyfant/gui/ao3s/a_WSpectrumCollection.py" line="90" mnemonic="4" />
+    <bookmark url="file://$PROJECT_DIR$/pyfant/gui/ao3s/a_WSpectrumCollection.py" line="509" mnemonic="5" />
+    <bookmark url="file://$PROJECT_DIR$/pyfant/gui/ao3s/a_WSpectrumCollection.py" line="517" mnemonic="8" />
+    <bookmark url="file://$PROJECT_DIR$/pyfant/gui/a_WCollapsiblePanel.py" line="25" mnemonic="9" />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="809047b1-bc86-4354-a64b-821ca449f470" name="Default" comment="" />
     <ignored path="pyfant.iws" />
@@ -20,25 +27,68 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="a_WChooseSpectrum.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/pyfant/gui/ao3s/a_WChooseSpectrum.py">
+      <file leaf-file-name="a_WFileSpectrumList.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/pyfant/gui/ao3s/a_WFileSpectrumList.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="304">
-              <caret line="84" column="25" selection-start-line="84" selection-start-column="25" selection-end-line="84" selection-end-column="25" />
+            <state relative-caret-position="2124">
+              <caret line="135" column="0" selection-start-line="135" selection-start-column="0" selection-end-line="135" selection-end-column="0" />
               <folding>
-                <element signature="e#66#92#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="a_XFileSparseCube.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/pyfant/gui/ao3s/a_XFileSparseCube.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding>
-                <element signature="e#31#49#0" expanded="true" />
+                <element signature="e#33#51#0" expanded="true" />
+                <element signature="e#543#624#1" expanded="false" />
+                <element signature="e#735#780#0" expanded="false" />
+                <element signature="e#6433#6596#0" expanded="false" />
+                <element signature="e#6725#7084#0" expanded="false" />
+                <element signature="e#8487#8547#0" expanded="false" />
+                <element signature="e#9238#9315#0" expanded="false" />
+                <element signature="e#9366#9611#0" expanded="false" />
+                <element signature="e#9666#10352#0" expanded="false" />
+                <element signature="e#9852#10043#0" expanded="false" />
+                <element signature="e#10087#10271#0" expanded="false" />
+                <element signature="e#10397#10425#0" expanded="false" />
+                <element signature="e#10431#10508#0" expanded="false" />
+                <element signature="e#10575#10632#0" expanded="false" />
+                <element signature="e#10638#10715#0" expanded="false" />
+                <element signature="e#10777#10874#0" expanded="false" />
+                <element signature="e#10819#10874#0" expanded="false" />
+                <element signature="e#10916#11300#0" expanded="false" />
+                <element signature="e#10958#11300#0" expanded="false" />
+                <element signature="e#11090#11254#0" expanded="false" />
+                <element signature="e#11346#11781#0" expanded="false" />
+                <element signature="e#11389#11630#0" expanded="false" />
+                <element signature="e#11674#11728#0" expanded="false" />
+                <element signature="e#11820#11846#0" expanded="false" />
+                <element signature="e#11884#11965#0" expanded="false" />
+                <element signature="e#12014#12095#0" expanded="false" />
+                <element signature="e#12027#12062#0" expanded="false" />
+                <element signature="e#12148#12152#0" expanded="false" />
+                <element signature="e#12190#13471#0" expanded="false" />
+                <element signature="e#12207#13352#0" expanded="false" />
+                <element signature="e#12463#13352#0" expanded="false" />
+                <element signature="e#12635#12725#0" expanded="false" />
+                <element signature="e#12785#12884#0" expanded="false" />
+                <element signature="e#13193#13288#0" expanded="false" />
+                <element signature="e#13397#13471#0" expanded="false" />
+                <element signature="e#13515#13564#0" expanded="false" />
+                <element signature="e#13607#13868#0" expanded="false" />
+                <element signature="e#13791#13868#0" expanded="false" />
+                <element signature="e#13918#13955#0" expanded="false" />
+                <element signature="e#13961#13985#0" expanded="false" />
+                <element signature="e#14151#14254#0" expanded="false" />
+                <element signature="e#14356#14477#0" expanded="false" />
+                <element signature="e#14483#14560#0" expanded="false" />
+                <element signature="e#14617#14677#0" expanded="false" />
+                <element signature="e#14734#15044#0" expanded="false" />
+                <element signature="e#14848#14982#0" expanded="false" />
+                <element signature="e#15091#15316#0" expanded="false" />
+                <element signature="e#15361#15536#0" expanded="false" />
+                <element signature="e#15578#15582#0" expanded="false" />
+                <element signature="e#15637#15931#0" expanded="false" />
+                <element signature="e#15789#15931#0" expanded="false" />
+                <element signature="e#15967#16026#0" expanded="false" />
+                <element signature="e#16071#16222#0" expanded="false" />
+                <element signature="e#16267#16597#0" expanded="false" />
+                <element signature="e#16643#16941#0" expanded="false" />
+                <element signature="e#16986#17086#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -47,8 +97,8 @@
       <file leaf-file-name="a_XFileSpectrumList.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/pyfant/gui/ao3s/a_XFileSpectrumList.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="342">
-              <caret line="19" column="34" selection-start-line="19" selection-start-column="34" selection-end-line="19" selection-end-column="34" />
+            <state relative-caret-position="214">
+              <caret line="121" column="45" selection-start-line="121" selection-start-column="45" selection-end-line="121" selection-end-column="45" />
               <folding>
                 <element signature="e#33#51#0" expanded="true" />
               </folding>
@@ -56,157 +106,86 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="__init__.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/pyfant/gui/ao3s/__init__.py">
+      <file leaf-file-name="basewindows.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/pyfant/gui/ao3s/basewindows.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="198">
-              <caret line="11" column="0" selection-start-line="11" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
-              <folding>
-                <element signature="e#20#46#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="a_WFileSpectrumList.py" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/pyfant/gui/ao3s/a_WFileSpectrumList.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="805">
-              <caret line="132" column="32" selection-start-line="132" selection-start-column="32" selection-end-line="132" selection-end-column="32" />
-              <folding>
-                <element signature="e#33#51#0" expanded="true" />
-                <element signature="e#543#624#1" expanded="false" />
-                <element signature="e#735#780#0" expanded="false" />
-                <element signature="e#2522#2549#0" expanded="false" />
-                <element signature="e#3058#3061#0" expanded="false" />
-                <element signature="e#3271#3355#0" expanded="false" />
-                <element signature="e#3892#4251#0" expanded="false" />
-                <element signature="e#6291#6454#0" expanded="false" />
-                <element signature="e#6583#6942#0" expanded="false" />
-                <element signature="e#8345#8405#0" expanded="false" />
-                <element signature="e#9096#9173#0" expanded="false" />
-                <element signature="e#9224#9469#0" expanded="false" />
-                <element signature="e#9524#10210#0" expanded="false" />
-                <element signature="e#9710#9901#0" expanded="false" />
-                <element signature="e#9945#10129#0" expanded="false" />
-                <element signature="e#10255#10283#0" expanded="false" />
-                <element signature="e#10289#10366#0" expanded="false" />
-                <element signature="e#10433#10490#0" expanded="false" />
-                <element signature="e#10496#10573#0" expanded="false" />
-                <element signature="e#10635#10732#0" expanded="false" />
-                <element signature="e#10677#10732#0" expanded="false" />
-                <element signature="e#10774#11158#0" expanded="false" />
-                <element signature="e#10816#11158#0" expanded="false" />
-                <element signature="e#10948#11112#0" expanded="false" />
-                <element signature="e#11204#11639#0" expanded="false" />
-                <element signature="e#11247#11488#0" expanded="false" />
-                <element signature="e#11532#11586#0" expanded="false" />
-                <element signature="e#11678#11704#0" expanded="false" />
-                <element signature="e#11742#11823#0" expanded="false" />
-                <element signature="e#11872#11953#0" expanded="false" />
-                <element signature="e#11885#11920#0" expanded="false" />
-                <element signature="e#12006#12010#0" expanded="false" />
-                <element signature="e#12048#13329#0" expanded="false" />
-                <element signature="e#12065#13210#0" expanded="false" />
-                <element signature="e#12321#13210#0" expanded="false" />
-                <element signature="e#12493#12583#0" expanded="false" />
-                <element signature="e#12643#12742#0" expanded="false" />
-                <element signature="e#13051#13146#0" expanded="false" />
-                <element signature="e#13255#13329#0" expanded="false" />
-                <element signature="e#13373#13422#0" expanded="false" />
-                <element signature="e#13465#13726#0" expanded="false" />
-                <element signature="e#13649#13726#0" expanded="false" />
-                <element signature="e#13776#13813#0" expanded="false" />
-                <element signature="e#13819#13843#0" expanded="false" />
-                <element signature="e#14009#14112#0" expanded="false" />
-                <element signature="e#14214#14335#0" expanded="false" />
-                <element signature="e#14341#14418#0" expanded="false" />
-                <element signature="e#14475#14535#0" expanded="false" />
-                <element signature="e#14592#14902#0" expanded="false" />
-                <element signature="e#14706#14840#0" expanded="false" />
-                <element signature="e#14949#15174#0" expanded="false" />
-                <element signature="e#15219#15394#0" expanded="false" />
-                <element signature="e#15436#15440#0" expanded="false" />
-                <element signature="e#15495#15789#0" expanded="false" />
-                <element signature="e#15647#15789#0" expanded="false" />
-                <element signature="e#15825#15884#0" expanded="false" />
-                <element signature="e#15929#16080#0" expanded="false" />
-                <element signature="e#16125#16455#0" expanded="false" />
-                <element signature="e#16501#16799#0" expanded="false" />
-                <element signature="e#16844#16944#0" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="a_XQuery.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/pyfant/gui/ao3s/a_XQuery.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="212">
-              <caret line="108" column="43" selection-start-line="108" selection-start-column="43" selection-end-line="108" selection-end-column="43" />
-              <folding>
-                <element signature="e#22#40#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="filesplist.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/pyfant/datatypes/filesplist.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="412">
-              <caret line="287" column="39" selection-start-line="287" selection-start-column="39" selection-end-line="287" selection-end-column="39" />
+            <state relative-caret-position="157">
+              <caret line="417" column="81" selection-start-line="417" selection-start-column="81" selection-end-line="417" selection-end-column="81" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="baseblocks.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/pyfant/blocks/baseblocks.py">
+      <file leaf-file-name="draw_cube.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/pyfant/plotting/draw_cube.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="137">
-              <caret line="32" column="52" selection-start-line="32" selection-start-column="52" selection-end-line="32" selection-end-column="52" />
+            <state relative-caret-position="1782">
+              <caret line="105" column="17" selection-start-line="105" selection-start-column="17" selection-end-line="105" selection-end-column="17" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="a_WSpectrumCollection.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/pyfant/gui/ao3s/a_WSpectrumCollection.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="338">
+              <caret line="509" column="0" selection-start-line="509" selection-start-column="0" selection-end-line="509" selection-end-column="0" />
               <folding>
-                <element signature="e#218#236#0" expanded="true" />
+                <element signature="e#35#53#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="__init__.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/pyfant/blocks/__init__.py">
+      <file leaf-file-name="a_WCollapsiblePanel.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/pyfant/gui/a_WCollapsiblePanel.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="36">
-              <caret line="2" column="22" selection-start-line="2" selection-start-column="22" selection-end-line="2" selection-end-column="22" />
+            <state relative-caret-position="918">
+              <caret line="52" column="108" selection-start-line="52" selection-start-column="108" selection-end-line="52" selection-end-column="108" />
               <folding>
-                <element signature="e#0#25#0" expanded="true" />
+                <element signature="e#34#60#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="slblocks.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/pyfant/blocks/slblocks.py">
+      <file leaf-file-name="filesparsecube.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/pyfant/datatypes/filesparsecube.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding>
-                <element signature="e#103#121#0" expanded="true" />
-                <element signature="e#369#420#0" expanded="false" />
-                <element signature="e#460#609#0" expanded="false" />
-                <element signature="e#652#1140#0" expanded="false" />
-                <element signature="e#861#1140#0" expanded="false" />
-                <element signature="e#1182#1344#0" expanded="false" />
-                <element signature="e#1182#1344#2" expanded="false" />
-                <element signature="e#1392#2096#0" expanded="false" />
-                <element signature="e#1392#1579#1" expanded="false" />
-                <element signature="e#1626#1684#0" expanded="false" />
-                <element signature="e#1724#2096#0" expanded="false" />
-                <element signature="e#2138#3344#0" expanded="false" />
-                <element signature="e#2138#2519#1" expanded="false" />
-                <element signature="e#2651#2717#0" expanded="false" />
-                <element signature="e#2757#3344#0" expanded="false" />
-              </folding>
+            <state relative-caret-position="450">
+              <caret line="214" column="27" selection-start-line="214" selection-start-column="27" selection-end-line="214" selection-end-column="27" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="filesplist.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/pyfant/datatypes/filesplist.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="108">
+              <caret line="111" column="91" selection-start-line="111" selection-start-column="91" selection-end-line="111" selection-end-column="91" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="spectrum.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/pyfant/datatypes/spectrum.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="374">
+              <caret line="316" column="17" selection-start-line="316" selection-start-column="17" selection-end-line="316" selection-end-column="17" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="function_base.py" pinned="false" current-in-tab="false">
+        <entry file="file:///usr/lib/python2.7/dist-packages/numpy/lib/function_base.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="554">
+              <caret line="1600" column="4" selection-start-line="1600" selection-start-column="4" selection-end-line="1600" selection-end-column="4" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -223,12 +202,9 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/pyfant/datatypes/filemolecules.py" />
-        <option value="$PROJECT_DIR$/pyfant/datatypes/filepar.py" />
         <option value="$PROJECT_DIR$/pyfant/datatypes/filetoh.py" />
         <option value="$PROJECT_DIR$/pyfant/misc/physics.py" />
         <option value="$PROJECT_DIR$/pyfant/datatypes/fileabsoru2.py" />
-        <option value="$PROJECT_DIR$/pyfant/util.py" />
         <option value="$PROJECT_DIR$/pyfant/datatypes/filemod.py" />
         <option value="$PROJECT_DIR$/pyfant/datatypes/filedissoc.py" />
         <option value="$PROJECT_DIR$/pyfant/datatypes/filemain.py" />
@@ -237,7 +213,6 @@
         <option value="$PROJECT_DIR$/pyfant/datatypes/fileoptions.py" />
         <option value="$PROJECT_DIR$/pyfant/datatypes/filehmap.py" />
         <option value="$PROJECT_DIR$/pyfant/datatypes/filefullcube.py" />
-        <option value="$PROJECT_DIR$/pyfant/datatypes/filesparsecube.py" />
         <option value="$PROJECT_DIR$/pyfant/datatypes/fileabxfwhm.py" />
         <option value="$PROJECT_DIR$/pyfant/datatypes/spectrum.py" />
         <option value="$PROJECT_DIR$/scripts/explorer.py" />
@@ -261,19 +236,23 @@
         <option value="$PROJECT_DIR$/pyfant/blocks/slblocks.py" />
         <option value="$PROJECT_DIR$/pyfant/blocks/sblocks.py" />
         <option value="$PROJECT_DIR$/pyfant/misc/matplotlibaux.py" />
-        <option value="$PROJECT_DIR$/pyfant/gui/ao3s/basewindows.py" />
         <option value="$PROJECT_DIR$/pyfant/gui/ao3s/windows.py" />
-        <option value="$PROJECT_DIR$/pyfant/gui/ao3s/a_XFileSparseCube.py" />
         <option value="$PROJECT_DIR$/pyfant/gui/ao3s/a_WChooseSpectrum.py" />
-        <option value="$PROJECT_DIR$/pyfant/gui/ao3s/a_WFileSparseCube.py" />
         <option value="$PROJECT_DIR$/pyfant/gui/ao3s/__init__.py" />
-        <option value="$PROJECT_DIR$/pyfant/gui/ao3s/a_XFileSpectrumList.py" />
-        <option value="$PROJECT_DIR$/pyfant/gui/ao3s/a_WFileSpectrumList.py" />
-        <option value="$PROJECT_DIR$/pyfant/gui/ao3s/a_WSpectrumCollection.py" />
         <option value="$PROJECT_DIR$/pyfant/gui/ao3s/a_XQuery.py" />
         <option value="$PROJECT_DIR$/pyfant/blocks/__init__.py" />
-        <option value="$PROJECT_DIR$/pyfant/datatypes/filesplist.py" />
         <option value="$PROJECT_DIR$/pyfant/blocks/baseblocks.py" />
+        <option value="$PROJECT_DIR$/pyfant/util.py" />
+        <option value="$PROJECT_DIR$/pyfant/gui/ao3s/a_WFileSparseCube.py" />
+        <option value="$PROJECT_DIR$/pyfant/gui/ao3s/a_XFileSparseCube.py" />
+        <option value="$PROJECT_DIR$/pyfant/plotting/draw_cube.py" />
+        <option value="$PROJECT_DIR$/pyfant/gui/ao3s/a_WFileSpectrumList.py" />
+        <option value="$PROJECT_DIR$/pyfant/gui/a_WCollapsiblePanel.py" />
+        <option value="$PROJECT_DIR$/pyfant/datatypes/filesparsecube.py" />
+        <option value="$PROJECT_DIR$/pyfant/gui/ao3s/basewindows.py" />
+        <option value="$PROJECT_DIR$/pyfant/gui/ao3s/a_XFileSpectrumList.py" />
+        <option value="$PROJECT_DIR$/pyfant/gui/ao3s/a_WSpectrumCollection.py" />
+        <option value="$PROJECT_DIR$/pyfant/datatypes/filesplist.py" />
       </list>
     </option>
   </component>
@@ -307,6 +286,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -371,28 +351,6 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="gui" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ao3s" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="pyfant" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="pyfant" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="pyfant" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
               <option name="myItemId" value="blocks" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -400,7 +358,6 @@
         </subPane>
       </pane>
       <pane id="Scratches" />
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -630,105 +587,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/pyfant/misc/physics.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="101">
-          <caret line="115" column="39" selection-start-line="115" selection-start-column="39" selection-end-line="115" selection-end-column="39" />
-          <folding>
-            <element signature="e#134#152#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pyfant/datatypes/fileabsoru2.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="144">
-          <caret line="8" column="85" selection-start-line="8" selection-start-column="85" selection-end-line="8" selection-end-column="85" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pyfant/util.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="126">
-          <caret line="305" column="51" selection-start-line="305" selection-start-column="51" selection-end-line="305" selection-end-column="51" />
-          <folding>
-            <element signature="e#0#109#1" expanded="false" />
-            <element signature="e#329#349#0" expanded="true" />
-            <element signature="e#475#554#0" expanded="false" />
-            <element signature="e#763#979#0" expanded="false" />
-            <element signature="e#1099#1199#0" expanded="false" />
-            <element signature="e#1234#1546#0" expanded="false" />
-            <element signature="e#1234#1329#1" expanded="false" />
-            <element signature="e#1582#1783#0" expanded="false" />
-            <element signature="e#1582#1682#1" expanded="false" />
-            <element signature="e#1846#2854#0" expanded="false" />
-            <element signature="e#2094#2838#0" expanded="false" />
-            <element signature="e#2679#2838#0" expanded="false" />
-            <element signature="e#2857#2957#0" expanded="false" />
-            <element signature="e#3077#4937#0" expanded="false" />
-            <element signature="e#3077#3407#1" expanded="false" />
-            <element signature="e#3493#3575#0" expanded="false" />
-            <element signature="e#3721#3764#0" expanded="false" />
-            <element signature="e#3852#4668#0" expanded="false" />
-            <element signature="e#3876#4668#0" expanded="false" />
-            <element signature="e#4239#4430#0" expanded="false" />
-            <element signature="e#4277#4408#0" expanded="false" />
-            <element signature="e#4480#4599#0" expanded="false" />
-            <element signature="e#4687#4763#0" expanded="false" />
-            <element signature="e#5064#6862#0" expanded="false" />
-            <element signature="e#5064#5589#1" expanded="false" />
-            <element signature="e#6084#6443#0" expanded="false" />
-            <element signature="e#6244#6443#0" expanded="false" />
-            <element signature="e#6286#6436#0" expanded="false" />
-            <element signature="e#6305#6421#0" expanded="false" />
-            <element signature="e#6893#7187#0" expanded="false" />
-            <element signature="e#7225#7549#0" expanded="false" />
-            <element signature="e#7611#9134#0" expanded="false" />
-            <element signature="e#7611#7861#1" expanded="false" />
-            <element signature="e#7887#9134#0" expanded="false" />
-            <element signature="e#8128#8204#0" expanded="false" />
-            <element signature="e#8231#8720#0" expanded="false" />
-            <element signature="e#8351#8442#0" expanded="false" />
-            <element signature="e#8477#8720#0" expanded="false" />
-            <element signature="e#8574#8720#0" expanded="false" />
-            <element signature="e#8616#8720#0" expanded="false" />
-            <element signature="e#8760#9134#0" expanded="false" />
-            <element signature="e#8781#9035#0" expanded="false" />
-            <element signature="e#8825#8890#0" expanded="false" />
-            <element signature="e#9183#10119#0" expanded="false" />
-            <element signature="e#9183#9372#1" expanded="false" />
-            <element signature="e#9405#10119#0" expanded="false" />
-            <element signature="e#9553#9629#0" expanded="false" />
-            <element signature="e#9656#9893#0" expanded="false" />
-            <element signature="e#9806#9893#0" expanded="false" />
-            <element signature="e#9933#10119#0" expanded="false" />
-            <element signature="e#9954#10021#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pyfant/datatypes/filemod.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="155">
-          <caret line="114" column="40" selection-start-line="114" selection-start-column="40" selection-end-line="114" selection-end-column="40" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pyfant/datatypes/filedissoc.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
-          <caret line="7" column="21" selection-start-line="7" selection-start-column="21" selection-end-line="7" selection-end-column="21" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pyfant/datatypes/filemain.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="126">
-          <caret line="9" column="34" selection-start-line="9" selection-start-column="34" selection-end-line="9" selection-end-column="34" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/pyfant/datatypes/fileabonds.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1278">
@@ -768,14 +626,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/pyfant/datatypes/filesparsecube.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="6444">
-          <caret line="365" column="43" selection-start-line="365" selection-start-column="43" selection-end-line="365" selection-end-column="43" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/pyfant/datatypes/fileabxfwhm.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="360">
@@ -791,14 +641,6 @@
           <folding>
             <element signature="e#0#22#0" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pyfant/datatypes/spectrum.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="252">
-          <caret line="482" column="47" selection-start-line="482" selection-start-column="47" selection-end-line="482" selection-end-column="47" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -820,7 +662,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="36">
           <caret line="2" column="16" selection-start-line="2" selection-start-column="16" selection-end-line="2" selection-end-column="16" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -916,7 +757,7 @@
         <state relative-caret-position="0">
           <caret line="0" column="2" selection-start-line="0" selection-start-column="2" selection-end-line="0" selection-end-column="2" />
           <folding>
-            <element signature="e#19#62#0" expanded="true" />
+            <element signature="e#19#62#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -925,19 +766,18 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="36">
           <caret line="2" column="0" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/README.md">
+      <provider editor-type-id="MarkdownFxPreviewEditor">
+        <state />
+      </provider>
       <provider editor-type-id="text-editor">
         <state relative-caret-position="126">
           <caret line="58" column="30" selection-start-line="58" selection-start-column="30" selection-end-line="58" selection-end-column="30" />
           <folding />
         </state>
-      </provider>
-      <provider editor-type-id="MarkdownFxPreviewEditor">
-        <state />
       </provider>
       <provider selected="true" editor-type-id="split-provider[text-editor;MarkdownPreviewEditor]">
         <state split_layout="FIRST">
@@ -993,17 +833,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pyfant/gui/ao3s/basewindows.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="270">
-          <caret line="15" column="0" selection-start-line="2" selection-start-column="0" selection-end-line="15" selection-end-column="0" />
-          <folding>
-            <element signature="e#136#162#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1015,148 +844,20 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/pyfant/gui/ao3s/a_WFileSparseCube.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="196">
-          <caret line="174" column="28" selection-start-line="174" selection-start-column="28" selection-end-line="174" selection-end-column="28" />
-          <folding>
-            <element signature="e#31#49#0" expanded="true" />
-            <element signature="e#619#698#1" expanded="false" />
-            <element signature="e#809#854#0" expanded="false" />
-            <element signature="e#1094#1180#0" expanded="false" />
-            <element signature="e#2921#2948#0" expanded="false" />
-            <element signature="e#3459#3462#0" expanded="false" />
-            <element signature="e#3672#3756#0" expanded="false" />
-            <element signature="e#4822#4846#0" expanded="false" />
-            <element signature="e#5286#5645#0" expanded="false" />
-            <element signature="e#7671#7833#0" expanded="false" />
-            <element signature="e#8078#8216#0" expanded="false" />
-            <element signature="e#8833#8969#0" expanded="false" />
-            <element signature="e#9260#9420#0" expanded="false" />
-            <element signature="e#9933#10292#0" expanded="false" />
-            <element signature="e#11799#11822#0" expanded="false" />
-            <element signature="e#13515#13525#0" expanded="false" />
-            <element signature="e#13903#13980#0" expanded="false" />
-            <element signature="e#14031#14273#0" expanded="false" />
-            <element signature="e#14318#14346#0" expanded="false" />
-            <element signature="e#14352#14429#0" expanded="false" />
-            <element signature="e#14496#14600#0" expanded="false" />
-            <element signature="e#14606#14683#0" expanded="false" />
-            <element signature="e#14745#14821#0" expanded="false" />
-            <element signature="e#14863#15247#0" expanded="false" />
-            <element signature="e#14905#15247#0" expanded="false" />
-            <element signature="e#15037#15201#0" expanded="false" />
-            <element signature="e#15290#15340#0" expanded="false" />
-            <element signature="e#15390#15470#0" expanded="false" />
-            <element signature="e#15506#16029#0" expanded="false" />
-            <element signature="e#15583#15878#0" expanded="false" />
-            <element signature="e#15922#15976#0" expanded="false" />
-            <element signature="e#16068#16094#0" expanded="false" />
-            <element signature="e#16132#16208#0" expanded="false" />
-            <element signature="e#16257#16291#0" expanded="false" />
-            <element signature="e#16344#16348#0" expanded="false" />
-            <element signature="e#16387#16572#0" expanded="false" />
-            <element signature="e#16419#16572#0" expanded="false" />
-            <element signature="e#16511#16572#0" expanded="false" />
-            <element signature="e#16610#18508#0" expanded="false" />
-            <element signature="e#16627#18389#0" expanded="false" />
-            <element signature="e#16668#16910#0" expanded="false" />
-            <element signature="e#17115#18389#0" expanded="false" />
-            <element signature="e#17287#17543#0" expanded="false" />
-            <element signature="e#17603#17702#0" expanded="false" />
-            <element signature="e#18026#18121#0" expanded="false" />
-            <element signature="e#18271#18292#0" expanded="false" />
-            <element signature="e#18434#18508#0" expanded="false" />
-            <element signature="e#18554#19084#0" expanded="false" />
-            <element signature="e#18755#19084#0" expanded="false" />
-            <element signature="e#18776#18952#0" expanded="false" />
-            <element signature="e#19004#19084#0" expanded="false" />
-            <element signature="e#19123#19141#0" expanded="false" />
-            <element signature="e#19189#19422#0" expanded="false" />
-            <element signature="e#19326#19422#0" expanded="false" />
-            <element signature="e#19469#19570#0" expanded="false" />
-            <element signature="e#19576#19653#0" expanded="false" />
-            <element signature="e#19710#19770#0" expanded="false" />
-            <element signature="e#19817#20154#0" expanded="false" />
-            <element signature="e#20211#20557#0" expanded="false" />
-            <element signature="e#20325#20495#0" expanded="false" />
-            <element signature="e#20599#20959#0" expanded="false" />
-            <element signature="e#20710#20959#0" expanded="false" />
-            <element signature="e#20827#20890#0" expanded="false" />
-            <element signature="e#21006#21235#0" expanded="false" />
-            <element signature="e#21280#21700#0" expanded="false" />
-            <element signature="e#21755#22049#0" expanded="false" />
-            <element signature="e#21907#22049#0" expanded="false" />
-            <element signature="e#22085#22176#0" expanded="false" />
-            <element signature="e#22224#23306#0" expanded="false" />
-            <element signature="e#22382#22997#0" expanded="false" />
-            <element signature="e#23041#23225#0" expanded="false" />
-            <element signature="e#23359#23528#0" expanded="false" />
-            <element signature="e#23452#23528#0" expanded="false" />
-            <element signature="e#23566#23994#0" expanded="false" />
-            <element signature="e#23661#23851#0" expanded="false" />
-            <element signature="e#23896#23994#0" expanded="false" />
-            <element signature="e#24031#25098#0" expanded="false" />
-            <element signature="e#24126#24957#0" expanded="false" />
-            <element signature="e#25001#25098#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pyfant/gui/ao3s/a_XFileSparseCube.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="e#31#49#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pyfant/gui/ao3s/windows.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="414">
-          <caret line="24" column="19" selection-start-line="24" selection-start-column="19" selection-end-line="24" selection-end-column="19" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/pyfant/gui/ao3s/windows.py" />
     <entry file="file://$PROJECT_DIR$/pyfant/gui/ao3s/__init__.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="198">
+        <state relative-caret-position="54">
           <caret line="11" column="0" selection-start-line="11" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
-          <folding>
-            <element signature="e#20#46#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pyfant/gui/ao3s/a_XFileSpectrumList.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="342">
-          <caret line="19" column="34" selection-start-line="19" selection-start-column="34" selection-end-line="19" selection-end-column="34" />
-          <folding>
-            <element signature="e#33#51#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pyfant/gui/ao3s/a_WSpectrumCollection.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="196">
-          <caret line="26" column="8" selection-start-line="26" selection-start-column="8" selection-end-line="26" selection-end-column="8" />
-          <folding>
-            <element signature="e#35#53#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/pyfant/gui/ao3s/a_WChooseSpectrum.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="304">
+        <state relative-caret-position="1440">
           <caret line="84" column="25" selection-start-line="84" selection-start-column="25" selection-end-line="84" selection-end-column="25" />
           <folding>
-            <element signature="e#66#92#0" expanded="true" />
+            <element signature="e#66#92#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1185,37 +886,16 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/pyfant/gui/ao3s/a_XQuery.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="212">
-          <caret line="108" column="43" selection-start-line="108" selection-start-column="43" selection-end-line="108" selection-end-column="43" />
-          <folding>
-            <element signature="e#22#40#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/pyfant/blocks/__init__.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="36">
           <caret line="2" column="22" selection-start-line="2" selection-start-column="22" selection-end-line="2" selection-end-column="22" />
-          <folding>
-            <element signature="e#0#25#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pyfant/datatypes/filesplist.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="412">
-          <caret line="287" column="39" selection-start-line="287" selection-start-column="39" selection-end-line="287" selection-end-column="39" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/pyfant/blocks/baseblocks.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="137">
+        <state relative-caret-position="522">
           <caret line="32" column="52" selection-start-line="32" selection-start-column="52" selection-end-line="32" selection-end-column="52" />
           <folding>
             <element signature="e#218#236#0" expanded="true" />
@@ -1223,72 +903,302 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$USER_HOME$/.PyCharm2016.2/system/python_stubs/-1247972723/PyQt4/QtGui/QToolBox.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="324">
+          <caret line="116" column="8" selection-start-line="116" selection-start-column="8" selection-end-line="116" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pyfant/util.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="196">
+          <caret line="36" column="0" selection-start-line="36" selection-start-column="0" selection-end-line="36" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#109#1" expanded="false" />
+            <element signature="e#343#363#0" expanded="true" />
+            <element signature="e#489#568#0" expanded="false" />
+            <element signature="e#777#993#0" expanded="false" />
+            <element signature="e#1220#1315#1" expanded="false" />
+            <element signature="e#1568#1768#0" expanded="false" />
+            <element signature="e#1568#1668#1" expanded="false" />
+            <element signature="e#1831#2839#0" expanded="false" />
+            <element signature="e#2079#2823#0" expanded="false" />
+            <element signature="e#2664#2823#0" expanded="false" />
+            <element signature="e#2842#2942#0" expanded="false" />
+            <element signature="e#3062#4922#0" expanded="false" />
+            <element signature="e#3062#3392#1" expanded="false" />
+            <element signature="e#3478#3560#0" expanded="false" />
+            <element signature="e#3706#3749#0" expanded="false" />
+            <element signature="e#3837#4653#0" expanded="false" />
+            <element signature="e#3861#4653#0" expanded="false" />
+            <element signature="e#4224#4415#0" expanded="false" />
+            <element signature="e#4262#4393#0" expanded="false" />
+            <element signature="e#4465#4584#0" expanded="false" />
+            <element signature="e#4672#4748#0" expanded="false" />
+            <element signature="e#5049#6847#0" expanded="false" />
+            <element signature="e#5049#5574#1" expanded="false" />
+            <element signature="e#6069#6428#0" expanded="false" />
+            <element signature="e#6229#6428#0" expanded="false" />
+            <element signature="e#6271#6421#0" expanded="false" />
+            <element signature="e#6290#6406#0" expanded="false" />
+            <element signature="e#6878#7172#0" expanded="false" />
+            <element signature="e#7210#7534#0" expanded="false" />
+            <element signature="e#7596#9119#0" expanded="false" />
+            <element signature="e#7596#7846#1" expanded="false" />
+            <element signature="e#7872#9119#0" expanded="false" />
+            <element signature="e#8113#8189#0" expanded="false" />
+            <element signature="e#8216#8705#0" expanded="false" />
+            <element signature="e#8336#8427#0" expanded="false" />
+            <element signature="e#8462#8705#0" expanded="false" />
+            <element signature="e#8559#8705#0" expanded="false" />
+            <element signature="e#8601#8705#0" expanded="false" />
+            <element signature="e#8745#9119#0" expanded="false" />
+            <element signature="e#8766#9020#0" expanded="false" />
+            <element signature="e#8810#8875#0" expanded="false" />
+            <element signature="e#9168#10104#0" expanded="false" />
+            <element signature="e#9168#9357#1" expanded="false" />
+            <element signature="e#9390#10104#0" expanded="false" />
+            <element signature="e#9538#9614#0" expanded="false" />
+            <element signature="e#9641#9878#0" expanded="false" />
+            <element signature="e#9791#9878#0" expanded="false" />
+            <element signature="e#9918#10104#0" expanded="false" />
+            <element signature="e#9939#10006#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pyfant/gui/ao3s/a_XQuery.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1638">
+          <caret line="108" column="43" selection-start-line="108" selection-start-column="43" selection-end-line="108" selection-end-column="43" />
+          <folding>
+            <element signature="e#22#40#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pyfant/gui/ao3s/a_WFileSparseCube.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="9504">
+          <caret line="687" column="58" selection-start-line="687" selection-start-column="58" selection-end-line="687" selection-end-column="58" />
+          <folding>
+            <element signature="e#31#49#0" expanded="false" />
+            <element signature="e#619#698#1" expanded="false" />
+            <element signature="e#809#854#0" expanded="false" />
+            <element signature="e#1094#1180#0" expanded="false" />
+            <element signature="e#2921#2948#0" expanded="false" />
+            <element signature="e#3459#3462#0" expanded="false" />
+            <element signature="e#3672#3756#0" expanded="false" />
+            <element signature="e#4822#4846#0" expanded="false" />
+            <element signature="e#5286#5645#0" expanded="false" />
+            <element signature="e#7671#7838#0" expanded="false" />
+            <element signature="e#9963#10322#0" expanded="false" />
+            <element signature="e#11829#11852#0" expanded="false" />
+            <element signature="e#13545#13555#0" expanded="false" />
+            <element signature="e#13933#14010#0" expanded="false" />
+            <element signature="e#14353#14381#0" expanded="false" />
+            <element signature="e#14387#14464#0" expanded="false" />
+            <element signature="e#14531#14635#0" expanded="false" />
+            <element signature="e#14641#14718#0" expanded="false" />
+            <element signature="e#14780#14856#0" expanded="false" />
+            <element signature="e#14898#15282#0" expanded="false" />
+            <element signature="e#14940#15282#0" expanded="false" />
+            <element signature="e#15072#15236#0" expanded="false" />
+            <element signature="e#15325#15375#0" expanded="false" />
+            <element signature="e#15425#15505#0" expanded="false" />
+            <element signature="e#15962#16016#0" expanded="false" />
+            <element signature="e#16108#16134#0" expanded="false" />
+            <element signature="e#16302#16336#0" expanded="false" />
+            <element signature="e#16389#16393#0" expanded="false" />
+            <element signature="e#16432#16617#0" expanded="false" />
+            <element signature="e#16464#16617#0" expanded="false" />
+            <element signature="e#16556#16617#0" expanded="false" />
+            <element signature="e#16718#16960#0" expanded="false" />
+            <element signature="e#17337#17593#0" expanded="false" />
+            <element signature="e#17653#17752#0" expanded="false" />
+            <element signature="e#18081#18176#0" expanded="false" />
+            <element signature="e#18326#18347#0" expanded="false" />
+            <element signature="e#18489#18563#0" expanded="false" />
+            <element signature="e#19064#19144#0" expanded="false" />
+            <element signature="e#19183#19201#0" expanded="false" />
+            <element signature="e#19651#19728#0" expanded="false" />
+            <element signature="e#19785#19845#0" expanded="false" />
+            <element signature="e#20306#20652#0" expanded="false" />
+            <element signature="e#20420#20590#0" expanded="false" />
+            <element signature="e#20694#21054#0" expanded="false" />
+            <element signature="e#20805#21054#0" expanded="false" />
+            <element signature="e#20922#20985#0" expanded="false" />
+            <element signature="e#21101#21330#0" expanded="false" />
+            <element signature="e#21855#22149#0" expanded="false" />
+            <element signature="e#22007#22149#0" expanded="false" />
+            <element signature="e#22329#23411#0" expanded="false" />
+            <element signature="e#22487#23102#0" expanded="false" />
+            <element signature="e#23146#23330#0" expanded="false" />
+            <element signature="e#23464#23633#0" expanded="false" />
+            <element signature="e#23557#23633#0" expanded="false" />
+            <element signature="e#24006#24104#0" expanded="false" />
+            <element signature="e#25116#25213#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pyfant/gui/ao3s/a_XFileSparseCube.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1890">
+          <caret line="122" column="15" selection-start-line="122" selection-start-column="15" selection-end-line="122" selection-end-column="15" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pyfant/plotting/draw_cube.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1782">
+          <caret line="105" column="17" selection-start-line="105" selection-start-column="17" selection-end-line="105" selection-end-column="17" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pyfant/gui/guiaux.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="137">
+          <caret line="134" column="4" selection-start-line="134" selection-start-column="4" selection-end-line="134" selection-end-column="4" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/pyfant/gui/ao3s/a_WFileSpectrumList.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="805">
-          <caret line="132" column="32" selection-start-line="132" selection-start-column="32" selection-end-line="132" selection-end-column="32" />
+        <state relative-caret-position="2124">
+          <caret line="135" column="0" selection-start-line="135" selection-start-column="0" selection-end-line="135" selection-end-column="0" />
           <folding>
             <element signature="e#33#51#0" expanded="true" />
             <element signature="e#543#624#1" expanded="false" />
             <element signature="e#735#780#0" expanded="false" />
-            <element signature="e#2522#2549#0" expanded="false" />
-            <element signature="e#3058#3061#0" expanded="false" />
-            <element signature="e#3271#3355#0" expanded="false" />
-            <element signature="e#3892#4251#0" expanded="false" />
-            <element signature="e#6291#6454#0" expanded="false" />
-            <element signature="e#6583#6942#0" expanded="false" />
-            <element signature="e#8345#8405#0" expanded="false" />
-            <element signature="e#9096#9173#0" expanded="false" />
-            <element signature="e#9224#9469#0" expanded="false" />
-            <element signature="e#9524#10210#0" expanded="false" />
-            <element signature="e#9710#9901#0" expanded="false" />
-            <element signature="e#9945#10129#0" expanded="false" />
-            <element signature="e#10255#10283#0" expanded="false" />
-            <element signature="e#10289#10366#0" expanded="false" />
-            <element signature="e#10433#10490#0" expanded="false" />
-            <element signature="e#10496#10573#0" expanded="false" />
-            <element signature="e#10635#10732#0" expanded="false" />
-            <element signature="e#10677#10732#0" expanded="false" />
-            <element signature="e#10774#11158#0" expanded="false" />
-            <element signature="e#10816#11158#0" expanded="false" />
-            <element signature="e#10948#11112#0" expanded="false" />
-            <element signature="e#11204#11639#0" expanded="false" />
-            <element signature="e#11247#11488#0" expanded="false" />
-            <element signature="e#11532#11586#0" expanded="false" />
-            <element signature="e#11678#11704#0" expanded="false" />
-            <element signature="e#11742#11823#0" expanded="false" />
-            <element signature="e#11872#11953#0" expanded="false" />
-            <element signature="e#11885#11920#0" expanded="false" />
-            <element signature="e#12006#12010#0" expanded="false" />
-            <element signature="e#12048#13329#0" expanded="false" />
-            <element signature="e#12065#13210#0" expanded="false" />
-            <element signature="e#12321#13210#0" expanded="false" />
-            <element signature="e#12493#12583#0" expanded="false" />
-            <element signature="e#12643#12742#0" expanded="false" />
-            <element signature="e#13051#13146#0" expanded="false" />
-            <element signature="e#13255#13329#0" expanded="false" />
-            <element signature="e#13373#13422#0" expanded="false" />
-            <element signature="e#13465#13726#0" expanded="false" />
-            <element signature="e#13649#13726#0" expanded="false" />
-            <element signature="e#13776#13813#0" expanded="false" />
-            <element signature="e#13819#13843#0" expanded="false" />
-            <element signature="e#14009#14112#0" expanded="false" />
-            <element signature="e#14214#14335#0" expanded="false" />
-            <element signature="e#14341#14418#0" expanded="false" />
-            <element signature="e#14475#14535#0" expanded="false" />
-            <element signature="e#14592#14902#0" expanded="false" />
-            <element signature="e#14706#14840#0" expanded="false" />
-            <element signature="e#14949#15174#0" expanded="false" />
-            <element signature="e#15219#15394#0" expanded="false" />
-            <element signature="e#15436#15440#0" expanded="false" />
-            <element signature="e#15495#15789#0" expanded="false" />
-            <element signature="e#15647#15789#0" expanded="false" />
-            <element signature="e#15825#15884#0" expanded="false" />
-            <element signature="e#15929#16080#0" expanded="false" />
-            <element signature="e#16125#16455#0" expanded="false" />
-            <element signature="e#16501#16799#0" expanded="false" />
-            <element signature="e#16844#16944#0" expanded="false" />
+            <element signature="e#6433#6596#0" expanded="false" />
+            <element signature="e#6725#7084#0" expanded="false" />
+            <element signature="e#8487#8547#0" expanded="false" />
+            <element signature="e#9238#9315#0" expanded="false" />
+            <element signature="e#9366#9611#0" expanded="false" />
+            <element signature="e#9666#10352#0" expanded="false" />
+            <element signature="e#9852#10043#0" expanded="false" />
+            <element signature="e#10087#10271#0" expanded="false" />
+            <element signature="e#10397#10425#0" expanded="false" />
+            <element signature="e#10431#10508#0" expanded="false" />
+            <element signature="e#10575#10632#0" expanded="false" />
+            <element signature="e#10638#10715#0" expanded="false" />
+            <element signature="e#10777#10874#0" expanded="false" />
+            <element signature="e#10819#10874#0" expanded="false" />
+            <element signature="e#10916#11300#0" expanded="false" />
+            <element signature="e#10958#11300#0" expanded="false" />
+            <element signature="e#11090#11254#0" expanded="false" />
+            <element signature="e#11346#11781#0" expanded="false" />
+            <element signature="e#11389#11630#0" expanded="false" />
+            <element signature="e#11674#11728#0" expanded="false" />
+            <element signature="e#11820#11846#0" expanded="false" />
+            <element signature="e#11884#11965#0" expanded="false" />
+            <element signature="e#12014#12095#0" expanded="false" />
+            <element signature="e#12027#12062#0" expanded="false" />
+            <element signature="e#12148#12152#0" expanded="false" />
+            <element signature="e#12190#13471#0" expanded="false" />
+            <element signature="e#12207#13352#0" expanded="false" />
+            <element signature="e#12463#13352#0" expanded="false" />
+            <element signature="e#12635#12725#0" expanded="false" />
+            <element signature="e#12785#12884#0" expanded="false" />
+            <element signature="e#13193#13288#0" expanded="false" />
+            <element signature="e#13397#13471#0" expanded="false" />
+            <element signature="e#13515#13564#0" expanded="false" />
+            <element signature="e#13607#13868#0" expanded="false" />
+            <element signature="e#13791#13868#0" expanded="false" />
+            <element signature="e#13918#13955#0" expanded="false" />
+            <element signature="e#13961#13985#0" expanded="false" />
+            <element signature="e#14151#14254#0" expanded="false" />
+            <element signature="e#14356#14477#0" expanded="false" />
+            <element signature="e#14483#14560#0" expanded="false" />
+            <element signature="e#14617#14677#0" expanded="false" />
+            <element signature="e#14734#15044#0" expanded="false" />
+            <element signature="e#14848#14982#0" expanded="false" />
+            <element signature="e#15091#15316#0" expanded="false" />
+            <element signature="e#15361#15536#0" expanded="false" />
+            <element signature="e#15578#15582#0" expanded="false" />
+            <element signature="e#15637#15931#0" expanded="false" />
+            <element signature="e#15789#15931#0" expanded="false" />
+            <element signature="e#15967#16026#0" expanded="false" />
+            <element signature="e#16071#16222#0" expanded="false" />
+            <element signature="e#16267#16597#0" expanded="false" />
+            <element signature="e#16643#16941#0" expanded="false" />
+            <element signature="e#16986#17086#0" expanded="false" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pyfant/gui/a_WCollapsiblePanel.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="918">
+          <caret line="52" column="108" selection-start-line="52" selection-start-column="108" selection-end-line="52" selection-end-column="108" />
+          <folding>
+            <element signature="e#34#60#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///usr/lib/python2.7/dist-packages/numpy/lib/function_base.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="554">
+          <caret line="1600" column="4" selection-start-line="1600" selection-start-column="4" selection-end-line="1600" selection-end-column="4" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pyfant/datatypes/spectrum.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="374">
+          <caret line="316" column="17" selection-start-line="316" selection-start-column="17" selection-end-line="316" selection-end-column="17" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pyfant/gui/ao3s/basewindows.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="157">
+          <caret line="417" column="81" selection-start-line="417" selection-start-column="81" selection-end-line="417" selection-end-column="81" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pyfant/gui/ao3s/a_XFileSpectrumList.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="214">
+          <caret line="121" column="45" selection-start-line="121" selection-start-column="45" selection-end-line="121" selection-end-column="45" />
+          <folding>
+            <element signature="e#33#51#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pyfant/datatypes/filesparsecube.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="450">
+          <caret line="214" column="27" selection-start-line="214" selection-start-column="27" selection-end-line="214" selection-end-column="27" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pyfant/gui/ao3s/a_WSpectrumCollection.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="338">
+          <caret line="509" column="0" selection-start-line="509" selection-start-column="0" selection-end-line="509" selection-end-column="0" />
+          <folding>
+            <element signature="e#35#53#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pyfant/datatypes/filesplist.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="108">
+          <caret line="111" column="91" selection-start-line="111" selection-start-column="91" selection-end-line="111" selection-end-column="91" />
+          <folding />
         </state>
       </provider>
     </entry>

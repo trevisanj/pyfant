@@ -17,6 +17,8 @@ from pyfant.gui import *
 from .basewindows import *
 from .a_WChooseSpectrum import *
 from .a_XScaleSpectrum import *
+from ..a_WCollapsiblePanel import *
+
 
 class WSpectrumCollection(WBase):
     """Editor for SpectrumCollection objects"""
@@ -38,64 +40,125 @@ class WSpectrumCollection(WBase):
         self.collection = None # SpectrumCollection
 
         # # Central layout
-        lwex = self.centralLayout = QVBoxLayout()
-        lwex.setMargin(0)
-        self.setLayout(lwex)
+        # Will have a toolbox and a table. When the toolbox contracts, there is more space for the table
+        lwmain = self.centralLayout = QVBoxLayout()
+        lwmain.setMargin(0)
+        self.setLayout(lwmain)
+
+
+        # ## Toolbox
+        # The toolbox will have only one widget whose layout is a grid with two columns:
+        #   - The first column contains labels
+        #   - The second column contains panels of buttons layed horizontally
+        # tb = keep_ref(QToolBox())
+        # # tb.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        # lwmain.addWidget(tb)
+        wgrid = keep_ref(WCollapsiblePanel())
+        wgrid.label.setText("<b>Tools</b>")
+        wgrid.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
+        lwmain.addWidget(wgrid)
+        lg = QGridLayout(wgrid.widget)
+        lg.setMargin(2)
+        lg.setSpacing(4)
+        # tb.addItem(wgrid, "Actions")
+        # First column of the grid layout is sorted
+        label = keep_ref(QLabel('<b>File:</b>'))
+        label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
+        lg.addWidget(label, 0, 0)
+        label = keep_ref(QLabel('<b>With all:</b>'))
+        label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
+        lg.addWidget(label, 1, 0)
+        label = keep_ref(QLabel('<b>With selected:</b>'))
+        label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
+        lg.addWidget(label, 2, 0)
+        label = keep_ref(QLabel('<b>With current:</b>'))
+        label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
+        lg.addWidget(label, 3, 0)
+
+
+        # ### Panel #0: operations independent of the table widget selection state
         ###
-        lwexex = QHBoxLayout()
-        lwexex.setMargin(0)
-        lwexex.setSpacing(2)
-        lwex.addLayout(lwexex)
+        lh = QHBoxLayout()
+        lh.setMargin(0)
+        lh.setSpacing(2)
+        lg.addLayout(lh, 0, 1)
+        lwmain.addLayout(lh)
         ###
-        b = keep_ref(QPushButton("Scale..."))
-        b.clicked.connect(self.scale_clicked)
-        lwexex.addWidget(b)
+        b = keep_ref(QPushButton("Add spectra..."))
+        b.setToolTip("Opens a 'Open File' window where multiple files can be selected.\n"
+                     "Accepts any supported spectral type, and also other Spectrum Collection files.\n"
+                     "Files are added in alphabetical order.")
+        b.clicked.connect(self.on_add_spectra)
+        lh.addWidget(b)
+        ###
+        lh.addSpacerItem(QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum))
+
+
+
+        # ### Panel #1: operations independent of the table widget selection state
+        ###
+        lh = QHBoxLayout()
+        lh.setMargin(0)
+        lh.setSpacing(2)
+        lg.addLayout(lh, 1, 1)
         ###
         b = keep_ref(QPushButton("Export CSV..."))
         b.clicked.connect(self.on_export_csv)
-        lwexex.addWidget(b)
+        lh.addWidget(b)
         ###
         b = self.button_query = QPushButton("Query")
         b.clicked.connect(self.on_query)
-        lwexex.addWidget(b)
+        lh.addWidget(b)
         ###
-        b = self.button_query = QPushButton("Merge with...")
-        b.clicked.connect(self.on_merge_with)
-        lwexex.addWidget(b)
+        lh.addSpacerItem(QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum))
+
+
+        # ### Panel #2: operations affecting only the spectra which are selected
         ###
-        lwexex.addSpacerItem(QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum))
-        ###
-        lwexex = QHBoxLayout()
-        lwexex.setMargin(0)
-        lwexex.setSpacing(2)
-        lwex.addLayout(lwexex)
-        ###
-        lwexex.addWidget(keep_ref(QLabel("With selected:")))
+        lh = QHBoxLayout()
+        lh.setMargin(0)
+        lh.setSpacing(2)
+        lg.addLayout(lh, 2, 1)
         ###
         b = keep_ref(QPushButton("Plot &stacked"))
         b.clicked.connect(self.plot_stacked_clicked)
-        lwexex.addWidget(b)
+        lh.addWidget(b)
         ###
         b = keep_ref(QPushButton("Plot &overlapped"))
         b.clicked.connect(self.plot_overlapped_clicked)
-        lwexex.addWidget(b)
+        lh.addWidget(b)
         ###
         b = keep_ref(QPushButton("Calc.Mag."))
         b.clicked.connect(self.calc_mag_clicked)
-        lwexex.addWidget(b)
+        lh.addWidget(b)
         ###
         b = keep_ref(QPushButton("Open in new window"))
         b.clicked.connect(self.open_in_new_clicked)
-        lwexex.addWidget(b)
+        lh.addWidget(b)
         ###
         b = keep_ref(QPushButton("Delete"))
         b.clicked.connect(self.delete_selected)
-        lwexex.addWidget(b)
+        lh.addWidget(b)
         ###
-        lwexex.addSpacerItem(QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum))
+        lh.addSpacerItem(QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum))
+
+
+        # ### Panel #3: operations affecting only the current spectrum
         ###
+        lh = QHBoxLayout()
+        lh.setMargin(0)
+        lh.setSpacing(2)
+        lg.addLayout(lh, 3, 1)
+        ###
+        b = keep_ref(QPushButton("Scale..."))
+        b.clicked.connect(self.scale_clicked)
+        lh.addWidget(b)
+        ###
+        lh.addSpacerItem(QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum))
+
         a = self.twSpectra = QTableWidget()
-        lwex.addWidget(a)
+        # lwmain.addWidget(a)
+        a.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         a.setSelectionMode(QAbstractItemView.MultiSelection)
         a.setSelectionBehavior(QAbstractItemView.SelectRows)
         a.setAlternatingRowColors(True)
@@ -112,6 +175,10 @@ class WSpectrumCollection(WBase):
         ah.setContextMenuPolicy(Qt.CustomContextMenu)
         ah.customContextMenuRequested.connect(self.show_header_context_menu)
         ah.setSelectionMode(QAbstractItemView.SingleSelection)
+        # tb.addItem(a, "Spectra")
+
+        lwmain.addWidget(a)
+
 
         self.setEnabled(False)  # disabled until load() is called
         style_checkboxes(self)
@@ -145,6 +212,26 @@ class WSpectrumCollection(WBase):
                 ii.append(obj)
         ii.sort()
         return ii
+
+    def row_index_to_spectrum_index(self, row_index):
+        """
+        Converts table row index within self.collection.spectra
+
+        This is necessary because the table may be sorted
+        """
+
+        item = self.twSpectra.item(row_index, self.twSpectra.columnCount()-1)
+        ret = item.data(1).toPyObject()
+        return ret
+
+    def get_current_spectrum_index(self):
+        return self.row_index_to_spectrum_index(self.twSpectra.currentRow())
+
+    def get_current_spectrum(self):
+        """Returns spectrum on which the table cursor (movable with the keyboar arrows) is currently"""
+        if self.twSpectra.rowCount() < 1:
+            return None
+        return self.collection.spectra[self.get_current_spectrum_index()]
 
     def update(self):
         """Refreshes the GUI to reflect what is in self.collection"""
@@ -317,6 +404,7 @@ class WSpectrumCollection(WBase):
             self.edited.emit(flag_changed_header)
 
     def open_in_new_clicked(self):
+        from .a_XFileSpectrumList import *
         ii = self.get_selected_spectrum_indexes()
         if len(ii) > 0:
             other = copy.deepcopy(self.collection)
@@ -334,8 +422,11 @@ class WSpectrumCollection(WBase):
             self.edited.emit(False)
 
     def scale_clicked(self):
-        if len(self.collection) > 0:
-          sp = self.collection.spectra[self.twSpectra.currentRow()]
+        """Performs a scaling operation on the current spectrum"""
+        sp = self.get_current_spectrum()
+
+        if sp is None:
+            return
 
         form = XScaleSpectrum()
         form.set_spectrum(sp)
@@ -399,25 +490,71 @@ class WSpectrumCollection(WBase):
         form.set_splist(copy.deepcopy(self.collection))
         form.show()
 
-    def on_merge_with(self):
+    def on_add_spectra(self):
         flag_emit = False
-        try:
-            # TODO another SpectrumCollection, not SpectrumList
-            new_filename = QFileDialog.getOpenFileName(self, "Merge with another Spectrum List file", "", "*.splist")
-            if new_filename:
-                new_filename = str(new_filename)
-                f = FileSpectrumList()
-                f.load(new_filename)
-                self.collection.merge_with(f.splist)
-                self.__update_gui()
-                flag_emit = True
-        except Exception as E:
-            msg = "Error merging: %s" % str_exc(E)
-            self.add_log_error(msg, True)
-            raise
+        filenames = QFileDialog.getOpenFileNames(self, "Add Spectra", "",
+         "All files(*.*);;Spectrum List files (*.splist);;Sparse Cube files (*.sparsecube)")
+        if not filenames:
+            return
+
+        classes = classes_sp+[FileSpectrumList, FileSparseCube]
+        report, successful, failed = ["<b>Results</b>"], [], []
+        for filename in filenames:
+            filename = str(filename)
+            basename = os.path.basename(filename)
+            file = load_with_classes(filename, classes)
+            try:
+                if file is None:
+                    raise RuntimeError("Could not load file")
+                if isinstance(file, FileSpectrum):
+                    self.collection.add_spectrum(file.spectrum)
+                elif isinstance(file, FileSpectrumList):
+                    self.collection.merge_with(file.splist)
+                elif isinstance(file, FileSparseCube):
+                    self.collection.merge_with(file.sparsecube)
+                successful.append("  - %s" % basename)
+            except Exception as e:
+                failed.append('&nbsp;&nbsp;- %s: %s' % (basename, str(e)))
+                self.add_log_error("Error adding file '%s': %s" % (basename, str_exc(e)))
+
+        if len(successful) > 0:
+            report.extend(["", "Successful:"])
+            report.extend(successful)
+
+            self.__update_gui()
+            flag_emit = True
+
+        if len(failed) > 0:
+            report.extend(["", "Failed:"])
+            report.extend(failed)
 
         if flag_emit:
             self.edited.emit(False)
+
+        show_message("<br>".join(report))
+
+
+    # def on_merge_with(self):
+    #     flag_emit = False
+    #     try:
+    #         # TODO another SpectrumCollection, not SpectrumList
+    #         new_filename = QFileDialog.getOpenFileName(self, "Merge with another Spectrum List file", "", "*.splist")
+    #         if new_filename:
+    #             new_filename = str(new_filename)
+    #             f = FileSpectrumList()
+    #             f.load(new_filename)
+    #             self.collection.merge_with(f.splist)
+    #             self.__update_gui()
+    #             flag_emit = True
+    #     except Exception as E:
+    #         msg = "Error merging: %s" % str_exc(E)
+    #         self.add_log_error(msg, True)
+    #         raise
+    #
+    #     if flag_emit:
+    #         self.edited.emit(False)
+    #
+
 
     # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * #
     # # Internal gear
