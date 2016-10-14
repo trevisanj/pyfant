@@ -1,6 +1,4 @@
-"""Window to edit a scaling factor"""
-
-__all__ = ["XScaleSpectrum"]
+__all__ = ["XApplySB_scalar"]
 
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
@@ -15,7 +13,7 @@ from pyfant.gui import *
 from pyfant import *
 import random
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
-from matplotlib.backends.backend_qt4agg import NavigationToolbar2QT # as NavigationToolbar2QT
+from matplotlib.backends.backend_qt4agg import NavigationToolbar2QT  # as NavigationToolbar2QT
 import matplotlib.pyplot as plt
 import numpy as np
 from itertools import product, combinations, cycle
@@ -29,15 +27,89 @@ import collections
 from .basewindows import *
 
 
+class XHelpDialog(XLogDialog):
+    """
+    Dialog with two areas: Fields Area and Help Area
 
-class XScaleSpectrum(XLogDialog):
+    1. The Fields area contains a grid layout and the OK & Cancel buttons
+    2. The Help Area contains a combo box and a text area
 
-    def __init__(self, parent=None, file_main=None, file_abonds=None):
-        XLogDialog.__init__(self, parent)
+    Relevant properties:
+      self.grid -- grid layout (initially empty)
+      self.labelHelpTopics -- label with text "Help Topics", exposed in case you want to change this text
+      self.comboBox -- combo box to add the help topics
+    """
+
+    def __init__(self, *args):
+        XLogDialog..__init__(self, *args)
+
 
         def keep_ref(obj):
             self._refs.append(obj)
             return obj
+
+
+        # # Central layout
+        lymain = self.centralLayout = QVBoxLayout()
+        lymain.setMargin(0)
+        self.setLayout(lymain)
+
+        # ## Title of Fields Area
+        label = keep_ref(QLabel("<b>Setup</b>"))
+        lymain.addWidget(label)
+
+        # ## Fields Area
+        lyfields = QHBoxLayout()
+        lyfields.setMargin(0)
+        lyfields.setSpacing(2)
+
+        # ### Left area of Fields Area
+        self.grid = QGridLayout()
+
+        # ### Right area of Fields Area (button box)
+        bb = keep_ref(QDialogButtonBox())
+        bb.setOrientation(Qt.Vertical)
+        bb.setStandardButtons(QDialogButtonBox.Cancel | QDialogButtonBox.Ok)
+        lyfields.addWidget(bb)
+        bb.rejected.connect(self.reject)
+        bb.accepted.connect(self.accept)
+
+        # ## Title of Help Area
+        label = keep_ref(QLabel("<b>Help</b>"))
+        lymain.addWidget(label)
+
+        # ## Help Area
+
+        # ### Panel containing a combobox to choose among help topics
+        ly = QHBoxLayout()
+        lymain.addLayout(ly)
+        ly.setMargin(0)
+        ly.setSpacing(2)
+
+        label = self.labelHelpTopics = QLabel("Help Topics")
+        ly.addWidget(self.labelHelpTopics)
+
+        cb = self.comboBox = QComboBox()
+        ly.addWidget(cb)
+        label.setBuddy(cb)
+
+        x = self.textEdit = QTextEdit()
+        x.setReadOnly(True)
+        x.setStyleSheet("QTextEdit {color: %s}" % COLOR_DESCR)
+        lymain.addWidget(x)
+
+
+
+
+
+
+
+class XApplySB_scalar(XLogDialog):
+    """Edit Parameters to apply SB_scalar blocks to a Spectrum List"""
+
+    def __init__(self, parent=None, file_main=None, file_abonds=None):
+        XLogDialog.__init__(self, parent)
+
 
         self.setWindowTitle("Scale spectrum")
 
@@ -91,7 +163,8 @@ class XScaleSpectrum(XLogDialog):
         y = self.edit_ref_mean_flux = QLineEdit()
         _toggle_widget(y, True)
         x.setBuddy(y)
-        pp.append((x, y, "Reference mean flux (Jy)", "Mean flux passing through filter<br>for a 0-magnitude object", ""))
+        pp.append((x, y, "Reference mean flux (Jy)",
+                   "Mean flux passing through filter<br>for a 0-magnitude object", ""))
         ###
         x = keep_ref(QLabel())
         y = self.edit_calc_mean_flux = QLineEdit()
@@ -134,7 +207,6 @@ class XScaleSpectrum(XLogDialog):
             edit.setToolTip(long_descr)
 
         lwleft.addSpacerItem(QSpacerItem(0, 0, QSizePolicy.Minimum, QSizePolicy.Expanding))
-
 
         bb = keep_ref(QDialogButtonBox())
         bb.setOrientation(Qt.Horizontal)
@@ -211,7 +283,7 @@ class XScaleSpectrum(XLogDialog):
 
     # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * #
     # # Internal gear
-            
+
 
     def __update(self):
         self.flag_process_changes = False
@@ -220,13 +292,15 @@ class XScaleSpectrum(XLogDialog):
             fig.clear()
             name = self.band_name()
             flag = self.flag_force_parametric()
-            cmean_flux, cmag = _calculate_and_plot(fig, self.spectrum, self.band_name(), self.flag_force_parametric())
+            cmean_flux, cmag = _calculate_and_plot(fig, self.spectrum, self.band_name(),
+                                                   self.flag_force_parametric())
             self.canvas0.draw()
 
             # Updates calculated state
             self.cmag = cmag
             band = Bands.bands[name]
-            self.edit_ref_mean_flux.setText("%.2f" % band.ref_mean_flux if band.ref_mean_flux else "(not available)")
+            self.edit_ref_mean_flux.setText(
+                "%.2f" % band.ref_mean_flux if band.ref_mean_flux else "(not available)")
             self.edit_calc_mean_flux.setText("%.2f" % cmean_flux)
             self.edit_calc_mag.setText(str(cmag) if cmag is not None else "(cannot calculate)")
             self.__update_factor()
@@ -247,8 +321,8 @@ class XScaleSpectrum(XLogDialog):
             text = str(k)
         self.edit_calc_factor.setText(text)
 
-def _calculate_and_plot(fig, spectrum, band_name, flag_force_parametric):
 
+def _calculate_and_plot(fig, spectrum, band_name, flag_force_parametric):
     # y = s*f ; s and y: fluxes ; f: filter ; all functions of wavelength
     # out_area = integrate y over whole axis, but y = 0 outside the filter range
     # weighted_mean_flux = out_area/band_area
@@ -271,8 +345,8 @@ def _calculate_and_plot(fig, spectrum, band_name, flag_force_parametric):
     COLOR_CURRENT_BAND = (.1, .1, .1)
     COLOR_FILL_BAND = (.9, .8, .8)
     LINE_WIDTH = 1.5
-    band_x = np.linspace(band_l0, band_lf, 200) # for plotting
-    band_y = band_f(band_x)                     # for plotting
+    band_x = np.linspace(band_l0, band_lf, 200)  # for plotting
+    band_y = band_f(band_x)  # for plotting
     band_span_x = band_lf - band_l0
     band_max_y = max(band_y)
     plot_l0, plot_lf = band_l0 - band_span_x * MARGIN_H, band_lf + band_span_x * MARGIN_H
@@ -284,12 +358,14 @@ def _calculate_and_plot(fig, spectrum, band_name, flag_force_parametric):
     ax = fig.add_subplot(311)
     if len(spc) == 0:
         ax.plot([], [])
-        ax.annotate("Band out of spectral range [%g, %g]" % (spectrum.x[0], spectrum.x[-1]), xy=(plot_h_middle, 0),
+        ax.annotate("Band out of spectral range [%g, %g]" % (spectrum.x[0], spectrum.x[-1]),
+                    xy=(plot_h_middle, 0),
                     horizontalalignment="center", verticalalignment="center")
     else:
         ax.plot(spp.x, spp.y, c=COLOR_CURRENT_BAND, lw=LINE_WIDTH)
         # shows mean flux within range
-        ax.plot([band_l0, band_lf], [weighted_mean_flux, weighted_mean_flux], linestyle="dashed", linewidth=LINE_WIDTH, color=(.4, .3, .1))
+        ax.plot([band_l0, band_lf], [weighted_mean_flux, weighted_mean_flux], linestyle="dashed",
+                linewidth=LINE_WIDTH, color=(.4, .3, .1))
     # ax.plot(spc.x, spc.y, c=COLOR_CURRENT_BAND, lw=LINE_WIDTH, zorder=999)
     ax.set_xlim([plot_l0, plot_lf])
     ax.set_ylim(flux_ylim)
@@ -325,13 +401,15 @@ def _calculate_and_plot(fig, spectrum, band_name, flag_force_parametric):
     ax = fig.add_subplot(313)
     if len(spc) == 0:
         ax.plot([], [])
-        ax.annotate("Band out of spectral range [%g, %g]" % (spectrum.x[0], spectrum.x[-1]), xy=(plot_h_middle, 0),
+        ax.annotate("Band out of spectral range [%g, %g]" % (spectrum.x[0], spectrum.x[-1]),
+                    xy=(plot_h_middle, 0),
                     horizontalalignment="center", verticalalignment="center")
     else:
         ax.plot(spc.x, out_y, c=COLOR_CURRENT_BAND, lw=LINE_WIDTH)
         ax.fill_between(spc.x, out_y, color=COLOR_FILL_BAND)
-        
-        ax.plot(spc.x, band_f_spc_x*weighted_mean_flux, linestyle="dashed", linewidth=LINE_WIDTH, color=(.4, .3, .1), label='equivalent horizontal')
+
+        ax.plot(spc.x, band_f_spc_x * weighted_mean_flux, linestyle="dashed", linewidth=LINE_WIDTH,
+                color=(.4, .3, .1), label='equivalent horizontal')
         ax.annotate("A2=%.1f" % out_area, xy=((spc.x[0] + spc.x[-1]) / 2, max(out_y) * .45),
                     horizontalalignment="center", verticalalignment="center",
                     color=(.4, .2, .1))
@@ -343,7 +421,6 @@ def _calculate_and_plot(fig, spectrum, band_name, flag_force_parametric):
     fig.tight_layout()
 
     return weighted_mean_flux, cmag
-
 
 
 def _toggle_widget(w, flag_readonly):

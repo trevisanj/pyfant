@@ -122,10 +122,14 @@ class SB_Extend(SBlock):
 
         return output
 
+class SB_scalar(SBlock):
+    """Ancestor for Spectrum Blocks whose output is a scalar"""
 
-class SB_SNR(SBlock):
+class SB_scalar_SNR(SBlock):
     """
     Calculates Signal-to-noise ratio (SNR) using a part of the "signal" (i.e. the spectrum)
+
+    Output is **scalar**
 
     The signal-to-noise ratio (SNR) is often defined as (signal power) / (noise power), herein
     calculated as

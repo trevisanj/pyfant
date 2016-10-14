@@ -1,14 +1,12 @@
-__all__ = ["MONO_FONT", "SOL_HEADERS", "SOL_ATTR_NAMES", "ATOM_ATTR_NAMES",
-           "ATOM_HEADERS", "index_nearest", "remove_line", "show_edit_form",
-           "PlotInfo", "place_left_top", "place_center", "snap_left", "snap_right",
-           "PARAMS_INVALID",
-           "show_error", "show_message", "show_warning", "ResetTableWidget",
-           "COLOR_ERROR", "COLOR_CONFIG", "COLOR_STAR", "COLOR_DESCR", "COLOR_WARNING",
-           "INITIALIZES_SUN", "check_return_space",
-           "enc_name", "enc_name_descr", "LLZERO_LLFIN", "DESCR_PTDISK",
-           "style_checkboxes", "DESCR_MULTI", "Occurrence", "ErrorCollector",
-           "VerticalLabel", "are_you_sure", "get_matplotlib_layout",
-           "style_widget"]
+# TODO move some functions to misc.pyqt
+__all__ = ["enc_name_descr", "enc_name", "INITIALIZES_SUN", "PARAMS_INVALID", "LLZERO_LLFIN",
+"DESCR_PTDISK", "DESCR_MULTI", "MONO_FONT", "SOL_HEADERS", "SOL_ATTR_NAMES", "ATOM_HEADERS",
+"ATOM_ATTR_NAMES", "style_checkboxes", "check_return_space", "show_error", "show_message",
+"show_warning", "are_you_sure", "ResetTableWidget", "index_nearest", "remove_line",
+"show_edit_form", "_DESKTOP_OFFSET_LEFT", "_DESKTOP_OFFSET_TOP", "place_left_top", "place_center",
+"snap_left", "snap_right", "PlotInfo", "Occurrence", "ErrorCollector", "VerticalLabel",
+"get_matplotlib_layout", "style_widget", ]
+
 
 from PyQt4.QtGui import *
 from PyQt4.QtCore import *
@@ -18,18 +16,8 @@ import os
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qt4agg import NavigationToolbar2QT # as NavigationToolbar2QT
 import matplotlib.pyplot as plt
+from ..constants import *
 
-# # Colors used in two or more different situations
-# Error color
-COLOR_ERROR = "#AA0000" # sortta wine
-# Warning color
-COLOR_WARNING = "#C98A00" # sortta yellow
-# Color for labels indicating a star parameter
-COLOR_STAR = "#2A8000"
-# Color for labels indicating a software configuration parameter
-COLOR_CONFIG = "#BD6909"
-# Default color for label text
-COLOR_DESCR = "#222222"
 
 def enc_name_descr(name, descr, color=COLOR_DESCR):
     """Encodes html given name and description."""
