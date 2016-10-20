@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding=utf8
 
 """PFANT Explorer --  list, visualize, and edit data files (_à la_ File Manager)"""
 

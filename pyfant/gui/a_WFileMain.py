@@ -6,7 +6,7 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from .guiaux import *
 from pyfant import FileMain
-
+from pyfant.constants import *
 
 class WFileMain(QWidget):
     """

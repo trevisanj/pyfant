@@ -7,6 +7,7 @@ from PyQt4.QtGui import *
 from .guiaux import *
 from pyfant import FileAbonds, adjust_atomic_symbol, FileDissoc
 import copy
+from pyfant.constants import *
 
 ABONDS_HEADERS = ["Element", "Abundance", "Notes"]
 NOTES_COLUMN_WIDTH = 200
