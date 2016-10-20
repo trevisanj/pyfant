@@ -52,7 +52,7 @@ def draw_cube_3d(ax, sparsecube, height_threshold=15):
         for s, e in combinations(np.array(list(product(r0, r1, r2))), 2):
             if np.sum(s == e) == 2:
                 # if np.sum(np.abs(s - e)) == r[1] - r[0]:
-                draw_line(*zip(s, e), lw=2)
+                draw_line(*list(zip(s, e)), lw=2)
 
     # draws grids
     for i in range(sparsecube.width):

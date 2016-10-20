@@ -2,13 +2,13 @@
 
 __all__ = ["XParametersEditor"]
 
+from .ui_XParametersEditor import Ui_XParametersEditor
 from PyQt4.QtGui import *
-import ui_XParametersEditor
 from . import a_WParametersEditor
 
 
 ################################################################################
-class XParametersEditor(QDialog, ui_XParametersEditor.Ui_XParametersEditor):
+class XParametersEditor(QDialog, Ui_XParametersEditor):
   """
   Arguments:
     parent=None -- nevermind

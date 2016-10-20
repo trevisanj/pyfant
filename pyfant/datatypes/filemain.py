@@ -80,11 +80,11 @@ class FileMain(DataFile):
           self.filetohy.append(s)
   
     # remaining conversions
-    self.ecrit, self.ptdisk = map(str2bool, (self.ecrit, self.ptdisk))
+    self.ecrit, self.ptdisk = list(map(str2bool, (self.ecrit, self.ptdisk)))
     self.pas, self.echx, self.echy, self.fwhm, self.teff, self.glog, \
     self.asalog, self.nhe, self.mu = \
-      map(float, (self.pas, self.echx, self.echy, self.fwhm, self.teff,
-            self.glog, self.asalog, self.nhe, self.mu))
+      list(map(float, (self.pas, self.echx, self.echy, self.fwhm, self.teff,
+            self.glog, self.asalog, self.nhe, self.mu)))
     self.inum = int(self.inum)
   
   def _do_save_as(self, filename):

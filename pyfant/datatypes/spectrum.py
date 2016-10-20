@@ -118,9 +118,9 @@ class Spectrum(object):
             #                "delta_lambda = %g" % self.delta_lambda,
             #                "no. points: %d" % len(self.x)])
 
-            s = " | ".join([u"%g \u2264 \u03BB \u2264 %g" % (self.x[0], self.x[-1]),
-                           u"\u0394\u03BB = %g" % self.delta_lambda,
-                           u"%g \u2264 flux \u2264 %g" % (np.min(self.y), np.max(self.y)),
+            s = " | ".join(["%g \\u2264 \\u03BB \\u2264 %g" % (self.x[0], self.x[-1]),
+                           "\\u0394\\u03BB = %g" % self.delta_lambda,
+                           "%g \\u2264 flux \\u2264 %g" % (np.min(self.y), np.max(self.y)),
                            "length: %d" % len(self.x)])
 
         else:
@@ -211,10 +211,10 @@ class Spectrum(object):
             delta_lambda = hdu.header["CDELT1"]
         except Exception as E:  # todo figure out the type of exception (KeyError?)
             delta_lambda = hdu.header['CD1_1']
-            print "Alternative delta lambda in FITS header: CD1_1"
-            print "Please narrow the Exception specification in the code"
-            print "Exception is: " + str(E) + " " + E.__class__.__name__
-            print delta_lambda
+            print("Alternative delta lambda in FITS header: CD1_1")
+            print("Please narrow the Exception specification in the code")
+            print(("Exception is: " + str(E) + " " + E.__class__.__name__))
+            print(delta_lambda)
         self.x = np.linspace(lambda0, lambda0 + delta_lambda * (n - 1), n)
         self.y = hdu.data
 
@@ -235,7 +235,7 @@ class Spectrum(object):
         hdu.header["CRVAL1"] = self.x[0]
         hdu.header["CDELT1"] = self.x[1] - self.x[0]
         hdu.header["XUNIT"] = "A"
-        for key, value in self.more_headers.iteritems():
+        for key, value in list(self.more_headers.items()):
             try:
                 # Strips line feeds eventually present in header data
                 if isinstance(value, str):
@@ -437,7 +437,7 @@ class FileSpectrumNulbad(FileSpectrum):
             [sp.tit, sp.tetaef, sp.glog, sp.asalog, sp.amg] = \
                 s_header0.unpack_from(s)
             [sp.tetaef, sp.glog, sp.asalog, sp.amg] = \
-                map(float, [sp.tetaef, sp.glog, sp.asalog, sp.amg])
+                list(map(float, [sp.tetaef, sp.glog, sp.asalog, sp.amg]))
 
             # -- row 02 --
             # Original format: ('#',I6,2X,'0. 0. 1. 1. Lzero =',F10.2,2x,'Lfin =', &
@@ -448,7 +448,7 @@ class FileSpectrumNulbad(FileSpectrum):
             [_, sp.l0, sp.lf, sp.pas, sp.fwhm] = \
                 s_header1.unpack_from(s)
             [sp.l0, sp.lf, sp.pas, sp.fwhm] = \
-                map(float, [sp.l0, sp.lf, sp.pas, sp.fwhm])
+                list(map(float, [sp.l0, sp.lf, sp.pas, sp.fwhm]))
             #n = int(n)
 
 
@@ -502,7 +502,7 @@ class FileSpectrumXY(FileSpectrum):
 
     def _do_save_as(self, filename):
         with open(filename, "w") as h:
-            print "xxxxxxxxxxxxxxxxxx", self.spectrum.x
+            print(("xxxxxxxxxxxxxxxxxx", self.spectrum.x))
             for x, y in zip(self.spectrum.x, self.spectrum.y):
                 write_lf(h, "%.10g %.10g" % (x, y))
 

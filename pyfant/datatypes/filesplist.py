@@ -101,7 +101,7 @@ class SpectrumCollection(AttrsPart):
         # self.fieldnames = []
         ff = []
         for sp in self.spectra:
-            ff.extend(sp.more_headers.keys())
+            ff.extend(list(sp.more_headers.keys()))
         return list(set(ff))
 
     def add_spectrum(self, sp):
@@ -283,7 +283,7 @@ class SpectrumList(SpectrumCollection):
             self.wavelength = np.copy(sp.wavelength)
         else:
             if not np.all(self.wavelength == sp.wavelength):
-                print "VAI TER QUE RESAMPLEAR ALGO"
+                print("VAI TER QUE RESAMPLEAR ALGO")
                 xcur0, xcur1 = self.wavelength[0], self.wavelength[-1]
                 xsp0, xsp1 = sp.x[0], sp.x[-1]
 
@@ -297,15 +297,15 @@ class SpectrumList(SpectrumCollection):
                 self.wavelength = np.arange(n)*dl+xnew0
 
                 if not (xnew0 == xcur0 and xnew1 == xcur1):
-                    print "RESAMPLEANDO EXISTING"
+                    print("RESAMPLEANDO EXISTING")
                     for sp_existing in self.spectra:
                         sp_existing.resample(self.wavelength)
 
                 if not(xnew0 == xsp0 and xnew1 == xsp1 and dl == sp.delta_lambda):
-                    print "RESAMPLING NEWCOMER"
+                    print("RESAMPLING NEWCOMER")
                     sp.resample(self.wavelength)
                 else:
-                    print "NO NEED TO RESAMPLE NEWCOMER"
+                    print("NO NEED TO RESAMPLE NEWCOMER")
 
                 # raise RuntimeError("Cannot add spectrum, wavelength vector does not match existing")
 
@@ -344,8 +344,8 @@ class SpectrumList(SpectrumCollection):
 
         # Creates the block
         try:
-            from pyfant.blocks.slblocks import *  # TODO make it locals to pass to eval()
-            block = eval(expr)  # , {}, {})
+            # from pyfant.blocks.slblocks import *  # TODO make it locals to pass to eval()
+            block = eval(expr, pyfant.blocks.slblocks)  # , {}, {})
             if not isinstance(block, SLB_MergeDownBlock):
                 raise RuntimeError("Must evaluate to a MergeDownBlock, but evaluated to a %s" % (block.__class__.__name__))
         except Exception as E:
@@ -362,7 +362,7 @@ class SpectrumList(SpectrumCollection):
                     grouping_keys = [tuple([spectrum.more_headers.get(fieldname) for fieldname in group_by]) for spectrum in self.spectra]
                     unique_keys = list(set(grouping_keys))
                     unique_keys.sort()
-                    sk = zip(self.spectra, grouping_keys)
+                    sk = list(zip(self.spectra, grouping_keys))
                     for unique_key in unique_keys:
                         group = SpectrumList()
                         for spectrum, grouping_key in sk:

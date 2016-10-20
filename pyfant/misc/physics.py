@@ -132,7 +132,7 @@ class Band(object):
         """Uses tabular data if available and not flag_force_parametric"""
         flag_parametric = flag_force_parametric
         if not flag_force_parametric and self.tabular:
-            x, y = zip(*self.tabular)
+            x, y = list(zip(*self.tabular))
             f = interp1d(x, y, kind='linear', bounds_error=False, fill_value=0)
         else:
             flag_parametric = True

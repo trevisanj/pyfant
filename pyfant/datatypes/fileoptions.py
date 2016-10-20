@@ -96,8 +96,8 @@ class FileOptions(DataFile):
     def get_names(self):
         """Returns a list with the names of all the options. Names come sorted"""
         d = dir(DataFile())
-        return filter(lambda x: not x.startswith(('_', 'get_')) and
-         x not in d, dir(self))
+        return [x for x in dir(self) if not x.startswith(('_', 'get_')) and
+         x not in d]
 
     def get_args(self):
         """
@@ -118,7 +118,7 @@ class FileOptions(DataFile):
         with open(filename, "r") as h:
             lines = h.read()
         cfg = imp.new_module('cfg')
-        exec lines in cfg.__dict__
+        exec(lines, cfg.__dict__)
 
         valid_names = self.get_names()
         for option_name in valid_names:

@@ -294,22 +294,18 @@ class XMainAbonds(QMainWindow):
     # Slots for signals emited by pyfant widgets
 
     def on_main_edited(self):
-        print "def on_main_edited(self):"
         self._on_edited()
 
     def on_abonds_edited(self):
-        print "def on_abonds_edited(self):"
         self._on_edited()
 
     def on_options_edited(self):
-        print "def on_options_edited(self):"
         self._on_edited()
 
     # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * #
     # Protected methods to be overriden or used by descendant classes
 
     def _on_edited(self):
-        print "def _on_edited(self):"
         index = self.__get_index()
         self.flags_changed[index] = True
         self.__update_tab_texts()

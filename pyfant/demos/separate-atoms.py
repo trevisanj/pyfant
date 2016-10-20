@@ -70,5 +70,5 @@ if manager.flag_success:
     # ## creates PDF
     plot_spectra_pages_pdf(spectra, "separate-atoms.pdf")
 else:
-    print "Not all pfant's succeeded"
-print "FINISHED"
+    print("Not all pfant's succeeded")
+print("FINISHED")

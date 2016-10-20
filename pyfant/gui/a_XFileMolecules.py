@@ -444,7 +444,6 @@ class XFileMolecules(QMainWindow):
 
                     format_BLB()
 
-                    print "subplot", n, 1, i+1
                     self.figure.add_subplot(n, 1, i_subplot)
                     pi.axis = ax = self.figure.gca()
                     ax.clear()
@@ -471,26 +470,6 @@ class XFileMolecules(QMainWindow):
 
     # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * #
 
-    # def edit_molecule_name(self):
-    #     """Edits current item from listWidgetMol."""
-    #
-    #     a = self.listWidgetMol
-    #     item = a.currentItem()
-    #     item.setFlags(item.flags() | Qt.ItemIsEditable)
-    #     a.editItem(item)
-
-
-    # def edit_file(self):
-    # #     paramSpecs = [
-    # #     ("titm", {"value": 5}),
-    # #     ("number", {"value": 8, "description": "Size for advisor's TopBottomDetector4"}),
-    # # ("SM_distance", {"value": 150}),
-    # # ("SM_gainRiskRatio", {"value": 2}),
-    # # ("SM_AF0", {"value": 0.02, "description": "Initial acceleration factor (AF)"}),
-    # # ("SM_AFIncrement", {"value": 0.02, "description": "AF increment"})
-    # # ]
-    #     print "quer editar o file eh"
-
     def edit_mol(self):
         obj = self.mol
         if obj is None: return
@@ -506,7 +485,6 @@ class XFileMolecules(QMainWindow):
                 if orig != value:
                     obj.__setattr__(name, value)
                     flag_changed = True
-                    print "setting %s = %s" % (name, value)
         if flag_changed:
             self.flag_changed = True
             item.setText(self.get_mol_string(obj))
@@ -543,16 +521,12 @@ class XFileMolecules(QMainWindow):
                 if orig != value:
                     obj.__setattr__(name, value)
                     flag_changed = True
-                    print "setting %s = %s" % (name, value)
         if flag_changed:
             self.flag_changed = True
             item.setText(self.get_mol_string(obj))
             # item.setTextColor(QColor(255, 0, 0))
             self.update_mol_info()
             self.update_window_title()
-
-    def edit_points(self):
-        print "quer editar os pontos eh"
 
     # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * #
 
@@ -650,7 +624,6 @@ class XFileMolecules(QMainWindow):
                 if o.flag:
                     # http://stackoverflow.com/questions/22172565/matplotlib-make-plus-sign-thicker
                     o.mpl_obj = o.axis.plot([lambda_], [o.y_vector[i]], 'xr', mew=2, ms=10)
-                    #print "drawing", [lambda_], [o.y_vector[i]]
             self.canvas.draw()
 
     def flag_plot(self, idx):
@@ -665,9 +638,6 @@ class XFileMolecules(QMainWindow):
             idx = index_nearest(self.sol.lmbdam, lambda_)
             self.form_lines.set_row(idx)
             # self.set_marker_row(idx)
-
-            # print 'button=%d, x=%d, y=%d, xdata=%f, ydata=%f'%(
-            #     event.button, event.x, event.y, event.xdata, event.ydata)
 
     # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * #
 

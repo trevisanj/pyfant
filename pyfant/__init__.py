@@ -1,9 +1,9 @@
 def init_agg():
     # Problems with Tk:
     # - plot windows pop as modal
-    # - configuration options not as rich as Qt4Agg
+    # - configuration options not as rich as Qt5Agg
     import matplotlib
-    matplotlib.use('Qt4Agg')
+    matplotlib.use('Qt5Agg')
 
 init_agg()
 
@@ -19,8 +19,8 @@ from .util import *
 from .from_vald import *
 from .multirunnable import *
 from .blocks import *
-import datatypes
-import misc
-import plotting
-import blocks
+from . import datatypes
+from . import misc
+from . import plotting
+from . import blocks
 # note that gui is not imported automatically

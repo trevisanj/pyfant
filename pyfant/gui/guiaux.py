@@ -332,7 +332,7 @@ class ErrorCollector(object):
 
                                 line += 1
                                 linetext_last = linetext
-                    except IOError, E:
+                    except IOError as E:
                         occ = Occurrence(path__, "cannot open", 0, str(E))
                         self.occurrences.append(occ)
 

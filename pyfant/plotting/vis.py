@@ -68,7 +68,7 @@ class VisPrint(Vis):
     action = "Print to console"
 
     def _do_use(self, obj):
-        print obj
+        print(obj)
 
 class VisModRecord(Vis):
     """

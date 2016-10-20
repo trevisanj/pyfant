@@ -20,7 +20,7 @@ def fmt_error(s):
 
 def print_error(s):
     """Prints string as error message."""
-    print fmt_error(s)
+    print((fmt_error(s)))
 
 
 def menu(title, options, cancel_label="Cancel", flag_allow_empty=False, flag_cancel=True, ch='.'):
@@ -42,19 +42,19 @@ def menu(title, options, cancel_label="Cancel", flag_allow_empty=False, flag_can
   min_allowed = 0 if flag_cancel else 1  # minimum option value allowed (if option not empty)
 
   while True:
-    print ""
-    print "  "+ch*(lt+8)
-    print "  "+ch*3+" "+title+" "+ch*3
-    print "  "+ch*(lt+8)
+    print("")
+    print(("  "+ch*(lt+8)))
+    print(("  "+ch*3+" "+title+" "+ch*3))
+    print(("  "+ch*(lt+8)))
     for i, s in enumerate(options):
-      print "  %d - %s" % (i+1, s)
-    if flag_cancel: print "  0 - << (*%s*)" % cancel_label
-    s_option = raw_input('? ')
+      print(("  %d - %s" % (i+1, s)))
+    if flag_cancel: print(("  0 - << (*%s*)" % cancel_label))
+    s_option = eval(input('? '))
 
     n_try = 0
     while True:
       if n_try >= 10:
-        print 'You are messing up!'
+        print('You are messing up!')
         break
 
       if len(s_option) == 0 and flag_allow_empty:
@@ -67,12 +67,12 @@ def menu(title, options, cancel_label="Cancel", flag_allow_empty=False, flag_can
           flag_ok = True
           break
       except ValueError:
-        print "Invalid integer value!"
+        print("Invalid integer value!")
 
-      print "Invalid option, range is [%d, %d]!" % (0, no_options)
+      print(("Invalid option, range is [%d, %d]!" % (0, no_options)))
 
       n_try += 1
-      s_option = raw_input("? ")
+      s_option = eval(input("? "))
 
     if flag_ok:
       break

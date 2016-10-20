@@ -99,7 +99,7 @@ class FileMolecules(DataFile):
     @property
     def num_lines(self):
         """Total number of spectral line, counting all molecules."""
-        return sum(map(lambda x: x.num_lines, self.molecules))
+        return sum([x.num_lines for x in self.molecules])
 
     @property
     def lmbdam(self):
@@ -164,19 +164,19 @@ class FileMolecules(DataFile):
                     # These vectors must have nvi elements
                     s_v, r_inc = multirow_str_vector(h, nvi, r)
                     r += r_inc
-                    qqv = map(float, s_v)
+                    qqv = list(map(float, s_v))
                     s_v, r_inc = multirow_str_vector(h, nvi, r)
                     r += r_inc
-                    ggv = map(float, s_v)
+                    ggv = list(map(float, s_v))
                     s_v, r_inc = multirow_str_vector(h, nvi, r)
                     r += r_inc
-                    bbv = map(float, s_v)
+                    bbv = list(map(float, s_v))
                     s_v, r_inc = multirow_str_vector(h, nvi, r)
                     r += r_inc
-                    ddv = map(float, s_v)
+                    ddv = list(map(float, s_v))
                     s_v, r_inc = multirow_str_vector(h, nvi, r)
                     r += r_inc
-                    fact = map(float, s_v)
+                    fact = list(map(float, s_v))
                     for name in ["qqv", "ggv", "bbv", "ddv", "fact"]:
                         v = eval(name)
                         if len(v) != nvi:
@@ -196,7 +196,7 @@ class FileMolecules(DataFile):
 
                     # Now reads lines
                     sol_iter = iter(m.sol)  # iterator to change the current set-of-lines with the "numlin" flag
-                    o = sol_iter.next()  # current set-of-lines
+                    o = next(sol_iter)  # current set-of-lines
                     while True:
                         # Someone added "*" signs as a 6th column of some lines
                         # which was causing my reading to crash.
@@ -205,7 +205,7 @@ class FileMolecules(DataFile):
                         temp = str_vector(h)
                         temp = temp[:5]
 
-                        lmbdam, sj, jj, iz, numlin = map(float, temp)
+                        lmbdam, sj, jj, iz, numlin = list(map(float, temp))
                         r += 1
 
                         o.lmbdam.append(lmbdam)
@@ -215,14 +215,14 @@ class FileMolecules(DataFile):
                         if numlin > 0:
                             if numlin == 9:
                                 break
-                            o = sol_iter.next()
+                            o = next(sol_iter)
 
                     if im+1 == nm:
                         break
 
                     im += 1
             except Exception as e:
-                raise type(e)(("Error around %d%s row of file '%s'" % (r+1, ordinal_suffix(r+1), filename))+": "+str(e)), None, sys.exc_info()[2]
+                raise type(e)(("Error around %d%s row of file '%s'" % (r+1, ordinal_suffix(r+1), filename))+": "+str(e)).with_traceback(sys.exc_info()[2])
 
     def cut(self, lzero, lfin):
         """Reduces the number of lines to only the ones whose lmbdam is inside [lzero, lfin]"""
@@ -252,6 +252,6 @@ class FileMolecules(DataFile):
                 for i, s in enumerate(m.sol):
                     assert isinstance(s, SetOfLines)
                     num_lines = len(s)  # number of lines for current set-of-lines
-                    for j in xrange(num_lines):
+                    for j in range(num_lines):
                         numlin = 0 if j < num_lines-1 else 9 if i == num_sol-1 else 1
                         write_lf(h, "%.10g %.10g %.10g 0 %d" % (s.lmbdam[j], s.sj[j], s.jj[j], numlin))

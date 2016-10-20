@@ -31,7 +31,7 @@ to_run.append(pf)
 manager = run_parallel(to_run, flag_console=False)
 
 if not manager.flag_success:
-    print "Not all pfant's succeeded running, so not plotting."
+    print("Not all pfant's succeeded running, so not plotting.")
     sys.exit()
 
 # Loads continuum's and plots

@@ -17,6 +17,7 @@ import platform
 from astropy.io import fits
 from .textinterface import *
 from .loggingaux import *
+import collections
 
 
 # #################################################################################################
@@ -237,7 +238,7 @@ def symlink(source, link_name):
     http://stackoverflow.com/questions/6260149/os-symlink-support-in-windows
     """
     os_symlink = getattr(os, "symlink", None)
-    if callable(os_symlink):
+    if isinstance(os_symlink, collections.Callable):
         os_symlink(source, link_name)
     else:
         import ctypes
@@ -251,7 +252,7 @@ def symlink(source, link_name):
 
 def print_skipped(reason):
     """Standardized printing for when a file was skipped."""
-    print "   ... SKIPPED (%s)." % reason
+    print(("   ... SKIPPED (%s)." % reason))
 
 
 def crunch_dir(name, n=50):
