@@ -124,7 +124,7 @@ def run_parallel(rr, max_simultaneous=None, flag_console=True, runnable_manager=
             print(("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"+(" ALIVE" if rm.is_alive() else " DEAD")))
             print(rm)
             print(("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"+(" ALIVE" if rm.is_alive() else " DEAD")))
-            s = eval(input("[Enter] -- [e]xit & keep in loop -- [q]uit -- [k]ill running >>> "))
+            s = eval(raw_input("[Enter] -- [e]xit & keep in loop -- [q]uit -- [k]ill running >>> "))
             if s.lower() == "q":
                 if rm.is_alive():
                     try:

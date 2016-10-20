@@ -14,9 +14,9 @@ class SLB_UseSBlock(SLBlock):
         SLBlock.__init__(self)
         self.sblock = sblock
 
-    def _do_use(self, input):
+    def _do_use(self, inp):
         output = self._new_output()
-        for i, sp in enumerate(input.spectra):
+        for i, sp in enumerate(inp.spectra):
             output.add_spectrum(self.sblock.use(sp))
         return output
 
@@ -26,9 +26,9 @@ class SLB_ExtractContinua(SLBlock):
 
     # TODO this is not a great system. Just de-noising could substantially improve the extracted continua
 
-    def _do_use(self, input):
-        output = SLB_UseSBlock(SB_Rubberband(flag_upper=True)).use(input)
-        spectrum_std = SLB_MergeDown(func=np.std).use(input)
+    def _do_use(self, inp):
+        output = SLB_UseSBlock(SB_Rubberband(flag_upper=True)).use(inp)
+        spectrum_std = SLB_MergeDown(func=np.std).use(inp)
         mean_std = np.mean(spectrum_std.spectra[0].y)
         for spectrum in output.spectra:
             spectrum.y -= mean_std*3
@@ -51,11 +51,11 @@ class SLB_MergeDown(SLB_MergeDownBlock):
         SLB_MergeDownBlock.__init__(self)
         self.func = func
 
-    def _do_use(self, input):
+    def _do_use(self, inp):
         output = self._new_output()
         sp = Spectrum()
-        sp.wavelength = np.copy(input.wavelength)
-        sp.flux = self.func(input.matrix(), 0)
+        sp.wavelength = np.copy(inp.wavelength)
+        sp.flux = self.func(inp.matrix(), 0)
         if len(sp.flux) != len(sp.wavelength):
             raise RuntimeError("func returned vector of length %d, but should be %d" % (len(sp.flux), len(sp.wavelength)))
         output.add_spectrum(sp)
@@ -79,17 +79,17 @@ class SLB_SNR(SLB_MergeDownBlock):
         SLB_MergeDownBlock.__init__(self)
         self.continua = continua
 
-    def _do_use(self, input):
+    def _do_use(self, inp):
         if self.continua is None:
-            continua = SLB_UseSBlock(SB_Rubberband(True)).use(input)
+            continua = SLB_UseSBlock(SB_Rubberband(True)).use(inp)
         else:
             continua = self.continua
         cont_2 = SLB_UseSBlock(SB_ElementWise(np.square)).use(continua)  # continua squared
         mean_cont_2 = SLB_MergeDown(np.mean).use(cont_2)
-        var_spectra = SLB_MergeDown(np.var).use(input)
+        var_spectra = SLB_MergeDown(np.var).use(inp)
         output = self._new_output()
         sp = Spectrum()
-        sp.wavelength = np.copy(input.wavelength)
+        sp.wavelength = np.copy(inp.wavelength)
         sp.flux = mean_cont_2.spectra[0].flux/var_spectra.spectra[0].flux
         output.add_spectrum(sp)
         return output

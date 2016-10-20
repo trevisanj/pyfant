@@ -78,7 +78,7 @@ class XScaleSpectrum(XLogDialog):
         y = self.cb_band = QComboBox()
         signals.append(y.currentIndexChanged)
         x.setBuddy(y)
-        y.addItems(Bands.bands.keys())
+        y.addItems(list(Bands.bands.keys()))
         pp.append((x, y, "&Band name", "UBVRI-x system", ""))
         ###
         x = self.label_x = QLabel()
@@ -298,7 +298,7 @@ def _calculate_and_plot(fig, spectrum, band_name, flag_force_parametric):
     # # Second subplot
     ax = fig.add_subplot(312)
     # other bands
-    for band in Bands.bands.itervalues():
+    for band in Bands.bands.values():
         l0, lf = band.range(flag_force_parametric)
         if lf >= plot_l0 and l0 <= plot_lf:
             x = np.linspace(l0, lf, 200)

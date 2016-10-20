@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 """
 Converts VALD3 atomic/molecular lines file to PFANT atomic lines file.
 
@@ -78,7 +78,7 @@ if __name__ == "__main__":
 
     logger.info("Saving file...")
     file_atoms.save_as(fn_out)
-    print "File %s was successfully created." % fn_out
+    print("File %s was successfully created." % fn_out)
     zz = file_atoms.zinf
     if len(zz) > 0:
         if np.all(zz == zz[0]):

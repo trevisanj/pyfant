@@ -244,7 +244,8 @@ class Executable(Runnable):
             try:
                 if self.conf.popen_text_dest is not None:
                     for line in self.__popen.stdout:
-                        self.conf.popen_text_dest.write(line)
+                        # In Python 3, line is bytes, write() cannot deal with that
+                        self.conf.popen_text_dest.write(line.decode("ascii"))
             finally:
                 self.__popen.stdout.close()
 

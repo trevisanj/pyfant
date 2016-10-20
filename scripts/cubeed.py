@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 
 """Data Cube Editor, import/export WebSim-COMPASS data cubes"""
 

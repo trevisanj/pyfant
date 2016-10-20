@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 
 #
 # NOT YET
@@ -54,4 +54,4 @@ if __name__ == "__main__":
 
 
     # mentira por enqto
-    print "Successfully created file '%s'" % args.fn_modeles
+    print("Successfully created file '%s'" % args.fn_modeles)

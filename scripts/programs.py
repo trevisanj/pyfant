@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 
 """
 Lists all Fortran/Python programs available (PFANT + pyfant)
@@ -21,15 +21,15 @@ if __name__ == "__main__":
     linesp, module_len = format_script_info(scriptinfo, format=args.format)
     linesf = get_fortrans(module_len)
 
-    print fmt_ascii_h1("Fortran")
-    print "\n".join(linesf)
-    print ""
+    print(fmt_ascii_h1("Fortran"))
+    print("\n".join(linesf))
+    print("")
 
-    print fmt_ascii_h1("Python")
-    print "\n".join(linesp)
+    print(fmt_ascii_h1("Python"))
+    print("\n".join(linesp))
 
-    print ""
-    print "Search directories:"
-    print "  Fortran: %s" % os.path.join(get_pfant_path(), "fortran", "bin")
-    print "  Python: %s" % os.path.join(get_pyfant_path(), "scripts")
+    print("")
+    print("Search directories:")
+    print("  Fortran: %s" % os.path.join(get_pfant_path(), "fortran", "bin"))
+    print("  Python: %s" % os.path.join(get_pyfant_path(), "scripts"))
 

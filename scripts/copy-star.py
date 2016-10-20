@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 """
 Copies stellar data files (such as main.dat, abonds.dat, dissoc.dat) to local directory
 
@@ -47,9 +47,9 @@ if __name__ == "__main__":
 
     # "-l" mode
     if args.list:
-        print fmt_ascii_h1("Subdirectories of '%s" % get_pfant_data_path())
+        print(fmt_ascii_h1("Subdirectories of '%s" % get_pfant_data_path()))
         for dirname in get_pfant_data_subdirs():
-            print dirname
+            print(dirname)
         sys.exit()
         
     # figures out the path to directory (dir_)
@@ -67,6 +67,6 @@ if __name__ == "__main__":
             dir_ = os.path.join(get_pfant_data_path(), args.directory)
             
     if not os.path.isdir(dir_):
-        print "'%s' is not a directory" % dir_
+        print("'%s' is not a directory" % dir_)
         sys.exit(-1)
     copy_star(dir_)

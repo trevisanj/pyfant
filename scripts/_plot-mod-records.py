@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 """
 Opens several windows to show what is inside a NEWMARCS grid file.
 """

@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 """
 Plots one record of a binary .mod file (e.g., modeles.mod, newnewm050.mod).
 """

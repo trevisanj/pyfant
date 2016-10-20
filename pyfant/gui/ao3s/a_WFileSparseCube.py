@@ -425,7 +425,7 @@ class WFileSparseCube(WBase):
         self.plot_colors()
 
     def go_clicked(self):
-        print "GO CLICKED\n" * 10
+        print("GO CLICKED\n" * 10)
         flag_emit = False
         try:
             x, y = self.get_place_spectrum_xy()
@@ -457,7 +457,7 @@ class WFileSparseCube(WBase):
 
     def timeout_place(self):
         if self.obj_square:
-            next_color = _ITER_COLORS_SQ.next()
+            next_color = next(_ITER_COLORS_SQ)
             for obj in self.obj_square:
                 obj.set_color(next_color)
                 self.canvas1.draw()

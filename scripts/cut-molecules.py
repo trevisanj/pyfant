@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 """
 Cuts molecular lines file to wavelength interval specified
 
@@ -33,9 +33,9 @@ if __name__ == "__main__":
     lmbdam = file_molecules.lmbdam
     m, M = min(lmbdam), max(lmbdam)
 
-    print "Original interval: [%g, %g]" % (m, M)
-    print "New interval: [%g, %g]" % (args.llzero[0], args.llfin[0])
+    print("Original interval: [%g, %g]" % (m, M))
+    print("New interval: [%g, %g]" % (args.llzero[0], args.llfin[0]))
 
     file_molecules.cut(args.llzero[0], args.llfin[0])
     file_molecules.save_as(args.fn_output[0])
-    print "Successfully created file '%s'" % args.fn_output[0]
+    print("Successfully created file '%s'" % args.fn_output[0])

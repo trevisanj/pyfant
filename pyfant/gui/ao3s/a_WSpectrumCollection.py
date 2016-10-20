@@ -367,7 +367,7 @@ class WSpectrumCollection(WBase):
         sspp = self.get_selected_spectra()
         flag_emit, flag_changed_header = False, False
         if len(sspp) > 0:
-            from a_XApplySB_scalar import XApplySB_scalar
+            from .a_XApplySB_scalar import XApplySB_scalar
 
             form = self.keep_ref(XApplySB_scalar())
             if not form.exec_():
@@ -439,7 +439,7 @@ class WSpectrumCollection(WBase):
     #         self.edited.emit(flag_changed_header)
     #
     def open_in_new_clicked(self):
-        from .a_XFileSpectrumList import *
+        from .a_XFileSpectrumList import XFileSpectrumList
         ii = self.get_selected_spectrum_indexes()
         if len(ii) > 0:
             other = copy.deepcopy(self.collection)

@@ -17,9 +17,9 @@ class SB_Rubberband(SBlock):
         # Upper or lower rubberband
         self.flag_upper = flag_upper
 
-    def _do_use(self, input):
+    def _do_use(self, inp):
         output = self._new_output()
-        y = input.y
+        y = inp.y
         if self.flag_upper:
             y = -y
         output.y = rubberband(y)
@@ -34,10 +34,10 @@ class SB_AddNoise(SBlock):
         # Standard deviation of noise
         self.std = std
 
-    def _do_use(self, input):
-        n = len(input)
+    def _do_use(self, inp):
+        n = len(inp)
         output = self._new_output()
-        output.y = np.copy(input.y)+np.random.normal(0, self.std, n)
+        output.y = np.copy(inp.y) + np.random.normal(0, self.std, n)
         return output
 
 
@@ -45,10 +45,10 @@ class SB_FNuToFLambda(SBlock):
     """
     Flux-nu to flux-lambda conversion. Assumes the wavelength axis is in angstrom
     """
-    def _do_use(self, input):
+    def _do_use(self, inp):
         raise NotImplementedError()
         output = self._new_output()
-        output.y = input.y
+        output.y = inp.y
 
 
 class SB_ElementWise(SBlock):
@@ -58,10 +58,10 @@ class SB_ElementWise(SBlock):
         SBlock.__init__(self)
         self.func = func
 
-    def _do_use(self, input):
+    def _do_use(self, inp):
         output = self._new_output()
-        output.wavelength = np.copy(input.wavelength)
-        output.flux = self.func(input.flux)
+        output.wavelength = np.copy(inp.wavelength)
+        output.flux = self.func(inp.flux)
         if len(output.flux) != len(output.wavelength):
             raise RuntimeError(
                 "func returned vector of length %d, but should be %d" % (len(output.flux), len(output.wavelength)))
@@ -96,8 +96,8 @@ class SB_Extend(SBlock):
         self.flag_left = flag_left
         self.flag_right = flag_right
 
-    def _do_use(self, input):
-        output = self._copy_input(input)
+    def _do_use(self, inp):
+        output = self._copy_input(inp)
 
         if not (self.flag_left or self.flag_right):
             return output
@@ -147,9 +147,9 @@ class SB_scalar_SNR(SB_scalar):
         self.llzero = llzero
         self.llfin = llfin
 
-    def _do_use(self, input):
-        x = input.x
-        y = input.y
+    def _do_use(self, inp):
+        x = inp.x
+        y = inp.y
         signal = y[np.logical_and(x >= self.llzero, x <= self.llfin)]
 
         output = np.mean(signal**2)/np.var(signal)

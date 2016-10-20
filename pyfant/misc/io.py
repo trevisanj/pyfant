@@ -321,8 +321,10 @@ def _format_script_info(py_len, title, scriptinfo, format):
         for si in scriptinfo:
             ret.append(mask % ("`%s`" % si.filename, si.description))
     elif format == "text":
-        hr = "*"*(len(title)+2)
-        ret.append("\n%s\n*%s*\n%s" % (hr, title, hr))
+        n = len(title)
+        # hr = "*"*(len(title)+2)
+        # ret.append("\n%s\n*%s*\n%s" % (hr, title, hr))
+        ret.append("\n %s \n%s" % (title, "+"+'-'*n+"+"))
         for si in scriptinfo:
             piece = si.filename + " " + ("." * (py_len - len(si.filename)))
             if si.flag_error:
@@ -357,8 +359,8 @@ def format_script_info(scriptinfo, format="text"):
 
     sisi_gra = [si for si in scriptinfo if si.flag_gui]
     sisi_cmd = [si for si in scriptinfo if not si.flag_gui]
-    sisi_gra.sort(cmp=lambda x, y: x.filename < y.filename)
-    sisi_cmd.sort(cmp=lambda x, y: x.filename < y.filename)
+    sisi_gra = sorted(sisi_gra, key=lambda x: x.filename)
+    sisi_cmd = sorted(sisi_cmd, key=lambda x: x.filename)
 
     ret = []
     if len(sisi_gra) > 0:
@@ -429,7 +431,7 @@ def load_with_classes(filename, classes):
             raise
         except Exception as e:  # (ValueError, NotImplementedError):
             # Note: for debugging, switch the below to True
-            if False:
+            if True:
                 get_python_logger().exception("Error trying with class \"%s\"" % \
                                               class_.__name__)
             pass

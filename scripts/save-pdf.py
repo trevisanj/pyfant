@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 
 """
 Looks for file "flux.norm" inside directories session-* and saves one figure per page in a PDF file
@@ -42,7 +42,7 @@ if __name__ == "__main__":
     for d in dd:
         name = d[8:]
 
-        print "Saving ", name, "..."
+        print("Saving ", name, "...")
 
         f = FileSpectrumPfant()
         f.load(os.path.join(d, "flux.norm"))

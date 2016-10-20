@@ -82,7 +82,7 @@ class FileModBin(DataFile):
     if b < MOD_REC_SIZE:
         raise RuntimeError("File too small")
 
-    num_rec = b/MOD_REC_SIZE-1
+    num_rec = int(b/MOD_REC_SIZE)-1
     self.records = []
     with open(filename, "rb") as h:
 

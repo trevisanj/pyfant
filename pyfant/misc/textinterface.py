@@ -49,7 +49,10 @@ def menu(title, options, cancel_label="Cancel", flag_allow_empty=False, flag_can
     for i, s in enumerate(options):
       print(("  %d - %s" % (i+1, s)))
     if flag_cancel: print(("  0 - << (*%s*)" % cancel_label))
-    s_option = eval(input('? '))
+    try:
+        s_option = input('? ')
+    except:
+        print("")
 
     n_try = 0
     while True:
@@ -72,7 +75,7 @@ def menu(title, options, cancel_label="Cancel", flag_allow_empty=False, flag_can
       print(("Invalid option, range is [%d, %d]!" % (0, no_options)))
 
       n_try += 1
-      s_option = eval(input("? "))
+      s_option = input("? ")
 
     if flag_ok:
       break

@@ -309,7 +309,7 @@ class XFileMainWindow(XLogMainWindow):
     # Protected methods to be overriden or used by descendant classes
 
     def _on_edited(self):
-        print "def %s._on_edited(self):" % self.__class__.__name__
+        print(("def %s._on_edited(self):" % self.__class__.__name__))
         index = self._get_tab_index()
         self.flags_changed[index] = True
         self._update_tab_texts()

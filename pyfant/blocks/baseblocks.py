@@ -19,21 +19,21 @@ class BaseBlock(object):
 class SBlock(BaseBlock):
     """SBlock -- class with a "use" method accepting only Spectrum as input"""
 
-    def use(self, input):
-        assert isinstance(input, Spectrum)
-        self._input = input
+    def use(self, inp):
+        assert isinstance(inp, Spectrum)
+        self._input = inp
         try:
             # If the output wavelength vector is the same, flag_copy_wavelength determines whether this vector
             # will be copied or just assigned to the output
             #
             # **Attention** blocks that handle the wavelength vectors must comply
-            output = self._do_use(input)
+            output = self._do_use(inp)
             assert output is not None  # it is common to forger to return in _do_use()
             if isinstance(output, Spectrum):
                 assert output._flag_created_by_block
             # Automatically assigns output wavelength vector if applicable
-            if isinstance(output, Spectrum) and output.wavelength is None and len(output.y) == len(input.y):
-                output.wavelength = np.copy(input.wavelength)  # TODO this may slow down things... or not ... if self.flag_copy_wavelength else input.wavelength
+            if isinstance(output, Spectrum) and output.wavelength is None and len(output.y) == len(inp.y):
+                output.wavelength = np.copy(inp.wavelength)  # TODO this may slow down things... or not ... if self.flag_copy_wavelength else input.wavelength
             return output
         finally:
             self._input = None
@@ -47,21 +47,21 @@ class SBlock(BaseBlock):
         output.more_headers = copy.deepcopy(self._input.more_headers)
         return output
 
-    def _copy_input(self, input):
+    def _copy_input(self, inp):
         """
         Returns copy of input + extra annotations
 
         Don't copy spectra explicitly; use this method instead
         """
 
-        output = copy.deepcopy(input)
+        output = copy.deepcopy(inp)
         output._flag_created_by_block = True
 
         return output
 
-    def _do_use(self, input):
+    def _do_use(self, inp):
         """Default implementation is identity"""
-        return input
+        return inp
 
 
 class SB_Rubberband(SBlock):
@@ -72,9 +72,9 @@ class SB_Rubberband(SBlock):
         # Upper or lower rubberband
         self.flag_upper = flag_upper
 
-    def _do_use(self, input):
+    def _do_use(self, inp):
         output = self._new_output()
-        y = input.y
+        y = inp.y
         if self.flag_upper:
             y = -y
         output.y = rubberband(y)
@@ -89,10 +89,10 @@ class SB_AddNoise(SBlock):
         # Standard deviation of noise
         self.std = std
 
-    def _do_use(self, input):
-        n = len(input)
+    def _do_use(self, inp):
+        n = len(inp)
         output = self._new_output()
-        output.y = np.copy(input.y)+np.random.normal(0, self.std, n)
+        output.y = np.copy(inp.y) + np.random.normal(0, self.std, n)
         return output
 
 
@@ -100,10 +100,10 @@ class SB_FNuToFLambda(SBlock):
     """
     Flux-nu to flux-lambda conversion. Assumes the wavelength axis is in angstrom
     """
-    def _do_use(self, input):
+    def _do_use(self, inp):
         raise NotImplementedError()
         output = self._new_output()
-        output.y = input.y
+        output.y = inp.y
 
 class SB_ElementWise(SBlock):
     """Applies function to input.flux. function must return vector of same dimension as input"""
@@ -112,10 +112,10 @@ class SB_ElementWise(SBlock):
         SBlock.__init__(self)
         self.func = func
 
-    def _do_use(self, input):
+    def _do_use(self, inp):
         output = self._new_output()
-        output.wavelength = np.copy(input.wavelength)
-        output.flux = self.func(input.flux)
+        output.wavelength = np.copy(inp.wavelength)
+        output.flux = self.func(inp.flux)
         if len(output.flux) != len(output.wavelength):
             raise RuntimeError(
                 "func returned vector of length %d, but should be %d" % (len(output.flux), len(output.wavelength)))
@@ -150,8 +150,8 @@ class SB_Extend(SBlock):
         self.flag_left = flag_left
         self.flag_right = flag_right
 
-    def _do_use(self, input):
-        output = self._copy_input(input)
+    def _do_use(self, inp):
+        output = self._copy_input(inp)
 
         if not (self.flag_left or self.flag_right):
             return output
@@ -197,9 +197,9 @@ class SB_SNR(SBlock):
         self.llzero = llzero
         self.llfin = llfin
 
-    def _do_use(self, input):
-        x = input.x
-        y = input.y
+    def _do_use(self, inp):
+        x = inp.x
+        y = inp.y
         signal = y[np.logical_and(x >= self.llzero, x <= self.llfin)]
 
         output = np.mean(signal**2)/np.var(signal)
@@ -212,11 +212,11 @@ class SB_SNR(SBlock):
 class SLBlock(BaseBlock):
     """SBlock -- class with a "use" method accepting a SpectrumList as input"""
 
-    def use(self, input):
-        assert isinstance(input, SpectrumList)
-        self._input = input
+    def use(self, inp):
+        assert isinstance(inp, SpectrumList)
+        self._input = inp
         try:
-            output = self._do_use(input)
+            output = self._do_use(inp)
             assert output is not None
             if isinstance(output, SpectrumList):
                 assert output._flag_created_by_block
@@ -230,9 +230,9 @@ class SLBlock(BaseBlock):
         output._flag_created_by_block = True  # assertion
         return output
 
-    def _do_use(self, input):
+    def _do_use(self, inp):
         """Default implementation is identity"""
-        return input
+        return inp
 
 
 class SLB_UseSBlock(SLBlock):
@@ -241,9 +241,9 @@ class SLB_UseSBlock(SLBlock):
         SLBlock.__init__(self)
         self.sblock = sblock
 
-    def _do_use(self, input):
+    def _do_use(self, inp):
         output = self._new_output()
-        for i, sp in enumerate(input.spectra):
+        for i, sp in enumerate(inp.spectra):
             output.add_spectrum(self.sblock.use(sp))
         return output
 
@@ -253,9 +253,9 @@ class SLB_ExtractContinua(SLBlock):
 
     # TODO this is not a great system. Just de-noising could substantially improve the extracted continua
 
-    def _do_use(self, input):
-        output = SLB_UseSBlock(SB_Rubberband(flag_upper=True)).use(input)
-        spectrum_std = SLB_MergeDown(func=np.std).use(input)
+    def _do_use(self, inp):
+        output = SLB_UseSBlock(SB_Rubberband(flag_upper=True)).use(inp)
+        spectrum_std = SLB_MergeDown(func=np.std).use(inp)
         mean_std = np.mean(spectrum_std.spectra[0].y)
         for spectrum in output.spectra:
             spectrum.y -= mean_std*3
@@ -277,11 +277,11 @@ class SLB_MergeDown(SLB_MergeDownBlock):
         SLB_MergeDownBlock.__init__(self)
         self.func = func
 
-    def _do_use(self, input):
+    def _do_use(self, inp):
         output = self._new_output()
         sp = Spectrum()
-        sp.wavelength = np.copy(input.wavelength)
-        sp.flux = self.func(input.matrix(), 0)
+        sp.wavelength = np.copy(inp.wavelength)
+        sp.flux = self.func(inp.matrix(), 0)
         if len(sp.flux) != len(sp.wavelength):
             raise RuntimeError("func returned vector of length %d, but should be %d" % (len(sp.flux), len(sp.wavelength)))
         output.add_spectrum(sp)
@@ -304,17 +304,17 @@ class SLB_SNR(SLB_MergeDownBlock):
         SLB_MergeDownBlock.__init__(self)
         self.continua = continua
 
-    def _do_use(self, input):
+    def _do_use(self, inp):
         if self.continua is None:
-            continua = SLB_UseSBlock(SB_Rubberband(True)).use(input)
+            continua = SLB_UseSBlock(SB_Rubberband(True)).use(inp)
         else:
             continua = self.continua
         cont_2 = SLB_UseSBlock(SB_ElementWise(np.square)).use(continua)  # continua squared
         mean_cont_2 = SLB_MergeDown(np.mean).use(cont_2)
-        var_spectra = SLB_MergeDown(np.var).use(input)
+        var_spectra = SLB_MergeDown(np.var).use(inp)
         output = self._new_output()
         sp = Spectrum()
-        sp.wavelength = np.copy(input.wavelength)
+        sp.wavelength = np.copy(inp.wavelength)
         sp.flux = mean_cont_2.spectra[0].flux/var_spectra.spectra[0].flux
         output.add_spectrum(sp)
         return output
