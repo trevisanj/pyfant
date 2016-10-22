@@ -437,7 +437,7 @@ class WFileSparseCube(WBase):
             self.__update_gui()
             flag_emit = True
         except Exception as E:
-            self.add_log_error(str_exc(E), True)
+            self.add_log_error(self.str_exc(E), True)
             raise
         if flag_emit:
             self.edited.emit()
@@ -486,7 +486,7 @@ class WFileSparseCube(WBase):
                     s = "wavelength_range"
                     lambda0, lambda1 = eval(kk["wavelength_range"])
                 except Exception as E:
-                    self.add_log_error("Failed evaluating %s: %s" % (s, str_exc(E)), True)
+                    self.add_log_error("Failed evaluating %s: %s" % (s, self.str_exc(E)), True)
                     continue
 
                 # Works with clone, then replaces original, to ensure atomic operation
@@ -495,7 +495,7 @@ class WFileSparseCube(WBase):
                 try:
                     clone.sparsecube.crop(x0, x1, y0, y1, lambda0, lambda1)
                 except Exception as E:
-                    self.add_log_error("Crop operation failed: %s" % str_exc(E), True)
+                    self.add_log_error("Crop operation failed: %s" % self.str_exc(E), True)
                     continue
 
                 form1 = self.keep_ref(self.parent_form.__class__())
@@ -508,7 +508,7 @@ class WFileSparseCube(WBase):
                 break
 
         except Exception as E:
-            self.add_log_error("Crop failed: %s" % str_exc(E), True)
+            self.add_log_error("Crop failed: %s" % self.str_exc(E), True)
             raise
 
     def export_ccube_clicked(self):
@@ -522,7 +522,7 @@ class WFileSparseCube(WBase):
                 fccube.wcube = wcube
                 fccube.save_as(fn)
             except Exception as E:
-                self.add_log_error("Failed export: %s" % str_exc(E), True)
+                self.add_log_error("Failed export: %s" % self.str_exc(E), True)
                 raise
 
     def replot_colors(self):
@@ -634,9 +634,9 @@ class WFileSparseCube(WBase):
         except Exception as E:
             flag_error = True
             if ss:
-                emsg = "Field '%s': %s" % (ss, str_exc(E))
+                emsg = "Field '%s': %s" % (ss, self.str_exc(E))
             else:
-                emsg = str_exc(E)
+                emsg = self.str_exc(E)
             self.add_log_error(emsg)
         if flag_emit:
             self.__emit_if()
@@ -662,7 +662,7 @@ class WFileSparseCube(WBase):
             self.canvas0.draw()
 
         except Exception as E:
-            self.add_log_error(str_exc(E))
+            self.add_log_error(self.str_exc(E))
             get_python_logger().exception("Could not plot spectra")
 
     def plot_colors(self):
@@ -692,6 +692,6 @@ class WFileSparseCube(WBase):
 
             self.flag_plot_colors_pending = False
         except Exception as E:
-            self.add_log_error(str_exc(E))
+            self.add_log_error(self.str_exc(E))
             get_python_logger().exception("Could not plot colors")
 

@@ -1,7 +1,7 @@
 
 
 __all__ = ["XLogMainWindow", "XLogDialog", "XFileMainWindow", "NullEditor", "WBase",
-"str_exc", "get_window_title", "style_widget"]
+"get_window_title", "style_widget"]
 
 
 from PyQt4.QtCore import *
@@ -30,11 +30,6 @@ def get_window_title(prefix):
         return "%s #%d" % (prefix, i)
 
 
-def str_exc(E):
-    """Generates a string from an Exception"""
-    return "%s: %s" % (E.__class__.__name__, str(E))
-
-
 class _LogPart(object):
     # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * #
     # Interface
@@ -47,6 +42,13 @@ class _LogPart(object):
         """
         self._refs.append(obj)
         return obj
+
+
+    @staticmethod
+    def str_exc(E):
+        """Generates a string from an Exception"""
+        return "%s: %s" % (E.__class__.__name__, str(E))
+
 
     def add_log_error(self, x, flag_also_show=False):
         """Sets text of labelError."""
@@ -118,17 +120,17 @@ class XFileMainWindow(XLogMainWindow):
         b = self.menuBar()
         m = self.menu_file = b.addMenu("&File")
 
-        ac = m.addAction("&Open...")
+        ac = m.addAction(get_pyfant_icon("document-open"), "&Open...")
         ac.setShortcut("Ctrl+O")
         ac.triggered.connect(self.on_open)
 
         m.addSeparator()
 
-        ac = m.addAction("&Save")
+        ac = m.addAction(get_pyfant_icon("document-save"), "&Save")
         ac.setShortcut("Ctrl+S")
         ac.triggered.connect(self.on_save)
 
-        ac = m.addAction("Save &as...")
+        ac = m.addAction(get_pyfant_icon("document-save-as"), "Save &as...")
         ac.setShortcut("Ctrl+Shift+S")
         ac.triggered.connect(self.on_save_as)
 
@@ -145,7 +147,7 @@ class XFileMainWindow(XLogMainWindow):
 
         m.addSeparator()
 
-        ac = m.addAction("&Quit")
+        ac = m.addAction(get_pyfant_icon("system-shutdown"), "&Quit")
         ac.setShortcut("Ctrl+Q")
         ac.triggered.connect(self.close)
 

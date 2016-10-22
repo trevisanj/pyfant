@@ -2,10 +2,10 @@
 # import splistblocks
 # import sp2scalar
 
-from . import baseblocks
-from . import mergedown
-from . import sp2scalar
-from . import spblocks
-from . import splistblocks
+from . import base
+from . import group
+from . import toscalar
+from . import sb
+from . import slb
 
 

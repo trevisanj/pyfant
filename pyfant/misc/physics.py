@@ -202,6 +202,7 @@ class Bands(object):
     ))
 
 
+    # (midpoint, FWHM)
     # Values taken from https://en.wikipedia.org/wiki/Photometric_system
     PARAMETRIC = collections.OrderedDict((
     ("U", (3650., 660.)),

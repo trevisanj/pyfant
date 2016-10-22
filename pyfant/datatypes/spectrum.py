@@ -258,7 +258,7 @@ class Spectrum(object):
         self.x = self.x[i0:i1]
         self.y = self.y[i0:i1]
 
-    def calculate_magnitude(self, band_name, flag_force_parametric=False):
+    def calculate_magnitude(self, band_name, flag_force_parametric=False, flag_always_full_band=False):
         """
         Calculates magnitude and stores values in more_headers "MAG_CALC" and "MAG_BAND"
 

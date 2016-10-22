@@ -46,6 +46,9 @@ class XFileSpectrumList(XFileMainWindow):
         ce.edited.connect(self.on_tab0_file_edited)
         self.editors[0] = ce
 
+        # # Adds spectrum collection actions to menu
+        self.menuBar().addMenu(self.ce.menu_actions)
+
         # # Loads default file by default
         if os.path.isfile(FileSpectrumList.default_filename):
             f = FileSpectrumList()

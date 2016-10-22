@@ -133,6 +133,10 @@ class SpectrumCollection(AttrsPart):
         for index in reversed(indexes):
             del self.spectra[index]
 
+    def clear(self):
+        """Removes all spectra from the collection"""
+        self.spectra = []
+
     def merge_with(self, other):
         """Adds spectra from other SpectrumCollection to self"""
         assert isinstance(other, SpectrumCollection)
@@ -328,15 +332,15 @@ class SpectrumList(SpectrumCollection):
     #     """Rudimentary query system for "merge down" operations
     #
     #     Arguments:
-    #         expr -- expression which will be eval()'ed with expected result to be a MergeDownBlock
+    #         expr -- expression which will be eval()'ed with expected result to be a GroupBlock
     #                 Example: "SNR()"
     #
     #                 TODO I should not eval here, the argument should be the block itself
     #
     #         group_by -- sequence of spectrum "more_headers" fieldnames.
-    #                     If not passed, will treat the whole SpectrumCollection as a single group.
+    #                     If not passed, will treat the whole SpectrumCollection as a single group.py.
     #                     If passed, will split the collection in groups and perform the "merge down" operations separately
-    #                     for each group
+    #                     for each group.py
     #
     #     Returns: (SpectrumCollection containing query result, list of error strings)
     #     """
@@ -347,8 +351,8 @@ class SpectrumList(SpectrumCollection):
     #     try:
     #         # from pyfant.blocks.slblocks import *  # TODO make it locals to pass to eval()
     #         block = eval(expr, ..blocks.mergedown)  # , {}, {})
-    #         if not isinstance(block, MergeDownBlock):
-    #             raise RuntimeError("Must evaluate to a MergeDownBlock, but evaluated to a %s" % (block.__class__.__name__))
+    #         if not isinstance(block, GroupBlock):
+    #             raise RuntimeError("Must evaluate to a GroupBlock, but evaluated to a %s" % (block.__class__.__name__))
     #     except Exception as E:
     #         msg = "Expression ''%s``: %s" % (expr, str(E))
     #         errors.append(msg)
@@ -365,23 +369,23 @@ class SpectrumList(SpectrumCollection):
     #                 unique_keys.sort()
     #                 sk = list(zip(self.spectra, grouping_keys))
     #                 for unique_key in unique_keys:
-    #                     group = SpectrumList()
+    #                     group.py = SpectrumList()
     #                     for spectrum, grouping_key in sk:
     #                         if grouping_key == unique_key:
-    #                             group.add_spectrum(spectrum)
-    #                     groups.append(group)
+    #                             group.py.add_spectrum(spectrum)
+    #                     groups.append(group.py)
     #
     #                 ret = SpectrumList()
-    #                 ret.fieldnames = group_by  # new SpectrumList will have the group field names
+    #                 ret.fieldnames = group_by  # new SpectrumList will have the group.py field names
     #
-    #                 # Uses block in each group
-    #                 for group in groups:
-    #                     splist = block.use(group)
+    #                 # Uses block in each group.py
+    #                 for group.py in groups:
+    #                     splist = block.use(group.py)
     #
-    #                     # copies "group by" fields from first input spectrum to output spectrum
+    #                     # copies "group.py by" fields from first input spectrum to output spectrum
     #                     sp = splist.spectra[0]
     #                     for fieldname in group_by:
-    #                         sp.more_headers[fieldname] = group.spectra[0].more_headers[fieldname]
+    #                         sp.more_headers[fieldname] = group.py.spectra[0].more_headers[fieldname]
     #                     ret.merge_with(splist)
     #         except Exception as E:
     #             msg = "Calculating output: %s" % str(E)
@@ -393,17 +397,19 @@ class SpectrumList(SpectrumCollection):
 
 
     def __update(self):
-        """Updates internal state"""
+        """
+        Updates internal state
+
+        This consists of verifying whether or not there are spectra.
+        If not, resets the wavelength vector.
+        """
 
         if not self.__flag_update:
             self.__flag_update_pending = True
             return
 
         if len(self.spectra) == 0:
-            return
-
-        # Nothing to update so far
-        pass
+            self.wavelength = np.array([-1., -1.])
 
 
 class FileSpectrumList(DataFile):

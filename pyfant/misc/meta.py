@@ -1,7 +1,7 @@
 """Class & metaclass stuff"""
 
 
-__all__ = ["AttrsPart", "froze_it", "collect_doc"]
+__all__ = ["AttrsPart", "froze_it", "collect_doc", "module_to_dict"]
 
 
 from functools import wraps
@@ -80,26 +80,37 @@ class AttrsPart(object):
         return s
 
 
-def collect_doc(module, prefix=None, flag_exclude_prefix=True):
+def collect_doc(module, base_class=None, prefix="", flag_exclude_prefix=False):
     """
     Collects class names and docstrings in module for classes starting with prefix
 
     Arguments:
         module -- Python module
-        prefix -- argument for str.startswith(); if not passed, does not filter (not recommended)
+        prefix -- argument for str.startswith(); if not passed, does not filter
+        base_class -- filters only descendants of this class
         flag_exclude_prefix -- whether or not to exclude prefix from class name in result
 
     Returns: [(classname0, docstring0), ...]
     """
 
-    assert not (prefix is None and flag_exclude_prefix), "Cannot exclude prefix if prefix was not passed"
-
     ret = []
-    for attrname in dir(module):
-        if not (prefix is None or attrname.startswith(prefix)):
+    for attrname in module.__all__:
+        if prefix and not attrname.startswith(prefix):
             continue
 
         attr = module.__getattribute__(attrname)
+
+        if base_class is not None and not issubclass(attr, base_class):
+            continue
+
         ret.append((attrname if not flag_exclude_prefix else attrname[len(prefix):], attr.__doc__))
 
+    return ret
+
+
+def module_to_dict(module):
+    """Creates a dictionary whose keys are module.__all__"""
+
+    lot = [(key, module.__getattribute__(key)) for key in module.__all__]
+    ret = dict(lot)
     return ret

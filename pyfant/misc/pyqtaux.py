@@ -1,10 +1,23 @@
-__all__ = ["get_QApplication", "_ThreadsafeTimer", "SignalProxy"]
+__all__ = ["get_QApplication", "_ThreadsafeTimer", "SignalProxy", "get_pyfant_icon"]
 
 
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 import time
 from threading import Lock
+from .io import get_pyfant_path
+
+
+def get_pyfant_icon(keyword):
+    """
+    Transforms a PNG file in a QIcon
+
+    Looks for a file named <keyword>.png in the "icons" directory
+    """
+
+    filename = get_pyfant_path("icons", keyword+".png")
+    ret = QIcon(filename)
+    return ret
 
 
 # #################################################################################################

@@ -16,7 +16,7 @@ class XHelpDialog(XLogDialog):
 
     Relevant attributes:
       self.help_data -- [(class name without prefix, docstring), ...]
-      self.block -- None or Sp2Scalar instance, set before closing when one clicks on "OK"
+      self.block -- None or ToScalar instance, set before closing when one clicks on "OK"
       self.grid -- grid layout (initially empty)
       self.labelHelpTopics -- label with text "Help Topics", exposed in case you want to change this text
       self.comboBox -- combo box to add the help topics
@@ -92,5 +92,10 @@ class XHelpDialog(XLogDialog):
 
     def combobox_changed(self):
         idx = self.comboBox.currentIndex()
-        self.textEdit.setText("<h1>%s</h1>%s\n" % (self.help_data[idx][0], self.help_data[idx][1].replace("\n", "<br>")))
+        # self.textEdit.setText("<h1>%s</h1>%s\n" % (self.help_data[idx][0], self.help_data[idx][1].replace("\n", "<br>")))
+
+
+        self.textEdit.setText("<h1>%s</h1><pre>%s</pre>\n" % (
+            self.help_data[idx][0], self.help_data[idx][1]))
+
 
