@@ -29,7 +29,7 @@
       <file leaf-file-name="a_XHelpDialog.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/pyfant/gui/ao3s/a_XHelpDialog.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="392">
+            <state relative-caret-position="540">
               <caret line="33" column="0" selection-start-line="33" selection-start-column="0" selection-end-line="33" selection-end-column="0" />
               <folding>
                 <element signature="e#29#55#0" expanded="true" />
@@ -73,7 +73,7 @@
       <file leaf-file-name="a_XScaleSpectrum.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/pyfant/gui/ao3s/a_XScaleSpectrum.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="554">
+            <state relative-caret-position="1026">
               <caret line="81" column="0" selection-start-line="81" selection-start-column="0" selection-end-line="81" selection-end-column="0" />
               <folding />
             </state>
@@ -83,7 +83,7 @@
       <file leaf-file-name="a_WSpectrumCollection.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/pyfant/gui/ao3s/a_WSpectrumCollection.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="162">
+            <state relative-caret-position="6678">
               <caret line="371" column="33" selection-start-line="371" selection-start-column="33" selection-end-line="371" selection-end-column="33" />
               <folding>
                 <element signature="e#35#53#0" expanded="true" />
@@ -95,7 +95,7 @@
       <file leaf-file-name="guiaux.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/pyfant/gui/guiaux.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="446">
+            <state relative-caret-position="4266">
               <caret line="237" column="36" selection-start-line="237" selection-start-column="36" selection-end-line="237" selection-end-column="36" />
               <folding>
                 <element signature="e#634#659#0" expanded="true" />
@@ -181,8 +181,9 @@
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="y" value="25" />
-    <option name="width" value="1366" />
+    <option name="x" value="-3" />
+    <option name="y" value="27" />
+    <option name="width" value="1372" />
     <option name="height" value="718" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
@@ -210,6 +211,8 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
+      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -242,10 +245,26 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="pyfant" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="pyfant" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="pyfant" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="blocks" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
-      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -414,13 +433,13 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="25" width="1366" height="718" extended-state="0" />
-    <editor active="true" />
+    <frame x="-3" y="27" width="1372" height="718" extended-state="6" />
+    <editor active="false" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.18235295" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.18228404" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="12" side_tool="true" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.15024233" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.46042004" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -645,64 +664,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2124">
           <caret line="135" column="0" selection-start-line="135" selection-start-column="0" selection-end-line="135" selection-end-column="0" />
-          <folding>
-            <element signature="e#33#51#0" expanded="false" />
-            <element signature="e#543#624#1" expanded="false" />
-            <element signature="e#735#780#0" expanded="false" />
-            <element signature="e#6433#6596#0" expanded="false" />
-            <element signature="e#6725#7084#0" expanded="false" />
-            <element signature="e#8487#8547#0" expanded="false" />
-            <element signature="e#9238#9315#0" expanded="false" />
-            <element signature="e#9366#9611#0" expanded="false" />
-            <element signature="e#9666#10352#0" expanded="false" />
-            <element signature="e#9852#10043#0" expanded="false" />
-            <element signature="e#10087#10271#0" expanded="false" />
-            <element signature="e#10397#10425#0" expanded="false" />
-            <element signature="e#10431#10508#0" expanded="false" />
-            <element signature="e#10575#10632#0" expanded="false" />
-            <element signature="e#10638#10715#0" expanded="false" />
-            <element signature="e#10777#10874#0" expanded="false" />
-            <element signature="e#10819#10874#0" expanded="false" />
-            <element signature="e#10916#11300#0" expanded="false" />
-            <element signature="e#10958#11300#0" expanded="false" />
-            <element signature="e#11090#11254#0" expanded="false" />
-            <element signature="e#11346#11781#0" expanded="false" />
-            <element signature="e#11389#11630#0" expanded="false" />
-            <element signature="e#11674#11728#0" expanded="false" />
-            <element signature="e#11820#11846#0" expanded="false" />
-            <element signature="e#11884#11965#0" expanded="false" />
-            <element signature="e#12014#12095#0" expanded="false" />
-            <element signature="e#12027#12062#0" expanded="false" />
-            <element signature="e#12148#12152#0" expanded="false" />
-            <element signature="e#12190#13471#0" expanded="false" />
-            <element signature="e#12207#13352#0" expanded="false" />
-            <element signature="e#12463#13352#0" expanded="false" />
-            <element signature="e#12635#12725#0" expanded="false" />
-            <element signature="e#12785#12884#0" expanded="false" />
-            <element signature="e#13193#13288#0" expanded="false" />
-            <element signature="e#13397#13471#0" expanded="false" />
-            <element signature="e#13515#13564#0" expanded="false" />
-            <element signature="e#13607#13868#0" expanded="false" />
-            <element signature="e#13791#13868#0" expanded="false" />
-            <element signature="e#13918#13955#0" expanded="false" />
-            <element signature="e#13961#13985#0" expanded="false" />
-            <element signature="e#14151#14254#0" expanded="false" />
-            <element signature="e#14356#14477#0" expanded="false" />
-            <element signature="e#14483#14560#0" expanded="false" />
-            <element signature="e#14617#14677#0" expanded="false" />
-            <element signature="e#14734#15044#0" expanded="false" />
-            <element signature="e#14848#14982#0" expanded="false" />
-            <element signature="e#15091#15316#0" expanded="false" />
-            <element signature="e#15361#15536#0" expanded="false" />
-            <element signature="e#15578#15582#0" expanded="false" />
-            <element signature="e#15637#15931#0" expanded="false" />
-            <element signature="e#15789#15931#0" expanded="false" />
-            <element signature="e#15967#16026#0" expanded="false" />
-            <element signature="e#16071#16222#0" expanded="false" />
-            <element signature="e#16267#16597#0" expanded="false" />
-            <element signature="e#16643#16941#0" expanded="false" />
-            <element signature="e#16986#17086#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -728,9 +689,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1872">
           <caret line="121" column="45" selection-start-line="121" selection-start-column="45" selection-end-line="121" selection-end-column="45" />
-          <folding>
-            <element signature="e#33#51#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -751,15 +709,6 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/README.md">
-      <provider editor-type-id="text-editor">
-        <state relative-caret-position="126">
-          <caret line="58" column="30" selection-start-line="58" selection-start-column="30" selection-end-line="58" selection-end-column="30" />
-          <folding />
-        </state>
-      </provider>
-      <provider editor-type-id="MarkdownFxPreviewEditor">
-        <state />
-      </provider>
       <provider selected="true" editor-type-id="split-provider[text-editor;MarkdownPreviewEditor]">
         <state split_layout="FIRST">
           <first_editor relative-caret-position="18">
@@ -768,6 +717,15 @@
           </first_editor>
           <second_editor />
         </state>
+      </provider>
+      <provider editor-type-id="text-editor">
+        <state relative-caret-position="126">
+          <caret line="58" column="30" selection-start-line="58" selection-start-column="30" selection-end-line="58" selection-end-column="30" />
+          <folding />
+        </state>
+      </provider>
+      <provider editor-type-id="MarkdownFxPreviewEditor">
+        <state />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/pyfant/datatypes/spectrum.py">
@@ -851,7 +809,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/pyfant/gui/guiaux.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="446">
+        <state relative-caret-position="4266">
           <caret line="237" column="36" selection-start-line="237" selection-start-column="36" selection-end-line="237" selection-end-column="36" />
           <folding>
             <element signature="e#634#659#0" expanded="true" />
@@ -861,7 +819,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/pyfant/gui/ao3s/a_XScaleSpectrum.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="554">
+        <state relative-caret-position="1026">
           <caret line="81" column="0" selection-start-line="81" selection-start-column="0" selection-end-line="81" selection-end-column="0" />
           <folding />
         </state>
@@ -869,7 +827,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/pyfant/gui/ao3s/a_XHelpDialog.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="392">
+        <state relative-caret-position="540">
           <caret line="33" column="0" selection-start-line="33" selection-start-column="0" selection-end-line="33" selection-end-column="0" />
           <folding>
             <element signature="e#29#55#0" expanded="true" />
@@ -903,7 +861,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/pyfant/gui/ao3s/a_WSpectrumCollection.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="162">
+        <state relative-caret-position="6678">
           <caret line="371" column="33" selection-start-line="371" selection-start-column="33" selection-end-line="371" selection-end-column="33" />
           <folding>
             <element signature="e#35#53#0" expanded="true" />
