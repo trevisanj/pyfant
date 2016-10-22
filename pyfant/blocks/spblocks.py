@@ -1,5 +1,6 @@
 __all__ = [
-"SB_Rubberband", "SB_AddNoise", "SB_FNuToFLambda", "SB_ElementWise", "SB_Extend", "SB_scalar", "SB_scalar_SNR"
+    "Rubberband", "AddNoise", "FNuToFLambda", "ElementWise", "Extend",
+    "Sp2Scalar", "SB_scalar_SNR"
 ]
 
 
@@ -9,11 +10,11 @@ from pyfant.datatypes.filesplist import SpectrumList
 import copy
 from .baseblocks import *
 
-class SB_Rubberband(SBlock):
+class Rubberband(SpectrumBlock):
     """Returns a rubber band"""
 
     def __init__(self, flag_upper=True):
-        SBlock.__init__(self)
+        SpectrumBlock.__init__(self)
         # Upper or lower rubberband
         self.flag_upper = flag_upper
 
@@ -28,9 +29,9 @@ class SB_Rubberband(SBlock):
         return output
 
 
-class SB_AddNoise(SBlock):
+class AddNoise(SpectrumBlock):
     def __init__(self, std=1.):
-        SBlock.__init__(self)
+        SpectrumBlock.__init__(self)
         # Standard deviation of noise
         self.std = std
 
@@ -41,7 +42,7 @@ class SB_AddNoise(SBlock):
         return output
 
 
-class SB_FNuToFLambda(SBlock):
+class FNuToFLambda(SpectrumBlock):
     """
     Flux-nu to flux-lambda conversion. Assumes the wavelength axis is in angstrom
     """
@@ -51,11 +52,11 @@ class SB_FNuToFLambda(SBlock):
         output.y = inp.y
 
 
-class SB_ElementWise(SBlock):
+class ElementWise(SpectrumBlock):
     """Applies function to input.flux. function must return vector of same dimension as input"""
 
     def __init__(self, func):
-        SBlock.__init__(self)
+        SpectrumBlock.__init__(self)
         self.func = func
 
     def _do_use(self, inp):
@@ -68,7 +69,7 @@ class SB_ElementWise(SBlock):
         return output
 
 
-class SB_Extend(SBlock):
+class Extend(SpectrumBlock):
     """
     Extends to left and/or right side
 
@@ -91,7 +92,7 @@ class SB_Extend(SBlock):
     """
 
     def __init__(self, fraction=.1, flag_left=True, flag_right=False):
-        SBlock.__init__(self)
+        SpectrumBlock.__init__(self)
         self.fraction = fraction
         self.flag_left = flag_left
         self.flag_right = flag_right
@@ -121,38 +122,4 @@ class SB_Extend(SBlock):
         output.y = np.concatenate((y_left, output.y, y_right))
 
         return output
-
-class SB_scalar(SBlock):
-    """Ancestor for Spectrum Blocks whose output is a scalar"""
-
-class SB_scalar_SNR(SB_scalar):
-    """
-    Calculates Signal-to-noise ratio (SNR) using a part of the "signal" (i.e. the spectrum)
-
-    Output is **scalar**
-
-    The signal-to-noise ratio (SNR) is often defined as (signal power) / (noise power), herein
-    calculated as
-
-        y_RMS**2 / variance(y)     (https://en.wikipedia.org/wiki/Signal-to-noise_ratio)
-
-    It is assumed that the "signal" is *stationary* within [llzero, llfin]
-    meaning that the mean and variance of the "signal" is the same for all points within
-    this region (more precisely "weak-sense stationary"
-    (https://en.wikipedia.org/wiki/Stationary_process#Weak_or_wide-sense_stationarity))
-    """
-
-    def __init__(self, llzero, llfin):
-        SBlock.__init__(self)
-        self.llzero = llzero
-        self.llfin = llfin
-
-    def _do_use(self, inp):
-        x = inp.x
-        y = inp.y
-        signal = y[np.logical_and(x >= self.llzero, x <= self.llfin)]
-
-        output = np.mean(signal**2)/np.var(signal)
-        return output
-
 

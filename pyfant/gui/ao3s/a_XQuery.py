@@ -51,9 +51,9 @@ class XQuery(XLogMainWindow):
         pp = self._map0 = []
         ###
         x = keep_ref(QLabel())
-        y = self.edit_expr = QLineEdit("SLB_SNR()")
+        y = self.edit_expr = QLineEdit("MergeDown_SNR()")
         x.setBuddy(y)
-        pp.append((x, y, "&Block expresion", "Other examples: 'SLB_MergeDown(np.mean)'", ""))
+        pp.append((x, y, "&Block expresion", "Other examples: 'SLMDB_NumpyFunc(np.mean)'", ""))
         ###
         x = keep_ref(QLabel())
         y = self.edit_group_by = QLineEdit()
@@ -103,9 +103,13 @@ class XQuery(XLogMainWindow):
 
     def on_run(self):
         try:
-            expr = str(self.edit_expr.text())
+            merge_down_block = self._evaluate_expr()
+
             s_group_by = str(self.edit_group_by.text())
             group_by = [str(y).upper() for y in [x.strip() for x in s_group_by.split(",")] if len(y) > 0]
+
+            grouper = blocks.splistblocks.Group(merge_down_block, group_by)
+
             other, errors = self.splist.query_merge_down(expr, group_by)
 
             if errors:
@@ -129,4 +133,20 @@ class XQuery(XLogMainWindow):
 
     # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * #
     # # Internal gear
+
+
+    def _evaluate_expr(self):
+        """Evaluates contents of expr edit to a MergeDownBlock"""
+
+        expr = str(self.edit_expr.text())
+
+        try:
+            block = eval(blocks.mergedown)  # , {}, {})
+            if not isinstance(block, blocks.baseblocks.MergeDownBlock):
+                raise RuntimeError(
+                    "Must evaluate to a MergeDownBlock, but evaluated to a %s" % (
+                        block.__class__.__name__))
+        except Exception as E:
+            msg = "Expression ''%s``: %s" % (expr, str(E))
+            self.add_log_error(msg, True)
 

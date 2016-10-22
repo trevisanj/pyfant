@@ -1,6 +1,6 @@
 """Conversion routines"""
 
-__all__ = ["adjust_atomic_symbol", "str2bool", "bool2str", "list2str", "chunk_string",
+__all__ = ["adjust_atomic_symbol", "str2bool", "bool2str", "chunk_string",
 "ordinal_suffix", "seconds2str", "make_fits_keys_dict", "eval_fieldnames"]
 
 import numpy as np
@@ -25,11 +25,6 @@ def bool2str(x):
     """Converts bool variable to either "T" or "F"."""
     assert isinstance(x, bool)
     return "T" if x else "F"
-
-
-def list2str(l):
-    """Converts list to string without the brackets."""
-    return " ".join([str(x) for x in l])
 
 
 def chunk_string(string, length):

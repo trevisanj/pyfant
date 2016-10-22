@@ -16,7 +16,7 @@ class XHelpDialog(XLogDialog):
 
     Relevant attributes:
       self.help_data -- [(class name without prefix, docstring), ...]
-      self.block -- None or SB_scalar instance, set before closing when one clicks on "OK"
+      self.block -- None or Sp2Scalar instance, set before closing when one clicks on "OK"
       self.grid -- grid layout (initially empty)
       self.labelHelpTopics -- label with text "Help Topics", exposed in case you want to change this text
       self.comboBox -- combo box to add the help topics

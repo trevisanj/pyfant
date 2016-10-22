@@ -90,6 +90,7 @@ class FileMain(DataFile):
   def _do_save_as(self, filename):
     """Saves to file."""
     assert isinstance(self.vvt, list), "vvt must be list!"
+    list2str = lambda l: " ".join([str(x) for x in l])
     with open(filename, "w") as h:
       write_lf(h, "%s" % self.titrav)
       write_lf(h, "%s %s %s %s %s" % (bool2str(self.ecrit),
@@ -108,3 +109,5 @@ class FileMain(DataFile):
       write_lf(h, list2str([self.llzero, self.llfin, self.aint]))
       for filetoh in self.filetohy:
         write_lf(h, filetoh)
+
+

@@ -5,6 +5,7 @@
     <bookmark url="file://$PROJECT_DIR$/pyfant/gui/a_WCollapsiblePanel.py" line="25" mnemonic="9" />
     <bookmark url="file://$PROJECT_DIR$/pyfant/gui/ao3s/a_XApplySB_scalar.py" line="48" mnemonic="3" />
     <bookmark url="file://$PROJECT_DIR$/pyfant/gui/ao3s/a_WSpectrumCollection.py" line="371" mnemonic="5" />
+    <bookmark url="file://$PROJECT_DIR$/pyfant/blocks/splistblocks.py" line="41" mnemonic="1" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="809047b1-bc86-4354-a64b-821ca449f470" name="Default" comment="" />
@@ -26,106 +27,105 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name=".gitignore" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/.gitignore">
+      <file leaf-file-name="sp2scalar.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/pyfant/blocks/sp2scalar.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="306">
-              <caret line="17" column="10" selection-start-line="17" selection-start-column="10" selection-end-line="17" selection-end-column="10" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="io.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/pyfant/misc/io.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="374">
-              <caret line="323" column="22" selection-start-line="323" selection-start-column="22" selection-end-line="323" selection-end-column="22" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="basewindows.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/pyfant/gui/ao3s/basewindows.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="556">
-              <caret line="331" column="0" selection-start-line="331" selection-start-column="0" selection-end-line="331" selection-end-column="0" />
+            <state relative-caret-position="198">
+              <caret line="29" column="12" selection-start-line="29" selection-start-column="12" selection-end-line="29" selection-end-column="12" />
               <folding>
-                <element signature="e#136#162#0" expanded="true" />
+                <element signature="e#289#931#1" expanded="false" />
+                <element signature="e#1102#1273#0" expanded="false" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="a_WSpectrumCollection.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/pyfant/gui/ao3s/a_WSpectrumCollection.py">
+      <file leaf-file-name="spectrum.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/pyfant/datatypes/spectrum.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="214">
-              <caret line="441" column="58" selection-start-line="441" selection-start-column="58" selection-end-line="441" selection-end-column="58" />
+            <state relative-caret-position="396">
+              <caret line="349" column="0" selection-start-line="349" selection-start-column="0" selection-end-line="349" selection-end-column="0" />
               <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="meta.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/pyfant/misc/meta.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="306">
+              <caret line="39" column="0" selection-start-line="39" selection-start-column="0" selection-end-line="39" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="splistblocks.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/pyfant/blocks/splistblocks.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="414">
+              <caret line="68" column="13" selection-start-line="68" selection-start-column="13" selection-end-line="68" selection-end-column="13" />
+              <folding>
+                <element signature="e#51#69#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="a_XQuery.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/pyfant/gui/ao3s/a_XQuery.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="270">
+              <caret line="112" column="15" selection-start-line="112" selection-start-column="15" selection-end-line="112" selection-end-column="15" />
+              <folding>
+                <element signature="e#22#40#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file leaf-file-name="__init__.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/pyfant/__init__.py">
+        <entry file="file://$PROJECT_DIR$/pyfant/blocks/__init__.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="90">
-              <caret line="5" column="23" selection-start-line="5" selection-start-column="23" selection-end-line="5" selection-end-column="23" />
+            <state relative-caret-position="144">
+              <caret line="8" column="26" selection-start-line="8" selection-start-column="26" selection-end-line="8" selection-end-column="26" />
               <folding>
-                <element signature="e#190#214#0" expanded="true" />
+                <element signature="e#62#86#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="textinterface.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/pyfant/misc/textinterface.py">
+      <file leaf-file-name="mergedown.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/pyfant/blocks/mergedown.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="110">
-              <caret line="52" column="19" selection-start-line="52" selection-start-column="19" selection-end-line="52" selection-end-column="19" />
-              <folding />
+            <state relative-caret-position="383">
+              <caret line="58" column="0" selection-start-line="58" selection-start-column="0" selection-end-line="58" selection-end-column="0" />
+              <folding>
+                <element signature="e#0#25#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="link.py" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/scripts/link.py">
+      <file leaf-file-name="spblocks.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/pyfant/blocks/spblocks.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="110">
-              <caret line="84" column="18" selection-start-line="84" selection-start-column="18" selection-end-line="84" selection-end-column="18" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="baseblocks.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/pyfant/blocks/baseblocks.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="110">
-              <caret line="49" column="26" selection-start-line="49" selection-start-column="26" selection-end-line="49" selection-end-column="26" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="sblocks.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/pyfant/blocks/sblocks.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="110">
-              <caret line="149" column="22" selection-start-line="149" selection-start-column="22" selection-end-line="149" selection-end-column="22" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="util.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/pyfant/util.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="92">
-              <caret line="125" column="25" selection-start-line="125" selection-start-column="25" selection-end-line="125" selection-end-column="25" />
-              <folding />
+            <state relative-caret-position="433">
+              <caret line="68" column="8" selection-start-line="68" selection-start-column="8" selection-end-line="68" selection-end-column="8" />
+              <folding>
+                <element signature="e#506#714#0" expanded="false" />
+                <element signature="e#752#1054#0" expanded="false" />
+                <element signature="e#788#877#0" expanded="false" />
+                <element signature="e#915#1054#0" expanded="false" />
+                <element signature="e#1096#1189#1" expanded="false" />
+                <element signature="e#1226#1314#0" expanded="false" />
+                <element signature="e#1960#2687#1" expanded="false" />
+                <element signature="e#2768#2901#0" expanded="false" />
+                <element signature="e#2939#3826#0" expanded="false" />
+                <element signature="e#3356#3493#0" expanded="false" />
+                <element signature="e#3535#3676#0" expanded="false" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -142,28 +142,14 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/scripts/explorer.py" />
-        <option value="$PROJECT_DIR$/scripts/splisted.py" />
-        <option value="$PROJECT_DIR$/scripts/tune-zinf.py" />
-        <option value="$PROJECT_DIR$/scripts/x.py" />
-        <option value="$PROJECT_DIR$/scripts/copy-star.py" />
-        <option value="$PROJECT_DIR$/scripts/create-grid.py" />
-        <option value="$PROJECT_DIR$/scripts/cut-atoms.py" />
-        <option value="$PROJECT_DIR$/scripts/cut-molecules.py" />
-        <option value="$PROJECT_DIR$/scripts/cut-spectrum.py" />
-        <option value="$PROJECT_DIR$/scripts/link.py" />
-        <option value="$PROJECT_DIR$/scripts/plot-spectra.py" />
         <option value="$PROJECT_DIR$/scripts/programs.py" />
         <option value="$PROJECT_DIR$/scripts/run4.py" />
         <option value="$PROJECT_DIR$/scripts/save-pdf.py" />
         <option value="$PROJECT_DIR$/setup.py" />
-        <option value="$PROJECT_DIR$/pyfant/blocks/slblocks.py" />
         <option value="$PROJECT_DIR$/pyfant/misc/matplotlibaux.py" />
         <option value="$PROJECT_DIR$/pyfant/gui/ao3s/windows.py" />
         <option value="$PROJECT_DIR$/pyfant/gui/ao3s/a_WChooseSpectrum.py" />
         <option value="$PROJECT_DIR$/pyfant/gui/ao3s/__init__.py" />
-        <option value="$PROJECT_DIR$/pyfant/gui/ao3s/a_XQuery.py" />
-        <option value="$PROJECT_DIR$/pyfant/blocks/__init__.py" />
         <option value="$PROJECT_DIR$/pyfant/gui/ao3s/a_WFileSparseCube.py" />
         <option value="$PROJECT_DIR$/pyfant/gui/ao3s/a_XFileSparseCube.py" />
         <option value="$PROJECT_DIR$/pyfant/plotting/draw_cube.py" />
@@ -171,15 +157,10 @@
         <option value="$PROJECT_DIR$/pyfant/gui/a_WCollapsiblePanel.py" />
         <option value="$PROJECT_DIR$/pyfant/datatypes/filesparsecube.py" />
         <option value="$PROJECT_DIR$/pyfant/gui/ao3s/a_XFileSpectrumList.py" />
-        <option value="$PROJECT_DIR$/pyfant/datatypes/filesplist.py" />
-        <option value="$PROJECT_DIR$/pyfant/datatypes/spectrum.py" />
         <option value="$PROJECT_DIR$/pyfant/gui/ao3s/a_XScaleSpectrum.py" />
         <option value="$PROJECT_DIR$/pyfant/gui/a_WFileMain.py" />
         <option value="$PROJECT_DIR$/pyfant/constants.py" />
-        <option value="$PROJECT_DIR$/pyfant/misc/meta.py" />
-        <option value="$PROJECT_DIR$/pyfant/gui/guiaux.py" />
         <option value="$PROJECT_DIR$/pyfant/gui/ao3s/a_XHelpDialog.py" />
-        <option value="$PROJECT_DIR$/pyfant/gui/ao3s/a_XApplySB_scalar.py" />
         <option value="$PROJECT_DIR$/pyfant/__init__.py.bak" />
         <option value="$PROJECT_DIR$/pyfant/gui/a_XFileAtoms.py" />
         <option value="$PROJECT_DIR$/README.md" />
@@ -187,12 +168,31 @@
         <option value="$PROJECT_DIR$/.gitignore" />
         <option value="$PROJECT_DIR$/pyfant/misc/io.py" />
         <option value="$PROJECT_DIR$/pyfant/gui/ao3s/basewindows.py" />
-        <option value="$PROJECT_DIR$/pyfant/gui/ao3s/a_WSpectrumCollection.py" />
-        <option value="$PROJECT_DIR$/pyfant/__init__.py" />
         <option value="$PROJECT_DIR$/pyfant/util.py" />
         <option value="$PROJECT_DIR$/pyfant/misc/textinterface.py" />
-        <option value="$PROJECT_DIR$/pyfant/blocks/baseblocks.py" />
         <option value="$PROJECT_DIR$/pyfant/blocks/sblocks.py" />
+        <option value="$PROJECT_DIR$/pyfant/misc/maths.py" />
+        <option value="$PROJECT_DIR$/pyfant/datatypes/filemain.py" />
+        <option value="$PROJECT_DIR$/pyfant/misc/conversion.py" />
+        <option value="$PROJECT_DIR$/pyfant/gui/guiaux.py" />
+        <option value="$PROJECT_DIR$/pyfant/datatypes/spectrum.py" />
+        <option value="$PROJECT_DIR$/pyfant/gui/ao3s/a_WSpectrumCollection.py" />
+        <option value="$PROJECT_DIR$/pyfant/gui/ao3s/a_XApplySB_scalar.py" />
+        <option value="$PROJECT_DIR$/pyfant/blocks/slblocks.py" />
+        <option value="$PROJECT_DIR$/pyfant/misc/meta.py" />
+        <option value="$PROJECT_DIR$/pyfant/blocks/sp2sp.py" />
+        <option value="$PROJECT_DIR$/pyfant/__init__.py" />
+        <option value="$PROJECT_DIR$/pyfant/blocks/sb.py" />
+        <option value="$PROJECT_DIR$/pyfant/blocks/spl2spl.py" />
+        <option value="$PROJECT_DIR$/pyfant/blocks/spectrumlistblock.py" />
+        <option value="$PROJECT_DIR$/pyfant/blocks/baseblocks.py" />
+        <option value="$PROJECT_DIR$/pyfant/blocks/spectrumblocks.py" />
+        <option value="$PROJECT_DIR$/pyfant/blocks/sp2scalar.py" />
+        <option value="$PROJECT_DIR$/pyfant/datatypes/filesplist.py" />
+        <option value="$PROJECT_DIR$/pyfant/blocks/mergedown.py" />
+        <option value="$PROJECT_DIR$/pyfant/blocks/__init__.py" />
+        <option value="$PROJECT_DIR$/pyfant/gui/ao3s/a_XQuery.py" />
+        <option value="$PROJECT_DIR$/pyfant/blocks/splistblocks.py" />
       </list>
     </option>
   </component>
@@ -271,6 +271,42 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="pyfant" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="pyfant" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="pyfant" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="pyfant" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="datatypes" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="pyfant" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="pyfant" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="pyfant" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="blocks" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -448,13 +484,13 @@
     <frame x="-3" y="27" width="1372" height="718" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.18228404" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.23718888" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="12" side_tool="true" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.42003232" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4749596" sideWeight="0.50292826" order="12" side_tool="true" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.4878837" sideWeight="0.49707174" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24963397" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
@@ -485,134 +521,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/pyfant/datatypes/filesplist.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1944">
-          <caret line="119" column="0" selection-start-line="119" selection-start-column="0" selection-end-line="119" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pyfant/datatypes/spectrum.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="158">
-          <caret line="294" column="27" selection-start-line="294" selection-start-column="27" selection-end-line="294" selection-end-column="27" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pyfant/gui/a_WFileMain.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="72">
-          <caret line="4" column="15" selection-start-line="4" selection-start-column="13" selection-end-line="4" selection-end-column="15" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pyfant/gui/a_XFileAtomsHistogram.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="137">
-          <caret line="37" column="0" selection-start-line="37" selection-start-column="0" selection-end-line="40" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pyfant/blocks/slblocks.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="e#369#420#0" expanded="false" />
-            <element signature="e#458#605#0" expanded="false" />
-            <element signature="e#648#1130#0" expanded="false" />
-            <element signature="e#855#1130#0" expanded="false" />
-            <element signature="e#1172#1334#0" expanded="false" />
-            <element signature="e#1172#1334#2" expanded="false" />
-            <element signature="e#1382#2080#0" expanded="false" />
-            <element signature="e#1382#1569#1" expanded="false" />
-            <element signature="e#1616#1674#0" expanded="false" />
-            <element signature="e#1712#2080#0" expanded="false" />
-            <element signature="e#2122#3320#0" expanded="false" />
-            <element signature="e#2122#2503#1" expanded="false" />
-            <element signature="e#2635#2701#0" expanded="false" />
-            <element signature="e#2739#3320#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pyfant/misc/meta.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="410">
-          <caret line="94" column="104" selection-start-line="94" selection-start-column="104" selection-end-line="94" selection-end-column="104" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pyfant/gui/guiaux.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4266">
-          <caret line="237" column="36" selection-start-line="237" selection-start-column="36" selection-end-line="237" selection-end-column="36" />
-          <folding>
-            <element signature="e#634#659#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pyfant/gui/ao3s/a_XScaleSpectrum.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1026">
-          <caret line="81" column="0" selection-start-line="81" selection-start-column="0" selection-end-line="81" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pyfant/gui/ao3s/a_XHelpDialog.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="540">
-          <caret line="33" column="0" selection-start-line="33" selection-start-column="0" selection-end-line="33" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pyfant/constants.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="20" column="0" selection-start-line="20" selection-start-column="0" selection-end-line="20" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pyfant/blocks/__init__.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="36">
-          <caret line="2" column="9" selection-start-line="2" selection-start-column="9" selection-end-line="2" selection-end-column="9" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pyfant/gui/ao3s/a_XApplySB_scalar.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="72">
-          <caret line="4" column="0" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pyfant/__init__.py.bak" />
-    <entry file="file:///usr/lib/python2.7/dist-packages/matplotlib/backends/backend_qt4agg.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pyfant/gui/a_XFileAtoms.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="73">
-          <caret line="9" column="28" selection-start-line="9" selection-start-column="28" selection-end-line="9" selection-end-column="28" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pyfant/rm.py.bak" />
     <entry file="file://$PROJECT_DIR$/README.md">
       <provider selected="true" editor-type-id="split-provider[text-editor;MarkdownPreviewEditor]">
         <state split_layout="FIRST">
@@ -823,14 +731,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/pyfant/misc/io.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="374">
-          <caret line="323" column="22" selection-start-line="323" selection-start-column="22" selection-end-line="323" selection-end-column="22" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/pyfant/gui/ao3s/basewindows.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="556">
@@ -849,44 +749,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/pyfant/gui/ao3s/a_WSpectrumCollection.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="214">
-          <caret line="441" column="58" selection-start-line="441" selection-start-column="58" selection-end-line="441" selection-end-column="58" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pyfant/__init__.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
-          <caret line="5" column="23" selection-start-line="5" selection-start-column="23" selection-end-line="5" selection-end-column="23" />
-          <folding>
-            <element signature="e#190#214#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/pyfant/util.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="92">
           <caret line="125" column="25" selection-start-line="125" selection-start-column="25" selection-end-line="125" selection-end-column="25" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pyfant/blocks/baseblocks.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="110">
-          <caret line="49" column="26" selection-start-line="49" selection-start-column="26" selection-end-line="49" selection-end-column="26" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pyfant/blocks/sblocks.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="110">
-          <caret line="149" column="22" selection-start-line="149" selection-start-column="22" selection-end-line="149" selection-end-column="22" />
           <folding />
         </state>
       </provider>
@@ -901,8 +767,300 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/scripts/link.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="110">
+        <state relative-caret-position="207">
           <caret line="84" column="18" selection-start-line="84" selection-start-column="18" selection-end-line="84" selection-end-column="18" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pyfant/misc/maths.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1134">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pyfant/misc/physics.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-2160">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pyfant/misc/misc.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pyfant/datatypes/filemain.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="223">
+          <caret line="104" column="0" selection-start-line="104" selection-start-column="0" selection-end-line="104" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pyfant/misc/io.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pyfant/gui/guiaux.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="18">
+          <caret line="1" column="0" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pyfant/datatypes/filetoh.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="165">
+          <caret line="63" column="55" selection-start-line="63" selection-start-column="55" selection-end-line="63" selection-end-column="55" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pyfant/misc/conversion.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="306">
+          <caret line="41" column="0" selection-start-line="41" selection-start-column="0" selection-end-line="41" selection-end-column="0" />
+          <folding>
+            <element signature="e#37#176#0" expanded="false" />
+            <element signature="e#232#383#0" expanded="false" />
+            <element signature="e#407#632#0" expanded="false" />
+            <element signature="e#656#766#0" expanded="false" />
+            <element signature="e#807#1246#0" expanded="false" />
+            <element signature="e#807#1169#1" expanded="false" />
+            <element signature="e#1276#1386#0" expanded="false" />
+            <element signature="e#1419#1820#0" expanded="false" />
+            <element signature="e#1858#2960#0" expanded="false" />
+            <element signature="e#1858#2465#1" expanded="false" />
+            <element signature="e#2532#2939#0" expanded="false" />
+            <element signature="e#2663#2871#0" expanded="false" />
+            <element signature="e#2712#2788#0" expanded="false" />
+            <element signature="e#3019#3396#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pyfant/gui/ao3s/a_WSpectrumCollection.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="225">
+          <caret line="108" column="51" selection-start-line="108" selection-start-column="51" selection-end-line="108" selection-end-column="51" />
+          <folding>
+            <element signature="e#771#816#0" expanded="false" />
+            <element signature="e#1109#1127#0" expanded="false" />
+            <element signature="e#1354#1366#0" expanded="false" />
+            <element signature="e#2011#2041#0" expanded="false" />
+            <element signature="e#2697#2771#0" expanded="false" />
+            <element signature="e#3005#3239#0" expanded="false" />
+            <element signature="e#3423#3497#0" expanded="false" />
+            <element signature="e#3991#4063#0" expanded="false" />
+            <element signature="e#4477#4480#0" expanded="false" />
+            <element signature="e#5140#5202#0" expanded="false" />
+            <element signature="e#6851#6928#0" expanded="false" />
+            <element signature="e#6989#7195#0" expanded="false" />
+            <element signature="e#7241#7322#0" expanded="false" />
+            <element signature="e#7372#7465#0" expanded="false" />
+            <element signature="e#7520#7736#0" expanded="false" />
+            <element signature="e#7614#7700#0" expanded="false" />
+            <element signature="e#7800#8063#0" expanded="false" />
+            <element signature="e#7800#7938#1" expanded="false" />
+            <element signature="e#8115#8183#0" expanded="false" />
+            <element signature="e#8229#8464#0" expanded="false" />
+            <element signature="e#8496#8585#0" expanded="false" />
+            <element signature="e#8591#8668#0" expanded="false" />
+            <element signature="e#8735#8826#0" expanded="false" />
+            <element signature="e#8878#9297#0" expanded="false" />
+            <element signature="e#8925#8999#0" expanded="false" />
+            <element signature="e#8925#8947#0" expanded="false" />
+            <element signature="e#9057#9276#0" expanded="false" />
+            <element signature="e#9106#9276#0" expanded="false" />
+            <element signature="e#9155#9276#0" expanded="false" />
+            <element signature="e#9303#9380#0" expanded="false" />
+            <element signature="e#9472#9659#0" expanded="false" />
+            <element signature="e#9719#12001#0" expanded="false" />
+            <element signature="e#10018#10187#0" expanded="false" />
+            <element signature="e#10472#10637#0" expanded="false" />
+            <element signature="e#10784#10863#0" expanded="false" />
+            <element signature="e#10914#11119#0" expanded="false" />
+            <element signature="e#10973#11119#0" expanded="false" />
+            <element signature="e#11037#11119#0" expanded="false" />
+            <element signature="e#11170#11228#0" expanded="false" />
+            <element signature="e#11284#11595#0" expanded="false" />
+            <element signature="e#11434#11524#0" expanded="false" />
+            <element signature="e#11644#11908#0" expanded="false" />
+            <element signature="e#11946#12001#0" expanded="false" />
+            <element signature="e#12076#12600#0" expanded="false" />
+            <element signature="e#12402#12507#0" expanded="false" />
+            <element signature="e#12545#12600#0" expanded="false" />
+            <element signature="e#12646#12737#0" expanded="false" />
+            <element signature="e#12786#12888#0" expanded="false" />
+            <element signature="e#12937#13720#0" expanded="false" />
+            <element signature="e#13064#13653#0" expanded="false" />
+            <element signature="e#13355#13513#0" expanded="false" />
+            <element signature="e#13566#13653#0" expanded="false" />
+            <element signature="e#13720#13749#0" expanded="false" />
+            <element signature="e#15900#16302#0" expanded="false" />
+            <element signature="e#16037#16302#0" expanded="false" />
+            <element signature="e#16343#16424#0" expanded="false" />
+            <element signature="e#16463#16848#0" expanded="false" />
+            <element signature="e#16706#16848#0" expanded="false" />
+            <element signature="e#16763#16848#0" expanded="false" />
+            <element signature="e#16911#18097#0" expanded="false" />
+            <element signature="e#16953#18097#0" expanded="false" />
+            <element signature="e#17128#17790#0" expanded="false" />
+            <element signature="e#17843#18030#0" expanded="false" />
+            <element signature="e#18136#18674#0" expanded="false" />
+            <element signature="e#18278#18674#0" expanded="false" />
+            <element signature="e#18365#18499#0" expanded="false" />
+            <element signature="e#18551#18674#0" expanded="false" />
+            <element signature="e#18708#18905#0" expanded="false" />
+            <element signature="e#18945#20587#0" expanded="false" />
+            <element signature="e#19351#20199#0" expanded="false" />
+            <element signature="e#19515#19999#0" expanded="false" />
+            <element signature="e#20051#20199#0" expanded="false" />
+            <element signature="e#20245#20379#0" expanded="false" />
+            <element signature="e#20421#20485#0" expanded="false" />
+            <element signature="e#20594#20620#0" expanded="false" />
+            <element signature="e#21519#21581#0" expanded="false" />
+            <element signature="e#22376#22645#0" expanded="false" />
+            <element signature="e#23177#23345#0" expanded="false" />
+            <element signature="e#23255#23321#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pyfant/gui/ao3s/a_XApplySB_scalar.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="257">
+          <caret line="56" column="23" selection-start-line="56" selection-start-column="23" selection-end-line="56" selection-end-column="23" />
+          <folding>
+            <element signature="e#32#58#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pyfant/misc/meta.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="306">
+          <caret line="39" column="0" selection-start-line="39" selection-start-column="0" selection-end-line="39" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pyfant/datatypes/filesplist.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="361">
+          <caret line="392" column="0" selection-start-line="325" selection-start-column="0" selection-end-line="392" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pyfant/blocks/mergedown.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="383">
+          <caret line="58" column="0" selection-start-line="58" selection-start-column="0" selection-end-line="58" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#25#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pyfant/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="e#190#214#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pyfant/blocks/baseblocks.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="294">
+          <caret line="135" column="0" selection-start-line="135" selection-start-column="0" selection-end-line="135" selection-end-column="0" />
+          <folding>
+            <element signature="e#80#98#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pyfant/gui/ao3s/a_XQuery.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="270">
+          <caret line="112" column="15" selection-start-line="112" selection-start-column="15" selection-end-line="112" selection-end-column="15" />
+          <folding>
+            <element signature="e#22#40#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pyfant/blocks/spblocks.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="433">
+          <caret line="68" column="8" selection-start-line="68" selection-start-column="8" selection-end-line="68" selection-end-column="8" />
+          <folding>
+            <element signature="e#506#714#0" expanded="false" />
+            <element signature="e#752#1054#0" expanded="false" />
+            <element signature="e#788#877#0" expanded="false" />
+            <element signature="e#915#1054#0" expanded="false" />
+            <element signature="e#1096#1189#1" expanded="false" />
+            <element signature="e#1226#1314#0" expanded="false" />
+            <element signature="e#1960#2687#1" expanded="false" />
+            <element signature="e#2768#2901#0" expanded="false" />
+            <element signature="e#2939#3826#0" expanded="false" />
+            <element signature="e#3356#3493#0" expanded="false" />
+            <element signature="e#3535#3676#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pyfant/blocks/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="144">
+          <caret line="8" column="26" selection-start-line="8" selection-start-column="26" selection-end-line="8" selection-end-column="26" />
+          <folding>
+            <element signature="e#62#86#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pyfant/blocks/splistblocks.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="414">
+          <caret line="68" column="13" selection-start-line="68" selection-start-column="13" selection-end-line="68" selection-end-column="13" />
+          <folding>
+            <element signature="e#51#69#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pyfant/blocks/sp2scalar.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="198">
+          <caret line="29" column="12" selection-start-line="29" selection-start-column="12" selection-end-line="29" selection-end-column="12" />
+          <folding>
+            <element signature="e#289#931#1" expanded="false" />
+            <element signature="e#1102#1273#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pyfant/datatypes/spectrum.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="396">
+          <caret line="349" column="0" selection-start-line="349" selection-start-column="0" selection-end-line="349" selection-end-column="0" />
           <folding />
         </state>
       </provider>

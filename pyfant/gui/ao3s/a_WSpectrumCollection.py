@@ -106,7 +106,7 @@ class WSpectrumCollection(WBase):
         b.clicked.connect(self.on_export_csv)
         lh.addWidget(b)
         ###
-        b = self.button_query = QPushButton("Query")
+        b = self.button_query = QPushButton("&Group")
         b.clicked.connect(self.on_query)
         lh.addWidget(b)
         ###
@@ -211,7 +211,7 @@ class WSpectrumCollection(WBase):
         items = self.twSpectra.selectedItems()
         ii = []
         for item in items:
-            obj = item.data(1).toPyObject()
+            obj = item.data(1)
             if isinstance(obj, int):
                 ii.append(obj)
         ii.sort()
@@ -225,7 +225,7 @@ class WSpectrumCollection(WBase):
         """
 
         item = self.twSpectra.item(row_index, self.twSpectra.columnCount()-1)
-        ret = item.data(1).toPyObject()
+        ret = item.data(1)
         return ret
 
     def get_current_spectrum_index(self):
@@ -599,6 +599,8 @@ class WSpectrumCollection(WBase):
         return str(self.twSpectra.horizontalHeaderItem(column).text())
 
     def __update_gui(self):
+        """Updates GUI to match self.collection, i.e., mainly the table widget"""
+
         self.flag_process_changes = False
         try:
             # Builds table widget contents
@@ -627,7 +629,7 @@ class WSpectrumCollection(WBase):
                 twi = QTableWidgetItem(sp.one_liner_str())
                 twi.setFlags(twi.flags() & ~Qt.ItemIsEditable)
                 # stores spectrum index not to lose track in case the table is sorted by column
-                twi.setData(1, QVariant(i))
+                twi.setData(1, i)
                 t.setItem(i, j, twi)
                 j += 1
 

@@ -118,9 +118,9 @@ class Spectrum(object):
             #                "delta_lambda = %g" % self.delta_lambda,
             #                "no. points: %d" % len(self.x)])
 
-            s = " | ".join(["%g \\u2264 \\u03BB \\u2264 %g" % (self.x[0], self.x[-1]),
-                           "\\u0394\\u03BB = %g" % self.delta_lambda,
-                           "%g \\u2264 flux \\u2264 %g" % (np.min(self.y), np.max(self.y)),
+            s = " | ".join(["%g \u2264 \u03BB \u2264 %g" % (self.x[0], self.x[-1]),
+                           "\u0394\u03BB = %g" % self.delta_lambda,
+                           "%g \u2264 flux \u2264 %g" % (np.min(self.y), np.max(self.y)),
                            "length: %d" % len(self.x)])
 
         else:

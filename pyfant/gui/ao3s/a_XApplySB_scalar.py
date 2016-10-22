@@ -14,10 +14,10 @@ _CLASS_PREFIX = "SB_scalar_"
 
 class XApplySB_scalar(XHelpDialog):
     """
-    Edit Parameters to apply SB_scalar blocks to a Spectrum List
+    Edit Parameters to apply Sp2Scalar blocks to a Spectrum List
 
     Relevant attributes:
-      self.block -- None or SB_scalar instance, set before closing when one clicks on "OK"
+      self.block -- None or Sp2Scalar instance, set before closing when one clicks on "OK"
       self.fieldname -- string
     """
 
@@ -34,7 +34,7 @@ class XApplySB_scalar(XHelpDialog):
 
         self.labelHelpTopics.setText("Functions available")
 
-        self.help_data = collect_doc(blocks.sblocks, prefix=_CLASS_PREFIX, flag_exclude_prefix=True)
+        self.help_data = collect_doc(blocks.sp2scalar, prefix=_CLASS_PREFIX, flag_exclude_prefix=True)
         self.comboBox.addItems([x[0] for x in self.help_data])
         ###
         label = QLabel(enc_name_descr("&Function", "See help below"))
@@ -54,11 +54,11 @@ class XApplySB_scalar(XHelpDialog):
 
     def accept(self):
         try:
-            from pyfant.blocks.sblocks import *
+            from pyfant.blocks.sp2scalar import *
             expr = str(self.editFunction.text())
             block = eval("SB_scalar_"+expr.strip())
 
-            if not isinstance(block, SB_scalar):
+            if not isinstance(block, Sp2Scalar):
                 raise RuntimeError("Expression does not evaluate to a valid Scalar Block")
 
             self.block = block

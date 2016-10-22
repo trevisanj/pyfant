@@ -323,72 +323,73 @@ class SpectrumList(SpectrumCollection):
             self.__flag_update_pending = False
 
 
-    def query_merge_down(self, expr, group_by=None):
-        """Rudimentary query system for "merge down" operations
-
-        Arguments:
-            expr -- expression which will be eval()'ed with expected result to be a MergeDownBlock
-                    Example: "SNR()"
-
-                    TODO I should not eval here, the argument should be the block itself
-
-            group_by -- sequence of spectrum "more_headers" fieldnames.
-                        If not passed, will treat the whole SpectrumCollection as a single group.
-                        If passed, will split the collection in groups and perform the "merge down" operations separately
-                        for each group
-
-        Returns: (SpectrumCollection containing query result, list of error strings)
-        """
-
-        ret, errors = None, []
-
-        # Creates the block
-        try:
-            # from pyfant.blocks.slblocks import *  # TODO make it locals to pass to eval()
-            block = eval(expr, pyfant.blocks.slblocks)  # , {}, {})
-            if not isinstance(block, SLB_MergeDownBlock):
-                raise RuntimeError("Must evaluate to a MergeDownBlock, but evaluated to a %s" % (block.__class__.__name__))
-        except Exception as E:
-            msg = "Expression ''%s``: %s" % (expr, str(E))
-            errors.append(msg)
-
-        if not errors:
-            try:
-                # Creates the groups
-                if not group_by:
-                    ret = block.use(self)
-                else:
-                    groups = []
-                    grouping_keys = [tuple([spectrum.more_headers.get(fieldname) for fieldname in group_by]) for spectrum in self.spectra]
-                    unique_keys = list(set(grouping_keys))
-                    unique_keys.sort()
-                    sk = list(zip(self.spectra, grouping_keys))
-                    for unique_key in unique_keys:
-                        group = SpectrumList()
-                        for spectrum, grouping_key in sk:
-                            if grouping_key == unique_key:
-                                group.add_spectrum(spectrum)
-                        groups.append(group)
-
-                    ret = SpectrumList()
-                    ret.fieldnames = group_by  # new SpectrumList will have the group field names
-
-                    # Uses block in each group
-                    for group in groups:
-                        splist = block.use(group)
-
-                        # copies "group by" fields from first input spectrum to output spectrum
-                        sp = splist.spectra[0]
-                        for fieldname in group_by:
-                            sp.more_headers[fieldname] = group.spectra[0].more_headers[fieldname]
-                        ret.merge_with(splist)
-            except Exception as E:
-                msg = "Calculating output: %s" % str(E)
-                errors.append(msg)
-                ret = []
-                get_python_logger().exception("query_merge_down")
-
-        return ret, errors
+    # def query_merge_down(self, expr, group_by=None):
+    #     # TODO: make block
+    #     """Rudimentary query system for "merge down" operations
+    #
+    #     Arguments:
+    #         expr -- expression which will be eval()'ed with expected result to be a MergeDownBlock
+    #                 Example: "SNR()"
+    #
+    #                 TODO I should not eval here, the argument should be the block itself
+    #
+    #         group_by -- sequence of spectrum "more_headers" fieldnames.
+    #                     If not passed, will treat the whole SpectrumCollection as a single group.
+    #                     If passed, will split the collection in groups and perform the "merge down" operations separately
+    #                     for each group
+    #
+    #     Returns: (SpectrumCollection containing query result, list of error strings)
+    #     """
+    #
+    #     ret, errors = None, []
+    #
+    #     # Creates the block
+    #     try:
+    #         # from pyfant.blocks.slblocks import *  # TODO make it locals to pass to eval()
+    #         block = eval(expr, ..blocks.mergedown)  # , {}, {})
+    #         if not isinstance(block, MergeDownBlock):
+    #             raise RuntimeError("Must evaluate to a MergeDownBlock, but evaluated to a %s" % (block.__class__.__name__))
+    #     except Exception as E:
+    #         msg = "Expression ''%s``: %s" % (expr, str(E))
+    #         errors.append(msg)
+    #
+    #     if not errors:
+    #         try:
+    #             # Creates the groups
+    #             if not group_by:
+    #                 ret = block.use(self)
+    #             else:
+    #                 groups = []
+    #                 grouping_keys = [tuple([spectrum.more_headers.get(fieldname) for fieldname in group_by]) for spectrum in self.spectra]
+    #                 unique_keys = list(set(grouping_keys))
+    #                 unique_keys.sort()
+    #                 sk = list(zip(self.spectra, grouping_keys))
+    #                 for unique_key in unique_keys:
+    #                     group = SpectrumList()
+    #                     for spectrum, grouping_key in sk:
+    #                         if grouping_key == unique_key:
+    #                             group.add_spectrum(spectrum)
+    #                     groups.append(group)
+    #
+    #                 ret = SpectrumList()
+    #                 ret.fieldnames = group_by  # new SpectrumList will have the group field names
+    #
+    #                 # Uses block in each group
+    #                 for group in groups:
+    #                     splist = block.use(group)
+    #
+    #                     # copies "group by" fields from first input spectrum to output spectrum
+    #                     sp = splist.spectra[0]
+    #                     for fieldname in group_by:
+    #                         sp.more_headers[fieldname] = group.spectra[0].more_headers[fieldname]
+    #                     ret.merge_with(splist)
+    #         except Exception as E:
+    #             msg = "Calculating output: %s" % str(E)
+    #             errors.append(msg)
+    #             ret = []
+    #             get_python_logger().exception("query_merge_down")
+    #
+    #     return ret, errors
 
 
     def __update(self):
