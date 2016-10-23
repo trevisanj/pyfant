@@ -449,7 +449,7 @@ class WSpectrumCollection(WBase):
         save = copy.deepcopy(self.collection)
 
         try:
-            for sp in sspp:
+            for sp in self.collection.spectra:
                 sp.more_headers[form.fieldname] = form.block.use(sp)
 
             if not form.fieldname in self.collection.fieldnames:
