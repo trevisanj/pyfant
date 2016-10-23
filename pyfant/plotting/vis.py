@@ -2,6 +2,8 @@ __all__ = ["VisPrint", "VisModRecord", "VisModCurves", "VisSpectrum", "VisFileTo
            "get_suitable_vis_classes", "VisAtoms", "VisMolecules", "VisOpa",
            "VisMarcs", "VisMarcsSaveAsMod", "VisGrid", "VisVector", "VisMain",
            "VisAbonds", "VisCube", "VisSpectrumList"]
+
+
 from pyfant.datatypes import *
 import numpy as np
 import matplotlib.pyplot as plt

@@ -1,4 +1,4 @@
-__all__ = ["XplotXY"]
+__all__ = ["XPlotXYZ"]
 
 
 from PyQt4.QtCore import *
@@ -8,9 +8,10 @@ from pyfant import *
 from ..guiaux import *
 import numpy as np
 import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
 
 
-class XPlotXY(XLogMainWindow):
+class XPlotXYZ(XLogMainWindow):
     """
     Plots two fields of a SpectrumCollection object in a simple x-y plot
 
@@ -49,6 +50,14 @@ class XPlotXY(XLogMainWindow):
         laa.setBuddy(cby)
         lwset.addWidget(cby)
         ###
+        laa = keep_ref(QLabel("&Z-axis"))
+        lwset.addWidget(laa)
+        ###
+        cbz = self.comboBoxZ = QComboBox()
+        cbz.addItems(collection.fieldnames)
+        laa.setBuddy(cbz)
+        lwset.addWidget(cbz)
+        ###
         b = keep_ref(QPushButton("Re&draw"))
         lwset.addWidget(b)
         b.clicked.connect(self.redraw)
@@ -81,17 +90,19 @@ class XPlotXY(XLogMainWindow):
         try:
             fig = self.figure
             fig.clear()
+            ax = fig.gca(projection='3d')
 
             fieldname_x = str(self.comboBoxX.currentText())
             fieldname_y = str(self.comboBoxY.currentText())
+            fieldname_z = str(self.comboBoxZ.currentText())
 
             spectra = self.collection.spectra
             n = len(spectra)
-            xx = np.zeros((n,))
-            yy = np.zeros((n,))
+            xx, yy, zz = np.zeros((n,)), np.zeros((n,)), np.zeros((n,))
             for i, sp in enumerate(spectra):
                 s_x = sp.more_headers.get(fieldname_x)
                 s_y = sp.more_headers.get(fieldname_y)
+                s_z = sp.more_headers.get(fieldname_z)
 
                 # Will ignore error converting to float
                 # Cells giving error will be zero
@@ -103,14 +114,22 @@ class XPlotXY(XLogMainWindow):
                     yy[i] = float(s_y)
                 except TypeError:
                     pass
+                try:
+                    zz[i] = float(s_z)
+                except TypeError:
+                    pass
 
-            sort_idxs = np.argsort(xx)
-            xx = xx[sort_idxs]
-            yy = yy[sort_idxs]
+            # 3D plot will be a scatter plot, no need to sort; besides, should we sort using X or Y?
+            #
+            # sort_idxs = np.argsort(xx)
+            # xx = xx[sort_idxs]
+            # yy = yy[sort_idxs]
+            # zz = zz[sort_idxs]
 
-            plt.plot(xx, yy, lw=2, color='k')
+            ax.plot3D(xx, yy, zz, 'ok', lw=2)
             plt.xlabel(fieldname_x)
             plt.ylabel(fieldname_y)
+            plt.ylabel(fieldname_z)
             format_BLB()
             self.canvas.draw()
 
