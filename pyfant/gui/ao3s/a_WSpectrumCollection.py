@@ -50,7 +50,7 @@ class WSpectrumCollection(WBase):
                           "Files are added in alphabetical order.")
         action.triggered.connect(self.on_add_spectra)
 
-        action = self.action_all_group = QAction(get_pyfant_icon("group.py-by"), "&Group...", self)
+        action = self.action_all_group = QAction(get_pyfant_icon("group-by"), "&Group...", self)
         action.triggered.connect(self.on_all_group)
 
         action = self.action_all_use_spectrum_block = QAction(get_pyfant_icon("go-next"), "&Transform...", self)

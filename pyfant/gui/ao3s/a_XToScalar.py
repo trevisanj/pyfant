@@ -32,13 +32,13 @@ class XToScalar(XHelpDialog):
 
         self.setWindowTitle("Extract Scalar")
 
-        self.labelHelpTopics.setText("Functions available")
+        self.labelHelpTopics.setText("&Available operations")
 
         # self.help_data = collect_doc(blocks.sp2scalar, base_class=blocks.baseblocks.ToScalar)
         self.help_data = collect_doc(blocks.toscalar, base_class=blocks.base.ToScalar)
         self.comboBox.addItems([x[0] for x in self.help_data])
         ###
-        label = QLabel(enc_name_descr("&Function", "See help below"))
+        label = QLabel(enc_name_descr("O&peration", "See help below"))
         edit = self.editFunction = QLineEdit("SNR(0, 10000)")
         label.setBuddy(edit)
         self.grid.addWidget(label, 0, 0)

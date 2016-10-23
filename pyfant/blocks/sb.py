@@ -8,7 +8,22 @@ import copy
 from .base import *
 
 class Rubberband(SpectrumBlock):
-    """Returns a rubber band"""
+    """
+    Convex polygonal line (aka "rubberband")
+
+    Arguments:
+        flag_upper=True -- whether to stretch rubberband from above the
+            spectrum; otherwise, stretches line from below
+
+    Stretches a polygonal line from below/above the spectrum. The vertices of this multi-segment
+    line will touch "troughs" of the spectrumvx without crossing the spectrum
+
+    This was inspired on -- but is not equivalent to -- OPUS Rubberband baseline correction [1].
+    However, this one is parameterless, whereas OPUS RBBC asks for a number of points
+
+    References:
+        [1] Bruker Optik GmbH, OPUS 5 Reference Manual. Ettlingen: Bruker, 2004.
+    """
 
     def __init__(self, flag_upper=True):
         SpectrumBlock.__init__(self)
@@ -27,6 +42,12 @@ class Rubberband(SpectrumBlock):
 
 
 class AddNoise(SpectrumBlock):
+    """
+    Adds normally distributed (Gaussian) random noise
+
+    Arguments:
+        std=1. -- standard deviation of Gaussian noise
+    """
     def __init__(self, std=1.):
         SpectrumBlock.__init__(self)
         # Standard deviation of noise
@@ -50,7 +71,18 @@ class FNuToFLambda(SpectrumBlock):
 
 
 class ElementWise(SpectrumBlock):
-    """Applies function to input.flux. function must return vector of same dimension as input"""
+    """
+    Applies specified function to spectrum flux
+
+    Arguments:
+        func -- a function that takes a vector (_i.e._, NumPy 1-D array) as input. It must return
+            vector of same dimension as input.NumPy ufunc's are suited for this.
+            Examples:
+                np.square
+                np.exp
+            It also be a lambda using list comprehension, for example:
+                lambda v: [x**2 for x in v]
+    """
 
     def __init__(self, func):
         SpectrumBlock.__init__(self)
@@ -63,6 +95,8 @@ class ElementWise(SpectrumBlock):
         if len(output.flux) != len(output.wavelength):
             raise RuntimeError(
                 "func returned vector of length %d, but should be %d" % (len(output.flux), len(output.wavelength)))
+        if not isinstance(output.flux, np.ndarray):
+            output.flux = np.array(output.flux)
         return output
 
 
@@ -71,21 +105,19 @@ class Extend(SpectrumBlock):
     Extends to left and/or right side
 
     Arguments:
-      fraction -- amount relative to number of points. Note that this
-                  applies individually to left and right (see below)
-      flag_left -- whether to extend by fraction to left
-      flag_right -- whether to extend by fraction to right
+        fraction -- amount relative to number of points. Note that this
+                    applies individually to left and right (see below)
+        flag_left -- whether to extend by fraction to left
+        flag_right -- whether to extend by fraction to right
 
     The y-value to use is found by using a "coarse" 2nd-order polynomial baseline.
     The baseline is "coarse" because it does not allow for many iterations until the
     baseline is found
 
-    **Case**
-    >> self.extend(.1, True, True)
-    # if original has 100 points, resulting will have 120 points
+    Examples:
+        Extend(.1, True, True)  # if original has 100 points, resulting will have 120 points
 
-    >> self.extend(.1, True, False)
-    # if original has 100 points, resulting will have 110 points
+        Extend(.1, True, False)  # if original has 100 points, resulting will have 110 points
     """
 
     def __init__(self, fraction=.1, flag_left=True, flag_right=False):

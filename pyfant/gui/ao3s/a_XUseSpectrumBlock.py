@@ -22,12 +22,12 @@ class XUseSpectrumBlock(XHelpDialog):
 
         self.setWindowTitle("Transform")
 
-        self.labelHelpTopics.setText("Functions available")
+        self.labelHelpTopics.setText("&Available operations")
 
         self.help_data = collect_doc(blocks.sb, base_class=blocks.base.SpectrumBlock)
         self.comboBox.addItems([x[0] for x in self.help_data])
         ###
-        label = QLabel(enc_name_descr("&Function", "See help below"))
+        label = QLabel(enc_name_descr("O&peration", "See help below"))
         edit = self.editFunction = QLineEdit("Cut(3000, 7000)")
         label.setBuddy(edit)
         self.grid.addWidget(label, 0, 0)
