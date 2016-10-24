@@ -281,7 +281,7 @@ def _calculate_and_plot(fig, spectrum, band_name, flag_force_parametric):
     flux_ylim = [0, np.max(spp.y) * (1 + MARGIN_V)] if len(spp) > 0 else [-.1, .1]
 
     # # First subplot
-    ax = fig.add_subplot(311)
+    ax = ax0 = fig.add_subplot(311)
     if len(spc) == 0:
         ax.plot([], [])
         ax.annotate("Band out of spectral range [%g, %g]" % (spectrum.x[0], spectrum.x[-1]), xy=(plot_h_middle, 0),
@@ -296,7 +296,7 @@ def _calculate_and_plot(fig, spectrum, band_name, flag_force_parametric):
     ax.set_ylabel("Flux")
 
     # # Second subplot
-    ax = fig.add_subplot(312)
+    ax = fig.add_subplot(312, sharex=ax0)
     # other bands
     for band in Bands.bands.values():
         l0, lf = band.range(flag_force_parametric)
@@ -311,7 +311,7 @@ def _calculate_and_plot(fig, spectrum, band_name, flag_force_parametric):
                         horizontalalignment="center", verticalalignment="center")
     # current band
     ax.plot(band_x, band_y, c=COLOR_CURRENT_BAND, lw=LINE_WIDTH)
-    ax.fill_between(band_x, band_y, color=COLOR_FILL_BAND)
+    ax.fill_between(spc.x, mm["band_f"](spc.x), color=COLOR_FILL_BAND)
     ax.set_xlim([plot_l0, plot_lf])
     ax.set_ylim([0, overall_max_y * (1 + MARGIN_V)])
     ax.set_ylabel("Gain")
@@ -322,7 +322,7 @@ def _calculate_and_plot(fig, spectrum, band_name, flag_force_parametric):
 
     # Third subplot
     # # First subplot
-    ax = fig.add_subplot(313)
+    ax = fig.add_subplot(313, sharex=ax0)
     if len(spc) == 0:
         ax.plot([], [])
         ax.annotate("Band out of spectral range [%g, %g]" % (spectrum.x[0], spectrum.x[-1]), xy=(plot_h_middle, 0),

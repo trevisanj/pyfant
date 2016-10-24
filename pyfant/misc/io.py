@@ -1,28 +1,87 @@
-__all__ = ["str_vector", "float_vector", "int_vector", "readline_strip", "multirow_str_vector",
-"get_pyfant_default_data_path", "new_filename", "_rename_to_temp_lock", "rename_to_temp",
-"overwrite_fits", "write_lf", "slugify", "copy_default_file", "get_pfant_path", "get_pfant_data_path",
-"get_pfant_data_subdirs", "get_pyfant_path", "get_pfant_star_subdirs", "symlink", "print_skipped",
-"crunch_dir", "get_fortrans", "load_with_classes", "is_text_file",
-"get_pyfant_scripts_path", "get_script_info", "format_script_info"]
+__all__ = ["crunch_dir", "is_text_file", "get_pfant_path", "overwrite_fits", "add_bits_to_path",
+"get_pyfant_scripts_path", "copy_pyfant_default_file", "slugify", "get_pyfant_path", "new_filename",
+"write_lf", "rename_to_temp", "load_with_classes", "float_vector", "get_pfant_star_subdirs",
+"get_pfant_data_path", "str_vector", "get_pfant_data_subdirs", "create_symlink", "int_vector",
+"get_fortrans", "get_pyfant_default_data_path", "readline_strip", "multirow_str_vector",
+]
 
 
-import os.path
-import re
-import shutil
-from threading import Lock
+import collections
 import glob
 import imp
-import textwrap
+import os.path
 import platform
+import re
+import shutil
+import textwrap
+from threading import Lock
 from astropy.io import fits
-from .textinterface import *
 from .loggingaux import *
-import collections
+import sys
 
 
-# #################################################################################################
-# # I/O routines
+# # Filename or pathname-related string manipulations
 
+def slugify(value, flagLower=True):
+  """
+  Converts to lowercase, removes non-alpha characters,
+  and converts spaces to hyphens.
+
+  Useful for making file names.
+
+  Source: http://stackoverflow.com/questions/5574042/string-slugification-in-python
+  """
+  value = re.sub('[^\w\s.]', '', value).strip()
+  if flagLower:
+    value = value.lower()
+  value = re.sub('[-\s]+', '-', value)
+  return value
+
+
+def crunch_dir(name, n=50):
+    """Puts "..." in the middle of a directory name if lengh > n."""
+    if len(name) > n + 3:
+        name = "..." + name[-n:]
+    return name
+
+def add_bits_to_path(path_, filename_prefix=None, extension=None):
+    """
+    Adds prefix/suffix to filename
+
+    Arguments:
+        path_ -- path to file
+        filename_prefix -- prefix to be added to file name
+        extension -- extension to be added to file name. The dot is automatically added, such as
+            "ext" and ".ext" will have the same effect
+
+    Examples:
+        > add_bits_to_path("/home/user/file", "prefix-")
+        /home/user/prefix-file
+
+        > add_bits_to_path("/home/user/file", None, ".ext")
+        /home/user/file.ext
+
+        > add_bits_to_path("/home/user/file", None, "ext")  # dot in extension is optional
+        /home/user/file.ext
+
+        > add_bits_to_path("/home/user/", None, ".ext")
+        /home/user/.ext
+    """
+
+    dir_, basename = os.path.split(path_)
+
+    if filename_prefix:
+        basename = filename_prefix+basename
+    if extension:
+        if not extension.startswith("."):
+            extension = "."+extension
+        basename = basename+extension
+
+    return os.path.join(dir_, basename)
+
+
+
+# # Text file parsing utillities
 
 def str_vector(f):
     """
@@ -88,6 +147,9 @@ def multirow_str_vector(f, n, r=0):
     return v, n_rows
 
 
+
+# # Probe, write, rename etc.
+
 def new_filename(prefix, extension=""):
   """returns a file name that does not exist yet, e.g. prefix.0001.extension"""
 
@@ -148,23 +210,102 @@ def write_lf(h, s):
   h.write(s+"\n")
 
 
-def slugify(value, flagLower=True):
-  """
-  Converts to lowercase, removes non-alpha characters,
-  and converts spaces to hyphens.
+def create_symlink(source, link_name):
+    """
+    Creates symbolic link for either operating system.
 
-  Useful for making file names.
+    http://stackoverflow.com/questions/6260149/os-symlink-support-in-windows
+    """
+    os_symlink = getattr(os, "symlink", None)
+    if isinstance(os_symlink, collections.Callable):
+        os_symlink(source, link_name)
+    else:
+        import ctypes
+        csl = ctypes.windll.kernel32.CreateSymbolicLinkW
+        csl.argtypes = (ctypes.c_wchar_p, ctypes.c_wchar_p, ctypes.c_uint32)
+        csl.restype = ctypes.c_ubyte
+        flags = 1 if os.path.isdir(source) else 0
+        if csl(link_name, source, flags) == 0:
+            raise ctypes.WinError()
 
-  Source: http://stackoverflow.com/questions/5574042/string-slugification-in-python
-  """
-  value = re.sub('[^\w\s.]', '', value).strip()
-  if flagLower:
-    value = value.lower()
-  value = re.sub('[-\s]+', '-', value)
-  return value
+
+def load_with_classes(filename, classes):
+    """Attempts to load file by trial-and-error using a given list of classes.
+
+    Arguments:
+      filename -- full path to file
+      classes -- list of DataFile descendant classes
+
+    Returns: DataFile object if loaded successfully, or None if not.
+
+    Note: it will stop at the first successful load.
+
+    Attention: this is not good if there is a bug in any of the file readers,
+    because *all exceptions will be silenced!*
+    """
+
+    ok = False
+    for class_ in classes:
+        obj = class_()
+        try:
+            obj.load(filename)
+            ok = True
+        # cannot let IOError through because pyfits raises IOError!!
+        # except IOError:
+        #     raise
+        except OSError:
+            raise
+        except Exception as e:  # (ValueError, NotImplementedError):
+            # Note: for debugging, switch the below to True
+            if False:
+                get_python_logger().exception("Error trying with class \"%s\"" % \
+                                              class_.__name__)
+            pass
+        if ok:
+            break
+    if ok:
+        return obj
+    return None
 
 
-def copy_default_file(filename):
+
+# ## http://eli.thegreenplace.net/2011/10/19/perls-guess-if-file-is-text-or-binary-implemented-in-python
+_PY3 = sys.version_info[0] == 3
+
+# A function that takes an integer in the 8-bit range and returns
+# a single-character byte object in py3 / a single-character string
+# in py2.
+#
+_int2byte = (lambda x: bytes((x,))) if _PY3 else chr
+
+_text_characters = (
+        b''.join(_int2byte(i) for i in range(32, 127)) +
+        b'\n\r\t\f\b')
+
+def is_text_file(filepath, blocksize=2**13):
+    """ Uses heuristics to guess whether the given file is text or binary,
+        by reading a single block of bytes from the file.
+        If more than 30% of the chars in the block are non-text, or there
+        are NUL ('\x00') bytes in the block, assume this is a binary file.
+    """
+    with open(filepath, "rb") as fileobj:
+        block = fileobj.read(blocksize)
+        if b'\x00' in block:
+            # Files with null bytes are binary
+            return False
+        elif not block:
+            # An empty file is considered a valid text file
+            return True
+
+        # Use translate's 'deletechars' argument to efficiently remove all
+        # occurrences of _text_characters from the block
+        nontext = block.translate(None, _text_characters)
+        return float(len(nontext)) / len(block) <= 0.30
+
+
+# # PFANT or pyfant-specific reference directory utilities
+
+def copy_pyfant_default_file(filename):
     """Copies file from pyfant/data/default directory to local directory."""
     fullpath = get_pyfant_default_data_path(filename)
     shutil.copy(fullpath, ".")
@@ -231,146 +372,6 @@ def get_pfant_star_subdirs():
     return ret
 
 
-def symlink(source, link_name):
-    """
-    Creates symbolic link for either operating system.
-
-    http://stackoverflow.com/questions/6260149/os-symlink-support-in-windows
-    """
-    os_symlink = getattr(os, "symlink", None)
-    if isinstance(os_symlink, collections.Callable):
-        os_symlink(source, link_name)
-    else:
-        import ctypes
-        csl = ctypes.windll.kernel32.CreateSymbolicLinkW
-        csl.argtypes = (ctypes.c_wchar_p, ctypes.c_wchar_p, ctypes.c_uint32)
-        csl.restype = ctypes.c_ubyte
-        flags = 1 if os.path.isdir(source) else 0
-        if csl(link_name, source, flags) == 0:
-            raise ctypes.WinError()
-
-
-def print_skipped(reason):
-    """Standardized printing for when a file was skipped."""
-    print(("   ... SKIPPED (%s)." % reason))
-
-
-def crunch_dir(name, n=50):
-    """Puts "..." in the middle of a directory name if lengh > n."""
-    if len(name) > n + 3:
-        name = "..." + name[-n:]
-    return name
-
-
-class ScriptInfo(object):
-    def __init__(self, filename, description, flag_error, flag_gui):
-        self.filename = filename
-        self.description = description
-        self.flag_error = flag_error
-        self.flag_gui = flag_gui
-
-
-def get_script_info(dir_):
-    """
-    Returns a list of ScriptInfo objects
-
-    The ScriptInfo objects represent the ".py" files in directory dir_,
-    except those starting with a "_"
-    """
-
-    ret = []
-    # gets all scripts in script directory
-    ff = glob.glob(os.path.join(dir_, "*.py"))
-    # discards scripts whose file name starts with a "_"
-    ff = [f for f in ff if not os.path.basename(f).startswith("_")]
-    ff.sort()
-
-    for f in ff:
-        _, filename = os.path.split(f)
-        flag_error = False
-        flag_gui = None
-        try:
-            # Checks if it is a graphical application
-
-            with open(f, "r") as h:
-                flag_gui = "QApplication" in h.read()
-
-            script_ = imp.load_source('script_', f)  # module object
-            descr = script_.__doc__.strip()
-            descr = descr.split("\n")[0]  # first line of docstring
-        except Exception as e:
-            flag_error = True
-            descr = "*%s*: %s" % (e.__class__.__name__, str(e))
-
-        ret.append(ScriptInfo(filename, descr, flag_error, flag_gui))
-
-    return ret
-
-
-def _format_script_info(py_len, title, scriptinfo, format):
-    ret = []
-    if format == "markdown-list":
-        ret.append("\n%s:" % title)
-        for si in scriptinfo:
-            ret.append("  - `%s` -- %s" % (si.filename, si.description))
-    elif format == "markdown-table":
-        ret.append("\n%s:\n" % title)
-        mask = "%%-%ds | %%s" % (py_len+2, )
-        ret.append(mask % ("Script name", "Purpose"))
-        ret.append("-" * (py_len + 3) + "|" + "-" * 10)
-        for si in scriptinfo:
-            ret.append(mask % ("`%s`" % si.filename, si.description))
-    elif format == "text":
-        n = len(title)
-        # hr = "*"*(len(title)+2)
-        # ret.append("\n%s\n*%s*\n%s" % (hr, title, hr))
-        ret.append("\n %s \n%s" % (title, "+"+'-'*n+"+"))
-        for si in scriptinfo:
-            piece = si.filename + " " + ("." * (py_len - len(si.filename)))
-            if si.flag_error:
-                ret.append(piece+si.description)
-            else:
-                # ret.append(piece)
-                ss = textwrap.wrap(si.description, 79 - py_len - 1)
-                ret.append(piece+" "+(ss[0] if ss and len(ss) > 0 else "no doc"))
-                for i in range(1, len(ss)):
-                    ret.append((" " * (py_len + 2))+ss[i])
-    return ret
-
-
-def format_script_info(scriptinfo, format="text"):
-    """
-    Generates listing of all Python scripts available as command-line programs.
-
-    Arguments:
-      infolist -- list of ScriptInfo objects
-
-      format -- One of the options below:
-        "text" -- generates plain text for printing at the console
-        "markdown-list" -- generates MarkDown as a list
-        "markdown-table" -- generates MarkDown as a table
-
-    Returns: (list of strings, maximum filename size)
-      list of strings -- can be joined with a "\n"
-      maximum filename size
-    """
-
-    py_len = max([len(si.filename) for si in scriptinfo])
-
-    sisi_gra = [si for si in scriptinfo if si.flag_gui]
-    sisi_cmd = [si for si in scriptinfo if not si.flag_gui]
-    sisi_gra = sorted(sisi_gra, key=lambda x: x.filename)
-    sisi_cmd = sorted(sisi_cmd, key=lambda x: x.filename)
-
-    ret = []
-    if len(sisi_gra) > 0:
-        ret.extend(_format_script_info(py_len, "Graphical applications", sisi_gra, format))
-    if len(sisi_cmd) > 0:
-        ret.extend(_format_script_info(py_len, "Command-line tools", sisi_cmd, format))
-
-    return ret, py_len
-
-
 def get_fortrans(max_len=None):
     """
     Generates listing of files in the Fortran bin directory
@@ -401,79 +402,4 @@ def get_fortrans(max_len=None):
         piece = name + " " + ("." * (max_len-len(name)))
         ret.append(("%-"+str(max_len)+"s %s") % (piece, status))
     return ret
-
-
-def load_with_classes(filename, classes):
-    """Attempts to load file by trial-and-error using a given list of classes.
-
-    Arguments:
-      filename -- full path to file
-      classes -- list of DataFile descendant classes
-
-    Returns: DataFile object if loaded successfully, or None if not.
-
-    Note: it will stop at the first successful load.
-
-    Attention: this is not good if there is a bug in any of the file readers,
-    because *all exceptions will be silenced!*
-    """
-
-    ok = False
-    for class_ in classes:
-        obj = class_()
-        try:
-            obj.load(filename)
-            ok = True
-        # cannot let IOError through because pyfits raises IOError!!
-        # except IOError:
-        #     raise
-        except OSError:
-            raise
-        except Exception as e:  # (ValueError, NotImplementedError):
-            # Note: for debugging, switch the below to True
-            if True:
-                get_python_logger().exception("Error trying with class \"%s\"" % \
-                                              class_.__name__)
-            pass
-        if ok:
-            break
-    if ok:
-        return obj
-    return None
-
-
-###############################################################################
-#http://eli.thegreenplace.net/2011/10/19/perls-guess-if-file-is-text-or-binary-implemented-in-python
-import sys
-_PY3 = sys.version_info[0] == 3
-
-# A function that takes an integer in the 8-bit range and returns
-# a single-character byte object in py3 / a single-character string
-# in py2.
-#
-_int2byte = (lambda x: bytes((x,))) if _PY3 else chr
-
-_text_characters = (
-        b''.join(_int2byte(i) for i in range(32, 127)) +
-        b'\n\r\t\f\b')
-
-def is_text_file(filepath, blocksize=2**13):
-    """ Uses heuristics to guess whether the given file is text or binary,
-        by reading a single block of bytes from the file.
-        If more than 30% of the chars in the block are non-text, or there
-        are NUL ('\x00') bytes in the block, assume this is a binary file.
-    """
-    with open(filepath, "rb") as fileobj:
-        block = fileobj.read(blocksize)
-        if b'\x00' in block:
-            # Files with null bytes are binary
-            return False
-        elif not block:
-            # An empty file is considered a valid text file
-            return True
-
-        # Use translate's 'deletechars' argument to efficiently remove all
-        # occurrences of _text_characters from the block
-        nontext = block.translate(None, _text_characters)
-        return float(len(nontext)) / len(block) <= 0.30
 

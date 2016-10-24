@@ -14,8 +14,10 @@ from .io import *
 from .loggingaux import *
 from .maths import *
 from .matplotlibaux import *
-from .meta import *
+from .parts import *
 from .misc import *
 from .pyqtaux import *
 from .textinterface import *
 from .physics import *
+from .search import *
+from .introspection import *

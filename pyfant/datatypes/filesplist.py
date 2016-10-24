@@ -13,7 +13,7 @@ import os
 import numpy as np
 from scipy.interpolate import interp1d
 import numbers
-#from ao3s.misc import *
+#from aosss.misc import *
 # from ..blocks import *
 import copy
 

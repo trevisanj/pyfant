@@ -1,3 +1,9 @@
+
+# (http://stackoverflow.com/questions/9079036)
+import sys
+if sys.version_info[0] < 3:
+    raise RuntimeError("Python version detected:\n*****\n%s\n*****\nCannot run, must be using Python 3" % sys.version)
+
 def init_agg():
     # Problems with Tk:
     # - plot windows pop as modal

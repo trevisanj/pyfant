@@ -263,7 +263,7 @@ def create_or_replace_or_skip_links(ff, dest_dir="."):
                     s_action = "replaced existing"
                 else:
                     s_action = "created"
-                symlink(f, ptd)
+                create_symlink(f, ptd)
                 print(("   ... %s link" % s_action))
             except Exception as e:
                 print_error("Error creating link: %s" % str(e))

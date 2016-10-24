@@ -1,11 +1,14 @@
 """Conversion routines"""
 
+
 __all__ = ["adjust_atomic_symbol", "str2bool", "bool2str", "chunk_string",
 "ordinal_suffix", "seconds2str", "make_fits_keys_dict", "eval_fieldnames",
-"valid_fits_key"]
+"valid_fits_key", "module_to_dict"]
+
 
 import numpy as np
 import re
+
 
 def adjust_atomic_symbol(x):
     """Makes sure atomic symbol is right-aligned and upper case (PFANT convention)."""
@@ -125,6 +128,7 @@ def valid_fits_key(key):
         raise RuntimeError("key '%s' has no valid characters to be a key in a FITS header" % key)
     return ret
 
+
 def eval_fieldnames(string_, varname="fieldnames"):
     """Evaluates string_, must evaluate to list of strings. Also converts field names to uppercase"""
     ff = eval(string_)
@@ -134,3 +138,12 @@ def eval_fieldnames(string_, varname="fieldnames"):
         raise RuntimeError("%s must be a list of strings" % varname)
     ff = [x.upper() for x in ff]
     return ff
+
+
+def module_to_dict(module):
+    """Creates a dictionary whose keys are module.__all__"""
+
+    lot = [(key, module.__getattribute__(key)) for key in module.__all__]
+    ret = dict(lot)
+    return ret
+

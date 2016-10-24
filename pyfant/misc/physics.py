@@ -5,7 +5,7 @@ __all__ = ["symbols", "SYMBOLS", "Color", "rainbow_colors", "ncolors", "MAGNITUD
 import numpy as np
 import collections
 from scipy.interpolate import interp1d
-from .meta import *
+from .parts import *
 
 
 # List of all atomic symbols
@@ -81,7 +81,7 @@ for c in rainbow_colors:
 # PHOTOMETRY
 
 MAGNITUDE_BASE = 100. ** (1. / 5)  # approx. 2.512
-
+REF_NUM_POINTS = 2000   # number of evaluation points over entire band range
 
 def ufunc_gauss(x0, fwhm):
     """Returns a Gaussian function given the x at maximum value and the fwhm. Works as a numpy ufunc
@@ -92,7 +92,7 @@ def ufunc_gauss(x0, fwhm):
 
     Test code:
 
-      >> from ao3s import *
+      >> from aosss import *
       >> import matplotlib.pyplot as plt
       >> import numpy as np
       >> f = ufunc_gauss(0, 5.)
@@ -128,6 +128,7 @@ class Band(object):
         self.parametric = parametric
         self.ref_mean_flux = ref_mean_flux
 
+
     def ufunc_band(self, flag_force_parametric):
         """Uses tabular data if available and not flag_force_parametric"""
         flag_parametric = flag_force_parametric
@@ -143,7 +144,14 @@ class Band(object):
         return f
 
     def range(self, flag_force_parametric=False, no_stds=3):
-        """Returns [wl0, wl1], using edges of tabular data or given number of standard deviations"""
+        """
+        Returns [wl0, wl1], using edges of tabular data or given number of standard deviations
+
+        Arguments:
+            flag_force_parametric=False -- TODO see ?
+            no_stds=3 -- TODO see ?
+
+        """
         flag_parametric = flag_force_parametric
 
         if not flag_force_parametric and self.tabular:
@@ -162,13 +170,32 @@ class Band(object):
         return ret
 
 
+    def area(self, l0, lf, flag_force_parametric=False):
+        """
+        Calculates area under given range [l0, lf]
+
+        Arguments:
+            l0 -- lower edge of range
+            lf -- upper edge of range
+            flag_force_parametric=False -- TODO see ?
+        """
+        # Calculates number of points as a fraction of REF_NUM_POINTS
+        ref_range = self.range(flag_force_parametric)
+        num_points = int((lf-l0)/(ref_range[1]-ref_range[0])*REF_NUM_POINTS)
+        x = np.linspace(l0, lf, num_points)
+        func = self.ufunc_band(flag_force_parametric)
+        y = func(x)
+        area = np.trapz(y)*(x[1]-x[0])  # integration
+        return area
+
+
 class Bands(object):
     # Michael Bessel 1990
     # Taken from http://spiff.rit.edu/classes/phys440/lectures/filters/filters.html
     #
     # The following code should get a plot of these tabulated bands:
     #
-    #   >> from ao3s import *
+    #   >> from aosss import *
     #   >> import matplotlib.pyplot as plt
     #   >> import numpy as np
     #   >> band_names = "UBVRI"
@@ -258,7 +285,7 @@ class Bands(object):
 
 
         Test code:
-          >> from ao3s import *
+          >> from aosss import *
           >> import matplotlib.pyplot as plt
           >> import numpy as np
           >> l0, lf = 3000, 250000

@@ -266,21 +266,39 @@ class Spectrum(object):
         """
 
         band = Bands.bands[band_name]
-        band_l0, band_lf = band.range(flag_force_parametric)  # band practical limits
-        band_f = band.ufunc_band(flag_force_parametric)  # callable transmission function
-        spc = copy.deepcopy(self)
-        spc.cut(band_l0, band_lf)
+        # band practical limits
+        band_l0, band_lf = band.range(flag_force_parametric)
+        # callable transmission function
+        band_f = band.ufunc_band(flag_force_parametric)
+        # Cuts spectrum if necessary
+        if self.x[0] < band_l0 or self.x[-1] > band_lf:
+            spc = copy.deepcopy(self)
+            spc.cut(band_l0, band_lf)
+        else:
+            spc = self
         band_f_spc_x = band_f(spc.x)
-        band_area = np.sum(band_f_spc_x) * spc.delta_lambda
         out_y = spc.y * band_f_spc_x
+
+        # Calculates the area under the band filter
+        band_area = band.area(*([band_l0, band_lf]
+                              if flag_always_full_band else [spc.x[0], spc.x[-1]]),
+                              flag_force_parametric=flag_force_parametric)
+
+        ref_mean_flux = None
 
         # Calculates apparent magnitude and filtered flux area
         cmag, weighted_mean_flux, out_area = None, 0, 0
         if band.ref_mean_flux:
             if len(spc) > 0:
+                if flag_always_full_band:
+                    ref_mean_flux = band.ref_mean_flux
+                else:
+                    ref_mean_flux = band.ref_mean_flux*band_area/\
+                                    band.area(band_l0, band_lf, flag_force_parametric)
+
                 out_area = np.sum(out_y) * spc.delta_lambda
                 weighted_mean_flux = out_area / band_area
-                cmag = -2.5 * np.log10(weighted_mean_flux / band.ref_mean_flux)
+                cmag = -2.5 * np.log10(weighted_mean_flux / ref_mean_flux)
 
                 # cosmetic manipulation
                 cmag = np.round(cmag, 3)
@@ -292,11 +310,12 @@ class Spectrum(object):
 
         self.more_headers["MAG_CALC"] = cmag
         self.more_headers["MAG_BAND"] = band_name
-        return {"band_area": band_area,  # area under band filter
+        return {"band_area": band_area,  # area under band filter only for the region of spc
                 "band_f": band_f,  # transmission function
                 "band_f_spc_x": band_f_spc_x,  # transmission function evaluated over spc.x
                 "band_l0": band_l0,  # l0 as in [l0, lf], band range considered
                 "band_lf": band_lf,  # lf as in [l0, lf], band range considered
+                "ref_mean_flux": ref_mean_flux,  # mean flux for which magnitude is zero
                 "spc": spc,  # spectrum cut to l0, lf, used in calculations
                 "cmag": cmag,  # calculated magnitude
                 "weighted_mean_flux": weighted_mean_flux,  # weighted-average flux where the weights are the transmission function

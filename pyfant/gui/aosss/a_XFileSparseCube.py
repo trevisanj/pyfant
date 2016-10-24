@@ -118,8 +118,12 @@ class XFileSparseCube(XFileMainWindow):
 
     def _filter_on_load(self, f):
         """Converts from FileFullCube to FileSparseCube format, if necessary"""
+        f1 = None
         if isinstance(f, FileFullCube):
             f1 = FileSparseCube()
             f1.sparsecube.from_full_cube(f.wcube)
+        if f1:
+            f1.filename = add_bits_to_path(f.filename, "imported-from-",
+                                           os.path.splitext(FileSparseCube.default_filename)[1])
             f = f1
         return f

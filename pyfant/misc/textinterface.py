@@ -1,4 +1,5 @@
-__all__ = ["fmt_ascii_h1", "fmt_error", "print_error", "menu", "format_progress", "markdown_table"]
+__all__ = ["fmt_ascii_h1", "fmt_error", "print_error", "menu", "format_progress", "markdown_table",
+           "print_skipped"]
 
 
 # #################################################################################################
@@ -117,3 +118,8 @@ def markdown_table(headers, data):
     for line in data:
         ret.append(mask % line)
     return ret
+
+
+def print_skipped(reason):
+    """Standardized printing for when a file was skipped."""
+    print(("   ... SKIPPED (%s)." % reason))

@@ -11,14 +11,14 @@ import os.path
 from itertools import product, combinations, cycle
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
-from pyfant import *
-from pyfant.datatypes.filesplist import *
-from pyfant.gui import *
 from .basewindows import *
 from .a_WChooseSpectrum import *
 from .a_XScaleSpectrum import *
 from .a_WFileSpectrumList import *
-
+from pyfant import *
+from pyfant.datatypes.filesplist import *
+from pyfant.gui import *
+from pyfant.util import classes_sp
 
 class XFileSpectrumList(XFileMainWindow):
     def __init__(self, parent=None, fileobj=None):
@@ -37,7 +37,7 @@ class XFileSpectrumList(XFileMainWindow):
         self.save_as_texts[0] = "Save %s as..." % _VVV
         self.open_texts[0] = "Load %s" % _VVV
         self.clss[0] = FileSpectrumList
-        self.clsss[0] = (FileSpectrumList, FileFullCube)  # file types that can be opened
+        self.clsss[0] = tuple([FileSpectrumList, FileFullCube]+classes_sp)  # file types that can be opened
         self.wilds[0] = "*.splist"
 
         lv = keep_ref(QVBoxLayout(self.gotting))
@@ -120,9 +120,16 @@ class XFileSpectrumList(XFileMainWindow):
 
     def _filter_on_load(self, f):
         """Converts from FileFullCube to FileSpectrumList format, if necessary"""
+        f1 = None
         if isinstance(f, FileFullCube):
             f1 = FileSpectrumList()
             f1.splist.from_full_cube(f.wcube)
+        elif isinstance(f, FileSpectrum):
+            f1 = FileSpectrumList()
+            f1.splist.add_spectrum(f.spectrum)
+        if f1:
+            f1.filename = add_bits_to_path(f.filename, "imported-from-",
+                                           os.path.splitext(FileSpectrumList.default_filename)[1])
             f = f1
         return f
 

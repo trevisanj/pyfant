@@ -187,6 +187,9 @@ class XFileMainWindow(XLogMainWindow):
         if not isinstance(f, self.clsss[index]):
             raise RuntimeError('Object to load must be in %s (not a %s)' % ([x.__name__ for x in self.clsss[index]], f.__class__.__name__))
         f = self._filter_on_load(f)
+
+        assert f.filename is not None, "_filter_on_load() probably forgot to assign file name"
+
         editor = self.editors[index]
         editor.load(f)
         self._update_tab_texts()
@@ -322,7 +325,12 @@ class XFileMainWindow(XLogMainWindow):
     # Protected methods to override as needed
 
     def _filter_on_load(self, f):
-        """Perform any necessary on-load file type conversions here: should all converge to same class"""
+        """
+        Inherit this function to convert file type
+
+        The idea is to handle multiple file types on load. If "f" class is not supported,
+        this method must raise an Exception
+        """
         return f
 
     # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * #
