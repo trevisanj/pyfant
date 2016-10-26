@@ -279,7 +279,7 @@ class Spectrum(object):
         # band practical limits
         band_l0, band_lf = band.range(flag_force_parametric)
         # callable transmission function
-        band_f = band.ufunc_band(flag_force_parametric)
+        band_f = band.ufunc(flag_force_parametric)
         # Cuts spectrum if necessary
         if self.x[0] < band_l0 or self.x[-1] > band_lf:
             spc = copy.deepcopy(self)

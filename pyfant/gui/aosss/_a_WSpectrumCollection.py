@@ -408,7 +408,7 @@ class WSpectrumCollection(WBase):
     #     if len(sspp) > 0:
     #
     #         try:
-    #             specs = (("band_name", {"value": "V", "labelText": "Band name (%s)" % ("/".join(Bands.bands.keys()),)}),
+    #             specs = (("band_name", {"value": "V", "labelText": "Band name (%s)" % ("/".join(UBVRIBands.bands.keys()),)}),
     #                      ("flag_force_parametric", {"value": False, "labelText": "Always use parametric band form?",
     #                                                 "toolTip": "Use (center, FWHM) to calculate the band even if tabular data is available"}),
     #                     )
@@ -420,7 +420,7 @@ class WSpectrumCollection(WBase):
     #                 kk = form.get_kwargs()
     #                 band_name = kk["band_name"].upper()
     #
-    #                 if not band_name in Bands.bands.keys():
+    #                 if not band_name in UBVRIBands.bands.keys():
     #                     show_error("Invalid band name")
     #                     continue
     #

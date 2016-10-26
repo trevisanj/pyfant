@@ -21,3 +21,4 @@ from .textinterface import *
 from .physics import *
 from .search import *
 from .introspection import *
+from .photometry import *

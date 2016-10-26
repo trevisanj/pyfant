@@ -302,7 +302,7 @@ def _calculate_and_plot(fig, spectrum, band_name, flag_force_parametric):
         l0, lf = band.range(flag_force_parametric)
         if lf >= plot_l0 and l0 <= plot_lf:
             x = np.linspace(l0, lf, 200)
-            y = band.ufunc_band(flag_force_parametric)(x)
+            y = band.ufunc(flag_force_parametric)(x)
             ax.plot(x, y, c=COLOR_OTHER_BANDS, lw=LINE_WIDTH)
             idx_max = np.argmax(y)
             max_y = y[idx_max]
