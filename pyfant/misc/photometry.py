@@ -30,10 +30,29 @@ __all__ = ["Bandpass", "bands_standard"]
 import numpy as np
 import collections
 from scipy.interpolate import interp1d
+from pyfant import Spectrum
 
 
 MAGNITUDE_BASE = 100. ** (1. / 5)  # approx. 2.512
 REF_NUM_POINTS = 2000   # number of evaluation points over entire band range
+
+
+
+def calculate_magnitude(x, y, band, system="stdref", zeropoint=0.):
+    """
+    Calculates magnitude
+
+    Arguments:
+        x -- wavelength vector (angstrom)
+        y -- flux vector erg/cm**2/s/Hz aka "Fnu"
+        band -- string (standard band name such as U/B/V/R/I), or Bandpass object
+        system -- reference magnitude system. Choices:
+            "stdref" -- literature reference values for bands U,B,V,R,I,J,H,K only
+            "vega" -- uses the Vega star spectrum as a reference
+            "ab" -- AB[solute] magnitude system
+        zeropoint -- subtracts this value from the calculated magnitude to implement some desired
+                     correction.
+    """
 
 
 class Bandpass(object):
@@ -47,6 +66,15 @@ class Bandpass(object):
         parametric -- ((wl, fwhm), ...)
         ref_mean_flux -- reference mean flux passing through filter at magnitude 0 in Jy units
     """
+
+    @property
+    def l0(self):
+        return self._get_l0()
+
+    @property
+    def lf(self):
+        return self._get_lf()
+
     def __init__(self, name, tabular=None, parametric=None, ref_mean_flux=None):
         self.name = name
         self.tabular = tabular
@@ -56,6 +84,86 @@ class Bandpass(object):
 
     def __repr__(self):
         return "Bandpass('%s', %s, %s, %s)" % (self.name, self.tabular, self.parametric, self.ref_mean_flux)
+
+
+    def __mul__(self, other):
+        raise TypeError("Bandpass left multiplication not defined")
+
+
+    def __rmul__(self, other):
+        """Multiplies with Spectrum object. Returns new Spectrum"""
+        if not isinstance(other, Spectrum):
+            try:
+                descr = other.__class__.__name__
+            except:
+                descr = str(other)
+            raise TypeError("Multiplication by a Bandpass is online defined by left argument of "
+                            "class Spectrum, but a %s was found" % descr)
+
+
+        out = copy.deepcopy(other)
+
+        l0, lf = max(self.l0, out.l0), min(self.lf, out.lf)
+        mask = np.logical_and(out.x >= l0, out.x <= lf)
+        out.y[mask] =
+        band_f = self.ufunc()
+
+            outspc.cut(band_l0, band_lf)
+        else:
+            spc = self
+        band_f_spc_x = band_f(spc.x)
+        out_y = spc.y * band_f_spc_x
+
+        # Calculates the area under the band filter
+        band_area = self.area(*([band_l0, band_lf]
+                              if flag_always_full_band else [spc.x[0], spc.x[-1]]),
+                              flag_force_parametric=flag_force_parametric)
+
+        ref_mean_flux = None
+
+        # Calculates apparent magnitude and filtered flux area
+        cmag, weighted_mean_flux, out_area = None, 0, 0
+        if self.ref_mean_flux:
+            if len(spc) > 0:
+                if flag_always_full_band:
+                    ref_mean_flux = self.ref_mean_flux
+                else:
+                    ref_mean_flux = self.ref_mean_flux*band_area/\
+                                    self.area(band_l0, band_lf, flag_force_parametric)
+
+                out_area = np.trapz(out_y, spc.x)
+                weighted_mean_flux = out_area / band_area
+                cmag = -2.5 * np.log10(weighted_mean_flux / ref_mean_flux)
+
+                # cosmetic manipulation
+                cmag = np.round(cmag, 3)
+                if cmag == 0.0:
+                    cmag = 0.0  # get rid of "-0.0"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     def ufunc(self, flag_force_parametric=False):
@@ -220,3 +328,5 @@ def ufunc_gauss(x0, fwhm):
     def f(x):
         return np.exp(-(x - x0) ** 2 * K)
     return f
+
+

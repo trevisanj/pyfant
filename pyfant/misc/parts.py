@@ -38,7 +38,14 @@ def froze_it(cls):
     return cls
 
 
-class AttrsPart(object):
+class PyfantObject(object):
+    """
+    Implements "meta" property (used to store history, etc.)
+    """
+    def __init__(self):
+        self.meta = {}
+
+class AttrsPart(PyfantObject):
     """
     Implements a new __str__() to print selected attributes.
 
@@ -52,6 +59,7 @@ class AttrsPart(object):
     less_attrs = None
 
     def __init__(self):
+        PyfantObject.__init__(self)
         if self.less_attrs is None:
             self.less_attrs = self.attrs
 
