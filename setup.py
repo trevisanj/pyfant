@@ -1,4 +1,7 @@
-#!/usr/bin/env python3
+import sys
+if sys.version_info[0] < 3:
+    print("Python version detected:\n*****\n%s\n*****\nCannot run, must be using Python 3" % sys.version)
+    sys.exit()
 
 from setuptools import setup, find_packages
 from glob import glob
@@ -9,7 +12,7 @@ setup(
     version = '0.16.10.13',
     license = 'GNU GPLv3',
     platforms = 'any',
-    description = 'Tools for Astronomy: Spectral Synthesis; Spectrograph Simulation Support; FITS files editors; and more.\n(1) Python interface for the PFANT spectral synthesis software (github.com/trevisanj/PFANT);\n (2) Support tools for Websim-Compass MOSAIC-E-ELT web-based simulator',
+    description = 'Python API and Graphical applications for PFANT (github.com/trevisanj/PFANT) Spectral Synthesis Software',
     author = 'Julio Trevisan',
     author_email = 'juliotrevisan@gmail.com',
     url = 'https://github.com/trevisanj/pyfant', # use the URL to the github repo

@@ -538,8 +538,10 @@ class WSpectrumCollection(WBase):
         if len(ii) > 0:
             other = copy.deepcopy(self.collection)
             other.spectra = [other.spectra[i] for i in ii]
+            # TODO who said it is a spectrum list? Could well be a FileSparseCube!!!! How to sort this?????????????????????????????????????????????????????????????????????
             f = FileSpectrumList()
             f.splist = other
+            f.filename = "noname.dontknowextension"  # TODO figure out a way to determine this filename because I dont know the original filename
 
             form = self.keep_ref(XFileSpectrumList())
             form.load(f)
@@ -588,7 +590,14 @@ class WSpectrumCollection(WBase):
                 if name in ("PIXEL-X", "PIXEL-Y", "Z-START"):
                     value = int(value)
 
-                self.collection.spectra[row].more_headers[name] = value
+
+                spectrum_index = self.row_index_to_spectrum_index(row)
+
+                print("OOOOOOOOOOOOOOOOOOOOOOOOOOOOLHA")
+                print("header", name, "era", self.collection.spectra[spectrum_index].more_headers[name])
+                print("vai ficar", value)
+
+                self.collection.spectra[spectrum_index].more_headers[name] = value
 
                 flag_emit = True
                 # replaces edited text with eventually cleaner version, e.g. decimals from integers are discarded

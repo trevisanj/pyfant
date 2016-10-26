@@ -1,11 +1,18 @@
 __all__ = ["symbols", "SYMBOLS", "Color", "rainbow_colors", "ncolors", "MAGNITUDE_BASE",
-           "ufunc_gauss", "Band", "Bands"]
+           "ufunc_gauss", "Band", "Bands", "C"]
 
 
 import numpy as np
 import collections
 from scipy.interpolate import interp1d
 from .parts import *
+
+
+# All values in CGS
+class LightSpeed(float):
+    "Light speed in cm/s (CGS) units"
+
+C = LightSpeed(299792458. * 100) # light speed in cm/s
 
 
 # List of all atomic symbols
@@ -129,7 +136,7 @@ class Band(object):
         self.ref_mean_flux = ref_mean_flux
 
 
-    def ufunc_band(self, flag_force_parametric):
+    def ufunc_band(self, flag_force_parametric=False):
         """Uses tabular data if available and not flag_force_parametric"""
         flag_parametric = flag_force_parametric
         if not flag_force_parametric and self.tabular:
@@ -145,7 +152,7 @@ class Band(object):
 
     def range(self, flag_force_parametric=False, no_stds=3):
         """
-        Returns [wl0, wl1], using edges of tabular data or given number of standard deviations
+        Returns [wl0, wl1] (angstrom) , using edges of tabular data or given number of standard deviations
 
         Arguments:
             flag_force_parametric=False -- TODO see ?
@@ -165,6 +172,7 @@ class Band(object):
 
         if flag_parametric:
             x0, fwhm = self.parametric
+            # FWHM-to-(standard deviation) convertion
             std = fwhm * (1. / np.sqrt(8 * np.log(2)))
             ret = [x0 - no_stds * std, x0 + no_stds * std]
         return ret
@@ -172,7 +180,7 @@ class Band(object):
 
     def area(self, l0, lf, flag_force_parametric=False):
         """
-        Calculates area under given range [l0, lf]
+        Calculates area (unit: a.u.*angstrom) under given range [l0, lf]
 
         Arguments:
             l0 -- lower edge of range
@@ -185,7 +193,8 @@ class Band(object):
         x = np.linspace(l0, lf, num_points)
         func = self.ufunc_band(flag_force_parametric)
         y = func(x)
-        area = np.trapz(y)*(x[1]-x[0])  # integration
+        # Has to include x in the integration because it may not be evenly spaced with the tabulated data
+        area = np.trapz(y, x)  # integration
         return area
 
 
@@ -229,7 +238,7 @@ class Bands(object):
     ))
 
 
-    # (midpoint, FWHM)
+    # (midpoint, FWHM) (angstrom)
     # Values taken from https://en.wikipedia.org/wiki/Photometric_system
     PARAMETRIC = collections.OrderedDict((
     ("U", (3650., 660.)),
@@ -249,26 +258,45 @@ class Bands(object):
 
     # values taken from https://en.wikipedia.org/wiki/Apparent_magnitude, but I- and J-band values agree with
     # Evans, C.J., et al., A&A 527(2011): A50.
-    REF_JY = collections.OrderedDict((
-    ("U", 1810),
-    ("B", 4260),
-    ("V", 3640),
-    ("R", 3080),
-    ("I", 2550),
+    # Unit is erg/cm**2/s/Hz
+    REF_FLUX = collections.OrderedDict((
+    ("U", 1.81e-20),
+    ("B", 4.26e-20),
+    ("V", 3.64e-20),
+    ("R", 3.08e-20),
+    ("I", 2.55e-20),
     ("Y", None),
-    ("J", 1600),
-    ("H", 1080),
-    ("K", 670),
+    ("J", 1.60e-20),
+    ("H", 1.08e-20),
+    ("K", 0.67e-20),
     ("L", None),
     ("M", None),
     ("N", None),
     ("Q", None),
-
+    # ("U", 1810),
+    # ("B", 4260),
+    # ("V", 3640),
+    # ("R", 3080),
+    # ("I", 2550),
+    # ("Y", None),
+    # ("J", 1600),
+    # ("H", 1080),
+    # ("K", 670),
+    # ("L", None),
+    # ("M", None),
+    # ("N", None),
+    # ("Q", None),
     ))
+
+    # # Temporary until I define this (bloody) scaling factor
+    # for key, value in zip(REF_FLUX.keys(), REF_FLUX.values()):
+    #     if value is not None:
+    #         REF_FLUX[key] *= 1e20
+
 
     bands = collections.OrderedDict()
     for k in PARAMETRIC:
-        bands[k] = Band(k, TABULAR.get(k), PARAMETRIC.get(k), REF_JY.get(k))
+        bands[k] = Band(k, TABULAR.get(k), PARAMETRIC.get(k), REF_FLUX.get(k))
 
     @classmethod
     def names(cls):

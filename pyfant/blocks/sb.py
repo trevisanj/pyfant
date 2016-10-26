@@ -1,11 +1,12 @@
-__all__ = ["Rubberband", "AddNoise", "FNuToFLambda", "ElementWise", "Extend", ]
+__all__ = ["Rubberband", "AddNoise", "FnuToFlambda", "FLambdaToFNu", "ElementWise", "Extend", ]
 
 
 import numpy as np
-from pyfant import *
-from pyfant.datatypes.filesplist import SpectrumList
+# from pyfant import *
+import pyfant
+# from pyfant.datatypes.filesplist import SpectrumList
 import copy
-from .base import *
+from .base import SpectrumBlock
 
 class Rubberband(SpectrumBlock):
     """
@@ -35,7 +36,7 @@ class Rubberband(SpectrumBlock):
         y = inp.y
         if self.flag_upper:
             y = -y
-        output.y = rubberband(y)
+        output.y = pyfant.rubberband(y)
         if self.flag_upper:
             output.y = -output.y
         return output
@@ -60,14 +61,54 @@ class AddNoise(SpectrumBlock):
         return output
 
 
-class FNuToFLambda(SpectrumBlock):
+class FLambdaToFNu(SpectrumBlock):
     """
-    Flux-nu to flux-lambda conversion. Assumes the wavelength axis is in angstrom
+    Flux-lambda to flux-nu conversion. Assumes the wavelength axis is in angstrom
+
+    Formula:
+        f_nu = f_lambda*(lambda/nu) = f_lambda*lambda**2/c
+
+        where
+            lambda is the wavelength in cm,
+            c is the speed of light in cm/s
+            f_lambda has irrelevant unit for this purpose
     """
     def _do_use(self, inp):
-        raise NotImplementedError()
-        output = self._new_output()
-        output.y = inp.y
+        out = self._copy_input(inp)
+        out.flambda_to_fnu()
+        return out
+
+
+class FnuToFlambda(SpectrumBlock):
+    """
+    Flux-nu to flux-lambda conversion. Assumes the wavelength axis is in angstrom
+
+    Formula:
+        f_lambda = f_nu*(nu/lambda) = f_nu*c/lambda**2
+
+        where
+            lambda is the wavelength in cm,
+            c is the speed of light in cm/s
+            f_lambda has irrelevant unit for this purpose
+    """
+
+    def _do_use(self, inp):
+        out = self._copy_input(inp)
+        out.fnu_to_flambda()
+        return out
+
+
+class FlambdaToFnu(SpectrumBlock):
+    """
+    Flux-nu to flux-lambda conversion. Assumes the wavelength axis is in angstrom
+
+    Formula:
+        f_nu = f_lambda*(lambda/nu) = f_lambda*lambda**2/c
+    """
+    def _do_use(self, inp):
+        out = self._copy_input(inp)
+        out.flambda_to_fnu()
+        return out
 
 
 class ElementWise(SpectrumBlock):
@@ -109,10 +150,11 @@ class Extend(SpectrumBlock):
                     applies individually to left and right (see below)
         flag_left -- whether to extend by fraction to left
         flag_right -- whether to extend by fraction to right
-
-    The y-value to use is found by using a "coarse" 2nd-order polynomial baseline.
-    The baseline is "coarse" because it does not allow for many iterations until the
-    baseline is found
+        fill_mode='poly_baseline' -- how to fill the new points. Valid values:
+            'poly_baseline' -- The y-value (left/right) to use is found by using a "coarse"
+                                2nd-order polynomial baseline. The baseline is "coarse" because it
+                                does not allow for many iterations until the baseline is found
+            'zero' -- Fills with zero
 
     Examples:
         Extend(.1, True, True)  # if original has 100 points, resulting will have 120 points
@@ -120,11 +162,14 @@ class Extend(SpectrumBlock):
         Extend(.1, True, False)  # if original has 100 points, resulting will have 110 points
     """
 
-    def __init__(self, fraction=.1, flag_left=True, flag_right=False):
+    def __init__(self, fraction=.1, flag_left=True, flag_right=False, fill_mode='poly_baseline'):
         SpectrumBlock.__init__(self)
         self.fraction = fraction
         self.flag_left = flag_left
         self.flag_right = flag_right
+        if not fill_mode in ('poly_baseline', 'zero'):
+            raise RuntimeError("Invalid fill mode: '%s'" % fill_mode)
+        self.fill_mode = fill_mode
 
     def _do_use(self, inp):
         output = self._copy_input(inp)
@@ -137,15 +182,23 @@ class Extend(SpectrumBlock):
 
         x_left, x_right, y_left, y_right = np.array([]), np.array([]), np.array([]), np.array([])
 
-        rubber = -poly_baseline(-output.y, 2, maxit=15)
+        if self.fill_mode == 'poly_baseline':
+            baseline = -pyfant.poly_baseline(-output.y, 2, maxit=15)
+            fill_l = baseline[0]
+            fill_r = baseline[-1]
+        elif self.fill_mode == 'zero':
+            fill_l = 0
+            fill_r = 0
+        else:
+            raise RuntimeError("Invalid fill mode: '%s'" % self.fill_mode)
 
         if self.flag_left:
             x_left = np.arange(num_add)*output.delta_lambda+(output.x[0]-output.delta_lambda*num_add)
-            y_left = np.ones(num_add)*rubber[0]
+            y_left = np.ones(num_add)*fill_l
 
         if self.flag_right:
             x_right = np.arange(num_add) * output.delta_lambda + (output.x[-1] + output.delta_lambda)
-            y_right = np.ones(num_add) * rubber[-1]
+            y_right = np.ones(num_add)*fill_r
 
         output.x = np.concatenate((x_left, output.x, x_right))
         output.y = np.concatenate((y_left, output.y, y_right))

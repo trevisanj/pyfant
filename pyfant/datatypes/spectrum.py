@@ -52,7 +52,9 @@ class Spectrum(object):
     @property
     def delta_lambda(self):
         """Should agree with self.pas"""
-        return self.x[1]-self.x[0]
+        ret = self.x[1]-self.x[0]
+        if ret != self.x[-1]-self.x[-2]:
+            raise RuntimeError("Spectrum delta lambda is not constant")
 
     @property
     def pixel_x(self):
@@ -118,11 +120,17 @@ class Spectrum(object):
             #                "delta_lambda = %g" % self.delta_lambda,
             #                "no. points: %d" % len(self.x)])
 
-            s = " | ".join(["%g \u2264 \u03BB \u2264 %g" % (self.x[0], self.x[-1]),
-                           "\u0394\u03BB = %g" % self.delta_lambda,
-                           "%g \u2264 flux \u2264 %g" % (np.min(self.y), np.max(self.y)),
-                           "length: %d" % len(self.x)])
+            info = ["%g \u2264 \u03BB \u2264 %g" % (self.x[0], self.x[-1])]
+            try:
+                dl = self.delta_lambda
+                info.append("\u0394\u03BB = %g" % dl)
+            except:
+                pass
 
+            info.append("%g \u2264 flux \u2264 %g" % (np.min(self.y), np.max(self.y)))
+            info.append("length: %d" % len(self.x))
+
+            s = " | ".join(info)
         else:
             s = "(empty)"
         return s
@@ -250,8 +258,8 @@ class Spectrum(object):
     def cut(self, l0, l1):
         """Cuts *in place* to wavelength interval [l0, l1]. Cut is done within the array objects thus keeping the same objects"""
         ii_delete = np.where(np.logical_or(self.x < l0, self.x > l1))
-        np.delete(self.x, ii_delete)
-        np.delete(self.y, ii_delete)
+        self.x = np.delete(self.x, ii_delete)
+        self.y = np.delete(self.y, ii_delete)
         
     def cut_idxs(self, i0, i1):
         """Cuts *in place* to slice i0:i1 (pythonic, interval = [i0, i1["""
@@ -260,7 +268,9 @@ class Spectrum(object):
 
     def calculate_magnitude(self, band_name, flag_force_parametric=False, flag_always_full_band=False):
         """
-        Calculates magnitude and stores values in more_headers "MAG_CALC" and "MAG_BAND"
+        Calculates magnitude
+
+        **Note** Assumed unit of spectrum is erg/cm**2/s/Hz (Fnu)
 
         Returns several variables in a dict, which may be also useful for plotting or other purposes
         """
@@ -296,7 +306,7 @@ class Spectrum(object):
                     ref_mean_flux = band.ref_mean_flux*band_area/\
                                     band.area(band_l0, band_lf, flag_force_parametric)
 
-                out_area = np.sum(out_y) * spc.delta_lambda
+                out_area = np.trapz(out_y, spc.x)
                 weighted_mean_flux = out_area / band_area
                 cmag = -2.5 * np.log10(weighted_mean_flux / ref_mean_flux)
 
@@ -308,8 +318,6 @@ class Spectrum(object):
             else:
                 cmag = np.inf
 
-        self.more_headers["MAG_CALC"] = cmag
-        self.more_headers["MAG_BAND"] = band_name
         return {"band_area": band_area,  # area under band filter only for the region of spc
                 "band_f": band_f,  # transmission function
                 "band_f_spc_x": band_f_spc_x,  # transmission function evaluated over spc.x
@@ -321,7 +329,6 @@ class Spectrum(object):
                 "weighted_mean_flux": weighted_mean_flux,  # weighted-average flux where the weights are the transmission function
                 "out_y": out_y,  # spc with flux multiplied by transmission function
                 "out_area": out_area,  # area under out_y
-                "fieldnames": ["MAG_CALC", "MAG_BAND"]  # names of fields added/replaces to self.more_headers
                 }
 
 
@@ -337,6 +344,43 @@ class Spectrum(object):
         self.wavelength = new_wavelength
 
 
+    def flambda_to_fnu(self):
+        """
+        Flux-nu to flux-lambda conversion **in-place**
+
+        Formula:
+            f_nu = f_lambda*(lambda/nu) = f_lambda*lambda**2/c
+
+            where
+                lambda is the wavelength in cm,
+                c is the speed of light in cm/s
+                f_lambda has irrelevant unit for this purpose
+
+        **Note** By convention in this library, Spectrum wavelength is always in angstrom
+        """
+
+        x_cm = self.x*1e-8
+        self.y *= 1./(1e-8 * C) * x_cm ** 2
+
+    def fnu_to_flambda(self):
+        """
+
+        **in-place** flux-lambda to flux-nu conversion
+
+        Converts flux from erg/s/cm**2/Hz
+                        to erg/s/cm**2/angstrom
+        Formula:
+            f_lambda = f_nu*(nu/lambda) = f_nu*c/lambda**2
+
+            (terms description are the same as in flambda_to_fnu())
+        """
+
+        x_cm = self.x * 1e-8  # angstrom -to cm
+        #    y * C/x_cm ** 2  would be in erg/s/cm**2/cm
+        # 1e-8 * C/x_cm ** 2        is in erg/s/cm**2/angstrom
+        self.y *= 1e-8 * C/x_cm ** 2
+
+
 class FileSpectrum(DataFile):
     attrs = ['spectrum']
 
@@ -345,8 +389,7 @@ class FileSpectrum(DataFile):
         self.spectrum = Spectrum()
 
     def load(self, filename=None):
-        # Method was overriden to set spectrum filename automatcially so that
-        # descendants don't have to bother about this.
+        """Method was overriden to set spectrum.filename as well"""
         DataFile.load(self, filename)
         self.spectrum.filename = filename
 
@@ -521,7 +564,6 @@ class FileSpectrumXY(FileSpectrum):
 
     def _do_save_as(self, filename):
         with open(filename, "w") as h:
-            print(("xxxxxxxxxxxxxxxxxx", self.spectrum.x))
             for x, y in zip(self.spectrum.x, self.spectrum.y):
                 write_lf(h, "%.10g %.10g" % (x, y))
 
