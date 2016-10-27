@@ -88,7 +88,16 @@ class XScaleSpectrum(XLogDialog):
         signals.append(y.currentIndexChanged)
         x.setBuddy(y)
         y.addItems(["ab", "vega", "stdflux"])
-        pp.append((x, y, "Magnitude &system", "", ""))
+        pp.append((x, y, "Magnitude &system",
+                   "'ab' -- AB[solute]<br>"
+                   "'vega' -- uses Vega spectrum as reference;<br>"
+                   "'stdflux' -- uses standard reference values from literature", ""))
+        ###
+        x = self.label_x = QLabel()
+        y = self.checkbox_force_band_range = QCheckBox()
+        signals.append(y.stateChanged)
+        x.setBuddy(y)
+        pp.append((x, y, "&Force filter range?", "(even when spectrum does not<br>completely overlap filter)", ""))
         ###
         x = self.label_x = QLabel()
         y = self.spinBox_mag = QDoubleSpinBox()
@@ -173,6 +182,13 @@ class XScaleSpectrum(XLogDialog):
         self.cb_system.setEditText(x)
         self.__update()
 
+    def flag_force_band_range(self):
+        return self.checkbox_force_band_range.isChecked()
+
+    def set_flag_force_band_range(self, x):
+        self.checkbox_force_band_range.setChecked(bool(x))
+        self.__update()
+
     def desired_magnitude(self):
         return self.spinBox_mag.value()
 
@@ -208,17 +224,28 @@ class XScaleSpectrum(XLogDialog):
             fig = self.figure0
             fig.clear()
             # name = self.band_name()
-            cmean_flux, cmag = _draw_figure(fig, self.spectrum, self.band_name(), self.flag_force_parametric())
+            bandpass = self.bandpasses[self.band_index()]
+            mag_data = pf.calculate_magnitude(self.spectrum, bandpass, self.system(),
+                                              self.flag_force_band_range())
+            _draw_figure(fig, mag_data, self.spectrum, self.flag_force_band_range())
             self.canvas0.draw()
 
+            mag = self.desired_magnitude()
+            cmag = mag_data["cmag"]
+
+            self.factor_ = k = MAGNITUDE_BASE ** (cmag - mag) if cmag is not None else float("nan")
+
             # Updates calculated state
-            self.cmag = cmag
-            band = self.bandpasses[self.band_index()]
-            self.edit_ref_mean_flux.setText("%.2f" % band.ref_mean_flux if band.ref_mean_flux
-                                            else "(not available)")
-            self.edit_calc_mean_flux.setText("%.2f" % cmean_flux)
-            self.edit_calc_mag.setText(str(cmag) if cmag is not None else "(cannot calculate)")
-            self.__update_factor()
+
+            kk = mag_data.keys()
+            lenk = max([len(k) for k in kk])
+            vv = mag_data.values()
+            text = "\n".join(["{0:{1}}: {2}".format(k, lenk, v) for k, v in mag_data.items()])
+
+
+            self.textEdit.setText("<pre>\n%s\n\n"
+                                  "Scaling factor: %g"
+                                  "</pre>" % (text, self.factor_))
 
         except Exception as E:
             self.add_log_error(str(E))
@@ -226,32 +253,22 @@ class XScaleSpectrum(XLogDialog):
         finally:
             self.flag_process_changes = True
 
-    def __update_factor(self):
-        mag = self.desired_magnitude()
-        cmag = self.calculated_magnitude()
-        text = "(cannot calculate)"
-        self.factor_ = None
-        if cmag is not None:
-            self.factor_ = k = MAGNITUDE_BASE ** (cmag - mag)
-            text = str(k)
-        self.edit_calc_factor.setText(text)
 
-def _draw_figure(fig, mag_data, spectrum, bandpass, flag_force_band_range):
+
+def _draw_figure(fig, mag_data, spectrum, flag_force_band_range):
 
     # y = s*f ; s and y: fluxes ; f: filter ; all functions of wavelength
     # out_area = integrate y over whole axis, but y = 0 outside the filter range
     # weighted_mean_flux = out_area/band_area
 
 
-    mag_data = pf.calculate_magnitude(spectrum, bandpass, system, flag_force_band_range)
-    band_l0, band_lf = mag_data["band_l0"], mag_data["band_lf"]
+    bp = mag_data["bp"]
     weighted_mean_flux = mag_data["weighted_mean_flux"]
-    spc = mag_data["spc"]
-    band_area = mag_data["band_area"]
-    out_y = mag_data["out_y"]
-    band_f = mag_data["band_f"]
-    band_f_spc_x = mag_data["band_f_spc_x"]
-    out_area = mag_data["out_area"]
+    calc_l0, calc_lf = mag_data["calc_l0"], mag_data["calc_lf"]
+    filtered_sp = mag_data["filtered_sp"]
+    band_area = bp.area(bp.l0, bp.lf)
+    out_y = filtered_sp.y
+    out_area = np.trapz(filtered_sp.y, filtered_sp.x)
     cmag = mag_data["cmag"]
 
     MARGIN_H = .15  # extends horizontally beyond band range
@@ -260,38 +277,38 @@ def _draw_figure(fig, mag_data, spectrum, bandpass, flag_force_band_range):
     COLOR_CURRENT_BAND = (.1, .1, .1)
     COLOR_FILL_BAND = (.9, .8, .8)
     LINE_WIDTH = 1.5
-    band_x = np.linspace(band_l0, band_lf, 200) # for plotting
-    band_y = band_f(band_x)                     # for plotting
-    band_span_x = band_lf - band_l0
+    band_x = np.linspace(bp.l0, bp.lf, 200)
+    band_y = bp.ufunc()(band_x)
+    band_span_x = bp.lf - bp.l0
     band_max_y = max(band_y)
-    plot_l0, plot_lf = band_l0 - band_span_x * MARGIN_H, band_lf + band_span_x * MARGIN_H
+    plot_l0, plot_lf = bp.l0 - band_span_x * MARGIN_H, bp.lf + band_span_x * MARGIN_H
     plot_h_middle = (plot_l0 + plot_lf) / 2
     spp = cut_spectrum(spectrum, plot_l0, plot_lf)  # spectrum for plotting
     flux_ylim = [0, np.max(spp.y) * (1 + MARGIN_V)] if len(spp) > 0 else [-.1, .1]
 
     # # First subplot
     ax = ax0 = fig.add_subplot(311)
-    if len(spc) == 0:
+    if len(spp) == 0:
         ax.plot([], [])
         ax.annotate("Band out of spectral range [%g, %g]" % (spectrum.x[0], spectrum.x[-1]), xy=(plot_h_middle, 0),
                     horizontalalignment="center", verticalalignment="center")
     else:
         ax.plot(spp.x, spp.y, c=COLOR_CURRENT_BAND, lw=LINE_WIDTH)
-        # shows mean flux within range
-        ax.plot([band_l0, band_lf], [weighted_mean_flux, weighted_mean_flux], linestyle="dashed", linewidth=LINE_WIDTH, color=(.4, .3, .1))
+        # shows weighted mean flux within range
+        ax.plot([bp.l0, bp.lf], [weighted_mean_flux, weighted_mean_flux], linestyle="dashed",
+                linewidth=LINE_WIDTH, color=(.4, .3, .1))
     # ax.plot(spc.x, spc.y, c=COLOR_CURRENT_BAND, lw=LINE_WIDTH, zorder=999)
-    ax.set_xlim([plot_l0, plot_lf])
     ax.set_ylim(flux_ylim)
     ax.set_ylabel("Flux")
 
     # # Second subplot
+    overall_max_y = 0
     ax = fig.add_subplot(312, sharex=ax0)
     # other bands
-    for band in Bands.bands.values():
-        l0, lf = band.range(flag_force_parametric)
-        if lf >= plot_l0 and l0 <= plot_lf:
-            x = np.linspace(l0, lf, 200)
-            y = band.ufunc(flag_force_parametric)(x)
+    for band in pf.get_ubv_bandpasses():
+        if band.lf >= plot_l0 and band.l0 <= plot_lf:
+            x = np.linspace(band.l0, band.lf, 200)
+            y = band.ufunc()(x)
             ax.plot(x, y, c=COLOR_OTHER_BANDS, lw=LINE_WIDTH)
             idx_max = np.argmax(y)
             max_y = y[idx_max]
@@ -300,10 +317,11 @@ def _draw_figure(fig, mag_data, spectrum, bandpass, flag_force_band_range):
                         horizontalalignment="center", verticalalignment="center")
     # current band
     ax.plot(band_x, band_y, c=COLOR_CURRENT_BAND, lw=LINE_WIDTH)
-    ax.fill_between(spc.x, mag_data["band_f"](spc.x), color=COLOR_FILL_BAND)
-    ax.set_xlim([plot_l0, plot_lf])
+    xfill = np.linspace(calc_l0, calc_lf, 50)
+    yfill = bp.ufunc()(xfill)
+    ax.fill_between(xfill, yfill, color=COLOR_FILL_BAND)
     ax.set_ylim([0, overall_max_y * (1 + MARGIN_V)])
-    ax.set_ylabel("Gain")
+    ax.set_ylabel("Bandpass filter curve")
     idx_max = np.argmax(band_y)
     ax.annotate("A1=%.1f" % band_area, xy=(band_x[idx_max], band_max_y * .45),
                 horizontalalignment="center", verticalalignment="center",
@@ -312,16 +330,17 @@ def _draw_figure(fig, mag_data, spectrum, bandpass, flag_force_band_range):
     # Third subplot
     # # First subplot
     ax = fig.add_subplot(313, sharex=ax0)
-    if len(spc) == 0:
+    if len(filtered_sp) == 0:
         ax.plot([], [])
         ax.annotate("Band out of spectral range [%g, %g]" % (spectrum.x[0], spectrum.x[-1]), xy=(plot_h_middle, 0),
                     horizontalalignment="center", verticalalignment="center")
     else:
-        ax.plot(spc.x, out_y, c=COLOR_CURRENT_BAND, lw=LINE_WIDTH)
-        ax.fill_between(spc.x, out_y, color=COLOR_FILL_BAND)
+        ax.plot(filtered_sp.x, out_y, c=COLOR_CURRENT_BAND, lw=LINE_WIDTH)
+        ax.fill_between(filtered_sp.x, out_y, color=COLOR_FILL_BAND)
         
-        ax.plot(spc.x, band_f_spc_x*weighted_mean_flux, linestyle="dashed", linewidth=LINE_WIDTH, color=(.4, .3, .1), label='equivalent horizontal')
-        ax.annotate("A2=%.1f" % out_area, xy=((spc.x[0] + spc.x[-1]) / 2, max(out_y) * .45),
+        ax.plot(xfill, yfill*weighted_mean_flux, linestyle="dashed",
+                linewidth=LINE_WIDTH, color=(.4, .3, .1), label='equivalent flat')
+        ax.annotate("A2=%g" % out_area, xy=((xfill[0] + xfill[-1]) / 2, max(out_y) * .45),
                     horizontalalignment="center", verticalalignment="center",
                     color=(.4, .2, .1))
     ax.set_xlim([plot_l0, plot_lf])

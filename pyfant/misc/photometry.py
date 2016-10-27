@@ -13,11 +13,12 @@ MAGNITUDE_BASE = 100. ** (1. / 5)  # approx. 2.512
 _REF_NUM_POINTS = 5000   # number of evaluation points over entire band range
 
 
-_ubv_bandpasses = []
+_ubv_bandpasses = None
 def get_ubv_bandpasses():
     """Returns list with UBVRI... Bandpass objects"""
     global _ubv_bandpasses
     if _ubv_bandpasses is None:
+        _ubv_bandpasses = []
         for name in UBVParametric.X0_FWHM.keys():
             bp = UBVTabulated(name) if name in "UBVRI" else UBVParametric(name)
             _ubv_bandpasses.append(bp)
@@ -85,13 +86,16 @@ def calculate_magnitude(sp, bp, system="stdflux", zero_point=0., flag_force_band
     weighted_mean_flux = filtered_sp_area/band_area
     cmag = -2.5 * np.log10(weighted_mean_flux / zero_flux) - zero_point
 
-    ret = {"bp": bp,
-            "calc_l0": calc_l0,
-            "calc_lf": calc_lf,
-            "filtered_sp_area": filtered_sp_area,
-            "weighted_mean_flux": weighted_mean_flux,
-            "zero_flux": zero_flux,
-            "cmag": cmag,}
+    ret = collections.OrderedDict((
+    ("bp", bp),
+    ("calc_l0", calc_l0),
+    ("calc_lf", calc_lf),
+    ("filtered_sp", filtered_sp),
+    ("filtered_sp_area", filtered_sp_area),
+    ("weighted_mean_flux", weighted_mean_flux),
+    ("zero_flux", zero_flux),
+    ("cmag", cmag),
+    ))
     if system == "vega":
         ret["filtered_vega_sp"] = filtered_vega_sp
     return ret
