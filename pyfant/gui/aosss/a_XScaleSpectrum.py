@@ -6,7 +6,7 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 import traceback as tb
 import datetime
-from pyfant import *
+import pyfant as pf
 from pyfant.gui import *
 import os
 from PyQt4.QtCore import *
@@ -40,6 +40,8 @@ class XScaleSpectrum(XLogDialog):
             return obj
 
         self.setWindowTitle("Scale spectrum")
+
+        self.bandpasses = pf.get_ubv_bandpasses()
 
         # Internal flag to prevent taking action when some field is updated programatically
         self.flag_process_changes = False
@@ -78,32 +80,15 @@ class XScaleSpectrum(XLogDialog):
         y = self.cb_band = QComboBox()
         signals.append(y.currentIndexChanged)
         x.setBuddy(y)
-        y.addItems(list(Bands.bands.keys()))
+        y.addItems([bp.name for bp in self.bandpasses])
         pp.append((x, y, "&Band name", "UBVRI-x system", ""))
         ###
-        x = self.label_x = QLabel()
-        y = self.checkbox_force_parametric = QCheckBox()
-        signals.append(y.stateChanged)
-        x.setBuddy(y)
-        pp.append((x, y, "&Force parametric?", "(even when tabular data is available)", ""))
-        ###
         x = keep_ref(QLabel())
-        y = self.edit_ref_mean_flux = QLineEdit()
-        _toggle_widget(y, True)
+        y = self.cb_system = QComboBox()
+        signals.append(y.currentIndexChanged)
         x.setBuddy(y)
-        pp.append((x, y, "Reference mean flux (Jy)", "Mean flux passing through filter<br>for a 0-magnitude object", ""))
-        ###
-        x = keep_ref(QLabel())
-        y = self.edit_calc_mean_flux = QLineEdit()
-        _toggle_widget(y, True)
-        x.setBuddy(y)
-        pp.append((x, y, "Calculated mean flux (Jy)", "A2 / A1 = ", ""))
-        ###
-        x = keep_ref(QLabel())
-        y = self.edit_calc_mag = QLineEdit()
-        _toggle_widget(y, True)
-        x.setBuddy(y)
-        pp.append((x, y, "Calculated apparent magnitude", "", ""))
+        y.addItems(["ab", "vega", "stdflux"])
+        pp.append((x, y, "Magnitude &system", "", ""))
         ###
         x = self.label_x = QLabel()
         y = self.spinBox_mag = QDoubleSpinBox()
@@ -115,13 +100,6 @@ class XScaleSpectrum(XLogDialog):
         x.setBuddy(y)
         pp.append((x, y, "Desired apparent &magnitude", "", ""))
         ###
-        x = keep_ref(QLabel())
-        y = self.edit_calc_factor = QLineEdit()
-        _toggle_widget(y, True)
-        x.setBuddy(y)
-        pp.append((x, y, "Resulting Scaling factor", "", ""))
-        ###
-
 
         for i, (label, edit, name, short_descr, long_descr) in enumerate(pp):
             # label.setStyleSheet("QLabel {text-align: right}")
@@ -133,8 +111,15 @@ class XScaleSpectrum(XLogDialog):
             label.setToolTip(long_descr)
             edit.setToolTip(long_descr)
 
-        lwleft.addSpacerItem(QSpacerItem(0, 0, QSizePolicy.Minimum, QSizePolicy.Expanding))
 
+        # ### Text Edit To Show calculated results
+        x = self.keep_ref(QLabel("<b>Computations</b>"))
+        y = self.textEdit = QTextEdit()
+        x.setBuddy(y)
+        y.setReadOnly(True)
+        y.setStyleSheet("QTextEdit {color: %s}" % COLOR_DESCR)
+        lwleft.addWidget(x)
+        lwleft.addWidget(y)
 
         bb = keep_ref(QDialogButtonBox())
         bb.setOrientation(Qt.Horizontal)
@@ -164,11 +149,12 @@ class XScaleSpectrum(XLogDialog):
     # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * #
     # # Interface
 
+
+    def band_index(self):
+        return self.cb_band.currentIndex()
+
     def band_name(self):
         return str(self.cb_band.currentText())
-
-    def flag_force_parametric(self):
-        return self.checkbox_force_parametric.isChecked()
 
     def set_spectrum(self, x):
         assert isinstance(x, Spectrum)
@@ -176,12 +162,15 @@ class XScaleSpectrum(XLogDialog):
         self.setEnabled(True)
         self.__update()
 
-    def set_flag_force_parametric(self, x):
-        self.checkbox_force_parametric.setChecked(bool(x))
-        self.__update()
-
     def set_band_name(self, x):
         self.cb_band.setEditText(x)
+        self.__update()
+
+    def system(self):
+        return str(self.cb_system.currentText())
+
+    def set_system(self, x):
+        self.cb_system.setEditText(x)
         self.__update()
 
     def desired_magnitude(self):
@@ -218,15 +207,15 @@ class XScaleSpectrum(XLogDialog):
         try:
             fig = self.figure0
             fig.clear()
-            name = self.band_name()
-            flag = self.flag_force_parametric()
-            cmean_flux, cmag = _calculate_and_plot(fig, self.spectrum, self.band_name(), self.flag_force_parametric())
+            # name = self.band_name()
+            cmean_flux, cmag = _draw_figure(fig, self.spectrum, self.band_name(), self.flag_force_parametric())
             self.canvas0.draw()
 
             # Updates calculated state
             self.cmag = cmag
-            band = Bands.bands[name]
-            self.edit_ref_mean_flux.setText("%.2f" % band.ref_mean_flux if band.ref_mean_flux else "(not available)")
+            band = self.bandpasses[self.band_index()]
+            self.edit_ref_mean_flux.setText("%.2f" % band.ref_mean_flux if band.ref_mean_flux
+                                            else "(not available)")
             self.edit_calc_mean_flux.setText("%.2f" % cmean_flux)
             self.edit_calc_mag.setText(str(cmag) if cmag is not None else "(cannot calculate)")
             self.__update_factor()
@@ -247,23 +236,23 @@ class XScaleSpectrum(XLogDialog):
             text = str(k)
         self.edit_calc_factor.setText(text)
 
-def _calculate_and_plot(fig, spectrum, band_name, flag_force_parametric):
+def _draw_figure(fig, mag_data, spectrum, bandpass, flag_force_band_range):
 
     # y = s*f ; s and y: fluxes ; f: filter ; all functions of wavelength
     # out_area = integrate y over whole axis, but y = 0 outside the filter range
     # weighted_mean_flux = out_area/band_area
 
 
-    mm = spectrum.calculate_magnitude(band_name, flag_force_parametric)
-    band_l0, band_lf = mm["band_l0"], mm["band_lf"]
-    weighted_mean_flux = mm["weighted_mean_flux"]
-    spc = mm["spc"]
-    band_area = mm["band_area"]
-    out_y = mm["out_y"]
-    band_f = mm["band_f"]
-    band_f_spc_x = mm["band_f_spc_x"]
-    out_area = mm["out_area"]
-    cmag = mm["cmag"]
+    mag_data = pf.calculate_magnitude(spectrum, bandpass, system, flag_force_band_range)
+    band_l0, band_lf = mag_data["band_l0"], mag_data["band_lf"]
+    weighted_mean_flux = mag_data["weighted_mean_flux"]
+    spc = mag_data["spc"]
+    band_area = mag_data["band_area"]
+    out_y = mag_data["out_y"]
+    band_f = mag_data["band_f"]
+    band_f_spc_x = mag_data["band_f_spc_x"]
+    out_area = mag_data["out_area"]
+    cmag = mag_data["cmag"]
 
     MARGIN_H = .15  # extends horizontally beyond band range
     MARGIN_V = .2  # extends vertically beyond band range
@@ -311,7 +300,7 @@ def _calculate_and_plot(fig, spectrum, band_name, flag_force_parametric):
                         horizontalalignment="center", verticalalignment="center")
     # current band
     ax.plot(band_x, band_y, c=COLOR_CURRENT_BAND, lw=LINE_WIDTH)
-    ax.fill_between(spc.x, mm["band_f"](spc.x), color=COLOR_FILL_BAND)
+    ax.fill_between(spc.x, mag_data["band_f"](spc.x), color=COLOR_FILL_BAND)
     ax.set_xlim([plot_l0, plot_lf])
     ax.set_ylim([0, overall_max_y * (1 + MARGIN_V)])
     ax.set_ylabel("Gain")

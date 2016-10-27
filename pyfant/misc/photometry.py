@@ -1,5 +1,5 @@
 __all__ = ["MAGNITUDE_BASE", "STDFLUX", "calculate_magnitude", "get_vega_spectrum",
-           "Bandpass", "UBVTabulated", "UBVParametric", "ufunc_gauss"]
+           "Bandpass", "UBVTabulated", "UBVParametric", "ufunc_gauss", "get_ubv_bandpasses"]
 
 
 import numpy as np
@@ -13,24 +13,15 @@ MAGNITUDE_BASE = 100. ** (1. / 5)  # approx. 2.512
 _REF_NUM_POINTS = 5000   # number of evaluation points over entire band range
 
 
-# Standard flux, according to several references
-#
-# TODO get references: Bessel etc
-#
-# values taken from https://en.wikipedia.org/wiki/Apparent_magnitude
-# I- and J-band values agree with Evans, C.J., et al., A&A 527(2011): A50.
-#
-# Unit is erg/cm**2/s/Hz
-STDFLUX = collections.OrderedDict((
-("U", 1.81e-20),
-("B", 4.26e-20),
-("V", 3.64e-20),
-("R", 3.08e-20),
-("I", 2.55e-20),
-("J", 1.60e-20),
-("H", 1.08e-20),
-("K", 0.67e-20),
-))
+_ubv_bandpasses = []
+def get_ubv_bandpasses():
+    """Returns list with UBVRI... Bandpass objects"""
+    global _ubv_bandpasses
+    if _ubv_bandpasses is None:
+        for name in UBVParametric.X0_FWHM.keys():
+            bp = UBVTabulated(name) if name in "UBVRI" else UBVParametric(name)
+            _ubv_bandpasses.append(bp)
+    return _ubv_bandpasses
 
 
 def calculate_magnitude(sp, bp, system="stdflux", zero_point=0., flag_force_band_range=False):
@@ -316,3 +307,22 @@ def ufunc_gauss(x0, fwhm):
         return np.exp(-(x - x0) ** 2 * K)
     return f
 
+
+# Standard flux, according to several references
+#
+# TODO get references: Bessel etc
+#
+# values taken from https://en.wikipedia.org/wiki/Apparent_magnitude
+# I- and J-band values agree with Evans, C.J., et al., A&A 527(2011): A50.
+#
+# Unit is erg/cm**2/s/Hz
+STDFLUX = collections.OrderedDict((
+("U", 1.81e-20),
+("B", 4.26e-20),
+("V", 3.64e-20),
+("R", 3.08e-20),
+("I", 2.55e-20),
+("J", 1.60e-20),
+("H", 1.08e-20),
+("K", 0.67e-20),
+))

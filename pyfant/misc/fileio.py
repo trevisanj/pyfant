@@ -248,11 +248,12 @@ def load_with_classes(filename, classes):
         try:
             obj.load(filename)
             ok = True
-        # cannot let IOError through because pyfits raises IOError!!
+        # # cannot let IOError through because pyfits raises IOError!!
         # except IOError:
         #     raise
-        except OSError:
-            raise
+        # # also cannot let OSError through because astropy.io.fits raises OSError!!
+        # except OSError:
+        #     raise
         except Exception as e:  # (ValueError, NotImplementedError):
             # Note: for debugging, switch the below to True
             if False:
