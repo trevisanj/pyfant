@@ -3,17 +3,15 @@ __all__ = ["crunch_dir", "is_text_file", "get_pfant_path", "overwrite_fits", "ad
 "write_lf", "rename_to_temp", "load_with_classes", "float_vector", "get_pfant_star_subdirs",
 "get_pfant_data_path", "str_vector", "get_pfant_data_subdirs", "create_symlink", "int_vector",
 "get_fortrans", "get_pyfant_default_data_path", "readline_strip", "multirow_str_vector",
-]
+"get_pyfant_data_path"]
 
 
 import collections
 import glob
-import imp
 import os.path
 import platform
 import re
 import shutil
-import textwrap
 from threading import Lock
 from astropy.io import fits
 from .loggingaux import *
@@ -269,7 +267,7 @@ def load_with_classes(filename, classes):
 
 
 
-# ## http://eli.thegreenplace.net/2011/10/19/perls-guess-if-file-is-text-or-binary-implemented-in-python
+# ## http://eli.thegreenplace.net/2011/10/19/perls-guess-if-file-is-text-or-binary-lemented-in-python
 _PY3 = sys.version_info[0] == 3
 
 # A function that takes an integer in the 8-bit range and returns
@@ -317,9 +315,15 @@ def get_pyfant_path(*args):
   return p
 
 
-def get_pyfant_default_data_path(fn):
-  """Returns full path to default data file."""
-  p = os.path.join(get_pyfant_path(), "datatypes", "default", fn)
+def get_pyfant_default_data_path(*args):
+  """Returns full path to object inside the default data directory"""
+  p = os.path.join(get_pyfant_path(), "data", "default", *args)
+  return p
+
+
+def get_pyfant_data_path(*args):
+  """Returns full path to object inside data directory"""
+  p = os.path.join(get_pyfant_path(), "data", *args)
   return p
 
 

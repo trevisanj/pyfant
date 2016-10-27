@@ -67,7 +67,7 @@ installed on your system.
 
 Possible way to install on Debian-based Linux:
 ```shell
-sudo apt-get install python3-matplotlib python3-scipy python3-qt4 python3-astropy python3-pip
+sudo apt-get install python3-matplotlib python3-scipy python3-pyqt4 python3-astropy python3-pip
 sudo pip3 install fortranformat
 ```
 

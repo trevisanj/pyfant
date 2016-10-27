@@ -42,6 +42,14 @@ class Spectrum(object):
         self.x = x
 
     @property
+    def l0(self):
+        return self.x[0]
+
+    @property
+    def lf(self):
+        return self.x[-1]
+
+    @property
     def flux(self):
         return self.y
 
@@ -95,20 +103,6 @@ class Spectrum(object):
         self.filename = None
         self.more_headers = {}  # for Spectrum, just cargo
 
-        # Attributes used only by FileSpectrumPfant
-        self.ikeytot = None
-        self.tit = None
-        self.tetaef = None
-        self.glog = None
-        self.asalog = None
-        self.modeles_nhe = None
-        self.amg = None
-        self.l0 = None
-        self.lf = None
-        self.pas = None
-        self.echx = None
-        self.echy = None
-        self.fwhm = None
 
     def __len__(self):
         """Corresponds to nulbad "ktot"."""
@@ -136,22 +130,23 @@ class Spectrum(object):
         return s
 
     def __str__(self):
-        s = ", ".join(["ikeytot = ", str(self.ikeytot), "\n",
-                       "tit = ", str(self.tit), "\n",
-                       "tetaef = ", str(self.tetaef), "\n",
-                       "glog = ", str(self.glog), "\n",
-                       "asalog = ", str(self.asalog), "\n",
-                       "modeles_nhe = ", str(self.modeles_nhe), "\n",
-                       "amg = ", str(self.amg), "\n",
-                       "l0 = ", str(self.l0), "\n",
-                       "lf = ", str(self.lf), "\n",
-                       "pas = ", str(self.pas), "\n",
-                       "echx = ", str(self.echx), "\n",
-                       "echy = ", str(self.echy), "\n",
-                       "fwhm = ", str(self.fwhm), "\n",
-                       "============\n"
-                       "Size of Spectrum: ", str(len(self)), "\n"])
-        return s
+        return self.one_liner_str()
+        # s = ", ".join(["ikeytot = ", str(self.ikeytot), "\n",
+        #                "tit = ", str(self.tit), "\n",
+        #                "tetaef = ", str(self.tetaef), "\n",
+        #                "glog = ", str(self.glog), "\n",
+        #                "asalog = ", str(self.asalog), "\n",
+        #                "modeles_nhe = ", str(self.modeles_nhe), "\n",
+        #                "amg = ", str(self.amg), "\n",
+        #                "l0 = ", str(self.l0), "\n",
+        #                "lf = ", str(self.lf), "\n",
+        #                "pas = ", str(self.pas), "\n",
+        #                "echx = ", str(self.echx), "\n",
+        #                "echy = ", str(self.echy), "\n",
+        #                "fwhm = ", str(self.fwhm), "\n",
+        #                "============\n"
+        #                "Size of Spectrum: ", str(len(self)), "\n"])
+        # return s
 
     def get_rgb(self, visible_range=None, method=0):
         """Takes weighted average of rainbow colors RGB's
@@ -266,7 +261,7 @@ class Spectrum(object):
         self.x = self.x[i0:i1]
         self.y = self.y[i0:i1]
 
-    def calculate_magnitude(self, band_name, flag_force_parametric=False, flag_always_full_band=False):
+    def calculate_magnitude(self, band_name, flag_force_parametric=False, flag_force_band_range=False):
         """
         Calculates magnitude
 
@@ -291,7 +286,7 @@ class Spectrum(object):
 
         # Calculates the area under the band filter
         band_area = band.area(*([band_l0, band_lf]
-                              if flag_always_full_band else [spc.x[0], spc.x[-1]]),
+                              if flag_force_band_range else [spc.x[0], spc.x[-1]]),
                               flag_force_parametric=flag_force_parametric)
 
         ref_mean_flux = None
@@ -300,7 +295,7 @@ class Spectrum(object):
         cmag, weighted_mean_flux, out_area = None, 0, 0
         if band.ref_mean_flux:
             if len(spc) > 0:
-                if flag_always_full_band:
+                if flag_force_band_range:
                     ref_mean_flux = band.ref_mean_flux
                 else:
                     ref_mean_flux = band.ref_mean_flux*band_area/\
@@ -405,6 +400,23 @@ class FileSpectrumPfant(FileSpectrum):
 
     default_filename = "flux.norm"
 
+    def __init__(self):
+        FileSpectrum.__init__(self)
+
+        self.ikeytot = None
+        self.tit = None
+        self.tetaef = None
+        self.glog = None
+        self.asalog = None
+        self.modeles_nhe = None
+        self.amg = None
+        self.l0 = None
+        self.lf = None
+        self.pas = None
+        self.echx = None
+        self.echy = None
+        self.fwhm = None
+
     def _do_load(self, filename):
         with open(filename, 'r') as h:
             f_header = ff.FortranRecordReader(
@@ -417,22 +429,22 @@ class FileSpectrumPfant(FileSpectrum):
                 s = h.readline()
                 if i == 0:
                     vars_ = f_header.read(s)  # This is actually quite slow, gotta avoid it
-                    [sp.ikeytot,
-                     sp.tit,
-                     sp.tetaef,
-                     sp.glog,
-                     sp.asalog,
-                     sp.modeles_nhe,
-                     sp.amg,
-                     sp.l0,
-                     sp.lf,
+                    [self.ikeytot,
+                     self.tit,
+                     self.tetaef,
+                     self.glog,
+                     self.asalog,
+                     self.modeles_nhe,
+                     self.amg,
+                     self.l0,
+                     self.lf,
                      _,  # lzero,
                      _,  # lfin,
                      _,  # itot
-                     sp.pas,
-                     sp.echx,
-                     sp.echy,
-                     sp.fwhm] = vars_
+                     self.pas,
+                     self.echx,
+                     self.echy,
+                     self.fwhm] = vars_
 
 
                 #itot = vars[11]
@@ -455,7 +467,7 @@ class FileSpectrumPfant(FileSpectrum):
                 # print v
                 # print i, self.ikeytot
 
-                if i < sp.ikeytot - 1:
+                if i < self.ikeytot - 1:
                     # Last point is discarded because pfant writes reduntantly:
                     # last point of iteration ikey is the same as first point of
                     # iteration ikey+1
@@ -472,7 +484,7 @@ class FileSpectrumPfant(FileSpectrum):
                 #last_itot = itot
 
         # Lambdas
-        sp.x = np.array([sp.l0 + k * sp.pas for k in range(0, len(y))])
+        sp.x = np.array([self.l0 + k * self.pas for k in range(0, len(y))])
         sp.y = np.array(y)
 
 #        logging.debug("Just read PFANT Spectrum '%s'" % filename)

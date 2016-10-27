@@ -1,58 +1,122 @@
-"""
-
->>> import matplotlib.pyplot as plt
->>> import numpy as np
->>> l0, lf = 3000, 250000
->>> x =  np.logspace(np.log10(l0), np.log10(lf), 1000, base=10.)
->>> for name in bands_standard:
->>>     band = bands_standard[name]
->>>     plt.subplot(211)
->>>     plt.semilogx(x, band.ufunc()(x), label=band.name)
->>>     plt.subplot(212)
->>>     plt.semilogx(x, band.ufunc(True)(x), label=band.name)
->>> plt.subplot(211)
->>> plt.title("Tabulated UBVRI")
->>> plt.xlim([l0, lf])
->>> plt.subplot(212)
->>> plt.title("Parametric UBVRI")
->>> plt.xlabel("Wavelength ($\AA$)")
->>> plt.xlim([l0, lf])
->>> l = plt.legend(loc='lower right')
->>> plt.tight_layout()
->>> plt.show()
-
-"""
-
-
-__all__ = ["Bandpass", "bands_standard"]
+__all__ = ["MAGNITUDE_BASE", "STDFLUX", "calculate_magnitude", "get_vega_spectrum",
+           "Bandpass", "UBVTabulated", "UBVParametric", "ufunc_gauss"]
 
 
 import numpy as np
 import collections
 from scipy.interpolate import interp1d
-from pyfant import Spectrum
+import pyfant as pf
+import copy
 
 
 MAGNITUDE_BASE = 100. ** (1. / 5)  # approx. 2.512
-REF_NUM_POINTS = 2000   # number of evaluation points over entire band range
+_REF_NUM_POINTS = 5000   # number of evaluation points over entire band range
 
 
+# Standard flux, according to several references
+#
+# TODO get references: Bessel etc
+#
+# values taken from https://en.wikipedia.org/wiki/Apparent_magnitude
+# I- and J-band values agree with Evans, C.J., et al., A&A 527(2011): A50.
+#
+# Unit is erg/cm**2/s/Hz
+STDFLUX = collections.OrderedDict((
+("U", 1.81e-20),
+("B", 4.26e-20),
+("V", 3.64e-20),
+("R", 3.08e-20),
+("I", 2.55e-20),
+("J", 1.60e-20),
+("H", 1.08e-20),
+("K", 0.67e-20),
+))
 
-def calculate_magnitude(x, y, band, system="stdref", zeropoint=0.):
+
+def calculate_magnitude(sp, bp, system="stdflux", zero_point=0., flag_force_band_range=False):
     """
     Calculates magnitude
 
     Arguments:
-        x -- wavelength vector (angstrom)
-        y -- flux vector erg/cm**2/s/Hz aka "Fnu"
-        band -- string (standard band name such as U/B/V/R/I), or Bandpass object
-        system -- reference magnitude system. Choices:
-            "stdref" -- literature reference values for bands U,B,V,R,I,J,H,K only
-            "vega" -- uses the Vega star spectrum as a reference
-            "ab" -- AB[solute] magnitude system
-        zeropoint -- subtracts this value from the calculated magnitude to implement some desired
+        sp -- Spectrum instance. **flux unit**: erg/cm**2/s/Hz aka "Fnu"
+        bp -- Bandpass object, or string in "UBVRIYJHKLMNQ"
+            If string in "UBVRI", creates a UBVTabular Bandpass object;
+            If string otherwise, creates a UBVParametric object.
+        system -- reference magnitude system.
+            Choices:
+                "stdflux" -- literature reference values for bands U,B,V,R,I,J,H,K only
+                "vega" -- uses the Vega star spectrum as a reference
+                "ab" -- AB[solute] magnitude system
+        zero_point -- subtracts this value from the calculated magnitude to implement some desired
                      correction.
+        flag_force_band_range -- this flag has effect when the spectrum does not completely overlap
+            the bandpass filter. How it works:
+                False (default) -- restricts the weighted mean flux calculation to the overlap
+                    range between the spectrum and the filter
+                True -- zero-fill the spectrum to overlap the filter range completely
+
+    Returns: a dictionary with "cmag": calculated magnitude, and many intermediary steps
     """
+
+    if isinstance(bp, Bandpass):
+        pass
+    elif isinstance(bp, str):
+        if bp in "UBVRI":
+            bp = UBVTabulated(bp)
+        else:
+            bp = UBVParametric(bp)
+    else:
+        raise ValueError("Invalid value for argument 'bandpass': %s" % str(bp))
+
+    # # Determines areas
+    filtered_sp = sp * bp
+    if flag_force_band_range:
+        calc_l0, calc_lf = bp.l0, bp.lf
+    else:
+        calc_l0, calc_lf = max(bp.l0, sp.l0), min(bp.lf, sp.lf)
+    band_area = bp.area(calc_l0, calc_lf)
+    # Note: discarding zeroes before integrating would make very little difference in time:
+    #       ~47.5 against ~49.6 for the Vega spectrum with 8827 points
+    filtered_sp_area = np.trapz(filtered_sp.y, filtered_sp.x)
+
+    # # Determines zero-magnitude flux value
+    if system == "stdflux":
+        zero_flux = STDFLUX[bp.name]
+    elif system == "ab":
+        zero_flux = 3631e-23
+    elif system == "vega":
+        vega_sp = __get_vega_spectrum()
+        filtered_vega_sp = vega_sp * bp
+        zero_flux = np.trapz(filtered_vega_sp.y, filtered_vega_sp.x)/bp.area(bp.l0, bp.lf)
+    else:
+        raise ValueError("Invalid reference magnitude system: '%s'" % system)
+
+    weighted_mean_flux = filtered_sp_area/band_area
+    cmag = -2.5 * np.log10(weighted_mean_flux / zero_flux) - zero_point
+
+    ret = {"bp": bp,
+            "calc_l0": calc_l0,
+            "calc_lf": calc_lf,
+            "filtered_sp_area": filtered_sp_area,
+            "weighted_mean_flux": weighted_mean_flux,
+            "zero_flux": zero_flux,
+            "cmag": cmag,}
+    if system == "vega":
+        ret["filtered_vega_sp"] = filtered_vega_sp
+    return ret
+
+
+__vega_spectrum = None
+def __get_vega_spectrum():
+    """Returns Spectrum of Vega"""
+    global __vega_spectrum
+    if __vega_spectrum is None:
+        __vega_spectrum = pf.load_spectrum(pf.get_pyfant_data_path("pysynphot-vega-fnu.xy"))
+    return __vega_spectrum
+
+def get_vega_spectrum():
+    """Returns Spectrum of Vega"""
+    return pf.load_spectrum(pf.get_pyfant_data_path("pysynphot-vega-fnu.xy"))
 
 
 class Bandpass(object):
@@ -75,15 +139,16 @@ class Bandpass(object):
     def lf(self):
         return self._get_lf()
 
-    def __init__(self, name, tabular=None, parametric=None, ref_mean_flux=None):
+    def __init__(self, name):
         self.name = name
-        self.tabular = tabular
-        self.parametric = parametric
-        self.ref_mean_flux = ref_mean_flux
 
 
-    def __repr__(self):
-        return "Bandpass('%s', %s, %s, %s)" % (self.name, self.tabular, self.parametric, self.ref_mean_flux)
+    def _get_l0(self):
+        raise NotImplementedError()
+
+
+    def _get_lf(self):
+        raise NotImplementedError
 
 
     def __mul__(self, other):
@@ -91,227 +156,149 @@ class Bandpass(object):
 
 
     def __rmul__(self, other):
-        """Multiplies with Spectrum object. Returns new Spectrum"""
-        if not isinstance(other, Spectrum):
-            try:
-                descr = other.__class__.__name__
-            except:
-                descr = str(other)
-            raise TypeError("Multiplication by a Bandpass is online defined by left argument of "
-                            "class Spectrum, but a %s was found" % descr)
+        """Right multiplication accepts Spectrum or tuple:(wave, flux)"""
 
-
-        out = copy.deepcopy(other)
-
-        l0, lf = max(self.l0, out.l0), min(self.lf, out.lf)
-        mask = np.logical_and(out.x >= l0, out.x <= lf)
-        out.y[mask] =
-        band_f = self.ufunc()
-
-            outspc.cut(band_l0, band_lf)
+        if isinstance(other, pf.Spectrum):
+            out = copy.deepcopy(other)
+            x, y = out.x, out.y
+        elif isinstance(other, tuple) and len(other) == 2 and isinstance(other[0], np.ndarray) and \
+             isinstance(other[1], np.ndarray) and len(other[0]) == len(other[1]):
+            flag_spectrum = False
+            out = copy.deepcopy(other)
+            x, y = out
         else:
-            spc = self
-        band_f_spc_x = band_f(spc.x)
-        out_y = spc.y * band_f_spc_x
+            raise TypeError("Invalid argument: "+str(other))
 
-        # Calculates the area under the band filter
-        band_area = self.area(*([band_l0, band_lf]
-                              if flag_always_full_band else [spc.x[0], spc.x[-1]]),
-                              flag_force_parametric=flag_force_parametric)
-
-        ref_mean_flux = None
-
-        # Calculates apparent magnitude and filtered flux area
-        cmag, weighted_mean_flux, out_area = None, 0, 0
-        if self.ref_mean_flux:
-            if len(spc) > 0:
-                if flag_always_full_band:
-                    ref_mean_flux = self.ref_mean_flux
-                else:
-                    ref_mean_flux = self.ref_mean_flux*band_area/\
-                                    self.area(band_l0, band_lf, flag_force_parametric)
-
-                out_area = np.trapz(out_y, spc.x)
-                weighted_mean_flux = out_area / band_area
-                cmag = -2.5 * np.log10(weighted_mean_flux / ref_mean_flux)
-
-                # cosmetic manipulation
-                cmag = np.round(cmag, 3)
-                if cmag == 0.0:
-                    cmag = 0.0  # get rid of "-0.0"
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        # Overlap between bandpass filter and spectrum
+        l0, lf = max(self.l0, x[0]), min(self.lf, x[-1])
+        # Spectrum point indexes corresponding to this overlap (boolean mask)
+        mask = np.logical_and(x >= l0, x <= lf)
+        # Multiplies by filter
+        y[mask] *= self.ufunc()(x[mask])
+        # Points outside filter will be zero
+        y[np.logical_not(mask)] = 0.
+        return out
 
 
     def ufunc(self, flag_force_parametric=False):
-        """
-        Returns a function of wavelength for the transmission filter given the band name. Works as a numpy ufunc
-
-        Arguments:
-            band_name -- e.g. "U", "J"
-            flag_force_parametric -- if set, will use parametric data even for the tabulated bands UBVRI
-        """
-        flag_parametric = flag_force_parametric
-        if not flag_force_parametric and self.tabular:
-            x, y = list(zip(*self.tabular))
-            f = interp1d(x, y, kind='linear', bounds_error=False, fill_value=0)
-        else:
-            flag_parametric = True
-
-        if flag_parametric:
-            x0, fwhm = self.parametric
-            f = ufunc_gauss(x0, fwhm)
-        return f
+        raise NotImplementedError()
 
 
-    def range(self, flag_force_parametric=False, no_stds=3):
-        """
-        Returns [wl0, wl1] (angstrom) beyond which the transmission function value is zero or negligible
-
-        Arguments:
-            flag_force_parametric -- if set, will use parametric data even for the tabulated bands UBVRI
-            no_stds -- number of standard deviations away from center to consider the range limit (parametric cases only).
-                       At 3 standard deviations from the center the value drops to approximately 1.1% of the maximum
-        """
-        flag_parametric = flag_force_parametric
-
-        if not flag_force_parametric and self.tabular:
-            points = self.tabular
-            p0, pf = points[0], points[-1]
-            # The following is assumed for the code to work
-            assert p0[1] == 0 and pf[1] == 0, "UBVRIBands.TABULAR tables must start and end with a zero"
-            ret = [p0[0], pf[0]]
-        else:
-            flag_parametric = True
-
-        if flag_parametric:
-            x0, fwhm = self.parametric
-            # FWHM-to-(standard deviation) convertion
-            std = fwhm * (1. / np.sqrt(8 * np.log(2)))
-            ret = [x0 - no_stds * std, x0 + no_stds * std]
-        return ret
-
-
-    def area(self, l0, lf, flag_force_parametric=False):
+    def area(self, l0, lf):
         """
         Calculates area (unit: a.u.*angstrom) under given range [l0, lf]
-
         Arguments:
             l0 -- lower edge of range
             lf -- upper edge of range
-            flag_force_parametric=False -- TODO see ?
         """
-        # Calculates number of points as a fraction of REF_NUM_POINTS
-        ref_range = self.range(flag_force_parametric)
-        num_points = int((lf-l0)/(ref_range[1]-ref_range[0])*REF_NUM_POINTS)
+        # Calculates number of points as a fraction of REF_NUM_POINTS, minimum 10 points
+        num_points = max(10, int((lf - l0) / (self.lf - self.l0) * _REF_NUM_POINTS))
         x = np.linspace(l0, lf, num_points)
-        func = self.ufunc(flag_force_parametric)
-        y = func(x)
-        # Has to include x in the integration because it may not be evenly spaced with the tabulated data
-        area = np.trapz(y, x)  # integration
+        area = np.trapz(self.ufunc()(x), x)
         return area
 
 
+class UBVTabulated(Bandpass):
+    """
+    Tabular filter
 
-# # Mounts dictionary bands_standard: standard band set
-# Michael Bessel 1990
-# Taken from http://spiff.rit.edu/classes/phys440/lectures/filters/filters.html
-BANDS_STANDARD_TABULAR = collections.OrderedDict((
-("U", ((3000, 0.00),  (3050, 0.016), (3100, 0.068), (3150, 0.167), (3200, 0.287), (3250, 0.423), (3300, 0.560),
-       (3350, 0.673), (3400, 0.772), (3450, 0.841), (3500, 0.905), (3550, 0.943), (3600, 0.981), (3650, 0.993),
-       (3700, 1.000), (3750, 0.989), (3800, 0.916), (3850, 0.804), (3900, 0.625), (3950, 0.423), (4000, 0.238),
-       (4050, 0.114), (4100, 0.051), (4150, 0.019), (4200, 0.000))),
-("B", ((3600, 0.0), (3700, 0.030), (3800, 0.134), (3900, 0.567), (4000, 0.920), (4100, 0.978), (4200, 1.000),
-       (4300, 0.978), (4400, 0.935), (4500, 0.853), (4600, 0.740), (4700, 0.640), (4800, 0.536), (4900, 0.424),
-       (5000, 0.325), (5100, 0.235), (5200, 0.150), (5300, 0.095), (5400, 0.043), (5500, 0.009), (5600, 0.0))),
-("V", ((4700, 0.000), (4800, 0.030), (4900, 0.163), (5000, 0.458), (5100, 0.780), (5200, 0.967), (5300, 1.000),
-      (5400, 0.973), (5500, 0.898), (5600, 0.792), (5700, 0.684), (5800, 0.574), (5900, 0.461), (6000, 0.359),
-      (6100, 0.270), (6200, 0.197), (6300, 0.135), (6400, 0.081), (6500, 0.045), (6600, 0.025), (6700, 0.017),
-      (6800, 0.013), (6900, 0.009), (7000, 0.000))),
-("R", ((5500, 0.0), (5600, 0.23), (5700, 0.74), (5800, 0.91), (5900, 0.98), (6000, 1.000), (6100, 0.98),
-       (6200, 0.96), (6300, 0.93), (6400, 0.90), (6500, 0.86), (6600, 0.81), (6700, 0.78), (6800, 0.72),
-       (6900, 0.67), (7000, 0.61), (7100, 0.56), (7200, 0.51), (7300, 0.46), (7400, 0.40), (7500, 0.35),
-       (8000, 0.14), (8500, 0.03), (9000, 0.00))),
-("I", ((7000, 0.000), (7100, 0.024), (7200, 0.232), (7300, 0.555), (7400, 0.785), (7500, 0.910), (7600, 0.965),
-       (7700, 0.985), (7800, 0.990), (7900, 0.995), (8000, 1.000), (8100, 1.000), (8200, 0.990), (8300, 0.980),
-       (8400, 0.950), (8500, 0.910), (8600, 0.860), (8700, 0.750), (8800, 0.560), (8900, 0.330), (9000, 0.150),
-       (9100, 0.030), (9200, 0.000)))
-))
+    Arguments:
+        name -- band name. Choices: U,B,V,R,I
+    """
 
+    # Tabular data for filters U,B,V,R,I
+    # Michael Bessel 1990
+    # Taken from http://spiff.rit.edu/classes/phys440/lectures/filters/filters.html
+    DATA = collections.OrderedDict((
+    ("U", ((3000, 0.00),  (3050, 0.016), (3100, 0.068), (3150, 0.167), (3200, 0.287), (3250, 0.423), (3300, 0.560),
+           (3350, 0.673), (3400, 0.772), (3450, 0.841), (3500, 0.905), (3550, 0.943), (3600, 0.981), (3650, 0.993),
+           (3700, 1.000), (3750, 0.989), (3800, 0.916), (3850, 0.804), (3900, 0.625), (3950, 0.423), (4000, 0.238),
+           (4050, 0.114), (4100, 0.051), (4150, 0.019), (4200, 0.000))),
+    ("B", ((3600, 0.0), (3700, 0.030), (3800, 0.134), (3900, 0.567), (4000, 0.920), (4100, 0.978), (4200, 1.000),
+           (4300, 0.978), (4400, 0.935), (4500, 0.853), (4600, 0.740), (4700, 0.640), (4800, 0.536), (4900, 0.424),
+           (5000, 0.325), (5100, 0.235), (5200, 0.150), (5300, 0.095), (5400, 0.043), (5500, 0.009), (5600, 0.0))),
+    ("V", ((4700, 0.000), (4800, 0.030), (4900, 0.163), (5000, 0.458), (5100, 0.780), (5200, 0.967), (5300, 1.000),
+          (5400, 0.973), (5500, 0.898), (5600, 0.792), (5700, 0.684), (5800, 0.574), (5900, 0.461), (6000, 0.359),
+          (6100, 0.270), (6200, 0.197), (6300, 0.135), (6400, 0.081), (6500, 0.045), (6600, 0.025), (6700, 0.017),
+          (6800, 0.013), (6900, 0.009), (7000, 0.000))),
+    ("R", ((5500, 0.0), (5600, 0.23), (5700, 0.74), (5800, 0.91), (5900, 0.98), (6000, 1.000), (6100, 0.98),
+           (6200, 0.96), (6300, 0.93), (6400, 0.90), (6500, 0.86), (6600, 0.81), (6700, 0.78), (6800, 0.72),
+           (6900, 0.67), (7000, 0.61), (7100, 0.56), (7200, 0.51), (7300, 0.46), (7400, 0.40), (7500, 0.35),
+           (8000, 0.14), (8500, 0.03), (9000, 0.00))),
+    ("I", ((7000, 0.000), (7100, 0.024), (7200, 0.232), (7300, 0.555), (7400, 0.785), (7500, 0.910), (7600, 0.965),
+           (7700, 0.985), (7800, 0.990), (7900, 0.995), (8000, 1.000), (8100, 1.000), (8200, 0.990), (8300, 0.980),
+           (8400, 0.950), (8500, 0.910), (8600, 0.860), (8700, 0.750), (8800, 0.560), (8900, 0.330), (9000, 0.150),
+           (9100, 0.030), (9200, 0.000)))
+    ))
 
-# (midpoint, FWHM) (angstrom)
-# Values taken from https://en.wikipedia.org/wiki/Photometric_system
-BANDS_STANDARD_PARAMETRIC = collections.OrderedDict((
-("U", (3650., 660.)),
-("B", (4450., 940.)),
-("V", (5510., 880.)),
-("R", (6580., 1380.)),
-("I", (8060., 1490.)),
-("Y", (10200., 1200.)),
-("J", (12200., 2130.)),
-("H", (16300., 3070.)),
-("K", (21900., 3900.)),
-("L", (34500., 4720.)),
-("M", (47500., 4600.)),
-("N", (105000., 25000.)),
-("Q", (210000., 58000.))
-))
+    def __init__(self, name):
+        if name not in self.DATA:
+            raise ValueError("Invalid band name, choices are " % str(self.DATA.keys()))
+        Bandpass.__init__(self, name)
+        self.name = name
+        self.x, self.y = zip(*self.DATA[name])
 
+    def __repr__(self):
+        return "UBVTabulated('%s')" % self.name
 
-# Standard flux, according to several references
-#
-# TODO get references: Bessel etc
-#
-# values taken from https://en.wikipedia.org/wiki/Apparent_magnitude
-# I- and J-band values agree with Evans, C.J., et al., A&A 527(2011): A50.
-#
-# Unit is erg/cm**2/s/Hz
-BANDS_STANDARD_REF_FLUX = collections.OrderedDict((
-("U", 1.81e-20),
-("B", 4.26e-20),
-("V", 3.64e-20),
-("R", 3.08e-20),
-("I", 2.55e-20),
-("Y", None),
-("J", 1.60e-20),
-("H", 1.08e-20),
-("K", 0.67e-20),
-("L", None),
-("M", None),
-("N", None),
-("Q", None),
-))
+    def _get_l0(self):
+        return self.x[0]
+
+    def _get_lf(self):
+        return self.x[-1]
+
+    def ufunc(self):
+        return interp1d(self.x, self.y, kind='linear', bounds_error=False, fill_value=0)
 
 
-bands_standard = collections.OrderedDict()
+class UBVParametric(Bandpass):
+    """
+    Parametric Gaussian filter
 
-for k in BANDS_STANDARD_PARAMETRIC:
-    bands_standard[k] = Bandpass(k, BANDS_STANDARD_TABULAR.get(k),
-                                    BANDS_STANDARD_PARAMETRIC.get(k),
-                                    BANDS_STANDARD_REF_FLUX.get(k))
+    Arguments:
+        name -- band name. Choices: U,B,V,R,I,Y,J,H,K,L,M,N,Q
+        num_stds=3 -- number of standard deviations to left and right of midpoint to consider as
+            band limits. Does not affect self.ufunc()
+    """
+
+    # Values taken from https://en.wikipedia.org/wiki/Photometric_system
+    X0_FWHM = collections.OrderedDict((
+    ("U", (3650., 660.)),
+    ("B", (4450., 940.)),
+    ("V", (5510., 880.)),
+    ("R", (6580., 1380.)),
+    ("I", (8060., 1490.)),
+    ("Y", (10200., 1200.)),
+    ("J", (12200., 2130.)),
+    ("H", (16300., 3070.)),
+    ("K", (21900., 3900.)),
+    ("L", (34500., 4720.)),
+    ("M", (47500., 4600.)),
+    ("N", (105000., 25000.)),
+    ("Q", (210000., 58000.))
+    ))
+
+    def __init__(self, name, num_stds=3):
+        if name not in self.X0_FWHM:
+            raise ValueError("Invalid band name, choices are " % str(self.X0_FWHM.keys()))
+        Bandpass.__init__(self, name)
+        self.x0, self.fwhm = self.X0_FWHM[name]
+        self.num_stds = num_stds
+
+        std = self.fwhm * (1. / np.sqrt(8 * np.log(2)))
+        self._l0, self._lf = self.x0 - num_stds * std, self.x0 + num_stds * std
+
+    def __repr__(self):
+        return "UBVParametric('%s', %d)" % (self.name, self.num_stds)
+
+    def _get_l0(self):
+        return self._l0
+
+    def _get_lf(self):
+        return self._lf
+
+    def ufunc(self):
+        return ufunc_gauss(self.x0, self.fwhm)
 
 
 def ufunc_gauss(x0, fwhm):
@@ -328,5 +315,4 @@ def ufunc_gauss(x0, fwhm):
     def f(x):
         return np.exp(-(x - x0) ** 2 * K)
     return f
-
 

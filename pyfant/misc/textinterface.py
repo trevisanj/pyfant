@@ -38,7 +38,7 @@ def menu(title, options, cancel_label="Cancel", flag_allow_empty=False, flag_can
 
   Adapted from irootlab menu.m"""
 
-  no_options, flag_ok, lt = len(options), 0, len(title)
+  num_options, flag_ok, lt = len(options), 0, len(title)
   option = None  # result
   min_allowed = 0 if flag_cancel else 1  # minimum option value allowed (if option not empty)
 
@@ -67,13 +67,13 @@ def menu(title, options, cancel_label="Cancel", flag_allow_empty=False, flag_can
 
       try:
         option = int(s_option)
-        if min_allowed <= option <= no_options:
+        if min_allowed <= option <= num_options:
           flag_ok = True
           break
       except ValueError:
         print("Invalid integer value!")
 
-      print(("Invalid option, range is [%d, %d]!" % (0, no_options)))
+      print(("Invalid option, range is [%d, %d]!" % (0, num_options)))
 
       n_try += 1
       s_option = input("? ")

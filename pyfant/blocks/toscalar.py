@@ -44,18 +44,18 @@ class Magnitude(ToScalar):
             band_name -- U/B/V/R/I/Y/J/H/K/L/M/N/Q
             flag_force_parametric -- (default: False) if set, will use parametric data even for
                 the tabulated bands U/B/V/R/I
-            flag_always_full_band -- (default: False) if set, will consider that the spectrum
+            flag_force_band_range -- (default: False) if set, will consider that the spectrum
                 extends over the full range of the band even if it is narrower than that
     """
 
 
-    def __init__(self, band_name, flag_force_parametric=False, flag_always_full_band=False):
+    def __init__(self, band_name, flag_force_parametric=False, flag_force_band_range=False):
         ToScalar.__init__(self)
         self.band_name = band_name
         self.flag_force_parametric = flag_force_parametric
-        self.flag_always_full_band = flag_always_full_band
+        self.flag_force_band_range = flag_force_band_range
 
     def _do_use(self, inp):
         temp = inp.calculate_magnitude(self.band_name, self.flag_force_parametric,
-                                      self.flag_always_full_band)
+                                      self.flag_force_band_range)
         return temp["cmag"]

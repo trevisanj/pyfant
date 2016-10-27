@@ -5,7 +5,7 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 import time
 from threading import Lock
-from .io import get_pyfant_path
+from .fileio import get_pyfant_path
 
 
 def get_pyfant_icon(keyword):

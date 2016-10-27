@@ -10,7 +10,7 @@ Miscellanea routines that import pyfant modules should be put in util.py instead
 
 from .conversion import *
 from .debugging import *
-from .io import *
+from .fileio import *
 from .loggingaux import *
 from .maths import *
 from .matplotlibaux import *
