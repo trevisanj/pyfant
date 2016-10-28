@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 """
 Tunes the "zinf" parameter for each atomic line in atomic lines file
 
@@ -190,7 +190,7 @@ if __name__ == "__main__":
             i += 1
             ii += 1
             if ii == 1000:
-                print format_progress(i, n)
+                print(format_progress(i, n))
                 ii = 0
 
     # # Runs pfant
@@ -240,7 +240,7 @@ if __name__ == "__main__":
         n = len(pp)
         X = np.zeros((n, 3))  # [algf, kiex, zinf], ...]
         ii = 0
-        print format_progress(0, n)
+        print(format_progress(0, n))
         cnt_min = 0
         cnt_max = 0
         for i, (a, combo) in enumerate(zip(aa, pp)):
@@ -278,9 +278,9 @@ if __name__ == "__main__":
             i += 1
             ii += 1
             if ii == 100:
-                print format_progress(i, n)
+                print(format_progress(i, n))
                 ii = 0
-        print format_progress(n, n)
+        print(format_progress(n, n))
         logger.info("zinf's clipped to minimum: %d" % cnt_min)
         logger.info("zinf's clipped to maximum: %d" % cnt_max)
 

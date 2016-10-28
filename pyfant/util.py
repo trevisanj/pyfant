@@ -121,10 +121,10 @@ def run_parallel(rr, max_simultaneous=None, flag_console=True, runnable_manager=
     # Primitive thread monitor
     if flag_console:
         while True:
-            print "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"+(" ALIVE" if rm.is_alive() else " DEAD")
-            print rm
-            print "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"+(" ALIVE" if rm.is_alive() else " DEAD")
-            s = raw_input("[Enter] -- [e]xit & keep in loop -- [q]uit -- [k]ill running >>> ")
+            print(("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"+(" ALIVE" if rm.is_alive() else " DEAD")))
+            print(rm)
+            print(("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"+(" ALIVE" if rm.is_alive() else " DEAD")))
+            s = eval(raw_input("[Enter] -- [e]xit & keep in loop -- [q]uit -- [k]ill running >>> "))
             if s.lower() == "q":
                 if rm.is_alive():
                     try:
@@ -145,9 +145,9 @@ def run_parallel(rr, max_simultaneous=None, flag_console=True, runnable_manager=
             rm.exit()
 
 
-    print "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"+(" ALIVE" if rm.is_alive() else " DEAD")
-    print "test-tm2 [SUPPOSED TO HAVE] EXITED"
-    print rm
+    print(("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"+(" ALIVE" if rm.is_alive() else " DEAD")))
+    print("test-tm2 [SUPPOSED TO HAVE] EXITED")
+    print(rm)
 
     return rm
 
@@ -201,7 +201,7 @@ def setup_inputs(dest_dir='.', star='sun-asplund-2009', common='common', h=True,
 def copy_star(src_dir):
     star_classes = [FileMain, FileDissoc, FileAbonds]
 
-    print "Will look inside directory %s" % src_dir
+    print(("Will look inside directory %s" % src_dir))
 
     # makes list of files to analyse
     types = ('*.dat', '*.mod')
@@ -215,7 +215,7 @@ def copy_star(src_dir):
 def link_to_data(src_dir):
     star_classes = [FileMain, FileDissoc, FileAbonds]
 
-    print "Will look inside directory %s" % src_dir
+    print(("Will look inside directory %s" % src_dir))
 
     # makes list of files to analyse
     types = ('*.dat', '*.mod', '*.moo')
@@ -240,7 +240,7 @@ def create_or_replace_or_skip_links(ff, dest_dir="."):
         ptd = os.path.join(dest_dir, name)  # path to destination
 
         flag_skip = False
-        print "Considering file '%s' ..." % name
+        print(("Considering file '%s' ..." % name))
         if os.path.isfile(ptd) and not os.path.islink(ptd):
             print_skipped("file exists in local directory")
             flag_skip = True
@@ -263,8 +263,8 @@ def create_or_replace_or_skip_links(ff, dest_dir="."):
                     s_action = "replaced existing"
                 else:
                     s_action = "created"
-                symlink(f, ptd)
-                print "   ... %s link" % s_action
+                create_symlink(f, ptd)
+                print(("   ... %s link" % s_action))
             except Exception as e:
                 print_error("Error creating link: %s" % str(e))
 
@@ -281,7 +281,7 @@ def copy_or_skip_files(ff, dest_dir="."):
         name = os.path.split(f)[1]
 
         flag_skip = False
-        print "Considering file '%s' ..." % name
+        print(("Considering file '%s' ..." % name))
         if os.path.isfile(name):
             print_skipped("file exists in local directory")
             flag_skip = True
@@ -296,7 +296,7 @@ def copy_or_skip_files(ff, dest_dir="."):
         if not flag_skip:
             try:
                 shutil.copy(f, dest_dir)
-                print "   ... file copied"
+                print("   ... file copied")
             except Exception as e:
                 print_error("Error copying file: %s" % str(e))
 

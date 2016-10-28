@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 """
 Creates symbolic links to PFANT data files as an alternative to copying these (sometimes large) files into local directory
 
@@ -64,15 +64,15 @@ if __name__ == "__main__":
     #     args.list = True  # makes "-l" the default behaviour
 
     if (not args.directory or len(args.directory) ==  0) and not args.list:
-        print "Directory name is required, except if '-l' option specified."
+        print("Directory name is required, except if '-l' option specified.")
         parser.print_usage()
         sys.exit()
 
     # "-l" mode
     if args.list:
-        print fmt_ascii_h1("Subdirectories of '%s" % get_pfant_data_path())
+        print(fmt_ascii_h1("Subdirectories of '%s" % get_pfant_data_path()))
         for dirname in get_pfant_data_subdirs():
-            print dirname
+            print(dirname)
         sys.exit()
 
     if args.path:
@@ -82,7 +82,7 @@ if __name__ == "__main__":
 
     if len(sys.argv) == 1:
         while True:
-            ans = raw_input("Create links to PFANT data files in '%s' (Y/n)? " %
+            ans = input("Create links to PFANT data files in '%s' (Y/n)? " %
                             dir_).upper()
             if ans in ("N", "NO"):
                 sys.exit()

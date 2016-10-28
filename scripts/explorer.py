@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 
 """PFANT Explorer --  list, visualize, and edit data files (_à la_ File Manager)"""
 

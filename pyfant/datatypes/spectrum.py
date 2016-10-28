@@ -42,6 +42,14 @@ class Spectrum(object):
         self.x = x
 
     @property
+    def l0(self):
+        return self.x[0]
+
+    @property
+    def lf(self):
+        return self.x[-1]
+
+    @property
     def flux(self):
         return self.y
 
@@ -52,7 +60,9 @@ class Spectrum(object):
     @property
     def delta_lambda(self):
         """Should agree with self.pas"""
-        return self.x[1]-self.x[0]
+        ret = self.x[1]-self.x[0]
+        if ret != self.x[-1]-self.x[-2]:
+            raise RuntimeError("Spectrum delta lambda is not constant")
 
     @property
     def pixel_x(self):
@@ -93,20 +103,6 @@ class Spectrum(object):
         self.filename = None
         self.more_headers = {}  # for Spectrum, just cargo
 
-        # Attributes used only by FileSpectrumPfant
-        self.ikeytot = None
-        self.tit = None
-        self.tetaef = None
-        self.glog = None
-        self.asalog = None
-        self.modeles_nhe = None
-        self.amg = None
-        self.l0 = None
-        self.lf = None
-        self.pas = None
-        self.echx = None
-        self.echy = None
-        self.fwhm = None
 
     def __len__(self):
         """Corresponds to nulbad "ktot"."""
@@ -118,32 +114,39 @@ class Spectrum(object):
             #                "delta_lambda = %g" % self.delta_lambda,
             #                "no. points: %d" % len(self.x)])
 
-            s = " | ".join([u"%g \u2264 \u03BB \u2264 %g" % (self.x[0], self.x[-1]),
-                           u"\u0394\u03BB = %g" % self.delta_lambda,
-                           u"%g \u2264 flux \u2264 %g" % (np.min(self.y), np.max(self.y)),
-                           "length: %d" % len(self.x)])
+            info = ["%g \u2264 \u03BB \u2264 %g" % (self.x[0], self.x[-1])]
+            try:
+                dl = self.delta_lambda
+                info.append("\u0394\u03BB = %g" % dl)
+            except:
+                pass
 
+            info.append("%g \u2264 flux \u2264 %g" % (np.min(self.y), np.max(self.y)))
+            info.append("length: %d" % len(self.x))
+
+            s = " | ".join(info)
         else:
             s = "(empty)"
         return s
 
     def __str__(self):
-        s = ", ".join(["ikeytot = ", str(self.ikeytot), "\n",
-                       "tit = ", str(self.tit), "\n",
-                       "tetaef = ", str(self.tetaef), "\n",
-                       "glog = ", str(self.glog), "\n",
-                       "asalog = ", str(self.asalog), "\n",
-                       "modeles_nhe = ", str(self.modeles_nhe), "\n",
-                       "amg = ", str(self.amg), "\n",
-                       "l0 = ", str(self.l0), "\n",
-                       "lf = ", str(self.lf), "\n",
-                       "pas = ", str(self.pas), "\n",
-                       "echx = ", str(self.echx), "\n",
-                       "echy = ", str(self.echy), "\n",
-                       "fwhm = ", str(self.fwhm), "\n",
-                       "============\n"
-                       "Size of Spectrum: ", str(len(self)), "\n"])
-        return s
+        return self.one_liner_str()
+        # s = ", ".join(["ikeytot = ", str(self.ikeytot), "\n",
+        #                "tit = ", str(self.tit), "\n",
+        #                "tetaef = ", str(self.tetaef), "\n",
+        #                "glog = ", str(self.glog), "\n",
+        #                "asalog = ", str(self.asalog), "\n",
+        #                "modeles_nhe = ", str(self.modeles_nhe), "\n",
+        #                "amg = ", str(self.amg), "\n",
+        #                "l0 = ", str(self.l0), "\n",
+        #                "lf = ", str(self.lf), "\n",
+        #                "pas = ", str(self.pas), "\n",
+        #                "echx = ", str(self.echx), "\n",
+        #                "echy = ", str(self.echy), "\n",
+        #                "fwhm = ", str(self.fwhm), "\n",
+        #                "============\n"
+        #                "Size of Spectrum: ", str(len(self)), "\n"])
+        # return s
 
     def get_rgb(self, visible_range=None, method=0):
         """Takes weighted average of rainbow colors RGB's
@@ -211,10 +214,10 @@ class Spectrum(object):
             delta_lambda = hdu.header["CDELT1"]
         except Exception as E:  # todo figure out the type of exception (KeyError?)
             delta_lambda = hdu.header['CD1_1']
-            print "Alternative delta lambda in FITS header: CD1_1"
-            print "Please narrow the Exception specification in the code"
-            print "Exception is: " + str(E) + " " + E.__class__.__name__
-            print delta_lambda
+            print("Alternative delta lambda in FITS header: CD1_1")
+            print("Please narrow the Exception specification in the code")
+            print(("Exception is: " + str(E) + " " + E.__class__.__name__))
+            print(delta_lambda)
         self.x = np.linspace(lambda0, lambda0 + delta_lambda * (n - 1), n)
         self.y = hdu.data
 
@@ -235,7 +238,7 @@ class Spectrum(object):
         hdu.header["CRVAL1"] = self.x[0]
         hdu.header["CDELT1"] = self.x[1] - self.x[0]
         hdu.header["XUNIT"] = "A"
-        for key, value in self.more_headers.iteritems():
+        for key, value in list(self.more_headers.items()):
             try:
                 # Strips line feeds eventually present in header data
                 if isinstance(value, str):
@@ -250,37 +253,57 @@ class Spectrum(object):
     def cut(self, l0, l1):
         """Cuts *in place* to wavelength interval [l0, l1]. Cut is done within the array objects thus keeping the same objects"""
         ii_delete = np.where(np.logical_or(self.x < l0, self.x > l1))
-        np.delete(self.x, ii_delete)
-        np.delete(self.y, ii_delete)
+        self.x = np.delete(self.x, ii_delete)
+        self.y = np.delete(self.y, ii_delete)
         
     def cut_idxs(self, i0, i1):
         """Cuts *in place* to slice i0:i1 (pythonic, interval = [i0, i1["""
         self.x = self.x[i0:i1]
         self.y = self.y[i0:i1]
 
-    def calculate_magnitude(self, band_name, flag_force_parametric=False):
+    def calculate_magnitude(self, band_name, flag_force_parametric=False, flag_force_band_range=False):
         """
-        Calculates magnitude and stores values in more_headers "MAG_CALC" and "MAG_BAND"
+        Calculates magnitude
+
+        **Note** Assumed unit of spectrum is erg/cm**2/s/Hz (Fnu)
 
         Returns several variables in a dict, which may be also useful for plotting or other purposes
         """
 
         band = Bands.bands[band_name]
-        band_l0, band_lf = band.range(flag_force_parametric)  # band practical limits
-        band_f = band.ufunc_band(flag_force_parametric)  # callable transmission function
-        spc = copy.deepcopy(self)
-        spc.cut(band_l0, band_lf)
+        # band practical limits
+        band_l0, band_lf = band.range(flag_force_parametric)
+        # callable transmission function
+        band_f = band.ufunc(flag_force_parametric)
+        # Cuts spectrum if necessary
+        if self.x[0] < band_l0 or self.x[-1] > band_lf:
+            spc = copy.deepcopy(self)
+            spc.cut(band_l0, band_lf)
+        else:
+            spc = self
         band_f_spc_x = band_f(spc.x)
-        band_area = np.sum(band_f_spc_x) * spc.delta_lambda
         out_y = spc.y * band_f_spc_x
+
+        # Calculates the area under the band filter
+        band_area = band.area(*([band_l0, band_lf]
+                              if flag_force_band_range else [spc.x[0], spc.x[-1]]),
+                              flag_force_parametric=flag_force_parametric)
+
+        ref_mean_flux = None
 
         # Calculates apparent magnitude and filtered flux area
         cmag, weighted_mean_flux, out_area = None, 0, 0
         if band.ref_mean_flux:
             if len(spc) > 0:
-                out_area = np.sum(out_y) * spc.delta_lambda
+                if flag_force_band_range:
+                    ref_mean_flux = band.ref_mean_flux
+                else:
+                    ref_mean_flux = band.ref_mean_flux*band_area/\
+                                    band.area(band_l0, band_lf, flag_force_parametric)
+
+                out_area = np.trapz(out_y, spc.x)
                 weighted_mean_flux = out_area / band_area
-                cmag = -2.5 * np.log10(weighted_mean_flux / band.ref_mean_flux)
+                cmag = -2.5 * np.log10(weighted_mean_flux / ref_mean_flux)
 
                 # cosmetic manipulation
                 cmag = np.round(cmag, 3)
@@ -290,19 +313,17 @@ class Spectrum(object):
             else:
                 cmag = np.inf
 
-        self.more_headers["MAG_CALC"] = cmag
-        self.more_headers["MAG_BAND"] = band_name
-        return {"band_area": band_area,  # area under band filter
+        return {"band_area": band_area,  # area under band filter only for the region of spc
                 "band_f": band_f,  # transmission function
                 "band_f_spc_x": band_f_spc_x,  # transmission function evaluated over spc.x
                 "band_l0": band_l0,  # l0 as in [l0, lf], band range considered
                 "band_lf": band_lf,  # lf as in [l0, lf], band range considered
+                "ref_mean_flux": ref_mean_flux,  # mean flux for which magnitude is zero
                 "spc": spc,  # spectrum cut to l0, lf, used in calculations
                 "cmag": cmag,  # calculated magnitude
                 "weighted_mean_flux": weighted_mean_flux,  # weighted-average flux where the weights are the transmission function
                 "out_y": out_y,  # spc with flux multiplied by transmission function
                 "out_area": out_area,  # area under out_y
-                "fieldnames": ["MAG_CALC", "MAG_BAND"]  # names of fields added/replaces to self.more_headers
                 }
 
 
@@ -318,6 +339,43 @@ class Spectrum(object):
         self.wavelength = new_wavelength
 
 
+    def flambda_to_fnu(self):
+        """
+        Flux-nu to flux-lambda conversion **in-place**
+
+        Formula:
+            f_nu = f_lambda*(lambda/nu) = f_lambda*lambda**2/c
+
+            where
+                lambda is the wavelength in cm,
+                c is the speed of light in cm/s
+                f_lambda has irrelevant unit for this purpose
+
+        **Note** By convention in this library, Spectrum wavelength is always in angstrom
+        """
+
+        x_cm = self.x*1e-8
+        self.y *= 1./(1e-8 * C) * x_cm ** 2
+
+    def fnu_to_flambda(self):
+        """
+
+        **in-place** flux-lambda to flux-nu conversion
+
+        Converts flux from erg/s/cm**2/Hz
+                        to erg/s/cm**2/angstrom
+        Formula:
+            f_lambda = f_nu*(nu/lambda) = f_nu*c/lambda**2
+
+            (terms description are the same as in flambda_to_fnu())
+        """
+
+        x_cm = self.x * 1e-8  # angstrom -to cm
+        #    y * C/x_cm ** 2  would be in erg/s/cm**2/cm
+        # 1e-8 * C/x_cm ** 2        is in erg/s/cm**2/angstrom
+        self.y *= 1e-8 * C/x_cm ** 2
+
+
 class FileSpectrum(DataFile):
     attrs = ['spectrum']
 
@@ -326,8 +384,7 @@ class FileSpectrum(DataFile):
         self.spectrum = Spectrum()
 
     def load(self, filename=None):
-        # Method was overriden to set spectrum filename automatcially so that
-        # descendants don't have to bother about this.
+        """Method was overriden to set spectrum.filename as well"""
         DataFile.load(self, filename)
         self.spectrum.filename = filename
 
@@ -343,6 +400,23 @@ class FileSpectrumPfant(FileSpectrum):
 
     default_filename = "flux.norm"
 
+    def __init__(self):
+        FileSpectrum.__init__(self)
+
+        self.ikeytot = None
+        self.tit = None
+        self.tetaef = None
+        self.glog = None
+        self.asalog = None
+        self.modeles_nhe = None
+        self.amg = None
+        self.l0 = None
+        self.lf = None
+        self.pas = None
+        self.echx = None
+        self.echy = None
+        self.fwhm = None
+
     def _do_load(self, filename):
         with open(filename, 'r') as h:
             f_header = ff.FortranRecordReader(
@@ -355,22 +429,22 @@ class FileSpectrumPfant(FileSpectrum):
                 s = h.readline()
                 if i == 0:
                     vars_ = f_header.read(s)  # This is actually quite slow, gotta avoid it
-                    [sp.ikeytot,
-                     sp.tit,
-                     sp.tetaef,
-                     sp.glog,
-                     sp.asalog,
-                     sp.modeles_nhe,
-                     sp.amg,
-                     sp.l0,
-                     sp.lf,
+                    [self.ikeytot,
+                     self.tit,
+                     self.tetaef,
+                     self.glog,
+                     self.asalog,
+                     self.modeles_nhe,
+                     self.amg,
+                     self.l0,
+                     self.lf,
                      _,  # lzero,
                      _,  # lfin,
                      _,  # itot
-                     sp.pas,
-                     sp.echx,
-                     sp.echy,
-                     sp.fwhm] = vars_
+                     self.pas,
+                     self.echx,
+                     self.echy,
+                     self.fwhm] = vars_
 
 
                 #itot = vars[11]
@@ -393,7 +467,7 @@ class FileSpectrumPfant(FileSpectrum):
                 # print v
                 # print i, self.ikeytot
 
-                if i < sp.ikeytot - 1:
+                if i < self.ikeytot - 1:
                     # Last point is discarded because pfant writes reduntantly:
                     # last point of iteration ikey is the same as first point of
                     # iteration ikey+1
@@ -410,7 +484,7 @@ class FileSpectrumPfant(FileSpectrum):
                 #last_itot = itot
 
         # Lambdas
-        sp.x = np.array([sp.l0 + k * sp.pas for k in range(0, len(y))])
+        sp.x = np.array([self.l0 + k * self.pas for k in range(0, len(y))])
         sp.y = np.array(y)
 
 #        logging.debug("Just read PFANT Spectrum '%s'" % filename)
@@ -437,7 +511,7 @@ class FileSpectrumNulbad(FileSpectrum):
             [sp.tit, sp.tetaef, sp.glog, sp.asalog, sp.amg] = \
                 s_header0.unpack_from(s)
             [sp.tetaef, sp.glog, sp.asalog, sp.amg] = \
-                map(float, [sp.tetaef, sp.glog, sp.asalog, sp.amg])
+                list(map(float, [sp.tetaef, sp.glog, sp.asalog, sp.amg]))
 
             # -- row 02 --
             # Original format: ('#',I6,2X,'0. 0. 1. 1. Lzero =',F10.2,2x,'Lfin =', &
@@ -448,7 +522,7 @@ class FileSpectrumNulbad(FileSpectrum):
             [_, sp.l0, sp.lf, sp.pas, sp.fwhm] = \
                 s_header1.unpack_from(s)
             [sp.l0, sp.lf, sp.pas, sp.fwhm] = \
-                map(float, [sp.l0, sp.lf, sp.pas, sp.fwhm])
+                list(map(float, [sp.l0, sp.lf, sp.pas, sp.fwhm]))
             #n = int(n)
 
 
@@ -502,7 +576,6 @@ class FileSpectrumXY(FileSpectrum):
 
     def _do_save_as(self, filename):
         with open(filename, "w") as h:
-            print "xxxxxxxxxxxxxxxxxx", self.spectrum.x
             for x, y in zip(self.spectrum.x, self.spectrum.y):
                 write_lf(h, "%.10g %.10g" % (x, y))
 

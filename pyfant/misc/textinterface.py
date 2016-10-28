@@ -1,4 +1,5 @@
-__all__ = ["fmt_ascii_h1", "fmt_error", "print_error", "menu", "format_progress", "markdown_table"]
+__all__ = ["fmt_ascii_h1", "fmt_error", "print_error", "menu", "format_progress", "markdown_table",
+           "print_skipped"]
 
 
 # #################################################################################################
@@ -20,7 +21,7 @@ def fmt_error(s):
 
 def print_error(s):
     """Prints string as error message."""
-    print fmt_error(s)
+    print((fmt_error(s)))
 
 
 def menu(title, options, cancel_label="Cancel", flag_allow_empty=False, flag_cancel=True, ch='.'):
@@ -37,24 +38,27 @@ def menu(title, options, cancel_label="Cancel", flag_allow_empty=False, flag_can
 
   Adapted from irootlab menu.m"""
 
-  no_options, flag_ok, lt = len(options), 0, len(title)
+  num_options, flag_ok, lt = len(options), 0, len(title)
   option = None  # result
   min_allowed = 0 if flag_cancel else 1  # minimum option value allowed (if option not empty)
 
   while True:
-    print ""
-    print "  "+ch*(lt+8)
-    print "  "+ch*3+" "+title+" "+ch*3
-    print "  "+ch*(lt+8)
+    print("")
+    print(("  "+ch*(lt+8)))
+    print(("  "+ch*3+" "+title+" "+ch*3))
+    print(("  "+ch*(lt+8)))
     for i, s in enumerate(options):
-      print "  %d - %s" % (i+1, s)
-    if flag_cancel: print "  0 - << (*%s*)" % cancel_label
-    s_option = raw_input('? ')
+      print(("  %d - %s" % (i+1, s)))
+    if flag_cancel: print(("  0 - << (*%s*)" % cancel_label))
+    try:
+        s_option = input('? ')
+    except:
+        print("")
 
     n_try = 0
     while True:
       if n_try >= 10:
-        print 'You are messing up!'
+        print('You are messing up!')
         break
 
       if len(s_option) == 0 and flag_allow_empty:
@@ -63,16 +67,16 @@ def menu(title, options, cancel_label="Cancel", flag_allow_empty=False, flag_can
 
       try:
         option = int(s_option)
-        if min_allowed <= option <= no_options:
+        if min_allowed <= option <= num_options:
           flag_ok = True
           break
       except ValueError:
-        print "Invalid integer value!"
+        print("Invalid integer value!")
 
-      print "Invalid option, range is [%d, %d]!" % (0, no_options)
+      print(("Invalid option, range is [%d, %d]!" % (0, num_options)))
 
       n_try += 1
-      s_option = raw_input("? ")
+      s_option = input("? ")
 
     if flag_ok:
       break
@@ -114,3 +118,8 @@ def markdown_table(headers, data):
     for line in data:
         ret.append(mask % line)
     return ret
+
+
+def print_skipped(reason):
+    """Standardized printing for when a file was skipped."""
+    print(("   ... SKIPPED (%s)." % reason))

@@ -3,16 +3,12 @@
 __all__ = ["XPFANT"]
 
 from PyQt4.QtGui import *
-from pyfant import *
 from .guiaux import *
 from . import XRunnableManager
 from pyfant import *
 from .a_XMainAbonds import *
 import os.path
-import matplotlib.pyplot as plt
-import traceback
 import copy
-import syntax
 import shutil
 
 ################################################################################

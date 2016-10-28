@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 """
 Cuts spectrum file to wavelength interval specified
 
@@ -30,16 +30,16 @@ if __name__ == "__main__":
 
     sp = load_spectrum(args.fn_input[0])
     if not sp:
-        print "File '%s' not recognized as a spectrum file." % args.fn_input[0]
+        print("File '%s' not recognized as a spectrum file." % args.fn_input[0])
         sys.exit()
 
     m = min(sp.x)
     M = max(sp.x)
 
-    print "Original interval: [%g, %g]" % (m, M)
-    print "New interval: [%g, %g]" % (args.llzero[0], args.llfin[0])
+    print("Original interval: [%g, %g]" % (m, M))
+    print("New interval: [%g, %g]" % (args.llzero[0], args.llfin[0]))
 
     f = FileSpectrumXY()
     f.spectrum = cut_spectrum(sp, args.llzero[0], args.llfin[0])
     f.save_as(args.fn_output[0])
-    print "Successfully created file '%s'" % args.fn_output[0]
+    print("Successfully created file '%s'" % args.fn_output[0])

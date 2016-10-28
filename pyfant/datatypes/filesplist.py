@@ -13,7 +13,7 @@ import os
 import numpy as np
 from scipy.interpolate import interp1d
 import numbers
-#from ao3s.misc import *
+#from aosss.misc import *
 # from ..blocks import *
 import copy
 
@@ -101,7 +101,7 @@ class SpectrumCollection(AttrsPart):
         # self.fieldnames = []
         ff = []
         for sp in self.spectra:
-            ff.extend(sp.more_headers.keys())
+            ff.extend(list(sp.more_headers.keys()))
         return list(set(ff))
 
     def add_spectrum(self, sp):
@@ -132,6 +132,10 @@ class SpectrumCollection(AttrsPart):
             raise RuntimeError("All indexes must be (0 le index lt %d)" % n)
         for index in reversed(indexes):
             del self.spectra[index]
+
+    def clear(self):
+        """Removes all spectra from the collection"""
+        self.spectra = []
 
     def merge_with(self, other):
         """Adds spectra from other SpectrumCollection to self"""
@@ -283,7 +287,7 @@ class SpectrumList(SpectrumCollection):
             self.wavelength = np.copy(sp.wavelength)
         else:
             if not np.all(self.wavelength == sp.wavelength):
-                print "VAI TER QUE RESAMPLEAR ALGO"
+                print("VAI TER QUE RESAMPLEAR ALGO")
                 xcur0, xcur1 = self.wavelength[0], self.wavelength[-1]
                 xsp0, xsp1 = sp.x[0], sp.x[-1]
 
@@ -297,15 +301,15 @@ class SpectrumList(SpectrumCollection):
                 self.wavelength = np.arange(n)*dl+xnew0
 
                 if not (xnew0 == xcur0 and xnew1 == xcur1):
-                    print "RESAMPLEANDO EXISTING"
+                    print("RESAMPLEANDO EXISTING")
                     for sp_existing in self.spectra:
                         sp_existing.resample(self.wavelength)
 
                 if not(xnew0 == xsp0 and xnew1 == xsp1 and dl == sp.delta_lambda):
-                    print "RESAMPLING NEWCOMER"
+                    print("RESAMPLING NEWCOMER")
                     sp.resample(self.wavelength)
                 else:
-                    print "NO NEED TO RESAMPLE NEWCOMER"
+                    print("NO NEED TO RESAMPLE NEWCOMER")
 
                 # raise RuntimeError("Cannot add spectrum, wavelength vector does not match existing")
 
@@ -323,86 +327,89 @@ class SpectrumList(SpectrumCollection):
             self.__flag_update_pending = False
 
 
-    def query_merge_down(self, expr, group_by=None):
-        """Rudimentary query system for "merge down" operations
-
-        Arguments:
-            expr -- expression which will be eval()'ed with expected result to be a MergeDownBlock
-                    Example: "SNR()"
-
-                    TODO I should not eval here, the argument should be the block itself
-
-            group_by -- sequence of spectrum "more_headers" fieldnames.
-                        If not passed, will treat the whole SpectrumCollection as a single group.
-                        If passed, will split the collection in groups and perform the "merge down" operations separately
-                        for each group
-
-        Returns: (SpectrumCollection containing query result, list of error strings)
-        """
-
-        ret, errors = None, []
-
-        # Creates the block
-        try:
-            from pyfant.blocks.slblocks import *  # TODO make it locals to pass to eval()
-            block = eval(expr)  # , {}, {})
-            if not isinstance(block, SLB_MergeDownBlock):
-                raise RuntimeError("Must evaluate to a MergeDownBlock, but evaluated to a %s" % (block.__class__.__name__))
-        except Exception as E:
-            msg = "Expression ''%s``: %s" % (expr, str(E))
-            errors.append(msg)
-
-        if not errors:
-            try:
-                # Creates the groups
-                if not group_by:
-                    ret = block.use(self)
-                else:
-                    groups = []
-                    grouping_keys = [tuple([spectrum.more_headers.get(fieldname) for fieldname in group_by]) for spectrum in self.spectra]
-                    unique_keys = list(set(grouping_keys))
-                    unique_keys.sort()
-                    sk = zip(self.spectra, grouping_keys)
-                    for unique_key in unique_keys:
-                        group = SpectrumList()
-                        for spectrum, grouping_key in sk:
-                            if grouping_key == unique_key:
-                                group.add_spectrum(spectrum)
-                        groups.append(group)
-
-                    ret = SpectrumList()
-                    ret.fieldnames = group_by  # new SpectrumList will have the group field names
-
-                    # Uses block in each group
-                    for group in groups:
-                        splist = block.use(group)
-
-                        # copies "group by" fields from first input spectrum to output spectrum
-                        sp = splist.spectra[0]
-                        for fieldname in group_by:
-                            sp.more_headers[fieldname] = group.spectra[0].more_headers[fieldname]
-                        ret.merge_with(splist)
-            except Exception as E:
-                msg = "Calculating output: %s" % str(E)
-                errors.append(msg)
-                ret = []
-                get_python_logger().exception("query_merge_down")
-
-        return ret, errors
+    # def query_merge_down(self, expr, group_by=None):
+    #     # TODO: make block
+    #     """Rudimentary query system for "merge down" operations
+    #
+    #     Arguments:
+    #         expr -- expression which will be eval()'ed with expected result to be a GroupBlock
+    #                 Example: "SNR()"
+    #
+    #                 TODO I should not eval here, the argument should be the block itself
+    #
+    #         group_by -- sequence of spectrum "more_headers" fieldnames.
+    #                     If not passed, will treat the whole SpectrumCollection as a single group.py.
+    #                     If passed, will split the collection in groups and perform the "merge down" operations separately
+    #                     for each group.py
+    #
+    #     Returns: (SpectrumCollection containing query result, list of error strings)
+    #     """
+    #
+    #     ret, errors = None, []
+    #
+    #     # Creates the block
+    #     try:
+    #         # from pyfant.blocks.slblocks import *  # TODO make it locals to pass to eval()
+    #         block = eval(expr, ..blocks.mergedown)  # , {}, {})
+    #         if not isinstance(block, GroupBlock):
+    #             raise RuntimeError("Must evaluate to a GroupBlock, but evaluated to a %s" % (block.__class__.__name__))
+    #     except Exception as E:
+    #         msg = "Expression ''%s``: %s" % (expr, str(E))
+    #         errors.append(msg)
+    #
+    #     if not errors:
+    #         try:
+    #             # Creates the groups
+    #             if not group_by:
+    #                 ret = block.use(self)
+    #             else:
+    #                 groups = []
+    #                 grouping_keys = [tuple([spectrum.more_headers.get(fieldname) for fieldname in group_by]) for spectrum in self.spectra]
+    #                 unique_keys = list(set(grouping_keys))
+    #                 unique_keys.sort()
+    #                 sk = list(zip(self.spectra, grouping_keys))
+    #                 for unique_key in unique_keys:
+    #                     group.py = SpectrumList()
+    #                     for spectrum, grouping_key in sk:
+    #                         if grouping_key == unique_key:
+    #                             group.py.add_spectrum(spectrum)
+    #                     groups.append(group.py)
+    #
+    #                 ret = SpectrumList()
+    #                 ret.fieldnames = group_by  # new SpectrumList will have the group.py field names
+    #
+    #                 # Uses block in each group.py
+    #                 for group.py in groups:
+    #                     splist = block.use(group.py)
+    #
+    #                     # copies "group.py by" fields from first input spectrum to output spectrum
+    #                     sp = splist.spectra[0]
+    #                     for fieldname in group_by:
+    #                         sp.more_headers[fieldname] = group.py.spectra[0].more_headers[fieldname]
+    #                     ret.merge_with(splist)
+    #         except Exception as E:
+    #             msg = "Calculating output: %s" % str(E)
+    #             errors.append(msg)
+    #             ret = []
+    #             get_python_logger().exception("query_merge_down")
+    #
+    #     return ret, errors
 
 
     def __update(self):
-        """Updates internal state"""
+        """
+        Updates internal state
+
+        This consists of verifying whether or not there are spectra.
+        If not, resets the wavelength vector.
+        """
 
         if not self.__flag_update:
             self.__flag_update_pending = True
             return
 
         if len(self.spectra) == 0:
-            return
-
-        # Nothing to update so far
-        pass
+            self.wavelength = np.array([-1., -1.])
 
 
 class FileSpectrumList(DataFile):

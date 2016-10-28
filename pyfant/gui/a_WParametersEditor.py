@@ -8,11 +8,6 @@ from PyQt4.QtGui import *
 from .parameter import Parameters
 
 
-try:
-    _fromUtf8 = QString.fromUtf8
-except AttributeError:
-    def _fromUtf8(s):
-        return s
 
 ################################################################################
 
@@ -81,8 +76,8 @@ class WParametersEditor(QWidget):
         self.verticalLayout.addLayout(self.formLayout)
 
         self.labelError = QLabel(self)
-        self.labelError.setStyleSheet(_fromUtf8("color: red"))
-        self.labelError.setText(_fromUtf8(""))
+        self.labelError.setStyleSheet("color: red")
+        self.labelError.setText("")
         self.verticalLayout.addWidget(self.labelError)
 
         spacerItem = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)

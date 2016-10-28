@@ -532,7 +532,8 @@ class WOptionsEditor(QWidget):
                 for j, letter in enumerate(IHPN):
                     # unicode is for a "v"-like check mark
                     flag_checked = letter in option.ihpn
-                    label = QLabel(QString(unichr(10003)) if flag_checked else "")
+                    #label = QLabel(QString(chr(10003)) if flag_checked else "")
+                    label = QLabel("\u2713" if flag_checked else "")
                     if flag_checked:
                         label.setToolTip("This option is used by %s." % _EXE_NAMES[letter   ])
 
@@ -666,7 +667,7 @@ class WOptionsEditor(QWidget):
 
     def on_preview(self):
         args = self.f.get_args()
-        print args
+        print(args)
         line = "fortran-binary-xxxx "+(" ".join(args))
         w = XText(self, line, "Command line")
         w.show()

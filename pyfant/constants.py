@@ -4,9 +4,6 @@ SESSION_PREFIX_SINGULAR = 'session-'
 SESSION_PREFIX_PLURAL = 'session-'
 MULTISESSION_PREFIX = 'multi-session-'
 
-# All values in CGS
-C = 299792458 * 100  # light speed in cm/s
-
 # # Colors used in two or more different situations
 # Error color
 COLOR_ERROR = "#AA0000" # sortta wine

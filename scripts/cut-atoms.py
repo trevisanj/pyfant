@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 """
 Cuts atomic lines file to wavelength interval specified
 
@@ -33,9 +33,9 @@ if __name__ == "__main__":
     m = min([min(a.lambda_) for a in file_atoms.atoms])
     M = max([max(a.lambda_) for a in file_atoms.atoms])
 
-    print "Original interval: [%g, %g]" % (m, M)
-    print "New interval: [%g, %g]" % (args.llzero[0], args.llfin[0])
+    print("Original interval: [%g, %g]" % (m, M))
+    print("New interval: [%g, %g]" % (args.llzero[0], args.llfin[0]))
 
     file_atoms.cut(args.llzero[0], args.llfin[0])
     file_atoms.save_as(args.fn_output[0])
-    print "Successfully created file '%s'" % args.fn_output[0]
+    print("Successfully created file '%s'" % args.fn_output[0])

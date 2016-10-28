@@ -19,7 +19,7 @@ import collections
 
 def _tm_print(s):
     """print for the thread manager2 (debugging)."""
-    print "^^ %s ^^" % s
+    print(("^^ %s ^^" % s))
 
 
 class RunnableManagerError(Exception):
@@ -359,7 +359,7 @@ class RunnableManager(QObject, threading.Thread):
     def __unlocked_add_runnables(self, runnables):
         n = len(self.__runnables)
         self.__runnables.extend(runnables)
-        self.__idxs_to_run.extend(range(n, n + len(runnables)))
+        self.__idxs_to_run.extend(list(range(n, n + len(runnables))))
 
 
     def __unlocked_kill_runnable(self, runnable):

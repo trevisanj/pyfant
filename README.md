@@ -52,25 +52,24 @@ a message to juliotrevisan@gmail.com
 
 ## 2.1 Required Software
 
-**Python version:** Python 2.7.xx
+**Python version:** Python 3.xx
 
 ## 2.1.1 Python Packages
 
 Please make sure you have all the packages below
 installed on your system.
 
-Package name  | Possible way to install
-------------- | ---
-matplotlib    | apt-Linux: `sudo apt-get install python-matplotlib`              |
-scipy         | apt-Linux: `sudo apt-get install python-scipy`
-pyqt4         | apt-Linux: `sudo apt-get install python-qt4`
-              | Windows: download Python 2.7 installer at https://riverbankcomputing.com/software/pyqt/download
-fortranformat | All systems: `[sudo] pip install fortranformat`
-astropy       | apt-Linux: `sudo apt-get install python-astropy`
-              | All systems: `[sudo] pip install astropy`
+  - matplotlib   
+  - scipy        
+  - PyQt4        
+  - fortranformat
+  - astropy      
 
-:notes: **Linux users** may have to `sudo` your `pip` commands.
-
+Possible way to install on Debian-based Linux:
+```shell
+sudo apt-get install python3-matplotlib python3-scipy python3-pyqt4 python3-astropy python3-pip
+sudo pip3 install fortranformat
+```
 
 ## 2.2 Clone the repository 
 
@@ -88,7 +87,7 @@ git clone ssh://git@github.com/trevisanj/pyfant.git
 
 ```shell
 cd pyfant
-sudo python setup.py develop
+sudo python3 setup.py develop
 ```
 
 

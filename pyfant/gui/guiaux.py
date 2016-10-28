@@ -1,4 +1,5 @@
 # TODO move some functions to misc.pyqt
+
 __all__ = ["enc_name_descr", "enc_name", "INITIALIZES_SUN", "PARAMS_INVALID", "LLZERO_LLFIN",
 "DESCR_PTDISK", "DESCR_MULTI", "MONO_FONT", "SOL_HEADERS", "SOL_ATTR_NAMES", "ATOM_HEADERS",
 "ATOM_ATTR_NAMES", "style_checkboxes", "check_return_space", "show_error", "show_message",
@@ -332,7 +333,7 @@ class ErrorCollector(object):
 
                                 line += 1
                                 linetext_last = linetext
-                    except IOError, E:
+                    except IOError as E:
                         occ = Occurrence(path__, "cannot open", 0, str(E))
                         self.occurrences.append(occ)
 

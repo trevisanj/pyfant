@@ -82,7 +82,7 @@ class FileModBin(DataFile):
     if b < MOD_REC_SIZE:
         raise RuntimeError("File too small")
 
-    num_rec = b/MOD_REC_SIZE-1
+    num_rec = int(b/MOD_REC_SIZE)-1
     self.records = []
     with open(filename, "rb") as h:
 
@@ -143,7 +143,7 @@ class FileModTxt(DataFile):
             r.glog = np.log10(float(struct.unpack("12s", h.readline()[:12])[0]))
             _skip()  # microturbulence parameter
             _skip()  # mass
-            r.asalog, r.asalalf = map(float, struct.unpack("6s 6s", h.readline()[:12]))
+            r.asalog, r.asalalf = list(map(float, struct.unpack("6s 6s", h.readline()[:12])))
             _skip()  # "1 cm radius for plane-parallel models"
             _skip()  # "Luminosity"
             _skip()  # "convection parameters"
@@ -167,8 +167,8 @@ class FileModTxt(DataFile):
             # reads log(tau(Rosseland)), T, Pe, Pg
             for i in range(n):
                 qwe = h.readline()
-                r.log_tau_ross[i], t, r.pe[i], r.pg[i] = map(float,
-                 struct.unpack("3x 6s 19x 8s 12s 12s", qwe[:60]))
+                r.log_tau_ross[i], t, r.pe[i], r.pg[i] = list(map(float,
+                 struct.unpack("3x 6s 19x 8s 12s 12s", qwe[:60])))
                 r.teta[i] = 5040./t
 
             # reads rhox to use in nh calculation
@@ -266,7 +266,7 @@ class FileOpa(DataFile):
             self.nwav = int(h.readline())
 
             v, n_rows = multirow_str_vector(h, self.nwav)
-            self.wav = np.array(map(float, v))
+            self.wav = np.array(list(map(float, v)))
 
             self.rad, self.tau, self.t, self.pe, self.pg, self.rho, self.xi, \
             self.ops = np.zeros(self.ndp), np.zeros(self.ndp), np.zeros(self.ndp), \
@@ -278,13 +278,13 @@ class FileOpa(DataFile):
                 self.rad[k], self.tau[k], self.t[k], self.pe[k], self.pg[k], \
                 self.rho[k], self.xi[k], self.ops[k] = float_vector(h)
                 v, n_rows = multirow_str_vector(h, 2*self.nwav)
-                abs_sca = np.array(map(float, v))
+                abs_sca = np.array(list(map(float, v)))
                 # This multiplication is performed as in original readopa.f
                 self.abs[:, k] = abs_sca[0::2]*self.ops[k]
                 self.sca[:, k] = abs_sca[1::2]*self.ops[k]
 
             v, n_rows = multirow_str_vector(h, 92)
-            self.abund = np.array(map(float, v))
+            self.abund = np.array(list(map(float, v)))
 
 
 

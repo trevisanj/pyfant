@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 """
 Plots spectra on screen or creates PDF file
 
@@ -88,12 +88,12 @@ if __name__ == "__main__":
     ss = []
     flag_ok = False
     for x in ff:
-        print "Reading file '%s'..." % x
+        print("Reading file '%s'..." % x)
         f = load_with_classes(x, classes)
         if f is None:
             print_error("... type not recognized, sorry")
         else:
-            print "... successfully read using reader %s." % f.__class__.__name__
+            print("... successfully read using reader %s." % f.__class__.__name__)
             ss.append(f.spectrum)
 
     if len(ss) == 0:

@@ -80,16 +80,17 @@ class FileMain(DataFile):
           self.filetohy.append(s)
   
     # remaining conversions
-    self.ecrit, self.ptdisk = map(str2bool, (self.ecrit, self.ptdisk))
+    self.ecrit, self.ptdisk = list(map(str2bool, (self.ecrit, self.ptdisk)))
     self.pas, self.echx, self.echy, self.fwhm, self.teff, self.glog, \
     self.asalog, self.nhe, self.mu = \
-      map(float, (self.pas, self.echx, self.echy, self.fwhm, self.teff,
-            self.glog, self.asalog, self.nhe, self.mu))
+      list(map(float, (self.pas, self.echx, self.echy, self.fwhm, self.teff,
+            self.glog, self.asalog, self.nhe, self.mu)))
     self.inum = int(self.inum)
   
   def _do_save_as(self, filename):
     """Saves to file."""
     assert isinstance(self.vvt, list), "vvt must be list!"
+    list2str = lambda l: " ".join([str(x) for x in l])
     with open(filename, "w") as h:
       write_lf(h, "%s" % self.titrav)
       write_lf(h, "%s %s %s %s %s" % (bool2str(self.ecrit),
@@ -108,3 +109,5 @@ class FileMain(DataFile):
       write_lf(h, list2str([self.llzero, self.llfin, self.aint]))
       for filetoh in self.filetohy:
         write_lf(h, filetoh)
+
+

@@ -126,9 +126,9 @@ def vald3_to_atoms(file_obj):
 
             # # Stores in object
             elem = adjust_atomic_symbol(elem)
-            key = elem+s_ioni  # will group elements by this key
+            key = elem+s_ioni  # will group.py elements by this key
 
-            if edict.has_key(key):
+            if key in edict:
                 a = edict[key]
             else:
                 a = edict[key] = Atom()
@@ -138,7 +138,7 @@ def vald3_to_atoms(file_obj):
             a.lines.append(line)
     except Exception as e:
         raise type(e)(("Error around %d%s row of VALD3 file" %
-            (r+1, ordinal_suffix(r)))+": "+str(e)), None, sys.exc_info()[2]
+            (r+1, ordinal_suffix(r)))+": "+str(e)).with_traceback(sys.exc_info()[2])
     _logger.debug("VALD3-to-atoms conversion successful!")
     _logger.info("Number of lines skipped (molecules): %d" % num_skip_mol)
     _logger.info("Number of lines skipped (ioni > 2): %d" % num_skip_ioni)

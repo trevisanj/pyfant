@@ -1,8 +1,13 @@
+<<<<<<< HEAD
 
 # No use to version the PyCharm project because I have different Python interpreters in different
 # computers
 .idea
 
+=======
+*.bak
+*.log
+>>>>>>> ba6c81fc9917e0cf33ca8a48988f8beddebf65de
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

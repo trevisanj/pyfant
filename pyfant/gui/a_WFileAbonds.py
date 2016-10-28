@@ -7,9 +7,12 @@ from PyQt4.QtGui import *
 from .guiaux import *
 from pyfant import FileAbonds, adjust_atomic_symbol, FileDissoc
 import copy
+from pyfant.constants import *
+
 
 ABONDS_HEADERS = ["Element", "Abundance", "Notes"]
 NOTES_COLUMN_WIDTH = 200
+
 
 def _format_error(row_index, message):
     return "<b>Row %d</b>: %s" % (row_index+1, message)
@@ -261,7 +264,7 @@ class WFileAbonds(QWidget):
 
             attrs = [o.__getattribute__(x) for x in ["ele", "abol", "notes"]]
 
-            for i in xrange(len(o)):
+            for i in range(len(o)):
                 for j, attr in enumerate(attrs):
                     item = QTableWidgetItem(str(attr[i]).strip())
                     t.setItem(i, j, item)

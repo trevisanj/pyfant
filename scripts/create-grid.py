@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 
 """
 Merges several atmospheric models into a single file (_i.e._, the "grid")
@@ -62,13 +62,13 @@ if __name__ == "__main__":
 
     filenames = glob.glob("./"+args.pattern)
     n = len(filenames)
-    print "%d file%s matching pattern '%s'" % (n, "s" if n != 1 else "", args.pattern)
+    print("%d file%s matching pattern '%s'" % (n, "s" if n != 1 else "", args.pattern))
 
     records = []
     for filename in filenames:
         if args.mode == "opa":
             name = os.path.splitext(os.path.basename(filename))[0]
-            print "Considering files '%s'+('.mod', '.opa') ..." % name
+            print("Considering files '%s'+('.mod', '.opa') ..." % name)
             try:
                 f = FileModTxt()
                 f.load(filename)
@@ -81,7 +81,7 @@ if __name__ == "__main__":
                 logger.exception("Error loading file '%s', skipping..." % filename)
         else:
             nameext = os.path.basename(filename)
-            print "Considering file '%s'+('.mod', '.opa') ..." % nameext
+            print("Considering file '%s'+('.mod', '.opa') ..." % nameext)
             try:
                 if args.mode == "modtxt":
                     f = FileModTxt()
@@ -96,7 +96,7 @@ if __name__ == "__main__":
 
 
     if len(records) == 0:
-        print "No valid models found, nothing to save."
+        print("No valid models found, nothing to save.")
         sys.exit()
 
     records.sort(key=lambda r: r.asalog*1e10+r.teff*100+r.glog)
@@ -108,4 +108,4 @@ if __name__ == "__main__":
     g.records = records
     g.save_as(args.fn_output)
 
-    print "Successfully created file '%s'" % args.fn_output
+    print("Successfully created file '%s'" % args.fn_output)

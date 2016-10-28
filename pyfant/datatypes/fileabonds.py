@@ -96,7 +96,7 @@ class FileAbonds(DataFile):
             except ValueError:
                 pass  # skips elements whose symbol is not in the periodic table
         # sorts by atomic number
-        indexes = sorted(range(len(atomic_numbers)), key=lambda k: atomic_numbers[k])
+        indexes = sorted(list(range(len(atomic_numbers))), key=lambda k: atomic_numbers[k])
         # mounts string
         l = ["'INDIVIDUAL ABUNDANCES:'   '%d'" % len(indexes)]+\
             ["%s %g" % (atomic_numbers[i], aa[i]) for i in indexes]
@@ -109,7 +109,7 @@ class FileAbonds(DataFile):
         alphabetically.
         """
 
-        indexes = sorted(range(len(self)), key=lambda k: self.ele[k].strip())
+        indexes = sorted(list(range(len(self))), key=lambda k: self.ele[k].strip())
         self.ele = [self.ele[i] for i in indexes]
         self.abol = [self.abol[i] for i in indexes]
         self.notes = [self.notes[i] for i in indexes]
@@ -134,7 +134,7 @@ class FileAbonds(DataFile):
                 atomic_numbers.append("    "+s)
                 not_found.append(symbol)
 
-        indexes = sorted(range(len(atomic_numbers)), key=lambda k: atomic_numbers[k])
+        indexes = sorted(list(range(len(atomic_numbers))), key=lambda k: atomic_numbers[k])
         self.ele = [self.ele[i] for i in indexes]
         self.abol = [self.abol[i] for i in indexes]
         self.notes = [self.notes[i] for i in indexes]
@@ -175,6 +175,6 @@ class FileAbonds(DataFile):
     def _do_save_as(self, filename):
         with open(filename, "w") as h:
             h.writelines([' %-2s%6.2f %s\n' % (self.ele[i], self.abol[i], self.notes[i])
-                          for i in xrange(len(self))])
+                          for i in range(len(self))])
             h.writelines(['1\n', '1\n'])
 

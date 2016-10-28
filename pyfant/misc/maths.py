@@ -1,4 +1,6 @@
-"""Maths"""
+"""
+Low-level maths def's
+"""
 
 
 __all__ = ["bc_rubber", "rubberband", "_rubber_pieces", "poly_baseline"]
@@ -8,10 +10,13 @@ import numpy as np
 
 
 def bc_rubber(vx):
-    """Convex Polygonal Line baseline correction
+    """
+    Convex Polygonal Line baseline correction
 
     Arguments:
-      vx -- vector
+        vx -- vector
+
+    Returns: vx-rubberband(vx)
     """
 
     return vx-rubberband(vx)
@@ -19,12 +24,18 @@ def bc_rubber(vx):
 
 def rubberband(vx):
     """
-    Convex polygonal line (aka rubberbadn) whose vertices touch troughs of x
-    without crossing x, where x = X[i, :], i <= 0 < no (see below).
+    Convex polygonal line (aka rubberband)
 
+    Arguments:
+        vx -- 1-D numpy array
 
-    This was inspired on OPUS SB_Rubberband baseline correction (RBBC) [1]. However,
-    this one is parameterless, whereas OPUS RBBC asks for a number of points.
+    Returns: the rubberband: a 1-D numpy array with same shape as vx
+
+    This function stretches a polygonal line from below vx. The vertices of this multi-segment line
+    will touch troughs of vx without crossing vx
+
+    This was inspired on -- but is not equivalent to -- OPUS Rubberband baseline correction [1].
+    However, this one is parameterless, whereas OPUS RBBC asks for a number of points.
 
     References:
         [1] Bruker Optik GmbH, OPUS 5 Reference Manual. Ettlingen: Bruker, 2004.

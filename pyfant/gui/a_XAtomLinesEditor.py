@@ -74,7 +74,7 @@ class XAtomLinesEditor(QMainWindow):
             # list with the vectors themselves
             attrs = [atom.__getattribute__(x) for x in ATOM_ATTR_NAMES]
 
-            for i in xrange(len(atom)):
+            for i in range(len(atom)):
                 for j, attr in enumerate(attrs):
                     item = QTableWidgetItem(str(attr[i]))
                     t.setItem(i, j, item)

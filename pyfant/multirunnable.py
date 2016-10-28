@@ -134,8 +134,8 @@ class MultiRunnable(Runnable):
         self.__status.stage = "pfant stage"
         self.__logger.info("+++ pfant stage...")
         pfant_list = []
-        symbols = self.__file_abxfwhm.ab.keys()
-        abdiffss = self.__file_abxfwhm.ab.values()
+        symbols = list(self.__file_abxfwhm.ab.keys())
+        abdiffss = list(self.__file_abxfwhm.ab.values())
         n_abdif = len(abdiffss[0])
         fwhms = self.__file_abxfwhm.get_fwhms()
         for fwhm in fwhms:
@@ -209,7 +209,7 @@ class MultiRunnable(Runnable):
 
         # ## Saves files for lineplot.py (lists of spectra)
         # Each item of each list is a full path to a spectrum file
-        for fwhm, sp_filenames in sp_filenames_by_fwhm.iteritems():
+        for fwhm, sp_filenames in list(sp_filenames_by_fwhm.items()):
             spl_filename = os.path.join(self.__sid.dir, "cv_%s.spl" % fmt_fwhm(fwhm))
             with open(spl_filename, "w") as h:
                 for sp_filename in sp_filenames:

@@ -2,6 +2,8 @@ __all__ = ["VisPrint", "VisModRecord", "VisModCurves", "VisSpectrum", "VisFileTo
            "get_suitable_vis_classes", "VisAtoms", "VisMolecules", "VisOpa",
            "VisMarcs", "VisMarcsSaveAsMod", "VisGrid", "VisVector", "VisMain",
            "VisAbonds", "VisCube", "VisSpectrumList"]
+
+
 from pyfant.datatypes import *
 import numpy as np
 import matplotlib.pyplot as plt
@@ -68,7 +70,7 @@ class VisPrint(Vis):
     action = "Print to console"
 
     def _do_use(self, obj):
-        print obj
+        print(obj)
 
 class VisModRecord(Vis):
     """
@@ -388,8 +390,7 @@ class VisOpa(Vis):
 
 
 
-###############################################################################
-# Editors
+# # Editors
 
 class VisAtoms(Vis):
     """Opens the ated window."""
@@ -447,7 +448,7 @@ class VisCube(Vis):
     action = "Edit using Data Cube Editor"
 
     def _do_use(self, r):
-        from pyfant.gui.ao3s import XFileSparseCube
+        from pyfant.gui.aosss import XFileSparseCube
         form = XFileSparseCube(self.parent_form, r)
         _forms.append(form)
         form.show()
@@ -455,11 +456,11 @@ class VisCube(Vis):
 
 class VisSpectrumList(Vis):
     """Opens the Spectrum List Editor window."""
-    input_classes = (FileSpectrumList,)
+    input_classes = (FileSpectrumList, FileSpectrum)
     action = "Edit using Spectrum List Editor"
 
     def _do_use(self, r):
-        from pyfant.gui.ao3s import XFileSpectrumList
+        from pyfant.gui.aosss import XFileSpectrumList
         form = XFileSpectrumList(self.parent_form, r)
         _forms.append(form)
         form.show()

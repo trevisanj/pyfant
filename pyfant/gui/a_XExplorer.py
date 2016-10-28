@@ -91,7 +91,7 @@ class LoadThread(QThread):
             try:
                 f = load_any_file(props.filepath)
                 props.f = f
-            except Exception, e:
+            except Exception as e:
                 # Suppresses exceptions
                 props.error_message = str(e)
             finally:
@@ -608,7 +608,7 @@ class XExplorer(QMainWindow):
                         p.flag_scanned = False
                         p.mtime = t
                         flag_refresh = True
-                except OSError, E:
+                except OSError as E:
                     if E.errno == 2:
                         # File no longer exists
                         if p.row_index <= ir:
@@ -642,9 +642,9 @@ class XExplorer(QMainWindow):
             self.__propss = []
 
             all_ = glob.glob(os.path.join(self.dir, "*"))
-            dirs = filter(os.path.isdir, all_)
+            dirs = list(filter(os.path.isdir, all_))
             dirs.sort()
-            files = filter(os.path.isfile, all_)
+            files = list(filter(os.path.isfile, all_))
             files.sort()
             dir_ = [os.path.join(self.dir, "..")] + dirs + files
 

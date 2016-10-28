@@ -62,7 +62,7 @@ class Atom(AttrsPart):
 
     def _cut(self, llzero, llfin):
         """Keeps only the lines with their llzero <= lambda_ <= llfin."""
-        for i in reversed(xrange(len(self))):
+        for i in reversed(list(range(len(self)))):
             if not (llzero <= self.lines[i].lambda_ <= llfin):
                 del self.lines[i]
 
@@ -146,7 +146,7 @@ class FileAtoms(DataFile):
 
     def cut(self, llzero, llfin):
         """Keeps only the lines with their llzero <= lambda_ <= llfin."""
-        for i in reversed(xrange(len(self))):
+        for i in reversed(list(range(len(self)))):
             atom = self.atoms[i]
             atom._cut(llzero, llfin)
             if len(atom) == 0:
@@ -160,9 +160,9 @@ class FileAtoms(DataFile):
           function -- receives an AtomicLine object as argument.
            Example: lambda line: line.algf >= -7
         """
-        for i in reversed(xrange(len(self))):
+        for i in reversed(list(range(len(self)))):
             atom = self.atoms[i]
-            atom.lines = filter(function, atom.lines)
+            atom.lines = list(filter(function, atom.lines))
             if len(atom) == 0:
                 del self.atoms[i]
 
@@ -176,12 +176,12 @@ class FileAtoms(DataFile):
           function -- receives an Atomic object as argument.
            Example: lambda atom: atom.ioni <= 2
         """
-        self.atoms = filter(function, self.atoms)
+        self.atoms = list(filter(function, self.atoms))
 
     def remove_element(self, elem):
         """Removes given element (any ionization level)."""
         elem = adjust_atomic_symbol(elem)
-        for i in reversed(xrange(len(self))):
+        for i in reversed(list(range(len(self)))):
             atom = self.atoms[i]
             if atom.elem == elem:
                 del self.atoms[i]
@@ -203,8 +203,8 @@ class FileAtoms(DataFile):
                     elem, s_ioni = temp[0][:-1], temp[0][-1]
                     line.lambda_ = float(temp[1])
                     elem = adjust_atomic_symbol(elem)
-                    key = elem+s_ioni  # will group elements by this key
-                    if edict.has_key(key):
+                    key = elem+s_ioni  # will group.py elements by this key
+                    if key in edict:
                         a = edict[key]
                     else:
                         a = edict[key] = Atom()
@@ -222,7 +222,7 @@ class FileAtoms(DataFile):
                         break
             except Exception as e:
                 raise type(e)(("Error around %d%s row of file '%s'" %
-                               (r+1, ordinal_suffix(r+1), filename))+": "+str(e)), None, sys.exc_info()[2]
+                               (r+1, ordinal_suffix(r+1), filename))+": "+str(e)).with_traceback(sys.exc_info()[2])
 
     def _do_save_as(self, filename):
         with open(filename, "w") as h:

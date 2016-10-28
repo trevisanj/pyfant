@@ -244,7 +244,8 @@ class Executable(Runnable):
             try:
                 if self.conf.popen_text_dest is not None:
                     for line in self.__popen.stdout:
-                        self.conf.popen_text_dest.write(line)
+                        # In Python 3, line is bytes, write() cannot deal with that
+                        self.conf.popen_text_dest.write(line.decode("ascii"))
             finally:
                 self.__popen.stdout.close()
 
@@ -371,7 +372,7 @@ class Pfant(Executable):
         if (not self.ikey or self.ikey < self.ikeytot) and os.path.isfile(p):
             with open(p) as h:
                 try:
-                    t = map(int, h.readline().split("/"))
+                    t = list(map(int, h.readline().split("/")))
                     ret.ikey = t[0]
                     ret.ikeytot = t[1]
                 except ValueError:
@@ -498,7 +499,7 @@ class Combo(Runnable):
         map = [(FOR_INNEWMARCS, self.__innewmarcs), (FOR_HYDRO2, self.__hydro2), (FOR_PFANT, self.__pfant),
                (FOR_NULBAD, self.__nulbad)]
         res = []
-        ii, ee = zip(*map)
+        ii, ee = list(zip(*map))
         self.__sequence.sort()
         for i_exe in self.__sequence:
             if i_exe in ii:

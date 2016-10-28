@@ -1,9 +1,9 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 
 """Spectrum List Editor"""
 
 from pyfant import *
-from pyfant.gui.ao3s import XFileSpectrumList
+from pyfant.gui.aosss import XFileSpectrumList
 import sys
 import argparse
 import logging

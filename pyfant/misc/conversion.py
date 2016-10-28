@@ -1,9 +1,13 @@
 """Conversion routines"""
 
-__all__ = ["adjust_atomic_symbol", "str2bool", "bool2str", "list2str", "chunk_string",
-"ordinal_suffix", "seconds2str", "make_fits_keys_dict", "eval_fieldnames"]
+
+__all__ = ["adjust_atomic_symbol", "str2bool", "bool2str", "chunk_string",
+"ordinal_suffix", "seconds2str", "make_fits_keys_dict", "eval_fieldnames",
+"valid_fits_key", "module_to_dict"]
+
 
 import numpy as np
+import re
 
 
 def adjust_atomic_symbol(x):
@@ -25,11 +29,6 @@ def bool2str(x):
     """Converts bool variable to either "T" or "F"."""
     assert isinstance(x, bool)
     return "T" if x else "F"
-
-
-def list2str(l):
-    """Converts list to string without the brackets."""
-    return " ".join([str(x) for x in l])
 
 
 def chunk_string(string, length):
@@ -80,7 +79,7 @@ def make_fits_keys_dict(keys):
 
     "The keyword names may be up to 8 characters long and can only contain
     uppercase letters A to Z, the digits 0 to 9, the hyphen, and the underscore
-    character." (http://fits.gsfc.nasa.gov/fits_primer.html)
+    character." [1]
 
     Arguments:
         keys -- list of strings
@@ -88,12 +87,16 @@ def make_fits_keys_dict(keys):
     Returns:
         dictionary whose keys are the elements in the "keys" argument, and whose
         values are made-up uppercase names
+
+    References:
+        [1] http://fits.gsfc.nasa.gov/fits_primer.html
     """
 
     key_dict = {}
     new_keys = []
     for key in keys:
-        fits_key = key[:8].upper()
+        # converts to valid FITS key according to reference [1] above
+        fits_key = valid_fits_key(key)
         num_digits = 1
         i = -1
         i_max = 9
@@ -111,6 +114,21 @@ def make_fits_keys_dict(keys):
     return key_dict
 
 
+def valid_fits_key(key):
+    """
+    Makes valid key for a FITS header
+
+    "The keyword names may be up to 8 characters long and can only contain
+    uppercase letters A to Z, the digits 0 to 9, the hyphen, and the underscore
+    character." (http://fits.gsfc.nasa.gov/fits_primer.html)
+    """
+
+    ret = re.sub("[^A-Z0-9\-_]", "", key.upper())[:8]
+    if len(ret) == 0:
+        raise RuntimeError("key '%s' has no valid characters to be a key in a FITS header" % key)
+    return ret
+
+
 def eval_fieldnames(string_, varname="fieldnames"):
     """Evaluates string_, must evaluate to list of strings. Also converts field names to uppercase"""
     ff = eval(string_)
@@ -120,3 +138,12 @@ def eval_fieldnames(string_, varname="fieldnames"):
         raise RuntimeError("%s must be a list of strings" % varname)
     ff = [x.upper() for x in ff]
     return ff
+
+
+def module_to_dict(module):
+    """Creates a dictionary whose keys are module.__all__"""
+
+    lot = [(key, module.__getattribute__(key)) for key in module.__all__]
+    ret = dict(lot)
+    return ret
+

@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 
 from pyfant.gui import XMulti, XRunnableManager
 from pyfant import *

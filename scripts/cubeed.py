@@ -1,9 +1,9 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 
 """Data Cube Editor, import/export WebSim-COMPASS data cubes"""
 
 from pyfant import *
-from pyfant.gui.ao3s import XFileSparseCube
+from pyfant.gui.aosss import XFileSparseCube
 import sys
 import argparse
 import logging
