@@ -1,5 +1,6 @@
 __all__ = ["MAGNITUDE_BASE", "STDFLUX", "calculate_magnitude", "get_vega_spectrum",
-           "Bandpass", "UBVTabulated", "UBVParametric", "ufunc_gauss", "get_ubv_bandpasses"]
+           "Bandpass", "UBVTabulated", "UBVParametric", "ufunc_gauss", "get_ubv_bandpasses",
+           "get_zero_flux", "calculate_magnitude_scalar"]
 
 
 import numpy as np
@@ -50,15 +51,7 @@ def calculate_magnitude(sp, bp, system="stdflux", zero_point=0., flag_force_band
     Returns: a dictionary with "cmag": calculated magnitude, and many intermediary steps
     """
 
-    if isinstance(bp, Bandpass):
-        pass
-    elif isinstance(bp, str):
-        if bp in "UBVRI":
-            bp = UBVTabulated(bp)
-        else:
-            bp = UBVParametric(bp)
-    else:
-        raise ValueError("Invalid value for argument 'bandpass': %s" % str(bp))
+    bp = __get_bandpass(bp)
 
     # # Determines areas
     filtered_sp = sp * bp
@@ -71,17 +64,7 @@ def calculate_magnitude(sp, bp, system="stdflux", zero_point=0., flag_force_band
     #       ~47.5 against ~49.6 for the Vega spectrum with 8827 points
     filtered_sp_area = np.trapz(filtered_sp.y, filtered_sp.x)
 
-    # # Determines zero-magnitude flux value
-    if system == "stdflux":
-        zero_flux = STDFLUX[bp.name]
-    elif system == "ab":
-        zero_flux = 3631e-23
-    elif system == "vega":
-        vega_sp = __get_vega_spectrum()
-        filtered_vega_sp = vega_sp * bp
-        zero_flux = np.trapz(filtered_vega_sp.y, filtered_vega_sp.x)/bp.area(bp.l0, bp.lf)
-    else:
-        raise ValueError("Invalid reference magnitude system: '%s'" % system)
+    zero_flux = get_zero_flux(bp, system)
 
     weighted_mean_flux = filtered_sp_area/band_area
     cmag = -2.5 * np.log10(weighted_mean_flux / zero_flux) - zero_point
@@ -96,9 +79,64 @@ def calculate_magnitude(sp, bp, system="stdflux", zero_point=0., flag_force_band
     ("zero_flux", zero_flux),
     ("cmag", cmag),
     ))
-    if system == "vega":
-        ret["filtered_vega_sp"] = filtered_vega_sp
+    # if system == "vega":
+    #     ret["filtered_vega_sp"] = filtered_vega_sp
     return ret
+
+
+def calculate_magnitude_scalar(flux, bp, system="stdflux", zero_point=0.):
+    """
+    Calculates magnitude for a single scalar flux value
+
+    Arguments:
+        flux -- float (erg/cm**2/s/Hz)
+        bp, system, zero_point -- see calculate_magnitude()
+
+    Returns: float
+    """
+    zero_flux = get_zero_flux(bp, system)
+    return -2.5 * np.log10(flux / zero_flux) - zero_point
+
+
+def get_zero_flux(bp, system="stdflux"):
+    """
+    Returns flux (erg/cm**2/s/Hz) for which magnitude is zero
+
+    Arguments:
+        bp -- Bandpass object, or band name, e.g., "U"
+        system -- {"stdflux", "ab", "vega"} reference magnitude system
+
+    For more on arguments, see calculate_magnitude()
+
+    Returns: float
+    """
+
+    bp = __get_bandpass(bp)
+
+    if system == "stdflux":
+        zero_flux = STDFLUX[bp.name]
+    elif system == "ab":
+        zero_flux = 3631e-23
+    elif system == "vega":
+        vega_sp = __get_vega_spectrum()
+        filtered_vega_sp = vega_sp * bp
+        zero_flux = np.trapz(filtered_vega_sp.y, filtered_vega_sp.x) / bp.area(bp.l0, bp.lf)
+    else:
+        raise ValueError("Invalid reference magnitude system: '%s'" % system)
+    return zero_flux
+
+
+def __get_bandpass(bp):
+    if isinstance(bp, Bandpass):
+        pass
+    elif isinstance(bp, str):
+        if bp in "UBVRI":
+            bp = UBVTabulated(bp)
+        else:
+            bp = UBVParametric(bp)
+    else:
+        raise ValueError("Invalid value for argument 'bandpass': %s" % str(bp))
+    return bp
 
 
 __vega_spectrum = None

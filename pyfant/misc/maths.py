@@ -34,7 +34,7 @@ def rubberband(vx):
     This function stretches a polygonal line from below vx. The vertices of this multi-segment line
     will touch troughs of vx without crossing vx
 
-    This was inspired on -- but is not equivalent to -- OPUS Rubberband baseline correction [1].
+    This was inspired on -- but is not equivalent to -- OPUS SB_Rubberband baseline correction [1].
     However, this one is parameterless, whereas OPUS RBBC asks for a number of points.
 
     References:

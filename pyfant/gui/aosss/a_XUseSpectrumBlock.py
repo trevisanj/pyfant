@@ -48,5 +48,5 @@ class XUseSpectrumBlock(XHelpDialog):
 
             return QDialog.accept(self)
         except Exception as e:
-            self.add_log_error(self.str_exc(e), True)
+            self.add_log_error(str_exc(e), True)
             return False

@@ -8,16 +8,16 @@ The interval is [llzero, llfin]
 """
 
 import argparse
-from pyfant import *
 import logging
 import sys
+import pyfant as pf
 
-misc.logging_level = logging.INFO
+pf.logging_level = logging.INFO
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
      description=__doc__,
-     formatter_class=SmartFormatter
+     formatter_class=pf.SmartFormatter
      )
     parser.add_argument('llzero', type=float, nargs=1,
      help='lower wavelength boundary (angstrom)')
@@ -28,7 +28,7 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    sp = load_spectrum(args.fn_input[0])
+    sp = pf.load_spectrum(args.fn_input[0])
     if not sp:
         print("File '%s' not recognized as a spectrum file." % args.fn_input[0])
         sys.exit()
@@ -39,7 +39,7 @@ if __name__ == "__main__":
     print("Original interval: [%g, %g]" % (m, M))
     print("New interval: [%g, %g]" % (args.llzero[0], args.llfin[0]))
 
-    f = FileSpectrumXY()
-    f.spectrum = cut_spectrum(sp, args.llzero[0], args.llfin[0])
+    f = pf.FileSpectrumXY()
+    f.spectrum = pf.blocks.SB_Cut(args.llzero[0], args.llfin[0]).use(sp)
     f.save_as(args.fn_output[0])
     print("Successfully created file '%s'" % args.fn_output[0])

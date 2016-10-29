@@ -203,7 +203,7 @@ class FileAtoms(DataFile):
                     elem, s_ioni = temp[0][:-1], temp[0][-1]
                     line.lambda_ = float(temp[1])
                     elem = adjust_atomic_symbol(elem)
-                    key = elem+s_ioni  # will group.py elements by this key
+                    key = elem+s_ioni  # will gb.py elements by this key
                     if key in edict:
                         a = edict[key]
                     else:

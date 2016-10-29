@@ -3,6 +3,7 @@ Data representations.
 """
 from .datafile import *
 from .spectrum import *
+from .filespectrum import *
 from .filedissoc import *
 from .fileabonds import *
 from .filemain import *

@@ -350,6 +350,7 @@ class SparseCube(SpectrumCollection):
             i1 = BSearchFloor(wl, sp.x[-1])
             assert i1 != -1, "BSearchFloor(wl, sp.x[-1]) FAILED"
 
+            # TODO account for different delta lambda
             if sp.delta_lambda != dl or wl[i0] != sp.x[0] or wl[i1] != sp.x[-1]:
                 # # Linear interpolation: either adjust for different delta lambda or misaligned wavelengths
                 wl_new = wl[i0:i1+1]

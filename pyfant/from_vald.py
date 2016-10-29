@@ -126,7 +126,7 @@ def vald3_to_atoms(file_obj):
 
             # # Stores in object
             elem = adjust_atomic_symbol(elem)
-            key = elem+s_ioni  # will group.py elements by this key
+            key = elem+s_ioni  # will gb.py elements by this key
 
             if key in edict:
                 a = edict[key]

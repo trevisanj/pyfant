@@ -88,7 +88,7 @@ class XScaleSpectrum(XLogDialog):
         signals.append(y.currentIndexChanged)
         x.setBuddy(y)
         y.addItems(["ab", "vega", "stdflux"])
-        pp.append((x, y, "Magnitude &system",
+        pp.append((x, y, "ToScalar_Magnitude &system",
                    "'ab' -- AB[solute]<br>"
                    "'vega' -- uses Vega spectrum as reference;<br>"
                    "'stdflux' -- uses standard reference values from literature", ""))
@@ -283,7 +283,7 @@ def _draw_figure(fig, mag_data, spectrum, flag_force_band_range):
     band_max_y = max(band_y)
     plot_l0, plot_lf = bp.l0 - band_span_x * MARGIN_H, bp.lf + band_span_x * MARGIN_H
     plot_h_middle = (plot_l0 + plot_lf) / 2
-    spp = cut_spectrum(spectrum, plot_l0, plot_lf)  # spectrum for plotting
+    spp = pf.SB_Cut(plot_l0, plot_lf).use(spectrum)  # spectrum for plotting
     flux_ylim = [0, np.max(spp.y) * (1 + MARGIN_V)] if len(spp) > 0 else [-.1, .1]
 
     # # First subplot
@@ -309,7 +309,7 @@ def _draw_figure(fig, mag_data, spectrum, flag_force_band_range):
         if band.lf >= plot_l0 and band.l0 <= plot_lf:
             x = np.linspace(band.l0, band.lf, 200)
             y = band.ufunc()(x)
-            ax.plot(x, y, c=COLOR_OTHER_BANDS, lw=LINE_WIDTH)
+            ax.plot(x, y, lw=LINE_WIDTH)  # c=COLOR_OTHER_BANDS)
             idx_max = np.argmax(y)
             max_y = y[idx_max]
             overall_max_y = max(max_y, band_max_y)

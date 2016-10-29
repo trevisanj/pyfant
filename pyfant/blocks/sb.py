@@ -1,4 +1,5 @@
-__all__ = ["Rubberband", "AddNoise", "FnuToFlambda", "FLambdaToFNu", "ElementWise", "Extend", ]
+__all__ = ["SB_Rubberband", "SB_AddNoise", "SB_FnuToFlambda", "SB_FLambdaToFNu", "SB_ElementWise",
+           "SB_Extend", "SB_Cut", "SB_Normalize"]
 
 
 import numpy as np
@@ -8,7 +9,7 @@ import pyfant
 import copy
 from .base import SpectrumBlock
 
-class Rubberband(SpectrumBlock):
+class SB_Rubberband(SpectrumBlock):
     """
     Convex polygonal line (aka "rubberband")
 
@@ -19,7 +20,7 @@ class Rubberband(SpectrumBlock):
     Stretches a polygonal line from below/above the spectrum. The vertices of this multi-segment
     line will touch "troughs" of the spectrumvx without crossing the spectrum
 
-    This was inspired on -- but is not equivalent to -- OPUS Rubberband baseline correction [1].
+    This was inspired on -- but is not equivalent to -- OPUS SB_Rubberband baseline correction [1].
     However, this one is parameterless, whereas OPUS RBBC asks for a number of points
 
     References:
@@ -42,7 +43,7 @@ class Rubberband(SpectrumBlock):
         return output
 
 
-class AddNoise(SpectrumBlock):
+class SB_AddNoise(SpectrumBlock):
     """
     Adds normally distributed (Gaussian) random noise
 
@@ -61,7 +62,7 @@ class AddNoise(SpectrumBlock):
         return output
 
 
-class FLambdaToFNu(SpectrumBlock):
+class SB_FLambdaToFNu(SpectrumBlock):
     """
     Flux-lambda to flux-nu conversion. Assumes the wavelength axis is in angstrom
 
@@ -79,7 +80,7 @@ class FLambdaToFNu(SpectrumBlock):
         return out
 
 
-class FnuToFlambda(SpectrumBlock):
+class SB_FnuToFlambda(SpectrumBlock):
     """
     Flux-nu to flux-lambda conversion. Assumes the wavelength axis is in angstrom
 
@@ -98,7 +99,7 @@ class FnuToFlambda(SpectrumBlock):
         return out
 
 
-class FlambdaToFnu(SpectrumBlock):
+class SB_FlambdaToFnu(SpectrumBlock):
     """
     Flux-nu to flux-lambda conversion. Assumes the wavelength axis is in angstrom
 
@@ -111,7 +112,7 @@ class FlambdaToFnu(SpectrumBlock):
         return out
 
 
-class ElementWise(SpectrumBlock):
+class SB_ElementWise(SpectrumBlock):
     """
     Applies specified function to spectrum flux
 
@@ -141,7 +142,7 @@ class ElementWise(SpectrumBlock):
         return output
 
 
-class Extend(SpectrumBlock):
+class SB_Extend(SpectrumBlock):
     """
     Extends to left and/or right side
 
@@ -157,9 +158,9 @@ class Extend(SpectrumBlock):
             'zero' -- Fills with zero
 
     Examples:
-        Extend(.1, True, True)  # if original has 100 points, resulting will have 120 points
+        SB_Extend(.1, True, True)  # if original has 100 points, resulting will have 120 points
 
-        Extend(.1, True, False)  # if original has 100 points, resulting will have 110 points
+        SB_Extend(.1, True, False)  # if original has 100 points, resulting will have 110 points
     """
 
     def __init__(self, fraction=.1, flag_left=True, flag_right=False, fill_mode='poly_baseline'):
@@ -172,6 +173,7 @@ class Extend(SpectrumBlock):
         self.fill_mode = fill_mode
 
     def _do_use(self, inp):
+        # TODO work with delta_lambda not constant
         output = self._copy_input(inp)
 
         if not (self.flag_left or self.flag_right):
@@ -205,3 +207,63 @@ class Extend(SpectrumBlock):
 
         return output
 
+
+class SB_Cut(SpectrumBlock):
+    """
+    Cuts spectrum given a wavelength interval
+
+    Arguments:
+        l0 -- initial wavelength
+        lf -- final wavelength
+    """
+
+    def __init__(self, l0, lf):
+        SpectrumBlock.__init__(self)
+        if self.l0 >= self.lf:
+            raise ValueError("l0 must be lower than lf")
+        self.l0 = l0
+        self.lf = lf
+
+    def __repr__(self):
+        return "SB_Cut({}, {})".format(self.l0, self.lf)
+
+    def _do_use(self, inp):
+        idx0 = np.argmin(np.abs(inp.x - self.l0))
+        idx1 = np.argmin(np.abs(sp.x - self.lf))
+        out = self._copy_input(inp)
+        out.x = out.x[idx0:idx1]
+        out.y = out.y[idx0:idx1]
+        return out
+
+
+class SB_Normalize(SpectrumBlock):
+    """
+    Normalizes spectrum according to specified method
+
+    Arguments:
+        method --
+            "01": normalizes between 0 and 1
+    """
+
+    def __init__(self, method="01"):
+        SpectrumBlock.__init__(self, method="01")
+        choices = ["01",]
+        if not method in choices:
+            raise ValueError("Invalid normalization method; choices: %s" % str(choices))
+        self.method = method
+
+    def __repr__(self):
+        return "SB_Normalize('{}')".format(self.method)
+
+    def _do_use(self, inp):
+        idx0 = np.argmin(np.abs(inp.x - self.l0))
+        idx1 = np.argmin(np.abs(sp.x - self.lf))
+        out = self._copy_input(inp)
+        out.x = out.x[idx0:idx1]
+        out.y = out.y[idx0:idx1]
+        if self.method == "01":
+            miny, maxy = np.min(out.y), np.max(out.y)
+            if miny == maxy:
+                raise RuntimeError("Cannot normalize, y-span is ZERO")
+            out.y = (out.y - miny) / (maxy - miny)
+        return out

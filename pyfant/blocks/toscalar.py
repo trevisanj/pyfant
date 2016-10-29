@@ -1,17 +1,17 @@
-__all__ = ["SNR", "Magnitude"]
+__all__ = ["ToScalar_SNR", "ToScalar_Magnitude"]
 
 
 from .base import ToScalar
 import numpy as np
 
 
-class SNR(ToScalar):
+class ToScalar_SNR(ToScalar):
     """
-    Calculates Signal-to-noise ratio (SNR) using a part of the "signal" (i.e. the spectrum)
+    Calculates Signal-to-noise ratio (GB_SNR) using a part of the "signal" (i.e. the spectrum)
 
     Output is **scalar**
 
-    The signal-to-noise ratio (SNR) is often defined as (signal power) / (noise power), herein
+    The signal-to-noise ratio (GB_SNR) is often defined as (signal power) / (noise power), herein
     calculated as
 
         y_RMS**2 / variance(y)     (https://en.wikipedia.org/wiki/Signal-to-noise_ratio)
@@ -36,7 +36,7 @@ class SNR(ToScalar):
         return output
 
 
-class Magnitude(ToScalar):
+class ToScalar_Magnitude(ToScalar):
     """
     Calculates the magnitude of a spectrum
 

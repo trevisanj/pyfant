@@ -39,7 +39,7 @@ class XToScalar(XHelpDialog):
         self.comboBox.addItems([x[0] for x in self.help_data])
         ###
         label = QLabel(enc_name_descr("O&peration", "See help below"))
-        edit = self.editFunction = QLineEdit("SNR(0, 10000)")
+        edit = self.editFunction = QLineEdit("GB_SNR(0, 10000)")
         label.setBuddy(edit)
         self.grid.addWidget(label, 0, 0)
         self.grid.addWidget(edit, 0, 1)
@@ -69,5 +69,5 @@ class XToScalar(XHelpDialog):
 
             return QDialog.accept(self)
         except Exception as e:
-            self.add_log_error(self.str_exc(e), True)
+            self.add_log_error(str_exc(e), True)
             return False

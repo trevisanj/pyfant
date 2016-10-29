@@ -333,14 +333,14 @@ class SpectrumList(SpectrumCollection):
     #
     #     Arguments:
     #         expr -- expression which will be eval()'ed with expected result to be a GroupBlock
-    #                 Example: "SNR()"
+    #                 Example: "GB_SNR()"
     #
     #                 TODO I should not eval here, the argument should be the block itself
     #
     #         group_by -- sequence of spectrum "more_headers" fieldnames.
-    #                     If not passed, will treat the whole SpectrumCollection as a single group.py.
+    #                     If not passed, will treat the whole SpectrumCollection as a single gb.py.
     #                     If passed, will split the collection in groups and perform the "merge down" operations separately
-    #                     for each group.py
+    #                     for each gb.py
     #
     #     Returns: (SpectrumCollection containing query result, list of error strings)
     #     """
@@ -369,23 +369,23 @@ class SpectrumList(SpectrumCollection):
     #                 unique_keys.sort()
     #                 sk = list(zip(self.spectra, grouping_keys))
     #                 for unique_key in unique_keys:
-    #                     group.py = SpectrumList()
+    #                     gb.py = SpectrumList()
     #                     for spectrum, grouping_key in sk:
     #                         if grouping_key == unique_key:
-    #                             group.py.add_spectrum(spectrum)
-    #                     groups.append(group.py)
+    #                             gb.py.add_spectrum(spectrum)
+    #                     groups.append(gb.py)
     #
     #                 ret = SpectrumList()
-    #                 ret.fieldnames = group_by  # new SpectrumList will have the group.py field names
+    #                 ret.fieldnames = group_by  # new SpectrumList will have the gb.py field names
     #
-    #                 # Uses block in each group.py
-    #                 for group.py in groups:
-    #                     splist = block.use(group.py)
+    #                 # Uses block in each gb.py
+    #                 for gb.py in groups:
+    #                     splist = block.use(gb.py)
     #
-    #                     # copies "group.py by" fields from first input spectrum to output spectrum
+    #                     # copies "gb.py by" fields from first input spectrum to output spectrum
     #                     sp = splist.spectra[0]
     #                     for fieldname in group_by:
-    #                         sp.more_headers[fieldname] = group.py.spectra[0].more_headers[fieldname]
+    #                         sp.more_headers[fieldname] = gb.py.spectra[0].more_headers[fieldname]
     #                     ret.merge_with(splist)
     #         except Exception as E:
     #             msg = "Calculating output: %s" % str(E)

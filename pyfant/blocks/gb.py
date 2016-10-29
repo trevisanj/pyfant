@@ -1,10 +1,12 @@
 from .base import *
 from . import sb
-import pyfant  #from .slb import UseSpectrumBlock
+import pyfant  #from .slb import SLB_UseSpectrumBlock
 
-__all__ = ["UseNumPyFunc", "SNR"]
 
-class UseNumPyFunc(GroupBlock):
+__all__ = ["GB_UseNumPyFunc", "GB_SNR"]
+
+
+class GB_UseNumPyFunc(GroupBlock):
     """Output contains single spectrum whose y-vector is calculated using a numpy function
 
     The numpy function must be able to operate on the first axis, e.g., np.mean(), np.std()
@@ -25,12 +27,12 @@ class UseNumPyFunc(GroupBlock):
         return output
 
 
-class SNR(GroupBlock):
-    """Calculates the SNR(lambda) = Power_signal(lambda)/Power_noise(lambda)
+class GB_SNR(GroupBlock):
+    """Calculates the GB_SNR(lambda) = Power_signal(lambda)/Power_noise(lambda)
 
     Arguments:
         continua -- SpectrumList containing the continua that will be used as the "signal" level.
-                    If not passed, will be calculated from the input spectra using a Rubberband(True) block
+                    If not passed, will be calculated from the input spectra using a SB_Rubberband(True) block
 
     References:
         [1] https://en.wikipedia.org/wiki/Signal_averaging
@@ -44,12 +46,12 @@ class SNR(GroupBlock):
 
     def _do_use(self, inp):
         if self.continua is None:
-            continua = pyfant.blocks.slb.UseSpectrumBlock(sb.Rubberband(True)).use(inp)
+            continua = pyfant.blocks.slb.SLB_UseSpectrumBlock(sb.SB_Rubberband(True)).use(inp)
         else:
             continua = self.continua
-        cont_2 = slb.UseSpectrumBlock(sb.ElementWise(np.square)).use(continua)  # continua squared
-        mean_cont_2 = UseNumPyFunc(np.mean).use(cont_2)
-        var_spectra = UseNumPyFunc(np.var).use(inp)
+        cont_2 = slb.UseSpectrumBlock(sb.SB_ElementWise(np.square)).use(continua)  # continua squared
+        mean_cont_2 = GB_UseNumPyFunc(np.mean).use(cont_2)
+        var_spectra = GB_UseNumPyFunc(np.var).use(inp)
         output = self._new_output()
         sp = Spectrum()
         sp.wavelength = np.copy(inp.wavelength)

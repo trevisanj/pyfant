@@ -3,9 +3,13 @@
 # import sp2scalar
 
 from . import base
-from . import group
+from . import gb
 from . import toscalar
 from . import sb
 from . import slb
 
+from .base import *
+from .gb import *
+from .toscalar import *
+from .slb import *
 

@@ -44,12 +44,6 @@ class _LogPart(object):
         return obj
 
 
-    @staticmethod
-    def str_exc(E):
-        """Generates a string from an Exception"""
-        return "%s: %s" % (E.__class__.__name__, str(E))
-
-
     def add_log_error(self, x, flag_also_show=False):
         """Sets text of labelError."""
         if len(x) == 0:

@@ -3,7 +3,7 @@
 
 __all__ = [
 "flag_log_console", "flag_log_file", "logging_level", "get_python_logger", "add_file_handler",
-"LogTwo", "SmartFormatter"]
+"LogTwo", "SmartFormatter", "str_exc"]
 
 
 import logging
@@ -97,3 +97,6 @@ class SmartFormatter(RawDescriptionHelpFormatter):
         # return argparse.ArgumentDefaultsHelpFormatter._split_lines(self, text, width)
 
 
+def str_exc(E):
+    """Generates a string from an Exception"""
+    return "%s: %s" % (E.__class__.__name__, str(E))

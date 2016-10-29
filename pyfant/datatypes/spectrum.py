@@ -1,19 +1,15 @@
-__all__ = ["Spectrum", "FileSpectrum", "FileSpectrumPfant",
-           "FileSpectrumNulbad", "FileSpectrumXY", "FileSpectrumFits",
-            "cut_spectrum", "cut_spectrum_idxs", "normalize_spectrum"]
+__all__ = ["Spectrum"]
 
-import fortranformat as ff
-import struct
-import logging
-import numpy as np
-from .datafile import DataFile
+
 from ..misc import *
 from astropy.io import fits
-from pyfant import write_lf
-import copy
-import os
-# from scipy.interpolate import interp1d
+from astropy import units as u
 from scipy import interp
+
+
+fnu = u.erg/u.cm**2/u.s/u.Hz
+flambda = u.erg/u.cm**2/u.s/u.angstrom
+
 
 class Spectrum(object):
     """
@@ -22,6 +18,22 @@ class Spectrum(object):
     Routines that have the term *in place*: it means that the spectrum
     itself is changed and nothing is returned
     """
+
+    @property
+    def xunit(self):
+        return self.more_headers.get("X-UNIT")
+
+    @xunit.setter
+    def xunit(self, value):
+        self.more_headers["X-UNIT"] = value
+
+    @property
+    def yunit(self):
+        return self.more_headers.get("Y-UNIT")
+
+    @yunit.setter
+    def yunit(self, value):
+        self.more_headers["Y-UNIT"] = value
 
     @property
     def title(self):
@@ -59,15 +71,16 @@ class Spectrum(object):
 
     @property
     def delta_lambda(self):
-        """Should agree with self.pas"""
+        """Returns delta lambda or NaN if found not to be constant"""
         ret = self.x[1]-self.x[0]
-        if ret != self.x[-1]-self.x[-2]:
-            raise RuntimeError("Spectrum delta lambda is not constant")
+        if abs(self.x[-1]-self.x[-2]-ret) > 1e-5:
+            return float("nan")
+        return ret
 
     @property
     def pixel_x(self):
         return self.more_headers.get("PIXEL-X")
-        
+
     @pixel_x.setter
     def pixel_x(self, value):
         self.more_headers["PIXEL-X"] = value
@@ -96,13 +109,16 @@ class Spectrum(object):
     def ylabel(self, value):
         self.more_headers["YLABEL"] = value
 
+    #*****************
     def __init__(self):
         self._flag_created_by_block = False  # assertion
+        self.more_headers = {}
         self.x = None  # x-values
         self.y = None  # y-values
+        # Default units
+        self.xunit = u.angstrom
+        self.yunit = fnu
         self.filename = None
-        self.more_headers = {}  # for Spectrum, just cargo
-
 
     def __len__(self):
         """Corresponds to nulbad "ktot"."""
@@ -205,7 +221,8 @@ class Spectrum(object):
     # header parameters *not* to be put automatically in self.more_headers
     #                  saved separately  dealt with automatically by the FITS module
     #                  ----------------  ------------------------------------------------
-    _IGNORE_HEADERS = ("CRVAL", "CDELT", "NAXIS", "PCOUNT", "BITPIX", "GCOUNT", "XTENSION")
+    _IGNORE_HEADERS = ("CRVAL", "CDELT", "NAXIS", "PCOUNT", "BITPIX", "GCOUNT", "XTENSION",
+                       "XUNIT", "BUNIT")
     def from_hdu(self, hdu):
         # x/wavelength and y/flux
         n = hdu.data.shape[0]
@@ -221,6 +238,26 @@ class Spectrum(object):
         self.x = np.linspace(lambda0, lambda0 + delta_lambda * (n - 1), n)
         self.y = hdu.data
 
+        _xunit = hdu.header.get("X-UNIT")
+        if _xunit:
+            self.xunit = u.Unit(_xunit)
+        else:
+            _xunit = hdu.header.get("XUNIT")
+            if _xunit == "nm":
+                self.xunit = u.nm
+            elif _xunit == "A":
+                self.xunit = u.angstrom
+
+        _yunit = hdu.header.get("Y-UNIT")
+        if _yunit:
+            self.yunit = u.Unit(_yunit)
+        else:
+            _yunit = hdu.header.get("BUNIT")
+            if _yunit == "erg/s/cm2/Hz":
+                self.xunit = fnu
+            elif _yunit == "erg/s/cm2/A":
+                self.xunit = flambda
+
         # Additional header fields
         for name in hdu.header:
             if not name.startswith(self._IGNORE_HEADERS):
@@ -231,13 +268,37 @@ class Spectrum(object):
                 self.more_headers[name] = value
 
     def to_hdu(self):
-        """Converts to fits.PrimaryHDU object. Assumes XUNIT is "A" (angstrom)"""
+        """Converts to FITS HDU. delta_lambda must be a constant"""
+
+        if np.isnan(self.delta_lambda):
+            raise RuntimeError("Cannot encode HDU in spec '{}' because delta_lambda is not constant".format(spec))
+
         hdu = fits.PrimaryHDU()
         # hdu.header[
         #     "telescop"] = "PFANT synthetic spectrum"  # "suggested" by https://python4astronomers.github.io/astropy/fits.html
         hdu.header["CRVAL1"] = self.x[0]
-        hdu.header["CDELT1"] = self.x[1] - self.x[0]
-        hdu.header["XUNIT"] = "A"
+        hdu.header["CDELT1"] = self.delta_lambda
+
+
+        _xunit = str(self.xunit)
+        _yunit = str(self.yunit)
+        hdu.header["X-UNIT"] = _xunit
+        hdu.header["Y-UNIT"] = _yunit
+
+        # AOSS expectations
+        _xunit = "(not supported)"
+        _yunit = "(not supported)"
+        if self.xunit == u.angstrom:
+            _xunit = "A"
+        if self.xunit == u.angstrom:
+            _xunit = "nm"
+        if self.yunit == fnu:
+            _yunit = "erg/s/cm2/Hz"
+        elif self.yunit == flambda:
+            _yunit = "erg/s/cm2/A"
+        hdu.header["XUNIT"] = _xunit
+        hdu.header["BUNIT"] = _yunit
+
         for key, value in list(self.more_headers.items()):
             try:
                 # Strips line feeds eventually present in header data
@@ -261,72 +322,6 @@ class Spectrum(object):
         self.x = self.x[i0:i1]
         self.y = self.y[i0:i1]
 
-    def calculate_magnitude(self, band_name, flag_force_parametric=False, flag_force_band_range=False):
-        """
-        Calculates magnitude
-
-        **Note** Assumed unit of spectrum is erg/cm**2/s/Hz (Fnu)
-
-        Returns several variables in a dict, which may be also useful for plotting or other purposes
-        """
-
-        band = Bands.bands[band_name]
-        # band practical limits
-        band_l0, band_lf = band.range(flag_force_parametric)
-        # callable transmission function
-        band_f = band.ufunc(flag_force_parametric)
-        # Cuts spectrum if necessary
-        if self.x[0] < band_l0 or self.x[-1] > band_lf:
-            spc = copy.deepcopy(self)
-            spc.cut(band_l0, band_lf)
-        else:
-            spc = self
-        band_f_spc_x = band_f(spc.x)
-        out_y = spc.y * band_f_spc_x
-
-        # Calculates the area under the band filter
-        band_area = band.area(*([band_l0, band_lf]
-                              if flag_force_band_range else [spc.x[0], spc.x[-1]]),
-                              flag_force_parametric=flag_force_parametric)
-
-        ref_mean_flux = None
-
-        # Calculates apparent magnitude and filtered flux area
-        cmag, weighted_mean_flux, out_area = None, 0, 0
-        if band.ref_mean_flux:
-            if len(spc) > 0:
-                if flag_force_band_range:
-                    ref_mean_flux = band.ref_mean_flux
-                else:
-                    ref_mean_flux = band.ref_mean_flux*band_area/\
-                                    band.area(band_l0, band_lf, flag_force_parametric)
-
-                out_area = np.trapz(out_y, spc.x)
-                weighted_mean_flux = out_area / band_area
-                cmag = -2.5 * np.log10(weighted_mean_flux / ref_mean_flux)
-
-                # cosmetic manipulation
-                cmag = np.round(cmag, 3)
-                if cmag == 0.0:
-                    cmag = 0.0  # get rid of "-0.0"
-
-            else:
-                cmag = np.inf
-
-        return {"band_area": band_area,  # area under band filter only for the region of spc
-                "band_f": band_f,  # transmission function
-                "band_f_spc_x": band_f_spc_x,  # transmission function evaluated over spc.x
-                "band_l0": band_l0,  # l0 as in [l0, lf], band range considered
-                "band_lf": band_lf,  # lf as in [l0, lf], band range considered
-                "ref_mean_flux": ref_mean_flux,  # mean flux for which magnitude is zero
-                "spc": spc,  # spectrum cut to l0, lf, used in calculations
-                "cmag": cmag,  # calculated magnitude
-                "weighted_mean_flux": weighted_mean_flux,  # weighted-average flux where the weights are the transmission function
-                "out_y": out_y,  # spc with flux multiplied by transmission function
-                "out_area": out_area,  # area under out_y
-                }
-
-
     def resample(self, new_wavelength, kind='linear'):
         """Resamples *in-place* to new wavelength vector using interpolation
 
@@ -339,309 +334,41 @@ class Spectrum(object):
         self.wavelength = new_wavelength
 
 
-    def flambda_to_fnu(self):
-        """
-        Flux-nu to flux-lambda conversion **in-place**
-
-        Formula:
-            f_nu = f_lambda*(lambda/nu) = f_lambda*lambda**2/c
-
-            where
-                lambda is the wavelength in cm,
-                c is the speed of light in cm/s
-                f_lambda has irrelevant unit for this purpose
-
-        **Note** By convention in this library, Spectrum wavelength is always in angstrom
-        """
-
-        x_cm = self.x*1e-8
-        self.y *= 1./(1e-8 * C) * x_cm ** 2
-
-    def fnu_to_flambda(self):
-        """
-
-        **in-place** flux-lambda to flux-nu conversion
-
-        Converts flux from erg/s/cm**2/Hz
-                        to erg/s/cm**2/angstrom
-        Formula:
-            f_lambda = f_nu*(nu/lambda) = f_nu*c/lambda**2
-
-            (terms description are the same as in flambda_to_fnu())
-        """
-
-        x_cm = self.x * 1e-8  # angstrom -to cm
-        #    y * C/x_cm ** 2  would be in erg/s/cm**2/cm
-        # 1e-8 * C/x_cm ** 2        is in erg/s/cm**2/angstrom
-        self.y *= 1e-8 * C/x_cm ** 2
-
-
-class FileSpectrum(DataFile):
-    attrs = ['spectrum']
-
-    def __init__(self):
-        DataFile.__init__(self)
-        self.spectrum = Spectrum()
-
-    def load(self, filename=None):
-        """Method was overriden to set spectrum.filename as well"""
-        DataFile.load(self, filename)
-        self.spectrum.filename = filename
-
-
-class FileSpectrumPfant(FileSpectrum):
-    """
-    PFANT Spectrum (`pfant` output)
-
-    This file alternates a "header" line where most of the information is
-    repeated, and a "values" line, with the values of the flux
-    corresponding to the lambda interval lzero-lfin
-    """
-
-    default_filename = "flux.norm"
-
-    def __init__(self):
-        FileSpectrum.__init__(self)
-
-        self.ikeytot = None
-        self.tit = None
-        self.tetaef = None
-        self.glog = None
-        self.asalog = None
-        self.modeles_nhe = None
-        self.amg = None
-        self.l0 = None
-        self.lf = None
-        self.pas = None
-        self.echx = None
-        self.echy = None
-        self.fwhm = None
-
-    def _do_load(self, filename):
-        with open(filename, 'r') as h:
-            f_header = ff.FortranRecordReader(
-                "(i5, a20, 5f15.5, 4f10.1, i10, 4f15.5)")
-            i = 0
-            y = []
-            sp = self.spectrum = Spectrum()
-
-            while True:
-                s = h.readline()
-                if i == 0:
-                    vars_ = f_header.read(s)  # This is actually quite slow, gotta avoid it
-                    [self.ikeytot,
-                     self.tit,
-                     self.tetaef,
-                     self.glog,
-                     self.asalog,
-                     self.modeles_nhe,
-                     self.amg,
-                     self.l0,
-                     self.lf,
-                     _,  # lzero,
-                     _,  # lfin,
-                     _,  # itot
-                     self.pas,
-                     self.echx,
-                     self.echy,
-                     self.fwhm] = vars_
-
-
-                #itot = vars[11]
-
-                # if False:
-                # # Will have to compile a different formatter depending on itot
-                #     if i == 0 or itot != last_itot:
-                #       f_flux = ff.FortranRecordReader("(%df15.5)" % itot)
-                #
-                #     v = f_flux.read(h.readline())
-                # else:
-                # Will see if can read faster than Fortran formatter
-                s = h.readline()
-
-                # Note: last character of s is "\n"
-                v = [float(s[0 + j:15 + j]) for j in range(0, len(s) - 1, 15)]
-
-                # print len(v)
-                # print "==========================="
-                # print v
-                # print i, self.ikeytot
-
-                if i < self.ikeytot - 1:
-                    # Last point is discarded because pfant writes reduntantly:
-                    # last point of iteration ikey is the same as first point of
-                    # iteration ikey+1
-                    # y = y + v  # update: taking all points calculated yes [:-1]
-                    y = y + v[:-1]
-                else:
-                    # ...except for in the last calculation interval
-                    # (then the last point is used).
-                    y = y + v
-                    break
-
-                i += 1
-
-                #last_itot = itot
-
-        # Lambdas
-        sp.x = np.array([self.l0 + k * self.pas for k in range(0, len(y))])
-        sp.y = np.array(y)
-
-#        logging.debug("Just read PFANT Spectrum '%s'" % filename)
-
-
-class FileSpectrumNulbad(FileSpectrum):
-    """
-    PFANT Spectrum (`nulbad` output)
-
-    This file alternates a "header" line where most of the information is
-    repeated, and a "values" line, with the values of the flux
-    corresponding to the lambda interval lzero-lfin
-    """
-
-    def _do_load(self, filename):
-        x = []
-        y = []
-        with open(filename, 'r') as h:
-            sp = self.spectrum = Spectrum()
-            # -- row 01 --
-            # Original format: ('#',A,'Tef=',F6.3,X,'log g=',F4.1,X,'[M/H]=',F5.2,X,F5.2)
-            s_header0 = struct.Struct("1x 20s 4x 6s 7x 4s 7x 5s 1x 5s")
-            s = h.readline()
-            [sp.tit, sp.tetaef, sp.glog, sp.asalog, sp.amg] = \
-                s_header0.unpack_from(s)
-            [sp.tetaef, sp.glog, sp.asalog, sp.amg] = \
-                list(map(float, [sp.tetaef, sp.glog, sp.asalog, sp.amg]))
-
-            # -- row 02 --
-            # Original format: ('#',I6,2X,'0. 0. 1. 1. Lzero =',F10.2,2x,'Lfin =', &
-            # F10.2,2X,'PAS =',F5.2,2x,'FWHM =',F5.2)
-            s_header1 = struct.Struct("1x 6s 21x 10s 8x 10s 7x 5s 8x 5s")
-            s = h.readline()
-
-            [_, sp.l0, sp.lf, sp.pas, sp.fwhm] = \
-                s_header1.unpack_from(s)
-            [sp.l0, sp.lf, sp.pas, sp.fwhm] = \
-                list(map(float, [sp.l0, sp.lf, sp.pas, sp.fwhm]))
-            #n = int(n)
-
-
-            # -- rows 03 ... --
-            #
-            # Examples:
-            #    4790.0000000000000       0.99463000000000001
-            #    4790.0400000000000        2.0321771294932130E-004
-
-            # pattern = re.compile(r"^\s+([0-9.E+-]+)\s+([0-9.E+-]+)")
-            while True:
-                s = h.readline().strip()
-                if not s:
-                  break
-
-                a, b = [float(z) for z in s.split()]
-                # if match is None:
-                #     raise ParseError('Row %d of file %s is invalid' % (i + 3, filename))
-                # a, b = map(float, match.groups())
-
-                x.append(a)
-                y.append(b)
-
-        sp.x = np.array(x)
-        sp.y = np.array(y)
-
-#        logging.debug("Just read NULBAD Spectrum '%s'" % filename)
-
-
-class FileSpectrumXY(FileSpectrum):
-    """
-    "Lambda-flux" Spectrum (2-column text file)
-
-    File may have comment lines; these will be ignored altogether, because the file
-    is read with numpy.loadtxt()
-    """
-
-    def _do_load(self, filename):
-        A = np.loadtxt(filename)
-        if len(A.shape) < 2:
-            raise RuntimeError("File %s does not contain 2D array" % filename)
-        if A.shape[1] < 2:
-            raise RuntimeError("File %s must contain at least two columns" % filename)
-        if A.shape[1] > 2:
-            logging.warning("File %s has more than two columns, taking only first and second" % filename)
-        sp = self.spectrum = Spectrum()
-        sp.x = A[:, 0]
-        sp.y = A[:, 1]
-#        logging.debug("Just read XY Spectrum '%s'" % filename)
-
-
-    def _do_save_as(self, filename):
-        with open(filename, "w") as h:
-            for x, y in zip(self.spectrum.x, self.spectrum.y):
-                write_lf(h, "%.10g %.10g" % (x, y))
-
-
-class FileSpectrumFits(FileSpectrum):
-    """FITS Spectrum"""
-
-    def _do_load(self, filename):
-        fits_obj = fits.open(filename)
-        # fits_obj.info()
-        hdu = fits_obj[0]
-        sp = self.spectrum = Spectrum()
-        sp.from_hdu(hdu)
-
-    def _do_save_as(self, filename):
-        """Saves spectrum back to FITS file."""
-
-        if len(self.spectrum.x) < 2:
-            raise RuntimeError("Spectrum must have at least two points")
-        if os.path.isfile(filename):
-            os.unlink(filename)  # PyFITS does not overwrite file
-
-        hdu = self.spectrum.to_hdu()
-        overwrite_fits(hdu, filename)
-
-
-
-
-########################################################################################################################
-# Pipeline routines -- spectrum manipulation
-#
-# **IMPORTANT** all functions here must make copies of original data.
-# dest.wavelength = source.wavelength.copy()  <--- correct
-# dest.wavelength = source.wavelength  <--- *WRONG*
-
-def cut_spectrum(sp, lambda0, lambda1):
-    """Cuts spectrum to interval [lambda0, lambda1]. Returns new"""
-    assert isinstance(sp, Spectrum), "sp argument must be a Spectrum!"
-    assert lambda0 <= lambda1
-    idx0 = np.argmin(np.abs(sp.x-lambda0))
-    idx1 = np.argmin(np.abs(sp.x-lambda1))
-    return cut_spectrum_idxs(sp, idx0, idx1)
-
-
-def cut_spectrum_idxs(sp, idx0, idx1):
-    """Cuts spectrum using index interval. Returns new"""
-    ret = copy.deepcopy(sp)
-    ret.x = ret.x[idx0:idx1]
-    ret.y = sp.y[idx0:idx1].copy()
-    return ret
-
-def normalize_spectrum(sp, method="01"):
-    """
-    Normalizes spectrum according to specified method. Returns new
-
-    Arguments:
-      method="01" -- Normalization method:
-        "01": normalizes between 0 and 1
-    """
-
-    ret = copy.deepcopy(sp)
-    if method == "01":
-        miny, maxy = np.min(ret.y), np.max(ret.y)
-        if miny == maxy:
-            raise RuntimeError("Cannot normalize, y-span is ZERO")
-        ret.y = (ret.y-miny)/(maxy-miny)
-    else:
-        raise RuntimeError("Invalid method: '%s'" % method)
-    return ret
+    def convert_x(self, new_unit):
+        """Converts x-axis to new unit"""
+
+    # def flambda_to_fnu(self):
+    #     """
+    #     Flux-nu to flux-lambda conversion **in-place**
+    #
+    #     Formula:
+    #         f_nu = f_lambda*(lambda/nu) = f_lambda*lambda**2/c
+    #
+    #         where
+    #             lambda is the wavelength in cm,
+    #             c is the speed of light in cm/s
+    #             f_lambda has irrelevant unit for this purpose
+    #
+    #     **Note** By convention in this library, Spectrum wavelength is always in angstrom
+    #     """
+    #
+    #     x_cm = self.x*1e-8
+    #     self.y *= 1./(1e-8 * C) * x_cm ** 2
+    #
+    # def fnu_to_flambda(self):
+    #     """
+    #
+    #     **in-place** flux-lambda to flux-nu conversion
+    #
+    #     Converts flux from erg/s/cm**2/Hz
+    #                     to erg/s/cm**2/angstrom
+    #     Formula:
+    #         f_lambda = f_nu*(nu/lambda) = f_nu*c/lambda**2
+    #
+    #         (terms description are the same as in flambda_to_fnu())
+    #     """
+    #
+    #     x_cm = self.x * 1e-8  # angstrom -to cm
+    #     #    y * C/x_cm ** 2  would be in erg/s/cm**2/cm
+    #     # 1e-8 * C/x_cm ** 2        is in erg/s/cm**2/angstrom
+    #     self.y *= 1e-8 * C/x_cm ** 2

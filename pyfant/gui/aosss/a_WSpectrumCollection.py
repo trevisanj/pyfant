@@ -13,7 +13,7 @@ from .basewindows import *
 from .a_XScaleSpectrum import *
 from ..a_WCollapsiblePanel import *
 from pyfant import *
-
+from astropy import units as u
 
 class WSpectrumCollection(WBase):
     """Editor for SpectrumCollection objects"""
@@ -35,14 +35,7 @@ class WSpectrumCollection(WBase):
         self.collection = None # SpectrumCollection
 
 
-
-
-
-
-
-
         # # Creates actions
-
 
         action = self.action_add_spectra = QAction(get_pyfant_icon("list-add"), "&Add spectra...", self)
         action.setToolTip("Opens a 'Open File' window where multiple files can be selected.\n"
@@ -415,7 +408,7 @@ class WSpectrumCollection(WBase):
         # It sth fails, will restore original
         save = copy.deepcopy(self.collection)
         try:
-            grouper = blocks.slb.Group(form.block, form.group_by)
+            grouper = blocks.slb.SLB_UseGroupBlock(form.block, form.group_by)
             self.collection = grouper.use(self.collection)
             self.__update_gui()
             flag_emit = True
@@ -515,7 +508,7 @@ class WSpectrumCollection(WBase):
                 with open(str(new_filename), "w") as file:
                     file.writelines(lines)
             except Exception as E:
-                msg = str("Error exporting text file: %s" % self.str_exc(E))
+                msg = str("Error exporting text file: %s" % str_exc(E))
                 self.add_log_error(msg, True)
                 raise
 
@@ -578,6 +571,7 @@ class WSpectrumCollection(WBase):
             text = None
             item = self.twSpectra.item(row, column)
             name = self.__get_tw_header(column)
+            self.flag_process_changes = False
             try:
                 value = str(item.text())
                 # Tries to convert to float, otherwise stores as string
@@ -590,12 +584,11 @@ class WSpectrumCollection(WBase):
                 if name in ("PIXEL-X", "PIXEL-Y", "Z-START"):
                     value = int(value)
 
+                # Units must be a valid astropy.Unit() argument
+                if name in ("X-UNIT", "Y-UNIT"):
+                    value = u.Unit(value)
 
                 spectrum_index = self.row_index_to_spectrum_index(row)
-
-                print("OOOOOOOOOOOOOOOOOOOOOOOOOOOOLHA")
-                print("header", name, "era", self.collection.spectra[spectrum_index].more_headers[name])
-                print("vai ficar", value)
 
                 self.collection.spectra[spectrum_index].more_headers[name] = value
 
@@ -606,8 +599,11 @@ class WSpectrumCollection(WBase):
             except Exception as E:
                 # restores original value
                 item.setText(str(self.collection.spectra[row].more_headers.get(name)))
-                self.add_log_error(self.str_exc(E), True)
+                self.add_log_error(str_exc(E), True)
                 raise
+
+            finally:
+                self.flag_process_changes = True
 
             if flag_emit:
                 self.edited.emit(False)
@@ -643,7 +639,7 @@ class WSpectrumCollection(WBase):
                 successful.append("  - %s" % basename)
             except Exception as e:
                 failed.append('&nbsp;&nbsp;- %s: %s' % (basename, str(e)))
-                self.add_log_error("Error adding file '%s': %s" % (basename, self.str_exc(e)))
+                self.add_log_error("Error adding file '%s': %s" % (basename, str_exc(e)))
 
         if len(successful) > 0:
             report.extend(["", "Successful:"])
@@ -675,7 +671,7 @@ class WSpectrumCollection(WBase):
     #             self.__update_gui()
     #             flag_emit = True
     #     except Exception as E:
-    #         msg = "Error merging: %s" % self.str_exc(E)
+    #         msg = "Error merging: %s" % str_exc(E)
     #         self.add_log_error(msg, True)
     #         raise
     #

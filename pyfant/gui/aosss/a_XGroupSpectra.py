@@ -9,7 +9,7 @@ from .a_XHelpDialog import *
 
 class XGroupSpectra(XHelpDialog):
     """
-    Edit Parameters group.py a SpectrumList
+    Edit Parameters gb.py a SpectrumList
 
     Relevant attributes (set on close):
       self.block -- None or GroupBlock instance
@@ -28,11 +28,11 @@ class XGroupSpectra(XHelpDialog):
 
         self.labelHelpTopics.setText("&Available operations")
 
-        self.help_data = collect_doc(blocks.group, base_class=blocks.base.GroupBlock)
+        self.help_data = collect_doc(blocks.gb, base_class=blocks.base.GroupBlock)
         self.comboBox.addItems([x[0] for x in self.help_data])
         ###
         label = QLabel(enc_name_descr("O&peration", "See help below"))
-        edit = self.editFunction = QLineEdit("UseNumPyFunc(np.mean)")
+        edit = self.editFunction = QLineEdit("GB_UseNumPyFunc(np.mean)")
         label.setBuddy(edit)
         self.grid.addWidget(label, 0, 0)
         self.grid.addWidget(edit, 0, 1)
@@ -48,7 +48,7 @@ class XGroupSpectra(XHelpDialog):
     def accept(self):
         try:
             expr = str(self.editFunction.text())
-            symbols_available = module_to_dict(blocks.group)
+            symbols_available = module_to_dict(blocks.gb)
             import numpy
             symbols_available["np"] = numpy
             block = eval(expr.strip(), {}, symbols_available)
@@ -64,6 +64,6 @@ class XGroupSpectra(XHelpDialog):
 
             return QDialog.accept(self)
         except Exception as e:
-            self.add_log_error(self.str_exc(e), True)
+            self.add_log_error(str_exc(e), True)
             return False
 

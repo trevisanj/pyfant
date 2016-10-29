@@ -2,6 +2,7 @@
 Routines used by plot-spectra.py
 """
 from pyfant import *
+import pyfant as pf
 import matplotlib.pyplot as plt
 import math
 import matplotlib.backends.backend_pdf
@@ -57,12 +58,25 @@ def plot_spectra_overlapped(ss, title=None, ymin=None):
     xmin = 1e38
     xmax = -1e38
     for i, s in enumerate(ss):
-        assert isinstance(s, Spectrum)
+        if xunit is None:
+            xunit = s.xunit
+        else:
+            if xunit != s.xunit:
+                raise RuntimeError("Spectra x-units do not match")
+
+        if yunit is None:
+            yunit = s.yunit
+        else:
+            if yunit != s.yunit:
+                raise RuntimeError("Spectra x-units do not match")
+
         ax = plt.gca()
         y = s.y
         ax.plot(s.x, y, label=str(s.title))
 
-    plt.xlabel('Wavelength ($\AA$)')
+
+    plt.xlabel('Wavelength ({})'.format(xunit))
+    plt.ylabel('({})'.format(yunit))
     xmin, xmax, ymin_, ymax, xspan, yspan = _calc_max_min(ss)
     if ymin is None:
         ymin = ymin_
@@ -110,7 +124,7 @@ def plot_spectra_pieces_pdf(ss, aint=10, pdf_filename='pieces.pdf', ymin=None):
         lambda1 = lambda0+aint
         logger.info("Printing page %d/%d ([%g, %g])" % (h+1, num_pages, lambda0, lambda1))
         for i, s in enumerate(ss):
-            s_cut = cut_spectrum(s, lambda0, lambda1)
+            s_cut = pf.SB_Cut(lambda0, lambda1).use(s)
             ax = plt.gca()
             ax.plot(s_cut.x, s_cut.y, label=s.title)
         plt.xlabel('Wavelength (interval: [%g, %g])' % (lambda0, lambda1))
@@ -151,7 +165,8 @@ def plot_spectra_pages_pdf(ss, pdf_filename='pages.pdf', ymin=None):
         title = s.title
         fig = plt.figure()
         plt.plot(s.x, s.y, c=_FAV_COLOR)
-        plt.xlabel('Wavelength')
+        plt.xlabel('Wavelength ({})'.format(s.xunit))
+        plt.xlabel('({})'.format(s.yunit))
         plt.title(title)
         plt.xlim([xmin-xspan*_T, xmax+xspan*_T])
         plt.ylim([ymin-yspan*_T, ymax+yspan*_T])
@@ -196,6 +211,7 @@ def draw_spectra(ss, title=None, ymin=None, num_rows=None):
     xmin = 1e38
     xmax = -1e38
     i, j = -1, num_cols
+    xunit, yunit = None, None
     for s in ss:
         j += 1
         if j >= num_cols:
@@ -209,17 +225,32 @@ def draw_spectra(ss, title=None, ymin=None, num_rows=None):
         ax.plot(s.x, y)
         ymin_, ymax = ax.get_ylim()
         ymin_now = ymin_ if ymin is None else ymin
-        ax.set_ylim([ymin_now, ymin_now + (ymax - ymin_now) * (
-        1 + _T)])  # prevents top of line from being hidden by plot box
+        ax.set_ylim([ymin_now, ymin_now + (ymax - ymin_now) * (1 + _T)])  # prevents top of line from being hidden by plot box
+
+        title = "({})".format(s.yunit)
         if s.title is not None:
-            ax.set_ylabel(s.title)
+            title = "{} {}".format(s.title, title)
+        ax.set_ylabel(title)
 
         xmin, xmax = min(min(s.x), xmin), max(max(s.x), xmax)
+
+        if xunit is None:
+            xunit = s.xunit
+        else:
+            if xunit != s.xunit:
+                raise RuntimeError("Spectra x-units do not match")
+
+        if yunit is None:
+            yunit = s.yunit
+        else:
+            if yunit != s.yunit:
+                raise RuntimeError("Spectra x-units do not match")
+
     span = xmax - xmin
     ax.set_xlim([xmin - span * _T, xmax + span * _T])
     for j in range(num_cols):
         ax = axarr[num_rows - 1, j]
-        ax.set_xlabel('Wavelength ($\AA$)')
+        ax.set_xlabel('Wavelength ({})'.format(xunit))
     plt.tight_layout()
     if title is not None:
         fig.canvas.set_window_title(title)

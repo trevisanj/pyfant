@@ -276,9 +276,9 @@ class VisSpectrum(Vis):
         ymi, yma = ax.get_ylim()
         ax.set_ylim([ymi, ymi + (yma - ymi) * (1 + T)])  # prevents top of line from being hidden by plot box
         # ax.set_ylabel(s.filename)
-        ax.set_ylabel("Flux (a.u.)")
+        ax.set_ylabel("Flux ({})".format(s.yunit))
         mi, ma = min(s.x), max(s.x)
-        ax.set_xlabel('Wavelength ($\AA$)')
+        ax.set_xlabel('Wavelength ({})'.format(s.xunit))
         span = ma - mi
         ax.set_xlim([mi - span * T, ma + span * T])
         if self.title is not None:

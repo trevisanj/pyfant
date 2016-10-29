@@ -288,9 +288,9 @@ class WFileSpectrumList(WBase):
         except Exception as E:
             flag_error = True
             if ss:
-                emsg = "Field '%s': %s" % (ss, self.str_exc(E))
+                emsg = "Field '%s': %s" % (ss, str_exc(E))
             else:
-                emsg = self.str_exc(E)
+                emsg = str_exc(E)
             self.add_log_error(emsg)
         if flag_emit:
             self.__emit_if()
@@ -335,7 +335,7 @@ class WFileSpectrumList(WBase):
             self.__update_gui()
             flag_emit = True
         except Exception as E:
-            self.add_log_error(self.str_exc(E), True)
+            self.add_log_error(str_exc(E), True)
             raise
         if flag_emit:
             self.edited.emit()
@@ -370,7 +370,7 @@ class WFileSpectrumList(WBase):
                     s = "wavelength_range"
                     lambda0, lambda1 = eval(kk["wavelength_range"])
                 except Exception as E:
-                    self.add_log_error("Failed evaluating %s: %s" % (s, self.str_exc(E)), True)
+                    self.add_log_error("Failed evaluating %s: %s" % (s, str_exc(E)), True)
                     continue
 
                 # Works with clone, then replaces original, to ensure atomic operation
@@ -379,14 +379,14 @@ class WFileSpectrumList(WBase):
                 try:
                     clone.splist.crop(lambda0, lambda1)
                 except Exception as E:
-                    self.add_log_error("Crop operation failed: %s" % self.str_exc(E), True)
+                    self.add_log_error("Crop operation failed: %s" % str_exc(E), True)
                     continue
 
                 self.__new_window(clone)
                 break
 
         except Exception as E:
-            self.add_log_error("Crop failed: %s" % self.str_exc(E), True)
+            self.add_log_error("Crop failed: %s" % str_exc(E), True)
             raise
 
     def rubberband_clicked(self):
@@ -406,7 +406,7 @@ class WFileSpectrumList(WBase):
     #     self.__use_slblock(MergeDown(np.std))
     #
     # def snr_clicked(self):
-    #     self.__use_slblock(SNR())
+    #     self.__use_slblock(GB_SNR())
 
     def on_collect_fieldnames(self):
         # TODO confirmation

@@ -115,4 +115,4 @@ class XPlotXY(XLogMainWindow):
             self.canvas.draw()
 
         except Exception as e:
-            self.add_log_error("Could draw figure: "+self.str_exc(e), True)
+            self.add_log_error("Could draw figure: "+str_exc(e), True)

@@ -1,4 +1,4 @@
-__all__ = ["UseSpectrumBlock", "ExtractContinua"]
+__all__ = ["SLB_UseSpectrumBlock", "SLB_ExtractContinua"]
 
 import numpy as np
 from pyfant import *
@@ -7,10 +7,9 @@ import copy
 from .base import *
 from . import sb
 import pyfant
-# from .mergedown import UseNumPyFunc
 
 
-class UseSpectrumBlock(SpectrumListBlock):
+class SLB_UseSpectrumBlock(SpectrumListBlock):
     """Calls sblock.use() for each individual spectrum"""
 
     def __init__(self, sblock=None):
@@ -24,34 +23,34 @@ class UseSpectrumBlock(SpectrumListBlock):
         return output
 
 
-class ExtractContinua(SpectrumListBlock):
+class SLB_ExtractContinua(SpectrumListBlock):
     """Calculates upper envelopes and subtracts mean(noise std)"""
 
     # TODO this is not a great system. Just de-noising could substantially improve the extracted continua
 
     def _do_use(self, inp):
-        output = UseSpectrumBlock(sb.Rubberband(flag_upper=True)).use(inp)
-        spectrum_std = pyfant.blocks.group.UseNumPyFunc(func=np.std).use(inp)
+        output = SLB_UseSpectrumBlock(sb.SB_Rubberband(flag_upper=True)).use(inp)
+        spectrum_std = pyfant.blocks.gb.GB_UseNumPyFunc(func=np.std).use(inp)
         mean_std = np.mean(spectrum_std.spectra[0].y)
         for spectrum in output.spectra:
             spectrum.y -= mean_std * 3
         return output
 
 
-class Group(SpectrumListBlock):
+class SLB_UseGroupBlock(SpectrumListBlock):
     """
     "Group by" operation using a GroupBlock
 
     Arguments:
         expr -- expression which will be eval()'ed with expected result to be a GroupBlock
-                Example: "SNR()"
+                Example: "GB_SNR()"
 
                 TODO I should not eval here, the argument should be the block itself
 
         group_by -- sequence of spectrum "more_headers" fieldnames.
-                    If not passed, will treat the whole SpectrumCollection as a single group.py.
+                    If not passed, will treat the whole SpectrumCollection as a single gb.py.
                     If passed, will split the collection in groups and perform the "merge down" operations separately
-                    for each group.py
+                    for each gb.py
 
     Returns: (SpectrumCollection containing query result, list of error strings)
     """
@@ -85,13 +84,13 @@ class Group(SpectrumListBlock):
                 groups.append(group)
 
             out = self._new_output()
-            out.fieldnames = self.group_by  # new SpectrumList will have the group.py field names
+            out.fieldnames = self.group_by  # new SpectrumList will have the gb.py field names
 
-            # Uses block in each group.py
+            # Uses block in each gb.py
             for group in groups:
                 splist = self.block.use(group)
 
-                # copies "group.py by" fields from first input spectrum to output spectrum
+                # copies "gb.py by" fields from first input spectrum to output spectrum
                 sp = splist.spectra[0]
                 for fieldname in self.group_by:
                     sp.more_headers[fieldname] = group.spectra[0].more_headers[fieldname]
