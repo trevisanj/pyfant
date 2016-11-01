@@ -57,6 +57,7 @@ def plot_spectra_overlapped(ss, title=None, ymin=None):
 
     xmin = 1e38
     xmax = -1e38
+    xunit, yunit = None, None
     for i, s in enumerate(ss):
         if xunit is None:
             xunit = s.xunit

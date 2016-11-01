@@ -1,5 +1,5 @@
 __all__ = ["SB_Rubberband", "SB_AddNoise", "SB_FnuToFlambda", "SB_FLambdaToFNu", "SB_ElementWise",
-           "SB_Extend", "SB_Cut", "SB_Normalize"]
+           "SB_Extend", "SB_Cut", "SB_Normalize", "SB_ConvertYUnit", "SB_Add", "SB_Mul"]
 
 
 import numpy as np
@@ -8,6 +8,7 @@ import pyfant
 # from pyfant.datatypes.filesplist import SpectrumList
 import copy
 from .base import SpectrumBlock
+import astropy.units as u
 
 class SB_Rubberband(SpectrumBlock):
     """
@@ -219,7 +220,7 @@ class SB_Cut(SpectrumBlock):
 
     def __init__(self, l0, lf):
         SpectrumBlock.__init__(self)
-        if self.l0 >= self.lf:
+        if l0 >= lf:
             raise ValueError("l0 must be lower than lf")
         self.l0 = l0
         self.lf = lf
@@ -229,7 +230,7 @@ class SB_Cut(SpectrumBlock):
 
     def _do_use(self, inp):
         idx0 = np.argmin(np.abs(inp.x - self.l0))
-        idx1 = np.argmin(np.abs(sp.x - self.lf))
+        idx1 = np.argmin(np.abs(inp.x - self.lf))
         out = self._copy_input(inp)
         out.x = out.x[idx0:idx1]
         out.y = out.y[idx0:idx1]
@@ -246,7 +247,7 @@ class SB_Normalize(SpectrumBlock):
     """
 
     def __init__(self, method="01"):
-        SpectrumBlock.__init__(self, method="01")
+        SpectrumBlock.__init__(self)
         choices = ["01",]
         if not method in choices:
             raise ValueError("Invalid normalization method; choices: %s" % str(choices))
@@ -256,14 +257,103 @@ class SB_Normalize(SpectrumBlock):
         return "SB_Normalize('{}')".format(self.method)
 
     def _do_use(self, inp):
-        idx0 = np.argmin(np.abs(inp.x - self.l0))
-        idx1 = np.argmin(np.abs(sp.x - self.lf))
         out = self._copy_input(inp)
-        out.x = out.x[idx0:idx1]
-        out.y = out.y[idx0:idx1]
         if self.method == "01":
             miny, maxy = np.min(out.y), np.max(out.y)
             if miny == maxy:
                 raise RuntimeError("Cannot normalize, y-span is ZERO")
             out.y = (out.y - miny) / (maxy - miny)
         return out
+
+
+# # Temporarily suspended (changing x-axis has implications in SpectrumList.wavelength vector
+#
+# class SB_ConvertXUnit(SpectrumBlock):
+#     """
+#     Converts x-axis unit
+#
+#     Arguments:
+#         new_unit -- astropy.units.unit or str
+#     """
+#
+#     def __init__(self, new_unit):
+#         SpectrumBlock.__init__(self)
+#         self.unit = u.Unit(new_unit)
+#
+#     def __repr__(self):
+#         return "{}({})".format(self.__class__.__name__, repr(self.unit))
+#
+#     def _do_use(self, inp):
+#         qty = inp.x * inp.xunit
+#         out = self._copy_input(inp)
+#         out.x = qty.to(self.unit).value
+#         out.unit = copy.deepcopy(self.unit)
+#         return out
+
+
+class SB_ConvertYUnit(SpectrumBlock):
+    """
+    Converts y-axis unit
+
+    Arguments:
+        new_unit -- astropy.units.unit or str
+    """
+
+    def __init__(self, new_unit):
+        SpectrumBlock.__init__(self)
+        self.unit = u.Unit(new_unit)
+
+    def __repr__(self):
+        return "{}({})".format(self.__class__.__name__, repr(self.unit))
+
+    def _do_use(self, inp):
+        # qty = inp.y * inp.yunit
+        out = self._copy_input(inp)
+        out.y = out.yunit.to(self.unit, out.y, equivalencies=u.spectral_density(out.xunit, out.x))
+        out.unit = copy.deepcopy(self.unit)
+        return out
+
+
+class SB_Mul(SpectrumBlock):
+    """
+    Multiplies y-values by constant value
+
+    Arguments:
+        value
+    """
+
+    def __init__(self, value=1.):
+        SpectrumBlock.__init__(self)
+        self.value = value
+
+    def __repr__(self):
+        return "{}({})".format(self.__class__.__name__, repr(self.value))
+
+    def _do_use(self, inp):
+        # qty = inp.y * inp.yunit
+        out = self._copy_input(inp)
+        out.y *= self.value
+        return out
+
+
+class SB_Add(SpectrumBlock):
+    """
+    Adds constant value to y-values
+
+    Arguments:
+        value
+    """
+
+    def __init__(self, value=0.):
+        SpectrumBlock.__init__(self)
+        self.value = value
+
+    def __repr__(self):
+        return "{}({})".format(self.__class__.__name__, repr(self.value))
+
+    def _do_use(self, inp):
+        out = self._copy_input(inp)
+        out.y += self.value
+        return out
+
+

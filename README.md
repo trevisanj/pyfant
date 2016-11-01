@@ -64,10 +64,11 @@ installed on your system.
   - PyQt4        
   - fortranformat
   - astropy      
+  - configobj
 
 Possible way to install on Debian-based Linux:
 ```shell
-sudo apt-get install python3-matplotlib python3-scipy python3-pyqt4 python3-astropy python3-pip
+sudo apt-get install python3-matplotlib python3-scipy python3-pyqt4 python3-astropy python3-pip python3-configobj
 sudo pip3 install fortranformat
 ```
 

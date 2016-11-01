@@ -1,6 +1,6 @@
 __all__ = ["MAGNITUDE_BASE", "STDFLUX", "calculate_magnitude", "get_vega_spectrum",
            "Bandpass", "UBVTabulated", "UBVParametric", "ufunc_gauss", "get_ubv_bandpasses",
-           "get_zero_flux", "calculate_magnitude_scalar"]
+           "get_zero_flux", "calculate_magnitude_scalar", "mag_to_flux", "get_bandpass"]
 
 
 import numpy as np
@@ -51,7 +51,7 @@ def calculate_magnitude(sp, bp, system="stdflux", zero_point=0., flag_force_band
     Returns: a dictionary with "cmag": calculated magnitude, and many intermediary steps
     """
 
-    bp = __get_bandpass(bp)
+    bp = get_bandpass(bp)
 
     # # Determines areas
     filtered_sp = sp * bp
@@ -111,7 +111,7 @@ def get_zero_flux(bp, system="stdflux"):
     Returns: float
     """
 
-    bp = __get_bandpass(bp)
+    bp = get_bandpass(bp)
 
     if system == "stdflux":
         zero_flux = STDFLUX[bp.name]
@@ -126,7 +126,13 @@ def get_zero_flux(bp, system="stdflux"):
     return zero_flux
 
 
-def __get_bandpass(bp):
+def mag_to_flux(mag, bp, system="stdflux"):
+    """Inverse of calculate_magnitude_scalar()"""
+    zero_flux = get_zero_flux(bp, system)
+    return zero_flux*10**(-.4*mag)
+
+
+def get_bandpass(bp):
     if isinstance(bp, Bandpass):
         pass
     elif isinstance(bp, str):

@@ -751,8 +751,9 @@ class WOptionsEditor(QWidget):
                 self.f.__setattr__(option.name, value)
 
             ss = ""
-            if self.f.llzero >= self.f.llfin:
-                "llzero must be lower than llfin"
+            if self.f.llzero is not None and self.f.llfin is not None:
+                if self.f.llzero >= self.f.llfin:
+                    raise RuntimeError("llzero must be lower than llfin")
 
         except Exception as E:
             flag_error = True
@@ -760,7 +761,8 @@ class WOptionsEditor(QWidget):
                 emsg = "Option <em>--%s</em>: %s" % (ss, str(E))
             else:
                 emsg = str(E)
-            # emsg = "<b>Invalid</b>: "+emsg
+            get_python_logger().exception("Updating Options object")
+
         self.flag_valid = not flag_error
         self.__set_error_text(emsg)
 

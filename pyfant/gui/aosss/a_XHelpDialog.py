@@ -95,7 +95,6 @@ class XHelpDialog(XLogDialog):
         # self.textEdit.setText("<h1>%s</h1>%s\n" % (self.help_data[idx][0], self.help_data[idx][1].replace("\n", "<br>")))
 
 
-        self.textEdit.setText("<h1>%s</h1><pre>%s</pre>\n" % (
-            self.help_data[idx][0], self.help_data[idx][1]))
+        self.textEdit.setText("<h3>{}{}</h3><pre>{}</pre>\n".format(*self.help_data[idx]))
 
 

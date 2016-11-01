@@ -9,6 +9,7 @@ from . import sb
 from . import slb
 
 from .base import *
+from .sb import *
 from .gb import *
 from .toscalar import *
 from .slb import *

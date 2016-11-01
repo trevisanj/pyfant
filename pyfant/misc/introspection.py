@@ -5,6 +5,7 @@ import os
 import glob
 import imp
 import textwrap
+import inspect
 
 
 # # Introspection-like routines
@@ -128,7 +129,7 @@ def collect_doc(module, base_class=None, prefix="", flag_exclude_prefix=False):
         base_class -- filters only descendants of this class
         flag_exclude_prefix -- whether or not to exclude prefix from class name in result
 
-    Returns: [(classname0, docstring0), ...]
+    Returns: [(classname0, signature, docstring0), ...]
     """
 
     ret = []
@@ -141,7 +142,9 @@ def collect_doc(module, base_class=None, prefix="", flag_exclude_prefix=False):
         if base_class is not None and not issubclass(attr, base_class):
             continue
 
-        ret.append((attrname if not flag_exclude_prefix else attrname[len(prefix):], attr.__doc__))
+        spec = inspect.signature(attr)
+
+        ret.append((attrname if not flag_exclude_prefix else attrname[len(prefix):], spec, attr.__doc__))
 
     return ret
 

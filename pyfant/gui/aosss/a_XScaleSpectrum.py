@@ -88,10 +88,20 @@ class XScaleSpectrum(XLogDialog):
         signals.append(y.currentIndexChanged)
         x.setBuddy(y)
         y.addItems(["ab", "vega", "stdflux"])
-        pp.append((x, y, "ToScalar_Magnitude &system",
-                   "'ab' -- AB[solute]<br>"
-                   "'vega' -- uses Vega spectrum as reference;<br>"
-                   "'stdflux' -- uses standard reference values from literature", ""))
+        pp.append((x, y, "Magnitude &system",
+                   "<b>'ab'</b> -- AB[solute]<br>"
+                   "<b>'vega'</b> -- uses Vega spectrum as reference;<br>"
+                   "<b>'stdflux'</b> -- uses standard reference values<br>from literature", ""))
+        ###
+        x = self.label_zero_point = QLabel()
+        y = self.spinBox_zero_point = QDoubleSpinBox()
+        y.setSingleStep(.01)
+        y.setDecimals(3)
+        y.setMinimum(-100)
+        y.setMaximum(100)
+        signals.append(y.valueChanged)
+        x.setBuddy(y)
+        pp.append((x, y, "&Zero point", "Value to subtract from calculated magnitude", ""))
         ###
         x = self.label_x = QLabel()
         y = self.checkbox_force_band_range = QCheckBox()
@@ -156,7 +166,7 @@ class XScaleSpectrum(XLogDialog):
         # self.__update()
 
     # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * #
-    # # Interface
+    # # Getters & setters
 
 
     def band_index(self):
@@ -192,6 +202,9 @@ class XScaleSpectrum(XLogDialog):
     def desired_magnitude(self):
         return self.spinBox_mag.value()
 
+    def zero_point(self):
+        return self.spinBox_zero_point.value()
+
     def calculated_magnitude(self):
         return self.cmag
 
@@ -225,7 +238,7 @@ class XScaleSpectrum(XLogDialog):
             fig.clear()
             # name = self.band_name()
             bandpass = self.bandpasses[self.band_index()]
-            mag_data = pf.calculate_magnitude(self.spectrum, bandpass, self.system(),
+            mag_data = pf.calculate_magnitude(self.spectrum, bandpass, self.system(), self.zero_point(),
                                               self.flag_force_band_range())
             _draw_figure(fig, mag_data, self.spectrum, self.flag_force_band_range())
             self.canvas0.draw()
@@ -266,7 +279,7 @@ def _draw_figure(fig, mag_data, spectrum, flag_force_band_range):
     weighted_mean_flux = mag_data["weighted_mean_flux"]
     calc_l0, calc_lf = mag_data["calc_l0"], mag_data["calc_lf"]
     filtered_sp = mag_data["filtered_sp"]
-    band_area = bp.area(bp.l0, bp.lf)
+    band_area = bp.area(calc_l0, calc_lf)
     out_y = filtered_sp.y
     out_area = np.trapz(filtered_sp.y, filtered_sp.x)
     cmag = mag_data["cmag"]
@@ -294,8 +307,9 @@ def _draw_figure(fig, mag_data, spectrum, flag_force_band_range):
                     horizontalalignment="center", verticalalignment="center")
     else:
         ax.plot(spp.x, spp.y, c=COLOR_CURRENT_BAND, lw=LINE_WIDTH)
-        # shows weighted mean flux within range
-        ax.plot([bp.l0, bp.lf], [weighted_mean_flux, weighted_mean_flux], linestyle="dashed",
+        # shows weighted mean flux within range (flat spectrum that would have the same
+        # magnitude as the actual spectrum)
+        ax.plot([calc_l0, calc_lf], [weighted_mean_flux, weighted_mean_flux], linestyle="dashed",
                 linewidth=LINE_WIDTH, color=(.4, .3, .1))
     # ax.plot(spc.x, spc.y, c=COLOR_CURRENT_BAND, lw=LINE_WIDTH, zorder=999)
     ax.set_ylim(flux_ylim)

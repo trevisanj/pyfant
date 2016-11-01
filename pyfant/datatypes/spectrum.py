@@ -290,7 +290,7 @@ class Spectrum(object):
         _yunit = "(not supported)"
         if self.xunit == u.angstrom:
             _xunit = "A"
-        if self.xunit == u.angstrom:
+        elif self.xunit == u.nm:
             _xunit = "nm"
         if self.yunit == fnu:
             _yunit = "erg/s/cm2/Hz"
@@ -300,6 +300,9 @@ class Spectrum(object):
         hdu.header["BUNIT"] = _yunit
 
         for key, value in list(self.more_headers.items()):
+            if key in ("X-UNIT", "Y-UNIT"):
+                continue
+
             try:
                 # Strips line feeds eventually present in header data
                 if isinstance(value, str):

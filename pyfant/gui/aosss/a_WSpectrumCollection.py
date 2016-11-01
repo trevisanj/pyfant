@@ -73,7 +73,7 @@ class WSpectrumCollection(WBase):
         action = self.action_sel_delete = QAction(get_pyfant_icon("list-remove"), "Delete", self)
         action.triggered.connect(self.on_sel_delete)
 
-        action = self.action_curr_scale = QAction(get_pyfant_icon("zoom-fit"), "Scale...", self)
+        action = self.action_curr_scale = QAction(get_pyfant_icon("zoom-fit"), "Scale to Magnitude...", self)
         action.triggered.connect(self.on_curr_scale)
 
 

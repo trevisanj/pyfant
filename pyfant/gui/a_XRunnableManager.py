@@ -335,7 +335,7 @@ class XRunnableManager(QMainWindow):
             nf = self.rm.num_finished  # grabs this before last table update,
                                        # so that it never skips a row update
             mt = self.rm.max_simultaneous
-            for i in xrange(max(0, self.__num_finished_shown-mt+1),
+            for i in range(max(0, self.__num_finished_shown-mt+1),
                             min(len(runnables), self.rm.num_finished+mt)):
                 runnable = runnables[i]
 
