@@ -3,7 +3,7 @@
 
 __all__ = ["adjust_atomic_symbol", "str2bool", "bool2str", "chunk_string",
 "ordinal_suffix", "seconds2str", "make_fits_keys_dict", "eval_fieldnames",
-"valid_fits_key", "module_to_dict"]
+"valid_fits_key", "module_to_dict", "expr_to_fieldname"]
 
 
 import numpy as np
@@ -138,6 +138,12 @@ def eval_fieldnames(string_, varname="fieldnames"):
         raise RuntimeError("%s must be a list of strings" % varname)
     ff = [x.upper() for x in ff]
     return ff
+
+
+def expr_to_fieldname(expr):
+    """Keeps the rightmost part of the class name after the "_" """
+    return expr[:expr.index("(")].strip().split("_")[-1]
+
 
 
 def module_to_dict(module):

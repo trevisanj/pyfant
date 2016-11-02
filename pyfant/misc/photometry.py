@@ -1,6 +1,7 @@
 __all__ = ["MAGNITUDE_BASE", "STDFLUX", "calculate_magnitude", "get_vega_spectrum",
            "Bandpass", "UBVTabulated", "UBVParametric", "ufunc_gauss", "get_ubv_bandpasses",
-           "get_zero_flux", "calculate_magnitude_scalar", "mag_to_flux", "get_bandpass"]
+           "get_zero_flux", "calculate_magnitude_scalar", "mag_to_flux", "get_ubv_bandpass",
+           "get_ubv_bandpasses_dict"]
 
 
 import numpy as np
@@ -15,15 +16,29 @@ _REF_NUM_POINTS = 5000   # number of evaluation points over entire band range
 
 
 _ubv_bandpasses = None
+_ubv_bandpasses_dict = None
 def get_ubv_bandpasses():
     """Returns list with UBVRI... Bandpass objects"""
-    global _ubv_bandpasses
+    global _ubv_bandpasses, _ubv_bandpasses_dict
     if _ubv_bandpasses is None:
         _ubv_bandpasses = []
+        _ubv_bandpasses_dict = collections.OrderedDict()
         for name in UBVParametric.X0_FWHM.keys():
             bp = UBVTabulated(name) if name in "UBVRI" else UBVParametric(name)
             _ubv_bandpasses.append(bp)
+            _ubv_bandpasses_dict[name] = bp
     return _ubv_bandpasses
+
+
+def get_ubv_bandpasses_dict():
+    """Returns dictionary with band name, i.e., U/B/V/etc. as dict"""
+    get_ubv_bandpasses()  # just to assure the dict is assembled
+    return _ubv_bandpasses_dict
+
+
+def get_ubv_bandpass(name):
+    get_ubv_bandpasses()  # just to assure the dict is assembled
+    return _ubv_bandpasses_dict[name]
 
 
 def calculate_magnitude(sp, bp, system="stdflux", zero_point=0., flag_force_band_range=False):
@@ -51,7 +66,7 @@ def calculate_magnitude(sp, bp, system="stdflux", zero_point=0., flag_force_band
     Returns: a dictionary with "cmag": calculated magnitude, and many intermediary steps
     """
 
-    bp = get_bandpass(bp)
+    bp = get_ubv_bandpass(bp)
 
     # # Determines areas
     filtered_sp = sp * bp
@@ -111,7 +126,7 @@ def get_zero_flux(bp, system="stdflux"):
     Returns: float
     """
 
-    bp = get_bandpass(bp)
+    bp = get_ubv_bandpass(bp)
 
     if system == "stdflux":
         zero_flux = STDFLUX[bp.name]
@@ -130,19 +145,6 @@ def mag_to_flux(mag, bp, system="stdflux"):
     """Inverse of calculate_magnitude_scalar()"""
     zero_flux = get_zero_flux(bp, system)
     return zero_flux*10**(-.4*mag)
-
-
-def get_bandpass(bp):
-    if isinstance(bp, Bandpass):
-        pass
-    elif isinstance(bp, str):
-        if bp in "UBVRI":
-            bp = UBVTabulated(bp)
-        else:
-            bp = UBVParametric(bp)
-    else:
-        raise ValueError("Invalid value for argument 'bandpass': %s" % str(bp))
-    return bp
 
 
 __vega_spectrum = None
@@ -374,3 +376,18 @@ STDFLUX = collections.OrderedDict((
 ("H", 1.08e-20),
 ("K", 0.67e-20),
 ))
+
+
+
+def __get_ubv_bandpass(bp):
+    """Internal function to convert string to Bandpass, or return the bp if already a Bandpass"""
+    if isinstance(bp, Bandpass):
+        pass
+    elif isinstance(bp, str):
+        if bp in "UBVRI":
+            bp = UBVTabulated(bp)
+        else:
+            bp = UBVParametric(bp)
+    else:
+        raise ValueError("Invalid value for argument 'bandpass': %s" % str(bp))
+    return bp

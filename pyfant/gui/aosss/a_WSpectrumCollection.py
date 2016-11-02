@@ -462,7 +462,6 @@ class WSpectrumCollection(WBase):
 
         # It sth fails, will restore original
         save = copy.deepcopy(self.collection)
-
         try:
             for sp in self.collection.spectra:
                 sp.more_headers[form.fieldname] = form.block.use(sp)
@@ -479,6 +478,7 @@ class WSpectrumCollection(WBase):
         except Exception as E:
             # Restores and logs error
             self.add_log_error("Failed to extract scalar: %s" % str(E), True)
+            self.collection = save
             raise
 
         if flag_emit:

@@ -7,16 +7,16 @@ import numpy as np
 
 class ToScalar_SNR(ToScalar):
     """
-    Calculates Signal-to-noise ratio (GB_SNR) using a part of the "signal" (i.e. the spectrum)
+    Calculates Signal-to-noise ratio (SNR) using a part of the "signal" (i.e. the spectrum)
 
-    Output is **scalar**
+    Formula: SNR = sqrt((y_**2)) / std(y_),
+             where:
+                 y_ is the  slice of of the spectrum flux vector within the range [llzero, llfin];
+                 the numerator is the RMS value of y_
 
-    The signal-to-noise ratio (GB_SNR) is often defined as (signal power) / (noise power), herein
-    calculated as
+    **Note** this has been tested to be consistent with IRAF SNR calculation
 
-        y_RMS**2 / variance(y)     (https://en.wikipedia.org/wiki/Signal-to-noise_ratio)
-
-    It is assumed that the "signal" is *stationary* within [llzero, llfin]
+    **Note** It is assumed that the "signal" is *stationary* within [llzero, llfin]
     meaning that the mean and variance of the "signal" is the same for all points within
     this region (more precisely "weak-sense stationary"
     (https://en.wikipedia.org/wiki/Stationary_process#Weak_or_wide-sense_stationarity))
@@ -32,7 +32,15 @@ class ToScalar_SNR(ToScalar):
         y = inp.y
         signal = y[np.logical_and(x >= self.llzero, x <= self.llfin)]
 
-        output = np.mean(signal**2)/np.var(signal)
+        a = np.sqrt(np.mean(signal**2))
+        b = np.std(signal)
+
+        if a == 0 and b == 0:
+            output = float("nan")
+        elif b == 0:
+            output = float("inf")
+        else:
+            output = a/b
         return output
 
 

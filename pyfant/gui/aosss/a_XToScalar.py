@@ -39,7 +39,7 @@ class XToScalar(XHelpDialog):
         self.comboBox.addItems([x[0] for x in self.help_data])
         ###
         label = QLabel(enc_name_descr("O&peration", "See help below"))
-        edit = self.editFunction = QLineEdit("GB_SNR(0, 10000)")
+        edit = self.editFunction = QLineEdit("ToScalar_SNR(0, 100000)")
         label.setBuddy(edit)
         self.grid.addWidget(label, 0, 0)
         self.grid.addWidget(edit, 0, 1)
@@ -55,16 +55,15 @@ class XToScalar(XHelpDialog):
 
     def accept(self):
         try:
-            # from pyfant.blocks.sp2scalar import *
             expr = str(self.editFunction.text())
             block = eval(expr.strip(), {}, module_to_dict(blocks.toscalar))
 
             if not isinstance(block, blocks.base.ToScalar):
-                raise RuntimeError("Expression does not evaluate to a valid Scalar Block")
+                raise RuntimeError("Expression does not evaluate to a valid ToScalar Block")
 
             self.block = block
             fieldname = str(self.editFieldName.text()).strip()
-            fieldname = expr[:expr.index("(")].strip() if len(fieldname) == 0 else fieldname
+            fieldname = expr_to_fieldname(expr) if len(fieldname) == 0 else fieldname
             self.fieldname = valid_fits_key(fieldname)
 
             return QDialog.accept(self)
