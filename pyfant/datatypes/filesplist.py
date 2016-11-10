@@ -266,6 +266,7 @@ class SpectrumList(SpectrumCollection):
                 if np.any(flux0 > 0):
                     sp = full_cube.get_spectrum(i, j)
                     sp.pixel_x, sp.pixel_y = i, j
+                    # TODO have to fill in filename first sp.more_headers["ORIGIN"] = os.path.basename(self.filename)
                     self.add_spectrum(sp)
 
 

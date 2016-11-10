@@ -25,6 +25,8 @@ class Spectrum(object):
 
     @xunit.setter
     def xunit(self, value):
+        if not isinstance(value, (u.Unit, u.CompositeUnit)):
+            raise TypeError("Spectrum x-unit must be an astropy unit, not '{}'".format(str(value)))
         self.more_headers["X-UNIT"] = value
 
     @property
@@ -33,6 +35,8 @@ class Spectrum(object):
 
     @yunit.setter
     def yunit(self, value):
+        if not isinstance(value, (u.Unit, u.CompositeUnit)):
+            raise TypeError("Spectrum y-unit must be an astropy unit, not '{}'".format(str(value)))
         self.more_headers["Y-UNIT"] = value
 
     @property
@@ -231,7 +235,7 @@ class Spectrum(object):
     #                  saved separately  dealt with automatically by the FITS module
     #                  ----------------  ------------------------------------------------
     _IGNORE_HEADERS = ("CRVAL", "CDELT", "NAXIS", "PCOUNT", "BITPIX", "GCOUNT", "XTENSION",
-                       "XUNIT", "BUNIT", "SIMPLE", "EXTEND")
+                       "XUNIT", "BUNIT", "SIMPLE", "EXTEND", "X-UNIT", "Y-UNIT")
     def from_hdu(self, hdu):
         # x/wavelength and y/flux
         n = hdu.data.shape[0]

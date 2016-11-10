@@ -1,4 +1,4 @@
-__all__ = ["ToScalar_SNR", "ToScalar_Magnitude"]
+__all__ = ["ToScalar_SNR", "ToScalar_Magnitude", "ToScalar_UseNumPyFunc"]
 
 
 from .base import ToScalar
@@ -67,3 +67,25 @@ class ToScalar_Magnitude(ToScalar):
         temp = inp.calculate_magnitude(self.band_name, self.flag_force_parametric,
                                       self.flag_force_band_range)
         return temp["cmag"]
+
+
+class ToScalar_UseNumPyFunc(ToScalar):
+    """
+    Reduces spectrum y-vector to scalar using a numpy function, e.g., np.mean(), np.std()
+    """
+
+    def __init__(self, func=np.mean):
+        ToScalar.__init__(self)
+        self.func = func
+
+    def _do_use(self, inp):
+        out = self.func(inp.y)
+        if isinstance(out, np.ndarray):
+            try:
+                # tries nice string representation;
+                s = self.func.__name__
+            except:
+                # if fails, goes for generic string conversion
+                s = str(self.func)
+            raise RuntimeError("Function '{}' does not evaluate to scalar".format(s))
+        return out

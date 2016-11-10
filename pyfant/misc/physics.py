@@ -1,4 +1,4 @@
-__all__ = ["symbols", "SYMBOLS", "Color", "rainbow_colors", "ncolors", "C"]
+__all__ = ["symbols", "SYMBOLS", "Color", "rainbow_colors", "ncolors", "C", "H"]
 
 
 import numpy as np
@@ -11,8 +11,11 @@ from .parts import *
 class LightSpeed(float):
     "Light speed in cm/s (CGS) units"
 
-C = LightSpeed(299792458. * 100) # light speed in cm/s
+class Planck(float):
+    """Planck's constant in cm**2*g/s"""
 
+C = LightSpeed(299792458. * 100)
+H = Planck(6.6261e-27)
 
 # List of all atomic symbols
 # obtained using elements.py from http://www.lfd.uci.edu/~gohlke/, then
