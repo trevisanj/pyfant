@@ -126,7 +126,7 @@ def get_zero_flux(bp, system="stdflux"):
     Returns: float
     """
 
-    bp = get_ubv_bandpass(bp)
+    bp = __get_ubv_bandpass(bp)
 
     if system == "stdflux":
         zero_flux = STDFLUX[bp.name]
@@ -180,6 +180,7 @@ class Bandpass(object):
     def lf(self):
         return self._get_lf()
 
+    #     ****
     def __init__(self, name):
         self.name = name
 

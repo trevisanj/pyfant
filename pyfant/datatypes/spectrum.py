@@ -1,4 +1,4 @@
-__all__ = ["Spectrum"]
+__all__ = ["Spectrum", ]
 
 
 from ..misc import *
@@ -21,7 +21,7 @@ class Spectrum(object):
 
     @property
     def xunit(self):
-        return self.more_headers.get("X-UNIT")
+        return self.more_headers["X-UNIT"]
 
     @xunit.setter
     def xunit(self, value):
@@ -29,7 +29,7 @@ class Spectrum(object):
 
     @property
     def yunit(self):
-        return self.more_headers.get("Y-UNIT")
+        return self.more_headers["Y-UNIT"]
 
     @yunit.setter
     def yunit(self, value):
@@ -164,6 +164,15 @@ class Spectrum(object):
         #                "Size of Spectrum: ", str(len(self)), "\n"])
         # return s
 
+    def clear_more_headers(self):
+        """Clears .more_headers dictionary, except for X-UNIT and Y-UNIT"""
+
+        keys = list(self.more_headers.keys())
+        for key in keys:
+            if key not in ("X-UNIT", "Y-UNIT"):
+                del self.more_headers[key]
+
+
     def get_rgb(self, visible_range=None, method=0):
         """Takes weighted average of rainbow colors RGB's
 
@@ -222,7 +231,7 @@ class Spectrum(object):
     #                  saved separately  dealt with automatically by the FITS module
     #                  ----------------  ------------------------------------------------
     _IGNORE_HEADERS = ("CRVAL", "CDELT", "NAXIS", "PCOUNT", "BITPIX", "GCOUNT", "XTENSION",
-                       "XUNIT", "BUNIT")
+                       "XUNIT", "BUNIT", "SIMPLE", "EXTEND")
     def from_hdu(self, hdu):
         # x/wavelength and y/flux
         n = hdu.data.shape[0]
@@ -247,6 +256,9 @@ class Spectrum(object):
                 self.xunit = u.nm
             elif _xunit == "A":
                 self.xunit = u.angstrom
+            else:
+                #  Fallback to angstrom
+                self.xunit = u.angstrom
 
         _yunit = hdu.header.get("Y-UNIT")
         if _yunit:
@@ -254,9 +266,12 @@ class Spectrum(object):
         else:
             _yunit = hdu.header.get("BUNIT")
             if _yunit == "erg/s/cm2/Hz":
-                self.xunit = fnu
+                self.yunit = fnu
             elif _yunit == "erg/s/cm2/A":
-                self.xunit = flambda
+                self.yunit = flambda
+            else:
+                # Fallback to dimensionless unit
+                self.yunit = u.Unit("")
 
         # Additional header fields
         for name in hdu.header:
@@ -285,7 +300,7 @@ class Spectrum(object):
         hdu.header["X-UNIT"] = _xunit
         hdu.header["Y-UNIT"] = _yunit
 
-        # AOSS expectations
+        # AOSSS expectations
         _xunit = "(not supported)"
         _yunit = "(not supported)"
         if self.xunit == u.angstrom:
@@ -304,10 +319,19 @@ class Spectrum(object):
                 continue
 
             try:
-                # Strips line feeds eventually present in header data
-                if isinstance(value, str):
-                    value = value.replace("\n", "")
-                hdu.header[key] = value
+                # handles commentary cards
+                #
+                # http://docs.astropy.org/en/stable/io/fits/usage/headers.html#comment-history-and-blank-keywords
+                if key in ("COMMENT", "HISTORY", ""):
+                    if isinstance(value, str):
+                        # proceeds as usual
+                        hdu.header[key] = value
+                    else:
+                        # value is probably an instance of fits.header._HeaderCommentaryCards
+                        for _ in value:
+                            hdu.header[key] = _
+                else:
+                    hdu.header[key] = value
             except:
                 get_python_logger().exception("Error adding header['%s'] = '%s'" % (key, value))
                 raise

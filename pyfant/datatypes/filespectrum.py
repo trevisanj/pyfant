@@ -227,6 +227,7 @@ class FileSpectrumFits(FileSpectrum):
         fits_obj = fits.open(filename)
         # fits_obj.info()
         hdu = fits_obj[0]
+        hdu.verify()
         sp = self.spectrum = Spectrum()
         sp.from_hdu(hdu)
 

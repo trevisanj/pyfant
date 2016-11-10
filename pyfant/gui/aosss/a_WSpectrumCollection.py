@@ -46,8 +46,8 @@ class WSpectrumCollection(WBase):
         action = self.action_all_group = QAction(get_pyfant_icon("group-by"), "&Group...", self)
         action.triggered.connect(self.on_all_group)
 
-        action = self.action_all_use_spectrum_block = QAction(get_pyfant_icon("go-next"), "&Transform...", self)
-        action.triggered.connect(self.on_all_use_spectrum_block)
+        # action = self.action_all_use_spectrum_block = QAction(get_pyfant_icon("go-next"), "&Transform...", self)
+        # action.triggered.connect(self.on_all_use_spectrum_block)
 
         action = self.action_all_to_scalar = QAction(get_pyfant_icon("go-next"), "To &Scalar...", self)
         action.triggered.connect(self.on_all_to_scalar)
@@ -60,6 +60,10 @@ class WSpectrumCollection(WBase):
 
         action = self.action_all_export_csv = QAction(get_pyfant_icon("document-export"), "&Export CSV...", self)
         action.triggered.connect(self.on_all_export_csv)
+
+        action = self.action_sel_use_spectrum_block = QAction(get_pyfant_icon("go-next"), "&Transform...", self)
+        action.setToolTip("Selected spectra will be deleted and transformed spectra will be added at the end")
+        action.triggered.connect(self.on_sel_use_spectrum_block)
 
         action = self.action_sel_plot_stacked = QAction(get_pyfant_icon("visualization"), "Plot &Stacked", self)
         action.triggered.connect(self.on_sel_plot_stacked)
@@ -82,12 +86,13 @@ class WSpectrumCollection(WBase):
         menu.addAction(self.action_add_spectra)
         m = keep_ref(menu.addMenu("With &All Spectra"))
         m.addAction(self.action_all_group)
-        m.addAction(self.action_all_use_spectrum_block)
+        # m.addAction(self.action_sel_use_spectrum_block)
         m.addAction(self.action_all_to_scalar)
         m.addAction(self.action_all_plot_xy)
         m.addAction(self.action_all_plot_xyz)
         m.addAction(self.action_all_export_csv)
         m = keep_ref(menu.addMenu("With &Selected Spectra"))
+        m.addAction(self.action_sel_use_spectrum_block)
         m.addAction(self.action_sel_plot_stacked)
         m.addAction(self.action_sel_plot_overlapped)
         m.addAction(self.action_sel_open_in_new)
@@ -160,7 +165,6 @@ class WSpectrumCollection(WBase):
         tb.setToolButtonStyle(TOOL_BUTTON_STYLE)
         tb.setIconSize(QSize(16, 16))
         tb.addAction(self.action_all_group)
-        tb.addAction(self.action_all_use_spectrum_block)
         tb.addAction(self.action_all_to_scalar)
         tb.addAction(self.action_all_plot_xy)
         tb.addAction(self.action_all_plot_xyz)
@@ -173,6 +177,7 @@ class WSpectrumCollection(WBase):
         lg.addWidget(tb, 2, 1)
         tb.setIconSize(QSize(16, 16))
         tb.setToolButtonStyle(TOOL_BUTTON_STYLE)
+        tb.addAction(self.action_sel_use_spectrum_block)
         tb.addAction(self.action_sel_plot_stacked)
         tb.addAction(self.action_sel_plot_overlapped)
         tb.addAction(self.action_sel_open_in_new)
@@ -421,35 +426,35 @@ class WSpectrumCollection(WBase):
         if flag_emit:
             self.edited.emit(True)
 
-
-    def on_all_use_spectrum_block(self):
-        flag_emit, flag_changed_header = False, False
-
-        from .a_XUseSpectrumBlock import XUseSpectrumBlock
-        form = self.keep_ref(XUseSpectrumBlock())
-        if not form.exec_():
-            return
-
-        # It sth fails, will restore original
-        save = copy.deepcopy(self.collection)
-        try:
-            sspp = save.spectra
-            self.collection.clear()
-            for sp in sspp:
-                block = copy.deepcopy(form.block)
-                self.collection.add_spectrum(block.use(sp))
-
-            self.__update_gui()
-            flag_emit = True
-
-        except Exception as E:
-            # Restores and logs error
-            self.collection = save
-            self.add_log_error("Failed to transform spectra: %s" % str(E), True)
-            raise
-
-        if flag_emit:
-            self.edited.emit(True)
+    #
+    # def on_all_use_spectrum_block(self):
+    #     flag_emit, flag_changed_header = False, False
+    #
+    #     from .a_XUseSpectrumBlock import XUseSpectrumBlock
+    #     form = self.keep_ref(XUseSpectrumBlock())
+    #     if not form.exec_():
+    #         return
+    #
+    #     # It sth fails, will restore original
+    #     save = copy.deepcopy(self.collection)
+    #     try:
+    #         sspp = save.spectra
+    #         self.collection.clear()
+    #         for sp in sspp:
+    #             block = copy.deepcopy(form.block)
+    #             self.collection.add_spectrum(block.use(sp))
+    #
+    #         self.__update_gui()
+    #         flag_emit = True
+    #
+    #     except Exception as E:
+    #         # Restores and logs error
+    #         self.collection = save
+    #         self.add_log_error("Failed to transform spectra: %s" % str(E), True)
+    #         raise
+    #
+    #     if flag_emit:
+    #         self.edited.emit(True)
 
 
     def on_all_to_scalar(self):
@@ -511,6 +516,36 @@ class WSpectrumCollection(WBase):
                 msg = str("Error exporting text file: %s" % str_exc(E))
                 self.add_log_error(msg, True)
                 raise
+
+
+    def on_sel_use_spectrum_block(self):
+        flag_emit, flag_changed_header = False, False
+
+        from .a_XUseSpectrumBlock import XUseSpectrumBlock
+        form = self.keep_ref(XUseSpectrumBlock())
+        if not form.exec_():
+            return
+
+        # It sth fails, will restore original
+        save = copy.deepcopy(self.collection)
+        try:
+            sspp = self.get_selected_spectra()
+            self.collection.delete_spectra(self.get_selected_spectrum_indexes())
+            for sp in sspp:
+                block = copy.deepcopy(form.block)
+                self.collection.add_spectrum(block.use(sp))
+
+            self.__update_gui()
+            flag_emit = True
+
+        except Exception as E:
+            # Restores and logs error
+            self.collection = save
+            self.add_log_error("Failed to transform spectra: %s" % str(E), True)
+            raise
+
+        if flag_emit:
+            self.edited.emit(True)
 
 
     def on_sel_plot_stacked(self):
@@ -639,7 +674,9 @@ class WSpectrumCollection(WBase):
                 successful.append("  - %s" % basename)
             except Exception as e:
                 failed.append('&nbsp;&nbsp;- %s: %s' % (basename, str(e)))
-                self.add_log_error("Error adding file '%s': %s" % (basename, str_exc(e)))
+                s = "Error adding file '%s': %s" % (basename, str_exc(e))
+                get_python_logger().exception(s)
+                self.add_log_error(s)
 
         if len(successful) > 0:
             report.extend(["", "Successful:"])
@@ -741,9 +778,9 @@ class WSpectrumCollection(WBase):
 
         self.action_add_spectra.setEnabled(True)
         self.action_all_group.setEnabled(can_group and has_any)
-        self.action_all_use_spectrum_block.setEnabled(has_any)
         self.action_all_to_scalar.setEnabled(has_any)
         self.action_all_export_csv.setEnabled(has_any)
+        self.action_sel_use_spectrum_block.setEnabled(any_selected)
         self.action_sel_plot_stacked.setEnabled(any_selected)
         self.action_sel_plot_overlapped.setEnabled(any_selected)
         self.action_sel_open_in_new.setEnabled(any_selected)

@@ -99,13 +99,15 @@ if __name__ == "__main__":
     if len(ss) == 0:
         print_error("Nothing to plot!")
     else:
+        setup = PlotSpectrumSetup(ymin=ymin)
+
         if args.pieces:
             plot_spectra_pieces_pdf(ss, aint=args.aint,
-                                    pdf_filename=args.fn_output, ymin=ymin)
+                                    pdf_filename=args.fn_output, setup=setup)
         elif args.pages:
-            plot_spectra_pages_pdf(ss, pdf_filename=args.fn_output, ymin=ymin)
+            plot_spectra_pages_pdf(ss, pdf_filename=args.fn_output, setup=setup)
         else:
             if args.ovl:
-                plot_spectra_overlapped(ss, "", ymin=ymin)
+                plot_spectra_overlapped(ss, "", setup=setup)
             else:
-                plot_spectra(ss, "", ymin=ymin, num_rows=num_rows)
+                plot_spectra(ss, "", setup=setup, num_rows=num_rows)

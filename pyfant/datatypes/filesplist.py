@@ -85,10 +85,7 @@ class SpectrumCollection(AttrsPart):
         hdu.header["FIELDN_V"] = str(self.fieldnames_visible)
         hdu.header["ANCHOVA"] = 26.9752
 
-        hdu.header.update(self.more_headers)  # TODO hope this works, if not ...
-#        for name, value in self.more_headers.iteritems():
-#            hdu.header[name] = value
-
+        hdu.header.update(self.more_headers)
         hdul.append(hdu)
 
         for sp in self.spectra:

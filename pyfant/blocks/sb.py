@@ -10,6 +10,7 @@ import copy
 from .base import SpectrumBlock
 import astropy.units as u
 
+
 class SB_Rubberband(SpectrumBlock):
     """
     Convex polygonal line (aka "rubberband")
@@ -244,11 +245,12 @@ class SB_Normalize(SpectrumBlock):
     Arguments:
         method --
             "01": normalizes between 0 and 1
+            "1": scales to have maximum at 1, keeping the 0 where it is
     """
 
     def __init__(self, method="01"):
         SpectrumBlock.__init__(self)
-        choices = ["01",]
+        choices = ["01", "1"]
         if not method in choices:
             raise ValueError("Invalid normalization method; choices: %s" % str(choices))
         self.method = method
@@ -263,6 +265,10 @@ class SB_Normalize(SpectrumBlock):
             if miny == maxy:
                 raise RuntimeError("Cannot normalize, y-span is ZERO")
             out.y = (out.y - miny) / (maxy - miny)
+
+        elif self.method == "1":
+            maxy = np.max(out.y)
+            out.y = out.y / maxy
         return out
 
 

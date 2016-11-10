@@ -21,3 +21,24 @@ from .filesparsecube import *
 from .filesplist import *
 from .filefits import *
 from .filepar import *
+
+from . import datafile
+from . import spectrum
+from . import filespectrum
+from . import filedissoc
+from . import fileabonds
+from . import filemain
+from . import filetoh
+from . import filemod
+from . import filehmap
+from . import fileabsoru2
+from . import filepartit
+from . import filemolecules
+from . import fileatoms
+from . import fileabxfwhm
+from . import fileoptions
+from . import filefullcube
+from . import filesparsecube
+from . import filesplist
+from . import filefits
+from . import filepar

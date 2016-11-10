@@ -15,7 +15,7 @@ def get_pyfant_icon(keyword):
     Looks for a file named <keyword>.png in the "icons" directory
     """
 
-    filename = get_pyfant_path("icons", keyword+".png")
+    filename = get_pyfant_path("data", "icons", keyword+".png")
     ret = QIcon(filename)
     return ret
 
