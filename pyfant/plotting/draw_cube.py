@@ -64,9 +64,13 @@ def draw_cube_3d(ax, sparsecube, height_threshold=15):
 
     for sp in sparsecube.spectra:
         if flag_segments:
-            flux1 = sp.flux[(0, -1),] * scale + sp.pixel_y + _ZERO_OFFSET
+            try:
+                flux1 = sp.flux[[0, -1]] * scale + sp.pixel_y + _ZERO_OFFSET
+            except:
+                print("EEEEEEEEEEEEEEEEEEEEEEEEEEE")
+                raise
             ax.plot(np.array([1, 1]) * sp.pixel_x + _ZERO_OFFSET + .5,
-                    sp.wavelength[(0, -1),],
+                    sp.wavelength[[0, -1]],
                     flux1, color='k')
         else:
             n = len(sp)
