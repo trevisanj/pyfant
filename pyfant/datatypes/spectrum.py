@@ -25,7 +25,7 @@ class Spectrum(object):
 
     @xunit.setter
     def xunit(self, value):
-        if not isinstance(value, (u.Unit, u.CompositeUnit)):
+        if not isinstance(value, (u.UnitBase,)):  #(u.Unit, u.CompositeUnit, u.IrreducibleUnit)):
             raise TypeError("Spectrum x-unit must be an astropy unit, not '{}'".format(str(value)))
         self.more_headers["X-UNIT"] = value
 
@@ -35,7 +35,7 @@ class Spectrum(object):
 
     @yunit.setter
     def yunit(self, value):
-        if not isinstance(value, (u.Unit, u.CompositeUnit)):
+        if not isinstance(value, (u.UnitBase,)):  #, (u.Unit, u.CompositeUnit)):
             raise TypeError("Spectrum y-unit must be an astropy unit, not '{}'".format(str(value)))
         self.more_headers["Y-UNIT"] = value
 
@@ -235,7 +235,7 @@ class Spectrum(object):
     #                  saved separately  dealt with automatically by the FITS module
     #                  ----------------  ------------------------------------------------
     _IGNORE_HEADERS = ("CRVAL", "CDELT", "NAXIS", "PCOUNT", "BITPIX", "GCOUNT", "XTENSION",
-                       "XUNIT", "BUNIT", "SIMPLE", "EXTEND", "X-UNIT", "Y-UNIT")
+                       "XUNIT", "BUNIT", "SIMPLE", "EXTEND", "X-UNIT", "Y-UNIT", "UNITS2", "UNITS1")
     def from_hdu(self, hdu):
         # x/wavelength and y/flux
         n = hdu.data.shape[0]
@@ -274,8 +274,21 @@ class Spectrum(object):
             elif _yunit == "erg/s/cm2/A":
                 self.yunit = flambda
             else:
-                # Fallback to dimensionless unit
-                self.yunit = u.Unit("")
+                # y-units as in file C001231_spintg.fits (a card "UNITS2" with blank value exists,
+                # but its comment is "electrons (TOTAL)")
+                try:
+                    _yunit = hdu.header.comments["UNITS1"]
+                except KeyError:
+                    try:
+                        _yunit = hdu.header.comments["UNITS2"]
+                    except KeyError:
+                        _yunit = None
+
+                if str(_yunit).startswith("electrons (TOTAL)"):
+                    self.yunit = u.electron
+                else:
+                    # Fallback to dimensionless unit
+                    self.yunit = u.Unit("")
 
         # Additional header fields
         for name in hdu.header:
