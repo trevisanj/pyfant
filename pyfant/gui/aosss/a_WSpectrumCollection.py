@@ -14,6 +14,7 @@ from .a_XScaleSpectrum import *
 from ..a_WCollapsiblePanel import *
 from pyfant import *
 from astropy import units as u
+import numpy as np
 
 class WSpectrumCollection(WBase):
     """Editor for SpectrumCollection objects"""

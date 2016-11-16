@@ -68,11 +68,9 @@ class XToScalar(XHelpDialog):
         try:
             expr = str(self.cb_operation.currentText())
             symbols_available = pf.module_to_dict(pf.blocks.toscalar)
-            import numpy
-            symbols_available["np"] = numpy
-            block = eval(expr.strip(), {}, symbols_available)
-
-            block = eval(expr.strip(), {}, symbols_available)
+            import numpy as np
+            symbols_available["np"] = np
+            block = eval(expr.strip(), symbols_available)
 
             if not isinstance(block, pf.blocks.base.ToScalar):
                 raise RuntimeError("Expression does not evaluate to a valid ToScalar Block")

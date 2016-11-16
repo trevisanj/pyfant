@@ -203,17 +203,16 @@ class SparseCube(SpectrumCollection):
 
         self.__flag_update = False
         try:
-            for i in range(nX):
-                for j in range(nY):
-                    Yi = j + 1
-                    flux0 = data[:, j, i]
-                    if np.any(flux0 > 0):
-                        sp = full_cube.get_spectrum(i, j)
-                        # discards edges that are zeros
-                        where_positive = np.where(sp.flux > 0)[0]
-                        sp.cut_idxs(where_positive[0], where_positive[-1]+1)
-                        sp.pixel_x, sp.pixel_y = i, j
-                        self.add_spectrum(sp)
+            # TODO implement threshold, i.e., abs(...) <= epsilon
+            xx, yy = np.where(sum(data, 0) != 0)
+
+            for i, j in zip(xx, yy):
+                sp = full_cube.get_spectrum(i, j)
+                # discards edges that are zeros
+                where_positive = np.where(sp.flux > 0)[0]
+                sp.cut_idxs(where_positive[0], where_positive[-1]+1)
+                sp.pixel_x, sp.pixel_y = i, j
+                self.add_spectrum(sp)
 
             self.height = nY
             self.width = nX

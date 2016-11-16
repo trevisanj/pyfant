@@ -75,7 +75,7 @@ class FullCube(AttrsPart):
         if not "HRFACTOR" in hdu.header:
             hdu.header["HRFACTOR"] = 1.
 
-        l0 = hdu.header["CRVAL3"]+hdu.header["CDELT3"]
+        l0 = hdu.header["CRVAL3"]  # I think WC was adding this but changed ... +hdu.header["CDELT3"]
         delta_lambda = hdu.header["CDELT3"]
         nlambda = hdu.header["NAXIS3"]
         self.hdu = hdu

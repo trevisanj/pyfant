@@ -14,6 +14,8 @@ class FilePar(DataFile):
         DataFile.__init__(self)
         self.params = OrderedDict()
 
+    def __getitem__(self, key):
+        return self.params[key]
 
     def _do_load(self, filename):
         data = []  # keyword, value pairs create dict at the end

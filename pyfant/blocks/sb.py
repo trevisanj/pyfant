@@ -1,5 +1,6 @@
 __all__ = ["SB_Rubberband", "SB_AddNoise", "SB_FnuToFlambda", "SB_FLambdaToFNu", "SB_ElementWise",
-           "SB_Extend", "SB_Cut", "SB_Normalize", "SB_ConvertYUnit", "SB_Add", "SB_Mul"]
+           "SB_Extend", "SB_Cut", "SB_Normalize", "SB_ConvertYUnit", "SB_Add", "SB_Mul",
+           "SB_MulByLambda", "SB_DivByLambda"]
 
 
 import numpy as np
@@ -20,7 +21,7 @@ class SB_Rubberband(SpectrumBlock):
             spectrum; otherwise, stretches line from below
 
     Stretches a polygonal line from below/above the spectrum. The vertices of this multi-segment
-    line will touch "troughs" of the spectrumvx without crossing the spectrum
+    line will touch "troughs" of the spectrum without crossing the spectrum
 
     This was inspired on -- but is not equivalent to -- OPUS SB_Rubberband baseline correction [1].
     However, this one is parameterless, whereas OPUS RBBC asks for a number of points
@@ -362,4 +363,20 @@ class SB_Add(SpectrumBlock):
         out.y += self.value
         return out
 
+
+class SB_MulByLambda(SpectrumBlock):
+    """Multiplies each y-point by its wavelength"""
+
+    def _do_use(self, inp):
+        out = self._copy_input(inp)
+        out.y *= out.x
+        return out
+
+class SB_DivByLambda(SpectrumBlock):
+    """Divides each y-point by its wavelength"""
+
+    def _do_use(self, inp):
+        out = self._copy_input(inp)
+        out.y /= out.x
+        return out
 

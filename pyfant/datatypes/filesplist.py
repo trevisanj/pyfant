@@ -257,17 +257,14 @@ class SpectrumList(SpectrumCollection):
         hdu = full_cube.hdu
         assert isinstance(hdu, fits.PrimaryHDU)
         data = hdu.data
-        nlambda, nY, nX = data.shape
 
-        for i in range(nX):
-            for j in range(nY):
-                Yi = j + 1
-                flux0 = data[:, j, i]
-                if np.any(flux0 > 0):
-                    sp = full_cube.get_spectrum(i, j)
-                    sp.pixel_x, sp.pixel_y = i, j
-                    # TODO have to fill in filename first sp.more_headers["ORIGIN"] = os.path.basename(self.filename)
-                    self.add_spectrum(sp)
+        # TODO implement threshold, i.e., abs(...) <= epsilon
+        xx, yy = np.where(sum(data, 0) != 0)
+        for i, j in zip(xx, yy):
+            sp = full_cube.get_spectrum(i, j)
+            sp.pixel_x, sp.pixel_y = i, j
+            # TODO have to fill in filename first sp.more_headers["ORIGIN"] = os.path.basename(self.filename)
+            self.add_spectrum(sp)
 
 
     def add_spectrum(self, sp):
