@@ -1,4 +1,5 @@
-__all__ = ["symbols", "SYMBOLS", "Color", "rainbow_colors", "ncolors", "C", "H"]
+__all__ = ["symbols", "SYMBOLS", "Color", "rainbow_colors", "ncolors", "C", "H",
+           "vacuum_nu_to_air_lambda"]
 
 
 import numpy as np
@@ -34,6 +35,33 @@ symbols = [
 ]
 # List of all atomic symbols in UPPERCASE
 SYMBOLS = [x.upper() for x in symbols]
+
+
+
+def vacuum_nu_to_air_lambda(wn):
+    """
+    Converts from (wavenumber in vacuum in cm**-1) to (wavelength in air in Angstrom)
+
+    Arguments:
+        wn -- wavenumber in vacuum (cm**-1)
+
+    Returns:
+        wl -- wavelength in air (cm**-1)
+
+
+    References:
+        - http://www.astro.uu.se/valdwiki/Air-to-vacuum%20conversion
+        - extraehitran.f (Jorge Melendez)
+    """
+
+    if wn == 0:
+        raise ValueError("Wavenumber cannot be zero")
+
+    l = wn*(1+8342.13e-8+15997/(3.89e9-wn**2) + 2406030./(1.3e10-wn**2))
+    wl = 1e8/l
+    return wl
+
+
 
 
 ###############################################################################
@@ -81,5 +109,6 @@ for i in range(1, ncolors):
 # converts RGB from [0, 255] to [0, 1.] interval
 for c in rainbow_colors:
     c.rgb = np.array([float(x)/255 for x in c.rgb])
+
 
 
