@@ -14,3 +14,5 @@ from .a_XText import *
 from .a_XExplorer import *
 from .a_XPFANT import *
 from .a_XMulti import *
+# TODO Horrible design
+from .aosss.basewindows import *

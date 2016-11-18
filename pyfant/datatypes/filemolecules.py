@@ -10,21 +10,23 @@ _logger.addHandler(logging.NullHandler())
 
 
 class SetOfLines(AttrsPart):
-    attrs = ["qqv", "ggv", "bbv", "ddv", "fact", "num_lines"]
+    attrs = ["vl", "v2l", "qqv", "ggv", "bbv", "ddv", "fact", "num_lines"]
 
-
-    def __init__(self):
+    def __init__(self, vl=None, v2l=None, qqv=None, ggv=None, bbv=None, ddv=None, fact=None):
         AttrsPart.__init__(self)
 
-        self.qqv = None
-        self.ggv = None
-        self.bbv = None
-        self.ddv = None
-        self.fact = None
+        self.vl = vl
+        self.v2l = v2l
+        self.qqv = qqv
+        self.ggv = ggv
+        self.bbv = bbv
+        self.ddv = ddv
+        self.fact = fact
 
         self.lmbdam = []
         self.sj = []
         self.jj = []
+        self.branch = []
 
     @property
     def num_lines(self):
@@ -33,15 +35,27 @@ class SetOfLines(AttrsPart):
     def __len__(self):
         return len(self.lmbdam)
 
+    def __repr__(self):
+        return "{}({}, {}, {}, {}, {}, {}, {})".format(self.__class__.__name__,
+            self.vl, self.v2l, self.qqv, self.ggv, self.bbv, self.ddv, self.fact)
+
     def cut(self, lzero, lfin):
         """Reduces the number of lines to only the ones whose lmbdam is inside [lzero, lfin]"""
-        l, s, j = [], [], []
-        for _l, _s, _j in zip(self.lmbdam, self.sj, self.jj):
+        l, s, j, b = [], [], [], []
+        for _l, _s, _j, _b in zip(self.lmbdam, self.sj, self.jj, self.branch):
             if lzero <= _l <= lfin:
                 l.append(_l)
                 s.append(_s)
                 j.append(_j)
-        self.lmbdam, self.sj, self.jj = l, s, j
+                b.append(_b)
+        self.lmbdam, self.sj, self.jj, self.branch = l, s, j, b
+
+    def append_line(self, lmbdam, sj, jj, branch):
+        self.lmbdam.append(lmbdam)
+        self.sj.append(sj)
+        self.jj.append(jj)
+        self.branch.append(branch)
+
 
 
 class Molecule(AttrsPart):
@@ -85,6 +99,7 @@ class Molecule(AttrsPart):
             set.cut(lzero, lfin)
 
 
+# TODO Save information in molecule header
 class FileMolecules(DataFile):
     """
     PFANT Molecular Lines

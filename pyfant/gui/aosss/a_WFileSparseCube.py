@@ -34,10 +34,6 @@ class WFileSparseCube(WBase):
     def __init__(self, parent):
         WBase.__init__(self, parent)
 
-        def keep_ref(obj):
-            self._refs.append(obj)
-            return obj
-
         # Whether all the values in the fields are valid or not
         self.flag_valid = False
         # Internal flag to prevent taking action when some field is updated programatically
@@ -62,16 +58,16 @@ class WFileSparseCube(WBase):
         lantanide.addWidget(sp2)
 
         # ## Widget left of horizontal splitter, containing (File Line) / (Options area)
-        wfilett0 = keep_ref(QWidget())
+        wfilett0 = self.keep_ref(QWidget())
         lwfilett0 = QVBoxLayout(wfilett0)
         lwfilett0.setMargin(0)
 
         # ### Line showing the File Name
-        wfile = keep_ref(QWidget())
+        wfile = self.keep_ref(QWidget())
         lwfilett0.addWidget(wfile)
-        l1 = keep_ref(QHBoxLayout(wfile))
+        l1 = self.keep_ref(QHBoxLayout(wfile))
         l1.setMargin(0)
-        l1.addWidget(keep_ref(QLabel("<b>File:<b>")))
+        l1.addWidget(self.keep_ref(QLabel("<b>File:<b>")))
         w = self.label_fn_sky = QLabel()
         l1.addWidget(w)
         l1.addSpacerItem(QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum))
@@ -88,21 +84,21 @@ class WFileSparseCube(WBase):
 
         # ##### Place Spectrum area
         # Widget that will be handled by the scrollable area
-        sa0 = keep_ref(QScrollArea())
+        sa0 = self.keep_ref(QScrollArea())
         sa0.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
         sa0.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
-        wscrw = keep_ref(QWidget())
+        wscrw = self.keep_ref(QWidget())
         sa0.setWidget(wscrw)
         sa0.setWidgetResizable(True)
         ###
         lscrw = QVBoxLayout(wscrw)
         lscrw.setMargin(3)
         ###
-        alabel = keep_ref(QLabel("<b>Place spectrum</b>"))
+        alabel = self.keep_ref(QLabel("<b>Place spectrum</b>"))
         lscrw.addWidget(alabel)
         ###
         # Place Spectrum variables & button
-        lg = keep_ref(QGridLayout())
+        lg = self.keep_ref(QGridLayout())
         lscrw.addLayout(lg)
         lg.setMargin(0)
         lg.setVerticalSpacing(4)
@@ -170,7 +166,7 @@ class WFileSparseCube(WBase):
         lwex = QVBoxLayout(wex)
         lwex.setMargin(3)
         ###
-        lwex.addWidget(keep_ref(QLabel("<b>Existing spectra</b>")))
+        lwex.addWidget(self.keep_ref(QLabel("<b>Existing spectra</b>")))
         ###
         w = self.wsptable = WSpectrumCollection(self.parent_form)
         w.edited.connect(self.on_spectra_edited)
@@ -181,26 +177,26 @@ class WFileSparseCube(WBase):
         spp.addWidget(wex)
 
         # #### Second tab (NEW FileSparseCube)
-        sa1 = keep_ref(QScrollArea())
+        sa1 = self.keep_ref(QScrollArea())
         tt0.addTab(sa1, "&Header")
         sa1.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
         sa1.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
 
         # Widget that will be handled by the scrollable area
-        w = keep_ref(QWidget())
+        w = self.keep_ref(QWidget())
         sa1.setWidget(w)
         sa1.setWidgetResizable(True)
         lscrw = QVBoxLayout(w)
         lscrw.setMargin(3)
         ###
-        lscrw.addWidget(keep_ref(QLabel("<b>Header properties</b>")))
+        lscrw.addWidget(self.keep_ref(QLabel("<b>Header properties</b>")))
         ###
-        b = keep_ref(QPushButton("Collect field names"))
+        b = self.keep_ref(QPushButton("Collect field names"))
         b.clicked.connect(self.on_collect_fieldnames)
         lscrw.addWidget(b)
 
         # Form layout
-        lg = keep_ref(QGridLayout())
+        lg = self.keep_ref(QGridLayout())
         lg.setMargin(0)
         lg.setVerticalSpacing(4)
         lg.setHorizontalSpacing(5)
@@ -212,7 +208,7 @@ class WFileSparseCube(WBase):
         pp = self._map1 = []
 
         ###
-        x = keep_ref(QLabel())
+        x = self.keep_ref(QLabel())
         y = self.edit_fieldnames = QPlainTextEdit()
         y.textChanged.connect(self.on_header_edited)
         x.setBuddy(y)
@@ -290,15 +286,15 @@ class WFileSparseCube(WBase):
         lgo.addSpacerItem(QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum))
 
         # #### More Tools tab
-        wset = keep_ref(QWidget())
+        wset = self.keep_ref(QWidget())
         tt0.addTab(wset, "&More")
-        lwset = keep_ref(QVBoxLayout(wset))
+        lwset = self.keep_ref(QVBoxLayout(wset))
         ###
-        b = keep_ref(QPushButton("&Crop in new window..."))
+        b = self.keep_ref(QPushButton("&Crop in new window..."))
         lwset.addWidget(b)
         b.clicked.connect(self.crop_clicked)
         ###
-        b = keep_ref(QPushButton("E&xport %s ..." % FileFullCube.description))
+        b = self.keep_ref(QPushButton("E&xport %s ..." % FileFullCube.description))
         lwset.addWidget(b)
         b.clicked.connect(self.export_ccube_clicked)
         ###
@@ -310,7 +306,7 @@ class WFileSparseCube(WBase):
         tt1.currentChanged.connect(self.current_tab_changed_vis)
 
         # #### Tab containing 3D plot representation
-        w0 = keep_ref(QWidget())
+        w0 = self.keep_ref(QWidget())
         tt1.addTab(w0, "&Plot 3D")
         # http://stackoverflow.com/questions/12459811
         self.figure0, self.canvas0, self.lfig0 = get_matplotlib_layout(w0)
@@ -318,14 +314,14 @@ class WFileSparseCube(WBase):
         # lscrw.addLayout(lfig)
 
         # #### Colors tab
-        w1 = keep_ref(QWidget())
+        w1 = self.keep_ref(QWidget())
         tt1.addTab(w1, "&Colors")
         ###
         lw1 = QVBoxLayout(w1)
-        lwset = keep_ref(QHBoxLayout())
+        lwset = self.keep_ref(QHBoxLayout())
         lw1.addLayout(lwset)
         ###
-        la = keep_ref(QLabel("&Visible range"))
+        la = self.keep_ref(QLabel("&Visible range"))
         lwset.addWidget(la)
         ###
         ed = self.lineEdit_visibleRange = QLineEdit("[3800., 7500.]")
@@ -333,7 +329,7 @@ class WFileSparseCube(WBase):
         la.setBuddy(ed)
         ed.textEdited.connect(self.on_colors_setup_edited)
         ###
-        la = keep_ref(QLabel("Color map"))
+        la = self.keep_ref(QLabel("Color map"))
         lwset.addWidget(la)
         ###
         ed = self.comboBox_cmap = QComboBox()
@@ -349,13 +345,13 @@ class WFileSparseCube(WBase):
         # cb.setTooltip("If checked, will make color luminosity proportional to flux area under the visible range")
         cb.stateChanged.connect(self.on_colors_setup_edited)
         ###
-        b = keep_ref(QPushButton("Redra&w"))
+        b = self.keep_ref(QPushButton("Redra&w"))
         lwset.addWidget(b)
         b.clicked.connect(self.replot_colors)
         ###
         lwset.addSpacerItem(QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum))
         ###
-        wm = keep_ref(QWidget())
+        wm = self.keep_ref(QWidget())
         # wm.setMargin(0)
         lw1.addWidget(wm)
         self.figure1, self.canvas1, self.lfig1 = get_matplotlib_layout(wm)

@@ -32,7 +32,8 @@ from . import misc
 from . import plotting
 from . import blocks
 from .blocks import *
-# note that gui is not imported automatically
+# note that gui * is not imported automatically, only the package
+from . import gui
 # note that blocks is not imported automatically
 
 
