@@ -2,9 +2,13 @@
 Non-visual classes for defining parameters
 """
 
+
 __all__ = ["Parameter", "Parameters"]
 
+
 from PyQt4.QtGui import *
+from collections import OrderedDict
+
 
 class Parameters(object):
     """
@@ -22,13 +26,21 @@ class Parameters(object):
 
     def _FromSpecs(self, specs):
         """
-        Populates _params using a list of dictionaries.
+        Populates _params using specification
 
         Arguments:
-          specs -- List as [(name, {...}), ...].
-               See Parameter.FromSpec() for documentation on specs
+          specs -- either:
+            (a) list as [(name, {...}), ...] (see Parameter.FromSpec() for further information)
+            (b) dictionary as {"name": value, ...}
         """
-        for spec in specs:
+
+        if isinstance(specs, dict):
+            specs_ = []
+            for name, value in specs.items():
+                specs_.append((name, {"value": value}))
+        else:
+            specs_ = specs
+        for spec in specs_:
             self.params.append(Parameter(spec))
 
     def AddToLayout(self, layout):
@@ -50,7 +62,7 @@ class Parameters(object):
 
 
     def GetKwargs(self):
-        ret = {}
+        ret = OrderedDict()
         for param in self.params:
             ret[param.name] = param.value
         return ret
