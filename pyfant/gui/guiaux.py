@@ -7,7 +7,7 @@ __all__ = ["enc_name_descr", "enc_name", "INITIALIZES_SUN", "PARAMS_INVALID", "L
 "show_warning", "are_you_sure", "ResetTableWidget", "index_nearest", "remove_line",
 "show_edit_form", "_DESKTOP_OFFSET_LEFT", "_DESKTOP_OFFSET_TOP", "place_left_top", "place_center",
 "snap_left", "snap_right", "PlotInfo", "Occurrence", "ErrorCollector", "VerticalLabel",
-"get_matplotlib_layout", "style_widget", ]
+"get_matplotlib_layout", "style_widget", "table_info_to_parameters", ]
 
 
 from PyQt4.QtGui import *
@@ -19,7 +19,7 @@ from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qt4agg import NavigationToolbar2QT # as NavigationToolbar2QT
 import matplotlib.pyplot as plt
 from ..constants import *
-
+from . import parameter
 
 def enc_name_descr(name, descr, color=COLOR_DESCR):
     """Encodes html given name and description."""
@@ -196,7 +196,10 @@ def show_edit_form(obj, attrs, title):
     """
     specs = []
     for name in attrs:
-        specs.append((name, {"value": obj.__getattribute__(name)}))
+        value = obj.__getattribute__(name)
+        if value is None:
+            value = ""  # None becomes str
+        specs.append((name, {"value": value}))
     form = XParametersEditor(specs=specs, title=title)
     r = form.exec_()
     return r, form
@@ -399,4 +402,31 @@ def get_matplotlib_layout(widget, flag_toolbar=True):
 def style_widget(spinbox, flag_changed):
     """(Paints background yellow)/(removes stylesheet)"""
     spinbox.setStyleSheet("QWidget {background-color: #FFFF00}" if flag_changed else "")
+
+
+def table_info_to_parameters(table_info):
+    """
+    Converts a list of MyDBRow into a parameters.Parameters object
+
+    See also: get_table_info()
+    """
+
+    # Example of item in table_info:
+    #   MyDBRow([('cid', 0), ('name', 'id'), ('type', 'integer'), ('notnull', 0), ('dflt_value', None), ('pk', 1)])
+
+    pp = parameter.Parameters()
+    for field_info in table_info:
+        p = parameter.Parameter()
+        if field_info.type == "integer":
+            p.type = int
+        elif field_info.type == "real":
+            p.type = float
+        else:
+            p.type = str
+
+        p.name = field_info.name
+        if field_info.dflt_value is not None:
+            p.value = field_info.dflt_value
+        pp.params.append(p)
+    return pp
 

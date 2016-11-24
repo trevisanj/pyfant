@@ -17,12 +17,16 @@ class Parameters(object):
     Arguments:
       specs -- [(name, {...}), ...] see Parameter.FromSpec() for full documentation.
     """
-    def __init__(self, specs):
+    def __init__(self, specs=[]):
         # List of Parameter objects
         self.params = []
-        # Original specs (this never gets updated)
-        self._specs = specs
         self._FromSpecs(specs)
+
+    def __len__(self):
+        return len(self.params)
+
+    def __iter__(self):
+        return self.params.__iter__()
 
     def _FromSpecs(self, specs):
         """
@@ -67,18 +71,6 @@ class Parameters(object):
             ret[param.name] = param.value
         return ret
 
-    def GetSpecs(self):
-        """Returns copy of self._specs with updated "values"."""
-        ret = []
-        for name, options in self._specs:
-            ret.append((name, options.copy()))
-        for param in self.params:
-            for name, options in ret:
-                if name == param.name:
-                    options["value"] = param.value
-                    break
-        return ret
-
 
 class Parameter(object):
     def __init__(self, spec=None):
@@ -115,7 +107,8 @@ class Parameter(object):
         self.labelText = d.get("labelText", self.name)
         self.toolTip = d.get("toolTip", "")
         t = self.type = d.get("type", type(d["value"]) if "value" in d else int)
-        assert t in (int, float, bool, str), "Invalid type: `%s`" % t.__name__
+        if not t in (int, float, bool, str):
+            raise TypeError("Invalid type: `%s`" % t.__name__)
         self.value = d.get("value", 1 if t in (int, float) else False if t == bool else "")
 
     def RenderWidget(self):

@@ -47,9 +47,6 @@ class WParametersEditor(QWidget):
         self._parameters.UpdateFromWidgets()
         return self._parameters.GetKwargs()
 
-    def get_specs(self):
-        return self._parameters.GetSpecs()
-
     def validate(self):
         # Currently calling Parameters.GetKwargs() to do the <quote>validation<quote>
         self._parameters.UpdateFromWidgets()

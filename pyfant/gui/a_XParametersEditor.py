@@ -36,9 +36,6 @@ class XParametersEditor(QDialog, Ui_XParametersEditor):
   def get_kwargs(self):
     return self.pe.get_kwargs()
 
-  def get_specs(self):
-    return self.pe.get_specs()
-
   def _ReadConfig(self):
     pass
 
@@ -46,7 +43,7 @@ class XParametersEditor(QDialog, Ui_XParametersEditor):
     try:
       self.pe.validate()
     except Exception as E:
-      QMessageBox.critical(None, "Error", E.message)
+      QMessageBox.critical(None, "Error", str(E))
 
     QDialog.accept(self)
 
