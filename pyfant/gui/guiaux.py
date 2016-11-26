@@ -430,3 +430,7 @@ def table_info_to_parameters(table_info):
         pp.params.append(p)
     return pp
 
+
+
+def nerdify(window):
+    window.setFont(MONO_FONT)

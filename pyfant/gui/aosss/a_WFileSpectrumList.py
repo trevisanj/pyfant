@@ -393,7 +393,7 @@ class WFileSpectrumList(WBase):
         self.__use_sblock(SB_Rubberband(flag_upper=True))
 
     def add_noise_clicked(self):
-        specs = (("std", {"labelText": "Noise standard deviation", "value": 1.}),)
+        specs = (("std", {"caption": "Noise standard deviation", "value": 1.}),)
         form = XParametersEditor(specs=specs, title="Select sub-range")
         if form.exec_():
             block = SB_AddNoise(**form.get_kwargs())

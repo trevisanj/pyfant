@@ -54,7 +54,7 @@ class Parameters(object):
         """
         for param in self.params:
             widget = param.RenderWidget()
-            layout.addRow(param.labelText, widget)
+            layout.addRow(param.caption, widget)
 
     def UpdateFromWidgets(self):
         for param in self.params:
@@ -75,7 +75,7 @@ class Parameters(object):
 class Parameter(object):
     def __init__(self, spec=None):
         self.name = None
-        self.labelText = None
+        self.caption = None
         self.toolTip = None
         self.type = None
         self.value = None
@@ -89,7 +89,7 @@ class Parameter(object):
           spec -- (name, {...})
 
         Dict keys:
-          "labelText" -- (optional) text for label in editor. Defaults to the
+          "caption" -- (optional) text for label in editor. Defaults to the
                  keyword argument name
           "toolTip" (optional)
           "type" -- (optional, defaults to type("value") or int if "value" is
@@ -104,11 +104,11 @@ class Parameter(object):
         Note that if type is not specified,
         """
         self.name, d = spec
-        self.labelText = d.get("labelText", self.name)
+        self.caption = d.get("caption", self.name)
         self.toolTip = d.get("toolTip", "")
         t = self.type = d.get("type", type(d["value"]) if "value" in d else int)
         if not t in (int, float, bool, str):
-            raise TypeError("Invalid type: `%s`" % t.__name__)
+            raise TypeError("Invalid type: '%s'" % t.__name__)
         self.value = d.get("value", 1 if t in (int, float) else False if t == bool else "")
 
     def RenderWidget(self):
