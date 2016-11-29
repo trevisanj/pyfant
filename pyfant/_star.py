@@ -1,5 +1,5 @@
 """
-Star
+This is an old idea to build a single-file definition for a star, but was not taken further
 """
 star = {
 "titrav": "Some star in the universe",
@@ -13,17 +13,17 @@ star = {
 algo = {
 "ptdisk": False,
 "mu": 1,
-"kik", 0,
+"kik": 0,
 "tolv": None,
 }
    
 run = {
 "pas": 0.01,
 "fwhm": 0.12,
-"flprefix" = None,
-"llzero" = None,
-"llfin" = None,
-"aint" = None,
+"flprefix": None,
+"llzero": None,
+"llfin": None,
+"aint": None,
 }
 
 abonds = """
@@ -107,4 +107,4 @@ abonds = """
  TH 0.50
   U 0.49
 """
-# read with csv and sctgringio
+# read with csv and stringio

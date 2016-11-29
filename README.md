@@ -109,7 +109,7 @@ Graphical applications:
   - `x.py` -- PFANT Launcher
 
 Command-line tools:
-  - `copy-star.py` -- Copies stellar data files to local directory.
+  - `copy-_star.py` -- Copies stellar data files to local directory.
   - `create-grid.py` -- Model Grid Creator from MARCS atmospheric models 
   - `cut-atoms.py` -- Cuts atomic lines file to wavelength interval specified.
   - `cut-molecules.py` -- Cuts molecular lines file to wavelength interval specified.

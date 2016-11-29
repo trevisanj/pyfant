@@ -5,6 +5,7 @@ Rule: no pyfant module can import util!!!
 
 """
 __all__ = ["MultiRunnable"]
+
 from pyfant import *
 import copy
 import os
