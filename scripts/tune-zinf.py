@@ -29,7 +29,7 @@ from pyfant import *
 import logging
 import copy
 import numpy as np
-from pyfant.gui import XRunnableManager
+from pyfant.windows import XRunnableManager
 from PyQt4.QtGui import *
 import time
 import os.path

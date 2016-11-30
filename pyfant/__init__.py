@@ -33,9 +33,9 @@ from . import plotting
 from . import blocks
 from .blocks import *
 # note that gui * is not imported automatically, only the package
-from . import gui
+from . import windows
 # note that blocks is not imported automatically
-
+from . import collaborate
 
 def get_config():
     """Returns PyfantConfigObj object that corresponds to file ~/.pyfant.conf"""

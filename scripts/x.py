@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
-from pyfant.gui import XMulti, XRunnableManager
+from pyfant.windows import XMulti, XRunnableManager
 from pyfant import *
-from pyfant.gui import guiaux
+from pyfant.windows import guiaux
 import sys
 from PyQt4.QtGui import *
 import argparse
