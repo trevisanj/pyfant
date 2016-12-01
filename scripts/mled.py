@@ -2,29 +2,31 @@
 
 """Molecular lines file editor."""
 
-from pyfant.gui import *
-from astrotypes import *
 import sys
 from PyQt4.QtGui import *
 from PyQt4.QtCore import *
 import argparse
 import logging
+import pyfant as pf
+import astroapi as aa
 
-misc.logging_level = logging.INFO
+aa.logging_level = logging.INFO
+aa.flag_log_file = True
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
     description=__doc__,
-    formatter_class=SmartFormatter
+    formatter_class=aa.SmartFormatter
     )
     parser.add_argument('fn', type=str, help='molecules file name',
-                        default=FileMolecules.default_filename, nargs='?')
+                        default=pf.FileMolecules.default_filename, nargs='?')
     args = parser.parse_args()
 
-    m = FileMolecules()
+    m = pf.FileMolecules()
     m.load(args.fn)
-    app = get_QApplication([])
-    form = XFileMolecules()
+    app = aa.get_QApplication([])
+    form = pf.XFileMolecules()
     form.show()
     form.load(m)
     sys.exit(app.exec_())

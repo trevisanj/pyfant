@@ -4,25 +4,21 @@ Miscellanea routines that depend on other pyfant modules.
 Rule: no pyfant module can import util!!!
 
 """
-__all__ = ["run_parallel",
-           "load_any_file", "load_spectrum",
-           "setup_inputs", "link_to_data", "copy_star",
-           "load_spectrum_fits_messed_x", "list_data_types", "classes_sp"]
+__all__ = [
+    "run_parallel", "setup_inputs", "copy_star", "link_to_data", "create_or_replace_or_skip_links",
+    "copy_or_skip_files",
+]
 
-import time
-import traceback
-import numpy as np
-import copy
 import os
 import glob
 import shutil
-from astropy.io import fits
 import astroapi as aa
 import pyfant as pf
 
 
 # ##################################################################################################
 # Terminal-based interface
+
 
 # TODO TEST run_parallel
 def run_parallel(rr, max_simultaneous=None, flag_console=True, runnable_manager=None):
@@ -42,7 +38,7 @@ def run_parallel(rr, max_simultaneous=None, flag_console=True, runnable_manager=
         assert isinstance(runnable_manager, pf.RunnableManager)
         rm = runnable_manager
     else:
-        rm = RunnableManager(max_simultaneous=max_simultaneous)
+        rm = pf.RunnableManager(max_simultaneous=max_simultaneous)
     flag_had_to_start = False
     if not rm.flag_start_called:
         rm.start()
@@ -101,8 +97,8 @@ def setup_inputs(dest_dir='.', star='sun-asplund-2009', common='common', h=True,
       opa=True -- whether to look for grid.moo
     """
 
-    logger = get_python_logger()
-    dd = get_pfant_path("data")
+    logger = aa.get_python_logger()
+    dd = aa.get_pfant_path("data")
 
     # Functions that return full path, given a filename, to ...
     fd = lambda filename: os.path.join(dest_dir, filename)  # ... Destination directory
@@ -134,7 +130,7 @@ def setup_inputs(dest_dir='.', star='sun-asplund-2009', common='common', h=True,
 
 
 def copy_star(src_dir):
-    star_classes = [FileMain, FileDissoc, FileAbonds]
+    star_classes = [pf.FileMain, pf.FileDissoc, pf.FileAbonds]
 
     print(("Will look inside directory %s" % src_dir))
 

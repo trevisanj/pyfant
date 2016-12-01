@@ -1,13 +1,14 @@
-from . import DataFile
-from ..misc import froze_it
 import re
 import sys
 import imp
+import astroapi as aa
+
 
 __all__ = ["FileOptions"]
 
-@froze_it
-class FileOptions(DataFile):
+
+@aa.froze_it
+class FileOptions(aa.DataFile):
     """
     `x.py` Command-line Options
 
@@ -22,7 +23,7 @@ class FileOptions(DataFile):
     attrs = []
 
     def __init__(self):
-        DataFile.__init__(self)
+        aa.DataFile.__init__(self)
 
         # innewmarcs, hydro2, pfant, nulbad
         self.logging_level = None
@@ -95,7 +96,7 @@ class FileOptions(DataFile):
 
     def get_names(self):
         """Returns a list with the names of all the options. Names come sorted"""
-        d = dir(DataFile())
+        d = dir(aa.DataFile())
         return [x for x in dir(self) if not x.startswith(('_', 'get_')) and
          x not in d]
 

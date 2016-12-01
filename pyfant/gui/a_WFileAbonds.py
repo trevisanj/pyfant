@@ -4,10 +4,9 @@ __all__ = ["WFileAbonds"]
 
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
-from .guiaux import *
 from pyfant import FileAbonds, adjust_atomic_symbol, FileDissoc
-import copy
-from pyfant.constants import *
+import astroapi as aa
+import pyfant as pf
 
 
 ABONDS_HEADERS = ["Element", "Abundance", "Notes"]
@@ -94,7 +93,7 @@ class WFileAbonds(QWidget):
         #a.currentCellChanged.connect(self.on_tableWidget_currentCellChanged)
         a.cellChanged.connect(self.on_tableWidget_cellChanged)
         a.setEditTriggers(QAbstractItemView.DoubleClicked | QAbstractItemView.EditKeyPressed)
-        a.setFont(MONO_FONT)
+        a.setFont(aa.MONO_FONT)
         a.installEventFilter(self)
 
         # ## The errors area
@@ -111,8 +110,8 @@ class WFileAbonds(QWidget):
         x = self.textEditError = QTextEdit(self)
         l.addWidget(x)
         x.setReadOnly(True)
-        x.setStyleSheet("QTextEdit {color: %s}" % COLOR_ERROR)
-        x.setFont(MONO_FONT)
+        x.setStyleSheet("QTextEdit {color: %s}" % aa.COLOR_ERROR)
+        x.setFont(aa.MONO_FONT)
 
         # ## Splitter stretch factors
         # These need to be set a posteriori otherwise they do
@@ -177,7 +176,7 @@ class WFileAbonds(QWidget):
                         item.setText(self._validate_element(row, item.text()))
                         flag_done = True
                     except Exception as E:
-                        show_error(str(E))
+                        aa.show_error(str(E))
 
                 if flag_done:
                     self._update_file_abonds()
@@ -205,7 +204,7 @@ class WFileAbonds(QWidget):
         self._update_file_abonds()
         self.edited.emit()
         if len(not_found) > 0:
-            show_message("Symbols not found in the periodic table:\n\n"+
+            aa.show_message("Symbols not found in the periodic table:\n\n"+
                         str([x.strip() for x in not_found])+"\n\n"+
                         "These symbols will appear first and will be ordered alphabetically.")
 
@@ -257,7 +256,7 @@ class WFileAbonds(QWidget):
         try:
             o, t = self.f, self.tableWidget
             n = len(o)
-            ResetTableWidget(t, n, len(ABONDS_HEADERS))
+            aa.ResetTableWidget(t, n, len(ABONDS_HEADERS))
             t.setHorizontalHeaderLabels(ABONDS_HEADERS)
 
             # list with the vectors themselves

@@ -1,12 +1,12 @@
-__all__ = ["XAtomLinesEditor"]
+
+__all__ = ["XMolLinesEditor"]
 
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
-from astrotypes import *
-import numpy as np
-from .guiaux import *
+import astroapi as aa
+from ._shared import *
 
-class XAtomLinesEditor(QMainWindow):
+class XMolLinesEditor(QMainWindow):
 
     def __init__(self, parent):
         QMainWindow.__init__(self)
@@ -21,16 +21,16 @@ class XAtomLinesEditor(QMainWindow):
         a.currentCellChanged.connect(self.on_tableWidget_currentCellChanged)
         a.cellChanged.connect(self.on_tableWidget_cellChanged)
         a.setEditTriggers(QAbstractItemView.DoubleClicked | QAbstractItemView.EditKeyPressed)
-        a.setFont(MONO_FONT)
+        a.setFont(aa.MONO_FONT)
         a.installEventFilter(self)
 
 
         self.setCentralWidget(a)
-        snap_right(self, 360)
+        aa.snap_right(self, 200)
 
     def on_tableWidget_currentCellChanged(self, currentRow, currentColumn, previousRow,
                                           previousColumn):
-        self.parent.AtomLinesEditor_current_row_changed(currentRow)
+        self.parent.MolLinesEditor_current_row_changed(currentRow)
 
     def on_tableWidget_cellChanged(self, row, column):
         if not self.flag_populating:
@@ -39,13 +39,13 @@ class XAtomLinesEditor(QMainWindow):
                 value = float(item.text())
             except ValueError:
                 # restores original value
-                show_error("Invalid floating point value: %s" % item.text())
-                item.setText(str(self.parent.atom.__getattribute__(ATOM_ATTR_NAMES[column])[row]))
+                aa.show_error("Invalid floating point value: %s" % item.text())
+                item.setText(str(self.parent.sol.__getattribute__(SOL_ATTR_NAMES[column])[row]))
             else:
-                self.parent.AtomLinesEditor_cell_changed(row, column, value)
+                self.parent.MolLinesEditor_cell_changed(row, column, value)
 
     def closeEvent(self, _):
-        self.parent.AtomLinesEditor_closing()
+        self.parent.MolLinesEditor_closing()
 
     def eventFilter(self, source, event):
         if event.type() == QEvent.KeyPress:
@@ -57,24 +57,24 @@ class XAtomLinesEditor(QMainWindow):
 
     # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # *
 
-    def set_atom(self, atom, title):
+    def set_sol(self, sol, title):
         """Sets set of lines."""
 
-        assert isinstance(atom, Atom)
+        assert isinstance(sol, aa.SetOfLines)
 
         self.flag_populating = True
         try:
             self.setWindowTitle(title)
 
             t = self.tableWidget
-            n = len(atom)
-            ResetTableWidget(t, n, len(ATOM_HEADERS))
-            t.setHorizontalHeaderLabels(ATOM_HEADERS)
+            n = len(sol)
+            aa.ResetTableWidget(t, n, len(SOL_HEADERS))
+            t.setHorizontalHeaderLabels(SOL_HEADERS)
 
             # list with the vectors themselves
-            attrs = [atom.__getattribute__(x) for x in ATOM_ATTR_NAMES]
+            attrs = [sol.__getattribute__(x) for x in SOL_ATTR_NAMES]
 
-            for i in range(len(atom)):
+            for i in range(len(sol)):
                 for j, attr in enumerate(attrs):
                     item = QTableWidgetItem(str(attr[i]))
                     t.setItem(i, j, item)
@@ -82,7 +82,6 @@ class XAtomLinesEditor(QMainWindow):
             t.resizeColumnsToContents()
         finally:
             self.flag_populating = False
-
 
     def set_row(self, i):
         t = self.tableWidget

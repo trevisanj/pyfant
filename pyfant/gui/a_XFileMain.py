@@ -4,9 +4,10 @@ __all__ = ["XFileMain"]
 
 from PyQt4.QtGui import *
 from . import a_WFileMain
-from pyfant import FileMain
-from .guiaux import *
 import os.path
+from pyfant import FileMain
+from astroapi import MONO_FONT, place_left_top, show_error, are_you_sure
+from ._shared import *
 
 ################################################################################
 class XFileMain(QMainWindow):

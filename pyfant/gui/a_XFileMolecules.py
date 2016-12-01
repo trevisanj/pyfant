@@ -6,16 +6,17 @@ __all__ = ["XFileMolecules"]
 
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
-from astrotypes import *
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qt4agg import NavigationToolbar2QT # as NavigationToolbar2QT
 import matplotlib.pyplot as plt
 import numpy as np
 from .a_XMolLinesEditor import *
-from .guiaux import *
 import os.path
 import webbrowser
 import sys
+from ._shared import *
+import astroapi as aa
+import pyfant as pf
 
 NUM_PLOTS = len(SOL_HEADERS)-1  # -1 because whe "lambda" does not have its plot
 
@@ -42,7 +43,7 @@ class XFileMolecules(QMainWindow):
 
         # ** tab "General file info"
         a = self.plainTextEditFileInfo = QPlainTextEdit()
-        a.setFont(MONO_FONT)
+        a.setFont(aa.MONO_FONT)
 
 
         # ** "Molecules browser"
@@ -72,7 +73,7 @@ class XFileMolecules(QMainWindow):
 
         # ** ** ** tab "Molecule info"
         a = self.plainTextEditMolInfo = QPlainTextEdit()
-        a.setFont(MONO_FONT)
+        a.setFont(aa.MONO_FONT)
 
         # ** ** ** tab "Molecular lines"
 
@@ -82,7 +83,7 @@ class XFileMolecules(QMainWindow):
         self.labelSol = QLabel('Sets of lines (Ctrl+2)')
 
         a = self.listWidgetSol = QListWidget()
-        a.setFont(MONO_FONT)
+        a.setFont(aa.MONO_FONT)
         #a.setFixedWidth(100)
         a.currentRowChanged.connect(self.on_listWidgetSol_currentRowChanged)
         a.setContextMenuPolicy(Qt.CustomContextMenu)
@@ -142,7 +143,7 @@ class XFileMolecules(QMainWindow):
 
         # ** ** ** ** ** ** tab "Set-of-lines info"
         a = self.plainTextEditSolInfo = QPlainTextEdit()
-        a.setFont(MONO_FONT)
+        a.setFont(aa.MONO_FONT)
 
         # ** ** ** ** ** ** Plot tab
 
@@ -173,7 +174,7 @@ class XFileMolecules(QMainWindow):
         a.addTab(self.plainTextEditSolInfo, "Set-of-lines Info (Alt+&N)")
         a.addTab(self.widgetSolPlot, "Set-of-lines plots (Alt+&P)")
         a.setCurrentIndex(1)
-        a.setFont(MONO_FONT)
+        a.setFont(aa.MONO_FONT)
 
         # ** ** ** ** ** splitter: (list of set-of-lines) | (plot)
         a = self.splitterSol = QSplitter(Qt.Horizontal)
@@ -186,7 +187,7 @@ class XFileMolecules(QMainWindow):
         a.addTab(self.plainTextEditMolInfo, "Molecule info (Alt+&M)")
         a.addTab(self.splitterSol, "Sets of lines (Alt+&L)")
         a.setCurrentIndex(1)
-        a.setFont(MONO_FONT)
+        a.setFont(aa.MONO_FONT)
 
         # ** splitter: (list of molecules) | (molecules tab widget)
         a = self.splitterMol = QSplitter(Qt.Horizontal)
@@ -200,7 +201,7 @@ class XFileMolecules(QMainWindow):
         a.addTab(self.plainTextEditFileInfo, "General File Info (Alt+&I)")
         a.addTab(self.splitterMol, "Molecules Browser (Alt+&B)")
         a.setCurrentIndex(1)
-        a.setFont(MONO_FONT)
+        a.setFont(aa.MONO_FONT)
 
 
         # * # * # * # * # * # * # *
@@ -226,7 +227,7 @@ class XFileMolecules(QMainWindow):
         # Final adjustments
 
         self.setCentralWidget(self.tabWidgetFile)
-        place_left_top(self)
+        aa.place_left_top(self)
 
     # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * #
 
@@ -285,9 +286,9 @@ class XFileMolecules(QMainWindow):
         try:
             base_dir = os.path.dirname(sys.argv[0])
             webbrowser.open_new(os.path.join(base_dir, "mled.html"))
-            show_message("Help file mled.html was opened in web browser.")
+            aa.show_message("Help file mled.html was opened in web browser.")
         except Exception as e:
-            show_error(str(e))
+            aa.show_error(str(e))
             raise
 
     def on_save(self, _):
@@ -295,7 +296,7 @@ class XFileMolecules(QMainWindow):
         try:
             self.save()
         except Exception as e:
-            show_error(str(e))
+            aa.show_error(str(e))
             raise
         finally:
             self.enable_save_actions()
@@ -310,7 +311,7 @@ class XFileMolecules(QMainWindow):
                     self.save_dir, _ = os.path.split(str(new_filename))
                     self.save_as(new_filename)
         except Exception as e:
-            show_error(str(e))
+            aa.show_error(str(e))
             raise
         finally:
             self.enable_save_actions()
@@ -361,14 +362,14 @@ class XFileMolecules(QMainWindow):
 
     def load(self, f):
         """Loads file into GUI."""
-        assert isinstance(f, FileMolecules)
+        assert isinstance(f, pf.FileMolecules)
 
         self.f = f
 
         self.plainTextEditFileInfo.setPlainText(str(f))
 
         for m in f.molecules:
-            assert isinstance(m, Molecule)
+            assert isinstance(m, pf.Molecule)
             item = QListWidgetItem(self.get_mol_string(m))
             # not going to allow editing yet item.setFlags(item.flags() | Qt.ItemIsEditable)
             self.listWidgetMol.addItem(item)
@@ -442,7 +443,7 @@ class XFileMolecules(QMainWindow):
                         x = _x[ii]
                         y = _y[ii]
 
-                    format_BLB()
+                    aa.format_BLB()
 
                     self.figure.add_subplot(n, 1, i_subplot)
                     pi.axis = ax = self.figure.gca()
@@ -474,7 +475,7 @@ class XFileMolecules(QMainWindow):
         obj = self.mol
         if obj is None: return
         item = self.listWidgetMol.currentItem()
-        r, form = show_edit_form(obj,
+        r, form = aa.show_edit_form(obj,
             ["titulo", "fe", "do", "mm", "am", "bm", "ua", "ub", "te", "cro", "s"],
             item.text())
         flag_changed = False
@@ -511,7 +512,7 @@ class XFileMolecules(QMainWindow):
         obj = self.sol
         if obj is None: return
         item = self.listWidgetMol.currentItem()
-        r, form = show_edit_form(self.sol, ["qqv", "ggv", "bbv", "ddv", "fact"],
+        r, form = aa.show_edit_form(self.sol, ["qqv", "ggv", "bbv", "ddv", "fact"],
                                   item.text())
         flag_changed = False
         if r == QDialog.Accepted:
@@ -612,7 +613,7 @@ class XFileMolecules(QMainWindow):
     def clear_markers(self):
         for o in self.plot_info:
             if o.mpl_obj:
-                remove_line(o.mpl_obj)
+                aa.remove_line(o.mpl_obj)
                 o.mpl_obj = None
 
     def draw_markers(self):
@@ -635,7 +636,7 @@ class XFileMolecules(QMainWindow):
     def on_plot_click(self, event):
         lambda_ = event.xdata
         if lambda_ is not None and self.form_lines is not None:
-            idx = index_nearest(self.sol.lmbdam, lambda_)
+            idx = aa.index_nearest(self.sol.lmbdam, lambda_)
             self.form_lines.set_row(idx)
             # self.set_marker_row(idx)
 

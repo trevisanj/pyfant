@@ -1,19 +1,14 @@
 """ThreadManager2 class."""
 __all__ = ["RunnableManager"]
 
-from .runnables import *
-from .misc import random_name, seconds2str, get_python_logger, MyLock
+from astroapi import random_name, seconds2str, get_python_logger, MyLock, froze_it
 import threading
-import traceback
-import time
 from PyQt4.QtCore import QObject, pyqtSignal
 import multiprocessing
 import copy
 import time
 from threading import Lock
-import logging
 import sys
-from .misc import froze_it
 import collections
 
 

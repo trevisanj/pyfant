@@ -6,15 +6,22 @@ Check session directory "session-<number>" for log files.
 """
 
 import argparse
-from pyfant import *
+import pyfant as pf
+import astroapi as aa
+import logging
+
+
+aa.logging_level = logging.INFO
+aa.flag_log_file = True
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
     description=__doc__,
-    formatter_class=SmartFormatter
+    formatter_class=aa.SmartFormatter
     )
 
-    names = Conf().opt.get_names() # option names
+    names = pf.Conf().opt.get_names() # option names
 
     for name in names:
         # name = name.replace('_', '-')
@@ -24,11 +31,9 @@ if __name__ == "__main__":
 
 
     # Configuration for Python logging messages.
-    misc.flag_log_console = True
-    misc.flag_log_file = True
-    logger = get_python_logger()
+    logger = aa.get_python_logger()
 
-    c = Combo()
+    c = pf.Combo()
     c.conf.flag_log_file = True  # Configuration for Fortran messages
     c.conf.flag_log_console = True  # "
     c.conf.flag_output_to_dir = False  # Will generate outputs in current directory

@@ -1,14 +1,13 @@
 __all__ = ["FileAbonds"]
 
 import struct
-from .datafile import *
+import astroapi as aa
 from ..misc import adjust_atomic_symbol
 import re
-from . import FileDissoc
-from ..misc import SYMBOLS
+from .filedissoc import FileDissoc
 
 
-class FileAbonds(DataFile):
+class FileAbonds(aa.DataFile):
     """PFANT Stellar Chemical Abundances"""
 
     description = "chemical abundances"
@@ -16,7 +15,7 @@ class FileAbonds(DataFile):
     attrs = ["ele", "abol", "notes"]
 
     def __init__(self):
-        DataFile.__init__(self)
+        aa.DataFile.__init__(self)
         self.ele = []   # list of atomic symbols
         self.abol = []  # corresponding abundances
         self.notes = []  # ignored by pfant
@@ -91,7 +90,7 @@ class FileAbonds(DataFile):
         for symbol, abundance in zip(self.ele, self.abol):
             s = symbol.strip()
             try:
-                atomic_numbers.append("%3d" % (SYMBOLS.index(s)+1))
+                atomic_numbers.append("%3d" % (aa.SYMBOLS.index(s)+1))
                 aa.append(abundance)
             except ValueError:
                 pass  # skips elements whose symbol is not in the periodic table
@@ -129,7 +128,7 @@ class FileAbonds(DataFile):
         for symbol in self.ele:
             s = symbol.strip()
             try:
-                atomic_numbers.append("%3d" % (SYMBOLS.index(s)+1))
+                atomic_numbers.append("%3d" % (aa.SYMBOLS.index(s)+1))
             except ValueError:
                 atomic_numbers.append("    "+s)
                 not_found.append(symbol)

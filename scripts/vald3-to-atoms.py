@@ -7,21 +7,23 @@ Molecular lines are skipped.
 """
 
 import argparse
-from pyfant import SmartFormatter
-from pyfant.from_vald import *
-from pyfant import misc
 import logging
 import numpy as np
 import sys
+import pyfant as pf
+import astroapi as aa
 
-misc.logging_level = logging.INFO
+
+aa.logging_level = logging.INFO
+aa.flag_log_file = True
+
 
 DEFOUT = "atoms-untuned-<fn_input>"
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
      description=__doc__,
-     formatter_class=SmartFormatter
+     formatter_class=aa.SmartFormatter
      )
     parser.add_argument('fn_input', type=str, help='input file name', nargs=1)
     parser.add_argument('fn_output', type=str, help='output file name', nargs="?",
@@ -32,7 +34,7 @@ if __name__ == "__main__":
      help='maximum kiex')
 
     args = parser.parse_args()
-    logger = misc.get_python_logger()
+    logger = aa.get_python_logger()
 
     fn_out = args.fn_output
     if fn_out == DEFOUT:
@@ -40,7 +42,7 @@ if __name__ == "__main__":
 
     logger.info("Converting file...")
     with open(args.fn_input[0], 'r') as file_:
-        file_atoms = vald3_to_atoms(file_)
+        file_atoms = pf.vald3_to_atoms(file_)
 
     n0 = file_atoms.num_lines
     logger.info("Number of lines before filtering: %d" % n0)

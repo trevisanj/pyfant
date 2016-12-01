@@ -1,14 +1,15 @@
 __all__ = ["FileMolecules", "Molecule", "SetOfLines"]
-from .datafile import *
-from ..misc import *
+
+
 from ..errors import *
-import logging
 import sys
 import numpy as np
-_logger = logging.getLogger(__name__)
-_logger.addHandler(logging.NullHandler())
+from astroapi import froze_it, AttrsPart, write_lf, DataFile, float_vector,  ordinal_suffix, \
+                     multirow_str_vector, str_vector, readline_strip, get_python_logger, \
+                     int_vector
 
 
+@froze_it
 class SetOfLines(AttrsPart):
     attrs = ["vl", "v2l", "qqv", "ggv", "bbv", "ddv", "fact", "num_lines"]
 
@@ -57,7 +58,7 @@ class SetOfLines(AttrsPart):
         self.branch.append(branch)
 
 
-
+@froze_it
 class Molecule(AttrsPart):
     attrs = ["titulo", "fe", "do", "mm", "am", "bm", "ua", "ub",
              "te", "cro", "s", "nv", "num_lines"]
@@ -100,6 +101,7 @@ class Molecule(AttrsPart):
 
 
 # TODO Save information in molecule header
+@froze_it
 class FileMolecules(DataFile):
     """
     PFANT Molecular Lines
@@ -163,7 +165,7 @@ class FileMolecules(DataFile):
                     self.molecules.append(m)
 
                     m.titulo = readline_strip(h)
-                    _logger.debug('Reading %d%s molecule \'%s\'' % (im+1, ordinal_suffix(im+1), m.titulo))
+                    get_python_logger().debug('Reading %d%s molecule \'%s\'' % (im+1, ordinal_suffix(im+1), m.titulo))
                     r += 1
                     m.fe, m.do, m.mm, m.am, m.bm, m.ua, m.ub, m.te, m.cro = float_vector(h)
                     r += 1

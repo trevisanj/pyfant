@@ -4,12 +4,11 @@ __all__ = ["WFileAbXFwhm"]
 
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
-from .guiaux import *
-from astrotypes import *
-from .syntax import *
 import sys
 import types
 import traceback
+from astroapi import get_python_logger, PythonHighlighter, style_checkboxes, COLOR_DESCR, COLOR_ERROR
+from pyfant import FileAbXFwhm
 
 class WFileAbXFwhm(QWidget):
     """

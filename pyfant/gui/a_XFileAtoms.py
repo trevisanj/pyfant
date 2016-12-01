@@ -6,17 +6,17 @@ __all__ = ["XFileAtoms"]
 
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
-from astrotypes import *
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qt4agg import NavigationToolbar2QT # as NavigationToolbar2QT
 import matplotlib.pyplot as plt
 import numpy as np
 from .a_XAtomLinesEditor import *
-from .guiaux import *
 import os.path
 import webbrowser
 import sys
-from . import XFileAtomsHistogram
+import astroapi as aa
+import pyfant as pf
+from ._shared import *
 
 
 NUM_PLOTS = len(ATOM_HEADERS)-1  # -1 because whe "lambda" does not have its plot
@@ -164,9 +164,9 @@ class XFileAtoms(QMainWindow):
         # * # * # * # * # * # * # *
         # Final adjustments
 
-        self.splitter.setFont(MONO_FONT)
+        self.splitter.setFont(aa.MONO_FONT)
         self.setCentralWidget(self.splitter)
-        place_left_top(self)
+        aa.place_left_top(self)
 
     # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * #
     # Qt override
@@ -208,9 +208,9 @@ class XFileAtoms(QMainWindow):
         base_dir = os.path.dirname(sys.argv[0])
         try:
             webbrowser.open_new(os.path.join(base_dir, "ated.html"))
-            show_message("Help file ated.html was opened in web browser.")
+            aa.show_message("Help file ated.html was opened in web browser.")
         except Exception as e:
-            show_error(str(e))
+            aa.show_error(str(e))
             raise
 
     def on_save(self, _):
@@ -218,7 +218,7 @@ class XFileAtoms(QMainWindow):
         try:
             self.save()
         except Exception as e:
-            show_error(str(e))
+            aa.show_error(str(e))
             raise
         finally:
             self.enable_save_actions()
@@ -233,7 +233,7 @@ class XFileAtoms(QMainWindow):
                     self.save_dir, _ = os.path.split(str(new_filename))
                     self.save_as(new_filename)
         except Exception as e:
-            show_error(str(e))
+            aa.show_error(str(e))
             raise
         finally:
             self.enable_save_actions()
@@ -255,7 +255,7 @@ class XFileAtoms(QMainWindow):
 
     def on_histogram(self, _):
         if self.form_histogram is None:
-            self.form_histogram = XFileAtomsHistogram(self.f)
+            self.form_histogram = pf.XFileAtomsHistogram(self.f)
         self.form_histogram.show()
 
 
@@ -263,12 +263,12 @@ class XFileAtoms(QMainWindow):
 
     def load(self, f):
         """Loads file into GUI."""
-        assert isinstance(f, FileAtoms)
+        assert isinstance(f, pf.FileAtoms)
 
         self.f = f
 
         for m in f.atoms:
-            assert isinstance(m, Atom)
+            assert isinstance(m, pf.Atom)
             item = QListWidgetItem(self.get_atom_string(m))
             # not going to allow editing yet item.setFlags(item.flags() | Qt.ItemIsEditable)
             self.listWidgetAtoms.addItem(item)
@@ -329,7 +329,7 @@ class XFileAtoms(QMainWindow):
                         x = _x[ii]
                         y = _y[ii]
 
-                    format_BLB()
+                    aa.format_BLB()
 
                     self.figure.add_subplot(SL[n-1][0], SL[n-1][1], i_subplot)
                     pi.axis = ax = self.figure.gca()
@@ -423,7 +423,7 @@ class XFileAtoms(QMainWindow):
     def clear_markers(self):
         for o in self.plot_info:
             if o.mpl_obj:
-                remove_line(o.mpl_obj)
+                aa.remove_line(o.mpl_obj)
                 o.mpl_obj = None
 
     def draw_markers(self):
@@ -446,7 +446,7 @@ class XFileAtoms(QMainWindow):
     def on_plot_click(self, event):
         lambda_ = event.xdata
         if lambda_ is not None and self.form_lines is not None:
-            idx = index_nearest(self.atom.lambda_, lambda_)
+            idx = aa.index_nearest(self.atom.lambda_, lambda_)
             self.form_lines.set_row(idx)
             # self.set_marker_row(idx)
 
@@ -457,6 +457,6 @@ class XFileAtoms(QMainWindow):
 
     @staticmethod
     def get_atom_string(a):
-        assert isinstance(a, Atom)
+        assert isinstance(a, pf.Atom)
         return "%-3s (%4d)" % (str(a).strip(), len(a))
 

@@ -1,12 +1,10 @@
 __all__ = ["FileHmap", "HmapRow"]
 
-from .datafile import *
-from ..misc import *
-import logging
 
-_logger = logging.getLogger(__name__)
-_logger.addHandler(logging.NullHandler())
+from astroapi import froze_it, AttrsPart, DataFile, write_lf
 
+
+@froze_it
 class HmapRow(AttrsPart):
     """Same structure as pfantlib.f90::hmap_row type."""
 
@@ -22,6 +20,7 @@ class HmapRow(AttrsPart):
         self.c1 = None
 
 
+@froze_it
 class FileHmap(DataFile):
     """
     PFANT Hygrogen Lines Map

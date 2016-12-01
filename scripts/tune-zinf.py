@@ -25,17 +25,17 @@ get higher zinf's. This is really not critical. pas=0.02 or pas=0.04 should do.
 """
 
 import argparse
-from pyfant import *
 import logging
 import copy
 import numpy as np
-from pyfant.windows import XRunnableManager
-from PyQt4.QtGui import *
-import time
 import os.path
-import glob
+import pyfant as pf
+import astroapi as aa
 
-misc.logging_level = logging.INFO
+
+aa.logging_level = logging.INFO
+aa.flag_log_file = True
+aa.flag_log_console = True
 
 # Fraction of peak to be considered its "settlement"
 EPSILON = 1e-4
@@ -67,7 +67,7 @@ def _get_zinf(lambda_centre, norm):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
      description=__doc__,
-     formatter_class=SmartFormatter
+     formatter_class=aa.SmartFormatter
      )
     parser.add_argument('--min', type=float, nargs='?', default=.1,
      help='minimum zinf. If zinf found for a particular line is smaller than '
@@ -90,7 +90,7 @@ if __name__ == "__main__":
     help='If set, will not remove the session directories.')
 
     args = parser.parse_args()
-    logger = get_python_logger()
+    logger = aa.get_python_logger()
 
     fn_out = args.fn_output
     if fn_out == DEFOUT:
@@ -103,23 +103,21 @@ if __name__ == "__main__":
     logger.info("Using inflate = %g" % args.inflate)
     logger.info("Using ge_current = %s" % args.ge_current)
 
-    file_atoms = FileAtoms()
+    file_atoms = pf.FileAtoms()
     file_atoms.load(args.fn_input[0])
 
-    misc.flag_log_console = True
-    misc.flag_log_file = True
     logger.info("Number of lines in file '%s': %d" % \
      (args.fn_input[0], file_atoms.num_lines))
 
     # # Tries to get input files together
-    setup_inputs(h=False, atoms=False, molecules=False, opa=False)
+    pf.setup_inputs(h=False, atoms=False, molecules=False, opa=False)
 
 
     # ## Runs innewmarcs if modeles.mod not present
     
     if not os.path.isfile('modeles.mod'):
         logger.info("'modeles.mod' does not exist, running innewmarcs...")
-        inn = Innewmarcs()
+        inn = pf.Innewmarcs()
         inn.conf.opt.opa = False
         inn.run()
 
@@ -130,7 +128,7 @@ if __name__ == "__main__":
     EXCEPTIONS = ["FE", "HE"]
     logger.info("Preparing abundances (Adding %g to all abundances, " % K_ADD)
     logger.info("except those of %s)..." % str(EXCEPTIONS))
-    fa = FileAbonds()
+    fa = pf.FileAbonds()
     fa.load("abonds.dat")
     cnt = 0
     for i in range(len(fa)):
@@ -157,16 +155,16 @@ if __name__ == "__main__":
     PAS = 0.04
     logger.info("Calculation step will be set to %g" % PAS)
     logger.info("Preparing pfant's...")
-    pp, aa, i = [], [], 0
+    pp, ll, i = [], [], 0
     ii = 0
     n = file_atoms.num_lines
     for atom in file_atoms.atoms:
         for line in atom.lines:
             a = copy.copy(atom)  # shallow copy
             a.lines = [line]
-            f = FileAtoms()
+            f = pf.FileAtoms()
             f.atoms = [a]
-            combo = Combo([FOR_PFANT])
+            combo = pf.Combo([pf.FOR_PFANT])
             # Fortran messages will not be displayed in terminal
             combo.conf.flag_log_console = False
             combo.conf.sid.flag_split_dirs = True
@@ -185,12 +183,12 @@ if __name__ == "__main__":
             combo.conf.opt.llzero = line.lambda_-args.max
             combo.conf.opt.llfin = line.lambda_
             pp.append(combo)
-            aa.append(a)
+            ll.append(a)
 
             i += 1
             ii += 1
             if ii == 1000:
-                print(format_progress(i, n))
+                print(aa.format_progress(i, n))
                 ii = 0
 
     # # Runs pfant
@@ -209,10 +207,10 @@ if __name__ == "__main__":
 
 
 
-    rm = RunnableManager()
+    rm = pf.RunnableManager()
     rm.add_runnables(pp)
-    app = get_QApplication([])
-    form = XRunnableManager(None, rm)
+    app = aa.get_QApplication([])
+    form = pf.XRunnableManager(None, rm)
     form.show()
     # it is good to start the manager as late as possible, otherwise
     # the program will hang if, for example, the form fails to be created.
@@ -240,10 +238,10 @@ if __name__ == "__main__":
         n = len(pp)
         X = np.zeros((n, 3))  # [algf, kiex, zinf], ...]
         ii = 0
-        print(format_progress(0, n))
+        print(aa.format_progress(0, n))
         cnt_min = 0
         cnt_max = 0
-        for i, (a, combo) in enumerate(zip(aa, pp)):
+        for i, (a, combo) in enumerate(zip(ll, pp)):
             combo.pfant.load_result()
 
 
@@ -278,9 +276,9 @@ if __name__ == "__main__":
             i += 1
             ii += 1
             if ii == 100:
-                print(format_progress(i, n))
+                print(aa.format_progress(i, n))
                 ii = 0
-        print(format_progress(n, n))
+        print(aa.format_progress(n, n))
         logger.info("zinf's clipped to minimum: %d" % cnt_min)
         logger.info("zinf's clipped to maximum: %d" % cnt_max)
 

@@ -35,23 +35,25 @@ c) "-p" option: looks for files in a directory specified.
 Note: in Windows, this script must be run as administrator.
 """
 import argparse
-from pyfant import *
 import logging
 import os.path
 import sys
 import glob
+import pyfant as pf
+import astroapi as aa
 
 
-misc.logging_level = logging.INFO
+aa.logging_level = logging.INFO
+aa.flag_log_file = True
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description=__doc__,
-        formatter_class=SmartFormatter
+        formatter_class=aa.SmartFormatter
     )
     parser.add_argument('-l', '--list', action='store_true',
-      help='lists subdirectories of '+get_pfant_data_path())
+      help='lists subdirectories of '+pf.get_pfant_data_path())
     parser.add_argument('-p', '--path', action='store_true',
       help='system path mode')
     parser.add_argument('directory', type=str, nargs="?", default="common",
@@ -70,15 +72,15 @@ if __name__ == "__main__":
 
     # "-l" mode
     if args.list:
-        print(fmt_ascii_h1("Subdirectories of '%s" % get_pfant_data_path()))
-        for dirname in get_pfant_data_subdirs():
+        print(aa.fmt_ascii_h1("Subdirectories of '%s" % pf.get_pfant_data_path()))
+        for dirname in pf.get_pfant_data_subdirs():
             print(dirname)
         sys.exit()
 
     if args.path:
         dir_ = args.directory
     else:
-        dir_ = get_pfant_path('data', args.directory)
+        dir_ = pf.get_pfant_path('data', args.directory)
 
     if len(sys.argv) == 1:
         while True:
@@ -89,5 +91,5 @@ if __name__ == "__main__":
             if ans in ("Y", "YES", ""):
                 break
 
-    link_to_data(dir_)
+    pf.link_to_data(dir_)
 

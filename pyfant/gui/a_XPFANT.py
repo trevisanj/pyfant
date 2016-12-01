@@ -3,13 +3,13 @@
 __all__ = ["XPFANT"]
 
 from PyQt4.QtGui import *
-from .guiaux import *
-from . import XRunnableManager
 from pyfant import *
 from .a_XMainAbonds import *
 import os.path
 import copy
 import shutil
+import astroapi as aa
+
 
 ################################################################################
 class XPFANT(XMainAbonds):
@@ -79,9 +79,9 @@ class XPFANT(XMainAbonds):
                 self.__submit_job()
             except Exception as e:
                 errors.append(str(e))
-                get_python_logger().exception("Cannot submit job")
+                aa.get_python_logger().exception("Cannot submit job")
         if len(errors) > 0:
-            show_error("Cannot submit job:\n  - "+("\n  - ".join(errors)))
+            aa.show_error("Cannot submit job:\n  - "+("\n  - ".join(errors)))
 
     def on_checkbox_custom_id_state_changed(self):
         self.__update_lineEdit_custom_id()

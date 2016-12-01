@@ -1,16 +1,15 @@
 __all__ = ["FileAtoms", "Atom", "AtomicLine"]
 
-from .datafile import *
 from ..misc import *
 from ..errors import *
 import struct
 import logging
 import sys
 import numpy as np
+from astroapi import froze_it, AttrsPart, DataFile, write_lf, str_vector, ordinal_suffix, float_vector
 
-_logger = logging.getLogger(__name__)
-_logger.addHandler(logging.NullHandler())
 
+@froze_it
 class Atom(AttrsPart):
     """
     Element with its atomic lines
@@ -67,6 +66,7 @@ class Atom(AttrsPart):
                 del self.lines[i]
 
 
+@froze_it
 class AtomicLine(AttrsPart):
     attrs = ["lambda_", "kiex", "algf", "ch", "gr", "ge", "zinf", "abondr"]
 

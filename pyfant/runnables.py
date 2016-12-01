@@ -9,10 +9,11 @@ from .conf import *
 import os
 from .misc import *
 from .errors import *
-from pyfant import FileSpectrumPfant, FileSpectrumNulbad, FileModBin
 from threading import Lock
+import astroapi as aa
 
-@froze_it
+
+@aa.froze_it
 class RunnableStatus(object):
 
     def __init__(self, runnable):
@@ -35,7 +36,7 @@ class RunnableStatus(object):
             return " ".join(l)
         return "?"
 
-@froze_it
+@aa.froze_it
 class ExecutableStatus(object):
     """Stores status related to Executable for reporting purposes."""
     
@@ -104,7 +105,7 @@ class Runnable(object):
         return self._get_sid()
 
     def __init__(self):
-        self.name = random_name()
+        self.name = aa.random_name()
         # Is running?
         self._flag_running = False
         # Is finished?
@@ -303,7 +304,7 @@ class Executable(Runnable):
             self.conf.logger.debug(str(self._status))
 
 
-@froze_it
+@aa.froze_it
 class Innewmarcs(Executable):
     """Class representing the innewmarcs executable."""
 
@@ -317,13 +318,13 @@ class Innewmarcs(Executable):
         self.modeles = None
 
     def load_result(self):
-        file_mod = FileModBin()
+        file_mod = aa.FileModBin()
         filepath = self.conf.get_fn_modeles()
         file_mod.load(filepath)
         self.modeles = file_mod
 
 
-@froze_it
+@aa.froze_it
 class Hydro2(Executable):
     """Class representing the hydro2 executable."""
 
@@ -337,7 +338,7 @@ class Hydro2(Executable):
         raise NotImplementedError("Opening hydro2 result will need hydro2 to save a side file containing a list of the files that it has created!!!")
 
 
-@froze_it
+@aa.froze_it
 class Pfant(Executable):
     """Class representing the pfant executable."""
 
@@ -384,12 +385,12 @@ class Pfant(Executable):
 
         for type_ in ("norm", "cont", "spec"):
             filepath = self.conf.get_pfant_output_filepath(type_)
-            file_sp = FileSpectrumPfant()
+            file_sp = aa.FileSpectrumPfant()
             file_sp.load(filepath)
             self.__setattr__(type_, file_sp.spectrum)
 
 
-@froze_it
+@aa.froze_it
 class Nulbad(Executable):
     """Class representing the nulbad executable."""
 
@@ -403,12 +404,14 @@ class Nulbad(Executable):
         self.convolved = None
 
     def load_result(self):
-        file_sp = FileSpectrumNulbad()
+        file_sp = aa.FileSpectrumNulbad()
         filepath = self.conf.get_nulbad_output_filepath()
         file_sp.load(filepath)
         self.convolved = file_sp.spectrum
 
-@froze_it
+
+@aa.froze_it
+
 class Combo(Runnable):
     """
     Runs sequence of executables: innermarcs, hydro2, pfant, nulbad.

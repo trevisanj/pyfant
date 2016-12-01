@@ -9,19 +9,25 @@ http://stackoverflow.com/questions/17788685
 """
 
 
-from matplotlib import pyplot as plt
-from pyfant import *
 import glob
 import os
 import matplotlib.backends.backend_pdf
 import argparse
 from pyfant import *
 import matplotlib.pyplot as plt
+import pyfant as pf
+import astroapi as aa
+import logging
+
+
+aa.logging_level = logging.INFO
+aa.flag_log_file = True
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
      description=__doc__,
-     formatter_class=SmartFormatter
+     formatter_class=aa.SmartFormatter
      )
 
     parser.add_argument('--samey',
@@ -34,17 +40,17 @@ if __name__ == "__main__":
     dd = glob.glob(conf.session_prefix+"*")
     dd.sort()
 
-    v = VisSpectrum()
+    v = aa.VisSpectrum()
     pdf = matplotlib.backends.backend_pdf.PdfPages(args.fn_output)
 
-    format_BLB()
+    aa.format_BLB()
 
     for d in dd:
         name = d[8:]
 
         print("Saving ", name, "...")
 
-        f = FileSpectrumPfant()
+        f = aa.FileSpectrumPfant()
         f.load(os.path.join(d, "flux.norm"))
 
         v.title = "%s" % name

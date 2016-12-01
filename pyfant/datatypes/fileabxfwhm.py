@@ -1,13 +1,13 @@
-"""
-FileMAbFwhm class (differential ABundances and FWHMs)
-"""
+"""FileMAbFwhm class (differential ABundances and FWHMs)"""
+
+
 __all__ = ["FileAbXFwhm"]
 
 
-from .datafile import *
 from pyfant import adjust_atomic_symbol
 import imp
 import numpy as np
+from astroapi import DataFile
 
 
 _COMMENT0 = """# Specification of differential abundances for each chemical.

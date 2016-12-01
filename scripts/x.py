@@ -1,37 +1,36 @@
 #!/usr/bin/env python3
 
-from pyfant.windows import XMulti, XRunnableManager
-from pyfant import *
-from pyfant.windows import guiaux
-import sys
-from PyQt4.QtGui import *
 import argparse
 import logging
+import pyfant as pf
+import astroapi as aa
+
+
+aa.logging_level = logging.INFO
+aa.flag_log_file = True
 
 
 __doc__ = """PFANT Launcher -- Graphical Interface for Spectral Synthesis\n\nSingle and multi modes.\n\n
 Multi mode
 ----------
-"""+guiaux.DESCR_MULTI+\
+"""+pf.gui._shared.DESCR_MULTI+\
 "---------\n\n"
 
-
-misc.logging_level = logging.INFO
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
      description=__doc__,
-     formatter_class=SmartFormatter
+     formatter_class=aa.SmartFormatter
      )
     args = parser.parse_args()
 
-    app = get_QApplication([])
+    app = aa.get_QApplication([])
 
-    form0 = XMulti()
+    form0 = pf.XMulti()
     # this would start with "multi" tab selected form0.tabWidget.setCurrentIndex(3)
 
-    rm = RunnableManager()
-    form1 = XRunnableManager(form0, rm)
+    rm = pf.RunnableManager()
+    form1 = pf.XRunnableManager(form0, rm)
     form1.flag_close_mpl_plots_on_close = False
     form1.flag_close_message = False
     form0.set_manager_form(form1)

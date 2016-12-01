@@ -4,10 +4,11 @@ __all__ = ["XFileAbonds"]
 
 from PyQt4.QtGui import *
 from . import a_WFileAbonds
-from pyfant import FileAbonds, FileDissoc
-from .guiaux import *
 import os
-from .a_XText import *
+from ._shared import *
+from pyfant import FileAbonds, FileDissoc
+from astroapi import are_you_sure, show_error, place_left_top, XText, MONO_FONT
+
 
 ################################################################################
 class XFileAbonds(QMainWindow):

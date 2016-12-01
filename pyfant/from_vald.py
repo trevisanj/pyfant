@@ -5,13 +5,14 @@ VALD3-to-PFANT conversions
 __all__ = ["vald3_to_atoms"]
 
 import csv
-from pyfant import adjust_atomic_symbol, Atom, FileAtoms, AtomicLine, \
- ordinal_suffix, symbols, get_python_logger
+import pyfant as pf
+import astroapi as aa
+
 import sys
 
 
 
-_logger = get_python_logger()
+_logger = aa.get_python_logger()
 
 
 # Temporary: no partition function for this
@@ -51,7 +52,7 @@ def vald3_to_atoms(file_obj):
 # 14|'KP                Li 1 - K 5 Bell    2 KP        2 KP        2 KP        2 KP        2 KP        2 KP        2 KP        2 KP        2 KP      Ar+           '
 
     reader = csv.reader(file_obj)
-    ret = FileAtoms()
+    ret = pf.FileAtoms()
     edict = {}  # links atomic symbols with Atom objects created (key is atomic symbol)
     r = 0
     num_skip_ioni, num_skip_mol = 0, 0
@@ -65,7 +66,7 @@ def vald3_to_atoms(file_obj):
 #                continue  # skips molecule
 
             elem = row[0][1:row[0].index(" ")]
-            if not elem in symbols:
+            if not elem in aa.SYMBOLS:
                 #x = raw_input("Skipping #"+elem+"#")
                 num_skip_mol += 1
                 continue  # skips molecule
@@ -98,7 +99,7 @@ def vald3_to_atoms(file_obj):
                 # Therefore, we fall back.
                 _waals = 0
 
-            line = AtomicLine()
+            line = pf.AtomicLine()
             line.lambda_ = float(row[1])
             line.algf = float(row[2])
             line.kiex = float(row[3])
@@ -125,20 +126,20 @@ def vald3_to_atoms(file_obj):
             line.abondr = 1
 
             # # Stores in object
-            elem = adjust_atomic_symbol(elem)
+            elem = pf.adjust_atomic_symbol(elem)
             key = elem+s_ioni  # will gb.py elements by this key
 
             if key in edict:
                 a = edict[key]
             else:
-                a = edict[key] = Atom()
+                a = edict[key] = pf.Atom()
                 a.elem = elem
                 a.ioni = int(s_ioni)
                 ret.atoms.append(a)
             a.lines.append(line)
     except Exception as e:
         raise type(e)(("Error around %d%s row of VALD3 file" %
-            (r+1, ordinal_suffix(r)))+": "+str(e)).with_traceback(sys.exc_info()[2])
+            (r+1, aa.ordinal_suffix(r)))+": "+str(e)).with_traceback(sys.exc_info()[2])
     _logger.debug("VALD3-to-atoms conversion successful!")
     _logger.info("Number of lines skipped (molecules): %d" % num_skip_mol)
     _logger.info("Number of lines skipped (ioni > 2): %d" % num_skip_ioni)

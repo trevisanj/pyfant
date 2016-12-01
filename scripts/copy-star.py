@@ -17,14 +17,17 @@ examples of usage:
 
 """
 import argparse
-from pyfant import *
 import logging
 import os.path
 import sys
 import glob
 import shutil
+import pyfant as pf
+import astroapi as aa
 
-misc.logging_level = logging.INFO
+
+aa.logging_level = logging.INFO
+aa.flag_log_file = True
 
 
 if __name__ == "__main__":
@@ -32,10 +35,10 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(
         description=__doc__,
-        formatter_class=SmartFormatter
+        formatter_class=aa.SmartFormatter
     )
     parser.add_argument('-l', '--list', action='store_true',
-      help='lists subdirectories of '+get_pfant_data_path())
+      help='lists subdirectories of '+pf.get_pfant_data_path())
     parser.add_argument('-p', '--path', action='store_true',
       help='system path mode')
     parser.add_argument('directory', type=str, nargs="?",
@@ -47,26 +50,26 @@ if __name__ == "__main__":
 
     # "-l" mode
     if args.list:
-        print(fmt_ascii_h1("Subdirectories of '%s" % get_pfant_data_path()))
-        for dirname in get_pfant_data_subdirs():
+        print(aa.fmt_ascii_h1("Subdirectories of '%s" % pf.get_pfant_data_path()))
+        for dirname in pf.get_pfant_data_subdirs():
             print(dirname)
         sys.exit()
         
     # figures out the path to directory (dir_)
     if flag_menu:
-        dirnames = get_pfant_star_subdirs()
-        choice = menu("Choose a star", [x.capitalize() for x in dirnames],
+        dirnames = pf.get_pfant_star_subdirs()
+        choice = aa.menu("Choose a star", [x.capitalize() for x in dirnames],
                       cancel_label="quit", flag_allow_empty=True, flag_cancel=False)
         if choice <= 0:
             sys.exit()
-        dir_ = os.path.join(get_pfant_data_path(), dirnames[choice-1])
+        dir_ = os.path.join(pf.get_pfant_data_path(), dirnames[choice-1])
     else:
         if args.path:
             dir_ = args.directory
         else:
-            dir_ = os.path.join(get_pfant_data_path(), args.directory)
+            dir_ = os.path.join(pf.get_pfant_data_path(), args.directory)
             
     if not os.path.isdir(dir_):
         print("'%s' is not a directory" % dir_)
         sys.exit(-1)
-    copy_star(dir_)
+    pf.copy_star(dir_)

@@ -7,14 +7,12 @@ from PyQt4.QtCore import *
 from .a_WFileMain import *
 from .a_WFileAbonds import *
 from .a_WOptionsEditor import *
-from astrotypes import *
-from .guiaux import *
-from . import XRunnableManager
-from astrotypes import *
+from .a_XRunnableManager import XRunnableManager
 import os
-import os.path
-import re
 import matplotlib.pyplot as plt
+from pyfant import FileMain, FileAbonds, FileOptions
+import astroapi as aa
+
 
 ################################################################################
 class XMainAbonds(QMainWindow):
@@ -114,7 +112,7 @@ class XMainAbonds(QMainWindow):
         # tab "File"
         tt = self.tabWidget = QTabWidget(self)
         la.addWidget(tt)
-        tt.setFont(MONO_FONT)
+        tt.setFont(aa.MONO_FONT)
 
         # ### Main configuration tab
         w0 = self.c27272 = QWidget()
@@ -222,7 +220,7 @@ class XMainAbonds(QMainWindow):
 
         if len(ff) > 0:
             s = "Unsaved changes\n  -"+("\n  -".join(ff))+"\n\nAre you sure you want to exit?"
-            flag_exit = are_you_sure(True, event, self, "Unsaved changes", s)
+            flag_exit = aa.are_you_sure(True, event, self, "Unsaved changes", s)
         if flag_exit:
             plt.close("all")
 
@@ -379,7 +377,7 @@ class XMainAbonds(QMainWindow):
         if not f:
             return True
         if not editor.flag_valid:
-            show_error("Cannot save, %s has error(s)!" % f.description)
+            aa.show_error("Cannot save, %s has error(s)!" % f.description)
         if f.filename:
             try:
                 f.save_as()
@@ -387,7 +385,7 @@ class XMainAbonds(QMainWindow):
                 self.__update_tab_texts()
                 return True
             except Exception as e:
-                show_error(str(e))
+                aa.show_error(str(e))
                 raise
         else:
             return self.__generic_save_as()
@@ -415,7 +413,7 @@ class XMainAbonds(QMainWindow):
                 self.__update_tab_texts()
                 return True
             except Exception as e:
-                show_error(str(e))
+                aa.show_error(str(e))
                 raise
         return False
 
@@ -437,7 +435,7 @@ class XMainAbonds(QMainWindow):
                 self._update_labels_fn()
                 self.__update_tab_texts()
         except Exception as e:
-            show_error(str(e))
+            aa.show_error(str(e))
             raise
 
     def __tab_has_file_operations(self):

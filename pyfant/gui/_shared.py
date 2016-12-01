@@ -3,11 +3,15 @@ Constants shared among windows, and resources that are not general enough to be 
 """
 
 
+import astroapi as aa
+import pyfant as pf
+
+
 # Messages shared in two or more different situations
 INITIALIZES_SUN = "Initializes fields with default parameters (Sun)"
 PARAMS_INVALID = "Can't save, invalid parameter values(s)!"
 LLZERO_LLFIN = "The calculation interval for the synthetic spectrum is given by "\
-  "["+enc_name("llzero", COLOR_CONFIG)+", "+enc_name("llfin", COLOR_CONFIG)+"]."\
+  "["+aa.enc_name("llzero", pf.COLOR_CONFIG)+", "+aa.enc_name("llfin", pf.COLOR_CONFIG)+"]."\
 """
 <pre>
           aint

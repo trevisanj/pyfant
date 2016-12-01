@@ -4,20 +4,20 @@ __all__ = ["WOptionsEditor"]
 
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
-from .guiaux import *
-from astrotypes import *
-from .a_XText import *
+import astroapi as aa
+import pyfant as pf
+
 
 _FROM_MAIN = ' (read from main configuration file)'
 _EXE_NAMES = {"i": "innewmarcs", "h": "hydro2", "p": "pfant", "n": "nulbad"}
 
 
-@froze_it
-class _Option(AttrsPart):
+@aa.froze_it
+class _Option(aa.AttrsPart):
     attrs = ["name", "argname", "descr"]
 
     def __init__(self):
-        AttrsPart.__init__(self)
+        aa.AttrsPart.__init__(self)
         self.checkbox = None
         self.label = None
         self.edit = None
@@ -31,7 +31,7 @@ class _Option(AttrsPart):
         self.flag_main = False
         # Whether or not the option is considered to be an option for developers (to aid debuggin etc)
         self.flag_devel = False
-        self.color = COLOR_DESCR
+        self.color = aa.COLOR_DESCR
         # other widgets to be shown/hidden (besides .checkbox, .label, .edit)
         self.other_widgets = []
         # Type (e.g. float, str). Only required for options whose default is None
@@ -70,7 +70,7 @@ class _Option(AttrsPart):
           flag_reset=False -- resets controls to default value if their value in the
                               FileOptions object is None
         """
-        assert isinstance(options, FileOptions)
+        assert isinstance(options, pf.FileOptions)
         attr = options.__getattribute__(self.name)
         flag_check = attr is not None
         self.checkbox.setChecked(flag_check)
@@ -82,7 +82,7 @@ class _Option(AttrsPart):
             self.update_edit_with_default()
 
     def get_label_text(self):
-        return enc_name_descr("--%s" % self.name, self.short_descr, self.color)
+        return aa.enc_name_descr("--%s" % self.name, self.short_descr, self.color)
 
 
     def get_value(self):
@@ -133,7 +133,7 @@ class WOptionsEditor(QWidget):
         # Whether all the values in the fields are valid or not
         self.flag_valid = False
         self.f = None # FileOptions object
-        self.logger = get_python_logger()
+        self.logger = aa.get_python_logger()
 
         # # Internal stuff that must not be accessed from outside
 
@@ -186,7 +186,7 @@ class WOptionsEditor(QWidget):
         l1 = self.layout23432 = QHBoxLayout()
         la.addLayout(l1)
         w = self.checkbox_main = QCheckBox("Show options that override main configuration file")
-        w.setStyleSheet("QCheckBox {color: %s}" % COLOR_CONFIG)
+        w.setStyleSheet("QCheckBox {color: %s}" % pf.COLOR_CONFIG)
         w.setChecked(True)
         w.stateChanged.connect(self.on_checkbox_main_clicked)
         w.setToolTip("Show options that, if set, will override values that appear in the main configuration file.")
@@ -318,7 +318,7 @@ class WOptionsEditor(QWidget):
          'default: <executable name>_dump.log, <i>e.g.</i>, <b>pfant_dump.log</b>')
         o.type = str
         o.flag_devel = True
-        self.__add_option(self.w_fn_main, 'ihpn', 'fn_main', FileMain.default_filename,
+        self.__add_option(self.w_fn_main, 'ihpn', 'fn_main', pf.FileMain.default_filename,
          'input file name: main configuration',
          'Contains star parameters and additional software configuration.<br><br>'
          '<b>Attention</b>: the following command-line options, if used, will '
@@ -330,7 +330,7 @@ class WOptionsEditor(QWidget):
         #
         # innewmarcs, hydro2, pfant
         #
-        self.__add_option(self.w_fn_modeles, 'ihp', 'fn_modeles', FileModBin.default_filename,
+        self.__add_option(self.w_fn_modeles, 'ihp', 'fn_modeles', aa.FileModBin.default_filename,
          'atmospheric model file name',
          'This is a binary file containing information about atmospheric model. '
          'This file is created by innewmarcs.')
@@ -346,7 +346,7 @@ class WOptionsEditor(QWidget):
          'Use absoru() kappa?',
          'Whether or not to include coefficients calculated by subroutine absoru() in the continuum.')
         o.flag_devel = False  # True
-        self.__add_option(self.w_fn_opa, 'ip', 'fn_opa', FileOpa.default_filename,
+        self.__add_option(self.w_fn_opa, 'ip', 'fn_opa', aa.FileOpa.default_filename,
          'Opacities filename',
          'This is a text file in the MARCS ".opa" format. This file can be generated through '
          'interpolation using <em>innewmarcs</em>.'
@@ -364,7 +364,7 @@ class WOptionsEditor(QWidget):
          'This is a binary file containing a grid of atmospheric models for interpolation.'
          '<p>Whether this file or the one specified by <em>--fn_moo</em> will be used '
          'will depend on the <em>--opa</em>option.')
-        self.__add_option(self.w_fn_moo, 'i', 'fn_moo', FileMoo.default_filename,
+        self.__add_option(self.w_fn_moo, 'i', 'fn_moo', aa.FileMoo.default_filename,
          'atmospheric model grid (<b>with opacities</b>)',
          'This is a binary file containing a grid of atmospheric models for interpolation, '
          'opacities included.'
@@ -400,18 +400,18 @@ class WOptionsEditor(QWidget):
          "lower boundary of calculation interval (&Aring;)",
          'default: &lt;main_llzero&gt; '+_FROM_MAIN)
         o.flag_main = True
-        o.color = COLOR_CONFIG
+        o.color = pf.COLOR_CONFIG
         o.type = float
         o = self.__add_option(self.w_llfin, 'hp', 'llfin', 6200.,
          'upper boundary of calculation interval (&Aring;)',
          'default: &lt;main_llfin&gt; '+_FROM_MAIN)
         o.flag_main = True
-        o.color = COLOR_CONFIG
+        o.color = pf.COLOR_CONFIG
         o.type = float
-        self.__add_option(self.w_fn_absoru2, 'hp', 'fn_absoru2', FileAbsoru2.default_filename,
+        self.__add_option(self.w_fn_absoru2, 'hp', 'fn_absoru2', pf.FileAbsoru2.default_filename,
          'input file name - absoru2',
          'This file contains physical data for pfant and hydro2 "absoru" module')
-        self.__add_option(self.w_fn_hmap, 'hp', 'fn_hmap', FileHmap.default_filename,
+        self.__add_option(self.w_fn_hmap, 'hp', 'fn_hmap', pf.FileHmap.default_filename,
          'input file name - hydrogen lines data',
          'Contains a table with<pre>'+
          'filename, niv inf, niv sup, central lambda, kiex, c1</pre>'
@@ -437,15 +437,15 @@ class WOptionsEditor(QWidget):
          '<li>2: parabolic</ul>')
         o.possible_values = [1, 2]
         # > @todo Find names for each file and update options help
-        self.__add_option(self.w_fn_dissoc, 'p', 'fn_dissoc', FileDissoc.default_filename,
+        self.__add_option(self.w_fn_dissoc, 'p', 'fn_dissoc', pf.FileDissoc.default_filename,
          'input file name - dissociative equilibrium', '')
-        self.__add_option(self.w_fn_partit, 'p', 'fn_partit', FilePartit.default_filename,
+        self.__add_option(self.w_fn_partit, 'p', 'fn_partit', pf.FilePartit.default_filename,
          'input file name - partition functions', '')
-        self.__add_option(self.w_fn_abonds, 'p', 'fn_abonds', FileAbonds.default_filename,
+        self.__add_option(self.w_fn_abonds, 'p', 'fn_abonds', pf.FileAbonds.default_filename,
          'input file name - atomic abundances', '')
-        self.__add_option(self.w_fn_atoms, 'p', 'fn_atoms', FileAtoms.default_filename,
+        self.__add_option(self.w_fn_atoms, 'p', 'fn_atoms', pf.FileAtoms.default_filename,
          'input file name - atomic lines', '')
-        self.__add_option(self.w_fn_molecules, 'p', 'fn_molecules', FileMolecules.default_filename,
+        self.__add_option(self.w_fn_molecules, 'p', 'fn_molecules', pf.FileMolecules.default_filename,
          'input file name - molecular lines', '')
         self.__add_option(self.w_no_molecules, 'p', 'no_molecules', False,
          'Skip molecules?',
@@ -466,7 +466,7 @@ class WOptionsEditor(QWidget):
          'calculation delta-lambda (&Aring;)',
          'default: &lt;main_pas&gt; '+_FROM_MAIN)
         o.flag_main = True
-        o.color = COLOR_CONFIG
+        o.color = pf.COLOR_CONFIG
         o = self.__add_option(self.w_abs, 'p', 'abs', True,
          'Use MARCS absorption coefficients?',
          'Whether or not to include MARCS <b>absorption</b> coefficients in the continuum'
@@ -489,7 +489,7 @@ class WOptionsEditor(QWidget):
          '<li><flprefix>.norm: normalized spectrum</ul><br>'
          'default: &lt;main_flprefix&gt; '+_FROM_MAIN)
         o.flag_main = True
-        o.color = COLOR_CONFIG
+        o.color = pf.COLOR_CONFIG
 
         #
         # nulbad-only
@@ -498,7 +498,7 @@ class WOptionsEditor(QWidget):
          'nulbad input - flux file name',
          'default: &lt;main_flprefix>.norm '+_FROM_MAIN)
         o.flag_main = True
-        o.color = COLOR_CONFIG
+        o.color = pf.COLOR_CONFIG
         self.__add_option(self.w_flam, 'n', 'flam', False,
          'Perform Fnu-to-FLambda transformation?',
          'If True, Fnu-to-FLambda transformation is done before the convolution')
@@ -514,7 +514,7 @@ class WOptionsEditor(QWidget):
           'full-width-half-maximum of Gaussian function',
           'default: &lt;main_fwhm&gt; '+_FROM_MAIN+')')
         o.flag_main = True
-        o.color = COLOR_CONFIG
+        o.color = pf.COLOR_CONFIG
 
         IHPN = "ihpn"
         NIHPN = len(IHPN)
@@ -565,7 +565,7 @@ class WOptionsEditor(QWidget):
             except:
                 self.logger.exception("Processing option '%s'" % option.name)
                 raise
-        self.__update_from_data(FileOptions(), True)
+        self.__update_from_data(pf.FileOptions(), True)
 
 
         # ### Second widget of splitter
@@ -578,11 +578,11 @@ class WOptionsEditor(QWidget):
         x.setReadOnly(True)
         # x.setGeometry(0, 0, 100, 0)
         # x.setWordWrap(True)
-        x.setStyleSheet("QTextEdit {color: %s}" % COLOR_DESCR)
+        x.setStyleSheet("QTextEdit {color: %s}" % aa.COLOR_DESCR)
         lu.addWidget(x)
 
         x = self.labelError = QLabel(self)
-        x.setStyleSheet("QLabel {color: %s}" % COLOR_ERROR)
+        x.setStyleSheet("QLabel {color: %s}" % aa.COLOR_ERROR)
         lu.addWidget(x)
 
         sp.addWidget(wlu)
@@ -592,7 +592,7 @@ class WOptionsEditor(QWidget):
         sp.setStretchFactor(1, 2)
 
         self.__update_gui_visible_options()
-        style_checkboxes(self)
+        pf.style_checkboxes(self)
         self.setEnabled(False)  # disabled until load() is called
         self.flag_process_changes = True
 
@@ -601,7 +601,7 @@ class WOptionsEditor(QWidget):
     # # Interface
 
     def load(self, x):
-        assert isinstance(x, FileOptions)
+        assert isinstance(x, pf.FileOptions)
         self.f = x
         self.__update_from_data(flag_reset=True)
         # this is called to perform file validation upon loading
@@ -625,7 +625,7 @@ class WOptionsEditor(QWidget):
             option = self.__find_option_by_widget(obj_focused)
             if option:
                 text = "%s<br><br>%s" % \
-                       (enc_name(option.name.replace("&", ""), option.color),
+                       (aa.enc_name(option.name.replace("&", ""), option.color),
                         option.long_descr)
                 self.__set_descr_text(text)
 
@@ -669,7 +669,7 @@ class WOptionsEditor(QWidget):
         args = self.f.get_args()
         print(args)
         line = "fortran-binary-xxxx "+(" ".join(args))
-        w = XText(self, line, "Command line")
+        w = aa.XText(self, line, "Command line")
         w.show()
 
     def on_filter(self):
@@ -761,7 +761,7 @@ class WOptionsEditor(QWidget):
                 emsg = "Option <em>--%s</em>: %s" % (ss, str(E))
             else:
                 emsg = str(E)
-            get_python_logger().exception("Updating Options object")
+            aa.get_python_logger().exception("Updating Options object")
 
         self.flag_valid = not flag_error
         self.__set_error_text(emsg)
@@ -820,10 +820,10 @@ class WOptionsEditor(QWidget):
         l = []
         if self.error_text:
             l.append('<span style="color: %s"><b>Error</b>: %s</span>' %
-                     (COLOR_ERROR, self.error_text))
+                     (pf.COLOR_ERROR, self.error_text))
         if self.hiding_text:
             l.append('<span style="color: %s"><b>Warning</b>: %s</span>' %
-                     (COLOR_WARNING, self.hiding_text))
+                     (pf.COLOR_WARNING, self.hiding_text))
         s = "; ".join(l)
         self.labelError.setText(s)
 

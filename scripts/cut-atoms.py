@@ -5,18 +5,21 @@ Cuts atomic lines file to wavelength interval specified
 The interval is [llzero, llfin]
 """
 
-import argparse
-from pyfant import SmartFormatter
-from pyfant import misc
-from pyfant import FileAtoms
-import logging
 
-misc.logging_level = logging.INFO
+import argparse
+import logging
+import pyfant as pf
+import astroapi as aa
+
+
+aa.logging_level = logging.INFO
+aa.flag_log_file = True
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
      description=__doc__,
-     formatter_class=SmartFormatter
+     formatter_class=aa.SmartFormatter
      )
     parser.add_argument('llzero', type=float, nargs=1,
      help='lower wavelength boundary (angstrom)')
@@ -27,7 +30,7 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    file_atoms = FileAtoms()
+    file_atoms = pf.FileAtoms()
     file_atoms.load(args.fn_input[0])
 
     m = min([min(a.lambda_) for a in file_atoms.atoms])

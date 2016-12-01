@@ -1,5 +1,85 @@
+import os
+import glob
+import platform
+
+
+def get_pfant_path(*args):
+    """
+    Returns absolute path to the "PFANT" directory.
+
+    PFANT binaries must be in PATH,
+    otherwise it will not work
+
+    Arguments passed will be incorporated into path
+    """
+    p = os.getenv("PATH")
+    pos1 = p.rfind("PFANT")
+    pos0 = p.rfind(os.pathsep, 0, pos1)
+
+    # works even if pos0 == -1
+    path_prefix = p[pos0 + 1:pos1+5]
+
+    return os.path.abspath(os.path.join(path_prefix, *args))
+
 
 def adjust_atomic_symbol(x):
     """Makes sure atomic symbol is right-aligned and upper case (PFANT convention)."""
     assert isinstance(x, str)
     return "%2s" % (x.strip().upper())
+
+def get_pfant_data_path():
+    """Returns absolute path to PFANT/data"""
+    return get_pfant_path("data")
+
+
+def get_pfant_data_subdirs():
+    """returns a list containing all subdirectories of PFANT/data (their names only, not full path)."""
+    dd = glob.glob(os.path.join(get_pfant_data_path(), "*"))
+    ret = []
+    for d in dd:
+        if os.path.isdir(d):
+            ret.append(os.path.basename(d))
+    return ret
+
+
+def get_pfant_star_subdirs():
+    """Returns only subdirectories of PFANT/data that contain file main.dat."""
+    dd = glob.glob(os.path.join(get_pfant_data_path(), "*"))
+    ret = []
+    for d in dd:
+        if os.path.isdir(d) and os.path.isfile(os.path.join(d, 'main.dat')):
+            ret.append(os.path.basename(d))
+    return ret
+
+
+def get_fortrans(max_len=None):
+    """
+    Generates listing of files in the Fortran bin directory
+
+    Arguments
+      max_len -- (optional) if passed, will use it, otherwise will be the
+                 maximum number of characters among all Fortran executable names.
+
+    Returns: list of filenames
+    """
+
+    ret = []
+    bindir = os.path.join(get_pfant_path(), "fortran", "bin")
+    ihpn = ["innewmarcs", "hydro2", "pfant", "nulbad"]
+    if max_len is None:
+        max_len = max(len(x) for x in ihpn)
+
+    if platform.system() == "Windows":
+        def has_it(x):
+            return os.path.isfile(os.path.join(bindir, x+".exe"))
+    else:
+        def has_it(x):
+            return os.path.isfile(os.path.join(bindir, x))
+    for name in ihpn:
+        status = "not found"
+        if has_it(name):
+            status = "found"
+        piece = name + " " + ("." * (max_len-len(name)))
+        ret.append(("%-"+str(max_len)+"s %s") % (piece, status))
+    return ret
+

@@ -1,9 +1,12 @@
 __all__ = ["FileDissoc"]
-from .datafile import *
+
+
 import fortranformat as ff
-from ..misc import *
+from pyfant import adjust_atomic_symbol
+from astroapi import froze_it, DataFile, write_lf
 
 
+@froze_it
 class FileDissoc(DataFile):
     """PFANT Stellar Dissociation Equilibrium Information"""
     default_filename = "dissoc.dat"
