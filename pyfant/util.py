@@ -1,7 +1,7 @@
 """
 Miscellanea routines that depend on other pyfant modules.
 
-Rule: no pyfant module can import util!!!
+Rule: only 'gui/' modules can import util!!!
 
 """
 __all__ = [

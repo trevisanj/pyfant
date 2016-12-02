@@ -2,6 +2,10 @@ import os
 import glob
 import platform
 
+__all__ = [
+    "get_pfant_path", "get_pfant_data_path", "get_pfant_data_subdirs", "get_pfant_star_subdirs",
+    "get_fortrans",
+    ]
 
 def get_pfant_path(*args):
     """
@@ -21,11 +25,6 @@ def get_pfant_path(*args):
 
     return os.path.abspath(os.path.join(path_prefix, *args))
 
-
-def adjust_atomic_symbol(x):
-    """Makes sure atomic symbol is right-aligned and upper case (PFANT convention)."""
-    assert isinstance(x, str)
-    return "%2s" % (x.strip().upper())
 
 def get_pfant_data_path():
     """Returns absolute path to PFANT/data"""

@@ -7,7 +7,7 @@ __all__ = ["Runnable", "RunnableStatus", "ExecutableStatus", "Executable",
 import subprocess
 from .conf import *
 import os
-from .misc import *
+from .lib import *
 from .errors import *
 from threading import Lock
 import astroapi as aa
