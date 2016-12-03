@@ -255,7 +255,7 @@ Commonly, inspecting these files will be enough to figure out what happened.
 Your current directory will also have a file named _python.log_, containing
 debug/info/warning/error messages from Python.
 
-:bulb: `explorer.py` has a "Collect Fortran errors" button, which
+:bulb: `explorer.py` has a "Collect errors" button, which
 recurses directories in search for error/warning messages in all files named `fortran.log`
 
 ## Metallicity/temperature/gravity of star is outside range in the grid of models

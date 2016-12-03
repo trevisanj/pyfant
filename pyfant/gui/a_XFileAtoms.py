@@ -38,7 +38,7 @@ class XFileAtoms(QMainWindow):
 
         # Information about the plots
         self.marker_row = None  # points into current atom, self.atom
-        self.plot_info = [PlotInfo() for i in range(NUM_PLOTS)]
+        self.plot_info = [PlotInfo() for _ in range(NUM_PLOTS)]
         # keptself.set_flag_plot(ATOM_ATTR_NAMES.index("kiex")-1, True)
         self.set_flag_plot(ATOM_ATTR_NAMES.index("algf")-1, True)
 
@@ -142,7 +142,7 @@ class XFileAtoms(QMainWindow):
 
         # self.menubar = QMenuBar(self)
         # self.menubar.setGeometry(QRect(0, 0, 772, 18))
-        #self.menubar.setObjectName(_fromUtf8("menubar"))
+        # self.menubar.setObjectName(_fromUtf8("menubar"))
         b = self.menuBar()
         m = self.menu_file = b.addMenu("&File")
         self.act_save = ac = m.addAction("&Save")
@@ -177,7 +177,7 @@ class XFileAtoms(QMainWindow):
             r = QMessageBox.question(self,
                         "About to exit",
                         "File \"%s\" has unsaved changes. Save now?" % self.f.filename,
-                        QMessageBox.Yes|QMessageBox.No|
+                        QMessageBox.Yes | QMessageBox.No|
                         QMessageBox.Cancel)
             if r == QMessageBox.Cancel:
                 event.ignore()
@@ -306,7 +306,7 @@ class XFileAtoms(QMainWindow):
 
             n = sum([info.flag for info in self.plot_info])  # number of subplots (0, 1 or 2)
             # map to reuse plotting routine, contains what differs between each plot
-            map_ = [(ATOM_HEADERS[i], o.__getattribute__(ATOM_ATTR_NAMES[i])) \
+            map_ = [(ATOM_HEADERS[i], o.__getattribute__(ATOM_ATTR_NAMES[i]))
                     for i in range(1, len(ATOM_HEADERS))]
 
             # number of rows and columns for each different number of subplots
@@ -350,7 +350,8 @@ class XFileAtoms(QMainWindow):
 
                     i_subplot += 1
 
-            if i_subplot > 1: plt.tight_layout()
+            if i_subplot > 1:
+                plt.tight_layout()
 
             self.canvas.draw()
             self.draw_markers()
@@ -364,7 +365,8 @@ class XFileAtoms(QMainWindow):
         self.labelNumLines.setText('Number of lines: %d' % (n,))
 
     def update_window_title(self):
-        self.setWindowTitle("ated -- %s" % (self.f.filename+("" if not self.flag_changed else " (changed)"), ))
+        self.setWindowTitle("ated -- %s" %
+                            (self.f.filename+("" if not self.flag_changed else " (changed)"), ))
 
     def enable_save_actions(self):
         self.act_save.setEnabled(True)
@@ -459,4 +461,3 @@ class XFileAtoms(QMainWindow):
     def get_atom_string(a):
         assert isinstance(a, pf.Atom)
         return "%-3s (%4d)" % (str(a).strip(), len(a))
-

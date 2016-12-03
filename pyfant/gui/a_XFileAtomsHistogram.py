@@ -108,5 +108,3 @@ class XFileAtomsHistogram(QMainWindow):
         plt.tight_layout()
         format_BLB()
         self.canvas.draw()
-
-

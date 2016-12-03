@@ -140,7 +140,8 @@ class WFileMain(QWidget):
         pp.append((x, y, "&mu", "cosine of angle", COLOR_CONFIG,
          "This is the cosine of the angle formed by center of "
          "the star disk, the point of observation, and the Earth as vertex. "
-         "<br><br>This value will be used only if "+enc_name("ptdisk", COLOR_CONFIG)+" is True.<br>\n<pre>\n"
+         "<br><br>This value will be used only if "+enc_name("ptdisk", COLOR_CONFIG)+
+         " is True.<br>\n<pre>\n"
          "             point of observation   \n"
          "            /                       \n"
          "           /                        \n"
@@ -169,7 +170,8 @@ class WFileMain(QWidget):
         y.setValidator(QDoubleValidator(0, 10, 5))
         x.setBuddy(y)
         pp.append((x, y, "&pas", "calculation step (&Aring;)", COLOR_CONFIG,
-         "The synthetic spectrum will have points "+enc_name("pas", COLOR_CONFIG)+" &Aring; distant from "
+         "The synthetic spectrum will have points "+enc_name("pas", COLOR_CONFIG)+
+         " &Aring; distant from "
          "each other.<br><br>Use this to specify the resolution of the synthetic spectrum."))
 
         x = self.label_llzero = QLabel()
@@ -178,7 +180,8 @@ class WFileMain(QWidget):
         y.textEdited.connect(self.on_edited)
         y.setValidator(QDoubleValidator(0, 10, 5))
         x.setBuddy(y)
-        pp.append((x, y, "ll&zero", "lower boundary of synthesis interval (&Aring;)", COLOR_CONFIG, LLZERO_LLFIN))
+        pp.append((x, y, "ll&zero", "lower boundary of synthesis interval (&Aring;)",
+                   COLOR_CONFIG, LLZERO_LLFIN))
 
         x = self.label_llfin = QLabel()
         y = self.lineEdit_llfin = QLineEdit()
@@ -186,7 +189,8 @@ class WFileMain(QWidget):
         y.textEdited.connect(self.on_edited)
         y.setValidator(QDoubleValidator(0, 10, 5))
         x.setBuddy(y)
-        pp.append((x, y, "&llfin", "upper boundary of synthesis interval (&Aring;)", COLOR_CONFIG, LLZERO_LLFIN))
+        pp.append((x, y, "&llfin", "upper boundary of synthesis interval (&Aring;)",
+                   COLOR_CONFIG, LLZERO_LLFIN))
 
         x = self.label_aint = QLabel()
         y = self.lineEdit_aint = QLineEdit()
@@ -196,8 +200,11 @@ class WFileMain(QWidget):
         x.setBuddy(y)
         pp.append((x, y, "&aint", "length of sub-interval (&Aring;)", COLOR_CONFIG,
         "This is length of each calculation sub-interval "
-        "(the calculation interval ["+enc_name("llzero", COLOR_CONFIG)+", "+enc_name("llfin", COLOR_CONFIG)+"] is split in sub-intervals of roughly "+enc_name("aint", COLOR_CONFIG)+" &Aring;)."
-        "<br><br>Note: "+enc_name("aint", COLOR_CONFIG)+" must be a multiple of "+enc_name("pas", COLOR_CONFIG)+"."+LLZERO_LLFIN))
+        "(the calculation interval ["+enc_name("llzero", COLOR_CONFIG)+", "+
+        enc_name("llfin", COLOR_CONFIG)+"] is split in sub-intervals of roughly "+
+        enc_name("aint", COLOR_CONFIG)+" &Aring;)."
+        "<br><br>Note: "+enc_name("aint", COLOR_CONFIG)+" must be a multiple of "+
+        enc_name("pas", COLOR_CONFIG)+"."+LLZERO_LLFIN))
 
         x = self.label_fwhm = QLabel()
         y = self.lineEdit_fwhm = QLineEdit()

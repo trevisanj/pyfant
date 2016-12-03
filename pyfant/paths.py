@@ -1,11 +1,14 @@
 import os
 import glob
 import platform
+import astroapi as aa
+
 
 __all__ = [
     "get_pfant_path", "get_pfant_data_path", "get_pfant_data_subdirs", "get_pfant_star_subdirs",
     "get_fortrans",
     ]
+
 
 def get_pfant_path(*args):
     """
@@ -59,7 +62,7 @@ def get_fortrans(max_len=None):
       max_len -- (optional) if passed, will use it, otherwise will be the
                  maximum number of characters among all Fortran executable names.
 
-    Returns: list of filenames
+    Returns: list of astroapi.ExeInfo
     """
 
     ret = []
@@ -78,7 +81,9 @@ def get_fortrans(max_len=None):
         status = "not found"
         if has_it(name):
             status = "found"
-        piece = name + " " + ("." * (max_len-len(name)))
-        ret.append(("%-"+str(max_len)+"s %s") % (piece, status))
+
+        ret.append(aa.ExeInfo(name, status, flag_gui=None))
+        # piece = name + " " + ("." * (max_len-len(name)))
+        # ret.append(("%-"+str(max_len)+"s %s") % (piece, status))
     return ret
 

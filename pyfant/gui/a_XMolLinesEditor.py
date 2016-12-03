@@ -60,7 +60,7 @@ class XMolLinesEditor(QMainWindow):
     def set_sol(self, sol, title):
         """Sets set of lines."""
 
-        assert isinstance(sol, aa.SetOfLines)
+        assert isinstance(sol, pf.SetOfLines)
 
         self.flag_populating = True
         try:

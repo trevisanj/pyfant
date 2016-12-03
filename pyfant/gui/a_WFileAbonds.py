@@ -90,7 +90,7 @@ class WFileAbonds(QWidget):
         a = self.tableWidget = QTableWidget()
         sp.addWidget(a)
         a.setSelectionMode(QAbstractItemView.SingleSelection)
-        #a.currentCellChanged.connect(self.on_tableWidget_currentCellChanged)
+        # a.currentCellChanged.connect(self.on_tableWidget_currentCellChanged)
         a.cellChanged.connect(self.on_tableWidget_cellChanged)
         a.setEditTriggers(QAbstractItemView.DoubleClicked | QAbstractItemView.EditKeyPressed)
         a.setFont(aa.MONO_FONT)
@@ -118,7 +118,6 @@ class WFileAbonds(QWidget):
         # not work properly.
         sp.setStretchFactor(0, 1)
         sp.setStretchFactor(1, 0)
-
 
         # finally...
         self.setEnabled(False)  # Disabled until load() is called
@@ -205,8 +204,8 @@ class WFileAbonds(QWidget):
         self.edited.emit()
         if len(not_found) > 0:
             aa.show_message("Symbols not found in the periodic table:\n\n"+
-                        str([x.strip() for x in not_found])+"\n\n"+
-                        "These symbols will appear first and will be ordered alphabetically.")
+                            str([x.strip() for x in not_found])+"\n\n"+
+                            "These symbols will appear first and will be ordered alphabetically.")
 
     def on_insert(self):
         self._insertRow(self.tableWidget.currentRow())
@@ -332,7 +331,7 @@ class WFileAbonds(QWidget):
             if elem not in ele and elem != " H":
                 warnings.append("<b>Warning</b>: element \"%s\", required for "
                  "dissociative equilibrium calculation, is missing. "
-                "Abundance adopted for \"%s\" will be %g" %
+                 "Abundance adopted for \"%s\" will be %g" %
                  (elem.strip(), elem.strip(), cclog+12))
 
         o.ele = ele

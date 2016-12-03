@@ -45,7 +45,6 @@ class FileDissoc(DataFile):
 
     def _do_load(self, filename):
         """Clears internal lists and loads from file."""
-        self.abol, self.ele = [], []
 
         with open(filename, "r") as h:
             fr = ff.FortranRecordReader('(2i5, 2f10.5, 1x, a100)')

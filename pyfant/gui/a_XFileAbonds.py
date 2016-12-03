@@ -167,4 +167,3 @@ class XFileAbonds(QMainWindow):
         self.setWindowTitle("abed -- %s%s%s" % (self.editor.f.filename,
           "" if not self.flag_changed else " (changed)",
           "" if self.editor.flag_valid else " (*invalid*)"))
-

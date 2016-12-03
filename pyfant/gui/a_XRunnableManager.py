@@ -71,7 +71,7 @@ class XRunnableManager(QMainWindow):
         b4.clicked.connect(self.on_exit)
         b5 = self.pushButtonRetryFailed = QPushButton("Retry &failed")
         b5.clicked.connect(self.on_retry_failed)
-        b6 = self.pushButtonCollectErrors = QPushButton("&Collect Fortran errors")
+        b6 = self.pushButtonCollectErrors = QPushButton("&Collect errors")
         b6.setToolTip("Searches for errors in log files and reports these errors in a new window.")
         b6.clicked.connect(self.on_collect_errors)
         # todo + note: assuming that there is no interest in adding new tasks later

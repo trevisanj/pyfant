@@ -7,6 +7,7 @@ import numpy as np
 from astroapi import froze_it, AttrsPart, write_lf, DataFile, float_vector,  ordinal_suffix, \
                      multirow_str_vector, str_vector, readline_strip, get_python_logger, \
                      int_vector
+import astroapi as aa
 
 
 @froze_it
@@ -96,8 +97,10 @@ class Molecule(AttrsPart):
     def cut(self, lzero, lfin):
         """Reduces the number of lines to only the ones whose lmbdam is inside [lzero, lfin]"""
 
-        for set in self.sol:
-            set.cut(lzero, lfin)
+        for i in reversed(list(range(len(self)))):
+            self.sol[i].cut(lzero, lfin)
+            if len(self.sol[i]) == 0:
+                del self.sol[i]
 
 
 # TODO Save information in molecule header
@@ -156,9 +159,9 @@ class FileMolecules(DataFile):
                 nv = int_vector(h)  # number of transitions=sets-of-lines for each molecule
                 r += 1
                 # Uses length of nv vector to know how many molecules to read (ignores "number")
-                nm = len(nv)
+                num_mol = len(nv)
 
-                for im in range(nm):
+                for im in range(num_mol):
                     nvi = nv[im]
 
                     m = Molecule()
@@ -220,32 +223,42 @@ class FileMolecules(DataFile):
                         # Therefore I read the line and discard beyond the 5th column before
                         # converting to float
                         temp = str_vector(h)
-                        temp = temp[:5]
+                        lmbdam = float(temp[0])
+                        sj = float(temp[1])
+                        jj = float(temp[2])
+                        iz = temp[3]
+                        numlin = int(temp[4])
 
-                        lmbdam, sj, jj, iz, numlin = list(map(float, temp))
                         r += 1
 
                         o.lmbdam.append(lmbdam)
                         o.sj.append(sj)
                         o.jj.append(jj)
+                        o.branch.append(iz)
 
                         if numlin > 0:
                             if numlin == 9:
                                 break
                             o = next(sol_iter)
 
-                    if im+1 == nm:
+                    get_python_logger().info("Loading '{}': {}".format(filename, aa.format_progress(im+1, num_mol)))
+
+                    if im+1 == num_mol:
                         break
 
-                    im += 1
+                    # im += 1
             except Exception as e:
-                raise type(e)(("Error around %d%s row of file '%s'" % (r+1, ordinal_suffix(r+1), filename))+": "+str(e)).with_traceback(sys.exc_info()[2])
+                raise type(e)(("Error around %d%s row of file '%s'" %
+                    (r+1, ordinal_suffix(r+1), filename))+": "+str(e)).with_traceback(sys.exc_info()[2])
 
     def cut(self, lzero, lfin):
         """Reduces the number of lines to only the ones whose lmbdam is inside [lzero, lfin]"""
 
-        for m in self.molecules:
+        for i in reversed(list(range(len(self)))):
+            m = self.molecules[i]
             m.cut(lzero, lfin)
+            if len(m) == 0:
+                del self.molecules[i]
 
     def _do_save_as(self, filename):
         with open(filename, "w") as h:

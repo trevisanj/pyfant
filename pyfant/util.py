@@ -98,7 +98,7 @@ def setup_inputs(dest_dir='.', star='sun-asplund-2009', common='common', h=True,
     """
 
     logger = aa.get_python_logger()
-    dd = aa.get_pfant_path("data")
+    dd = pf.get_pfant_path("data")
 
     # Functions that return full path, given a filename, to ...
     fd = lambda filename: os.path.join(dest_dir, filename)  # ... Destination directory
@@ -217,7 +217,7 @@ def copy_or_skip_files(ff, dest_dir="."):
             aa.print_skipped("file exists in local directory")
             flag_skip = True
         else:
-            obj = aa.load_with_classes(f, [aa.FileMain, aa.FileAbonds, aa.FileDissoc])
+            obj = aa.load_with_classes(f, [pf.FileMain, pf.FileAbonds, pf.FileDissoc])
             if obj is not None:
                 pass
             else:

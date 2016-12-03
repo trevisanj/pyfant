@@ -1,8 +1,6 @@
 # todo plot "X" instead of line
-# find line in editor by clicking
 # rename molecule
 
-__all__ = ["XFileMolecules"]
 
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
@@ -18,7 +16,12 @@ from ._shared import *
 import astroapi as aa
 import pyfant as pf
 
+
+__all__ = ["XFileMolecules"]
+
+
 NUM_PLOTS = len(SOL_HEADERS)-1  # -1 because whe "lambda" does not have its plot
+
 
 class XFileMolecules(QMainWindow):
 
@@ -37,7 +40,7 @@ class XFileMolecules(QMainWindow):
 
         # Information about the plots
         self.marker_row = None  # points into current set-of-lines, self.sol
-        self.plot_info = [PlotInfo() for i in range(NUM_PLOTS)]
+        self.plot_info = [PlotInfo() for _ in range(NUM_PLOTS)]
         self.set_flag_plot(SOL_ATTR_NAMES.index("sj")-1, True)
         self.set_flag_plot(SOL_ATTR_NAMES.index("jj")-1, True)
 
@@ -79,12 +82,12 @@ class XFileMolecules(QMainWindow):
 
         # ** ** ** ** left
 
-        #P = QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Expanding)
+        # P = QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Expanding)
         self.labelSol = QLabel('Sets of lines (Ctrl+2)')
 
         a = self.listWidgetSol = QListWidget()
         a.setFont(aa.MONO_FONT)
-        #a.setFixedWidth(100)
+        # a.setFixedWidth(100)
         a.currentRowChanged.connect(self.on_listWidgetSol_currentRowChanged)
         a.setContextMenuPolicy(Qt.CustomContextMenu)
         a.customContextMenuRequested.connect(self.on_listWidgetSol_customContextMenuRequested)
@@ -209,7 +212,7 @@ class XFileMolecules(QMainWindow):
 
         # self.menubar = QMenuBar(self)
         # self.menubar.setGeometry(QRect(0, 0, 772, 18))
-        #self.menubar.setObjectName(_fromUtf8("menubar"))
+        # self.menubar.setObjectName(_fromUtf8("menubar"))
         b = self.menuBar()
         m = self.menu_file = b.addMenu("&File")
         self.act_save = ac = m.addAction("&Save")
@@ -262,7 +265,7 @@ class XFileMolecules(QMainWindow):
             r = QMessageBox.question(self,
                         "About to exit",
                         "File \"%s\" has unsaved changes. Save now?" % self.f.filename,
-                        QMessageBox.Yes|QMessageBox.No|
+                        QMessageBox.Yes | QMessageBox.No|
                         QMessageBox.Cancel)
             if r == QMessageBox.Cancel:
                 event.ignore()
@@ -423,7 +426,7 @@ class XFileMolecules(QMainWindow):
 
             n = sum([info.flag for info in self.plot_info])  # number of subplots (0, 1 or 2)
             # map to reuse plotting routine, contains what differs between each plot
-            map_ = [(SOL_HEADERS[i], o.__getattribute__(SOL_ATTR_NAMES[i])) \
+            map_ = [(SOL_HEADERS[i], o.__getattribute__(SOL_ATTR_NAMES[i]))
                     for i in range(1, len(SOL_HEADERS))]
 
             i_subplot = 1
@@ -454,17 +457,18 @@ class XFileMolecules(QMainWindow):
 
                     # x-limits
                     xmin, xmax = min(x), max(x)
-                    K = .02*(xmax-xmin)
-                    ax.set_xlim([xmin-K, xmax+K])
+                    k = .02*(xmax-xmin)
+                    ax.set_xlim([xmin-k, xmax+k])
 
                     # y-limits
                     ymin, ymax = min(y), max(y)
-                    K = .02*(ymax-ymin)
-                    ax.set_ylim([ymin-K, ymax+K])
+                    k = .02*(ymax-ymin)
+                    ax.set_ylim([ymin-k, ymax+k])
 
                     i_subplot += 1
 
-            if i_subplot > 1: plt.tight_layout()
+            if i_subplot > 1:
+                plt.tight_layout()
 
             self.canvas.draw()
             self.draw_markers()
@@ -473,7 +477,8 @@ class XFileMolecules(QMainWindow):
 
     def edit_mol(self):
         obj = self.mol
-        if obj is None: return
+        if obj is None:
+            return
         item = self.listWidgetMol.currentItem()
         r, form = aa.show_edit_form(obj,
             ["titulo", "fe", "do", "mm", "am", "bm", "ua", "ub", "te", "cro", "s"],
@@ -489,9 +494,9 @@ class XFileMolecules(QMainWindow):
         if flag_changed:
             self.flag_changed = True
             item.setText(self.get_mol_string(obj))
-            #item.setStyleSheet("selected:active{background: yellow}")
+            # item.setStyleSheet("selected:active{background: yellow}")
             # item.setTextColor(QColor(255, 0, 0))
-            #item.setBackgroundColor(QColor(255, 0, 0))
+            # item.setBackgroundColor(QColor(255, 0, 0))
             self.update_mol_info()
             self.update_window_title()
 
@@ -510,7 +515,8 @@ class XFileMolecules(QMainWindow):
 
     def edit_sol(self):
         obj = self.sol
-        if obj is None: return
+        if obj is None:
+            return
         item = self.listWidgetMol.currentItem()
         r, form = aa.show_edit_form(self.sol, ["qqv", "ggv", "bbv", "ddv", "fact"],
                                   item.text())
@@ -553,7 +559,8 @@ class XFileMolecules(QMainWindow):
         self.labelNumLines.setText('Number of lines: %d' % (n,))
 
     def update_window_title(self):
-        self.setWindowTitle("mled - %s" % (self.f.filename+("" if not self.flag_changed else " (changed)"),))
+        self.setWindowTitle("mled - %s" % (self.f.filename+("" if not self.flag_changed
+                                                            else " (changed)"),))
 
     def enable_save_actions(self):
         self.act_save.setEnabled(True)
@@ -597,7 +604,8 @@ class XFileMolecules(QMainWindow):
     def set_editor_sol(self):
         """Sets the set-of-lines of the editor."""
         if self.sol is not None and self.form_lines is not None:
-            self.form_lines.set_sol(self.sol, "Set-of-lines: "+self.listWidgetSol.currentItem().text())
+            self.form_lines.set_sol(self.sol, "Set-of-lines: "+
+                                    self.listWidgetSol.currentItem().text())
 
     def close_editor(self):
         if self.form_lines is not None:
@@ -649,5 +657,3 @@ class XFileMolecules(QMainWindow):
     @staticmethod
     def get_sol_string(index, sol):
         return "%3d %7s" % (index+1, '(%d)' % len(sol))
-
-

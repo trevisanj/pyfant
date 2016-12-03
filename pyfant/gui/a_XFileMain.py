@@ -123,4 +123,3 @@ class XFileMain(QMainWindow):
         self.setWindowTitle("mained -- %s%s%s" % (self.editor.f.filename,
           "" if not self.flag_changed else " (changed)",
           "" if self.editor.flag_valid else " (*invalid*)"))
-

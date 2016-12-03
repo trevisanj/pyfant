@@ -1,15 +1,17 @@
 """Widget to edit a Conf object."""
 
-__all__ = ["WOptionsEditor"]
-
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 import astroapi as aa
 import pyfant as pf
 
+__all__ = ["WOptionsEditor"]
 
 _FROM_MAIN = ' (read from main configuration file)'
 _EXE_NAMES = {"i": "innewmarcs", "h": "hydro2", "p": "pfant", "n": "nulbad"}
+
+IHPN = "ihpn"
+NIHPN = len(IHPN)
 
 
 @aa.froze_it
@@ -23,13 +25,14 @@ class _Option(aa.AttrsPart):
         self.edit = None
         self.name = None
         self.ihpn = None
-        self.argname =  None
-        self.default =  None
+        self.argname = None
+        self.default = None
         self.short_descr = None
         self.long_descr = None
         # Whether or not the option overrides a value in main.dat
         self.flag_main = False
-        # Whether or not the option is considered to be an option for developers (to aid debuggin etc)
+        # Whether or not the option is considered to be an option for developers
+        # (to aid debuggin etc)
         self.flag_devel = False
         self.color = aa.COLOR_DESCR
         # other widgets to be shown/hidden (besides .checkbox, .label, .edit)
@@ -84,7 +87,6 @@ class _Option(aa.AttrsPart):
     def get_label_text(self):
         return aa.enc_name_descr("--%s" % self.name, self.short_descr, self.color)
 
-
     def get_value(self):
         type_ = type(self.default) if self.default is not None else self.type
         w = self.edit
@@ -101,17 +103,17 @@ class _Option(aa.AttrsPart):
 
             # validation
             if self.possible_values is not None:
-                if not value in self.possible_values:
+                if value not in self.possible_values:
                     raise RuntimeError("invalid value: \"%s\" -- possible values are: %s" %
-                                       (str(value), '"'+('"/"'.join([str(x) for x in self.possible_values]))+'"'))
-            if self.min is not None:
-                if value < self.min:
-                    raise RuntimeError("value too small (minimum allowed: %g)" % self.min)
-            if self.max is not None:
-                if value > self.max:
-                    raise RuntimeError("value too big (maximum allowed: %g)" % self.max)
+                                       (str(value), '"' + (
+                                       '"/"'.join([str(x) for x in self.possible_values])) + '"'))
+            if self.min is not None and value < self.min:
+                raise RuntimeError("value too small (minimum allowed: %g)" % self.min)
+            if self.max is not None and value > self.max:
+                raise RuntimeError("value too big (maximum allowed: %g)" % self.max)
 
         return value
+
 
 class WOptionsEditor(QWidget):
     """
@@ -127,12 +129,11 @@ class WOptionsEditor(QWidget):
     def __init__(self, parent=None):
         QWidget.__init__(self, parent)
 
-
         # # Setup & accessible attributes
 
         # Whether all the values in the fields are valid or not
         self.flag_valid = False
-        self.f = None # FileOptions object
+        self.f = None  # FileOptions object
         self.logger = aa.get_python_logger()
 
         # # Internal stuff that must not be accessed from outside
@@ -162,7 +163,7 @@ class WOptionsEditor(QWidget):
         l1.addWidget(w)
         w.setFixedWidth(100)
 
-        w = self.line12312 = QFrame() # vertical line
+        w = self.line12312 = QFrame()  # vertical line
         l1.addWidget(w)
         # w.setGeometry(QRect(240, 240, 3, 61))
         w.setFrameShape(QFrame.VLine)
@@ -189,7 +190,8 @@ class WOptionsEditor(QWidget):
         w.setStyleSheet("QCheckBox {color: %s}" % pf.COLOR_CONFIG)
         w.setChecked(True)
         w.stateChanged.connect(self.on_checkbox_main_clicked)
-        w.setToolTip("Show options that, if set, will override values that appear in the main configuration file.")
+        w.setToolTip("Show options that, if set, will override values "
+                     "that appear in the main configuration file.")
         l1.addWidget(w)
         w = self.checkbox_devel = QCheckBox("Show developer options")
         w.setChecked(False)
@@ -200,7 +202,6 @@ class WOptionsEditor(QWidget):
         b = QPushButton("Preview command line")
         b.clicked.connect(self.on_preview)
         l1.addWidget(b)
-
 
         # ## Splitter with scroll area and descripton+error area
         sp = self.splitter = QSplitter(Qt.Vertical)
@@ -217,7 +218,7 @@ class WOptionsEditor(QWidget):
         w = self.scrollWidget = QWidget()
         sa.setWidget(self.scrollWidget)
         sa.setWidgetResizable(True)
-#        la.addWidget(w)
+        #        la.addWidget(w)
 
         # #### The form layout
         # This layout contains the form layout and a spacer item
@@ -289,107 +290,112 @@ class WOptionsEditor(QWidget):
         # irrelevant nowadays, but may be shown again some time.
 
         o = self.__add_option(self.w_logging_level, 'ihpn', 'logging_level', 'debug',
-         'logging level',
-         'These are the available options:<ul>'+
-         '<li>debug'+
-         '<li>info'+
-         '<li>warning'+
-         '<li>error'+
-         '<li>critical'+
-         '<li>halt</ul>')
+                              'logging level',
+                              'These are the available options:<ul>' +
+                              '<li>debug' +
+                              '<li>info' +
+                              '<li>warning' +
+                              '<li>error' +
+                              '<li>critical' +
+                              '<li>halt</ul>')
         o.flag_devel = True
         o.possible_values = ["debug", "info", "warning", "error", "critical", "halt"]
         o = self.__add_option(self.w_logging_console, 'ihpn', 'logging_console', True,
-         'Log to console?',
-         'Whether or not to log messages to standard output (usually the command console)')
+        'Log to console?',
+        'Whether or not to log messages to standard output (usually the command console)')
         o.flag_devel = True
         o = self.__add_option(self.w_logging_file, 'ihpn', 'logging_file', False,
-          'Log to file?',
-          'Whether or not to log messages to log file '+
-          '(specified by option --fn_logging)')
+                              'Log to file?',
+                              'Whether or not to log messages to log file ' +
+                              '(specified by option --fn_logging)')
         o.flag_devel = True
         o = self.__add_option(self.w_explain, 'ihpn', 'explain', False,
-          'Save additional debugging information?',
-          'This flag informs the Fortran code to save additional information in file explain.txt '+
-          '(debugging purposes; output varies, or flag may be ignored)')
+        'Save additional debugging information?',
+        'This flag informs the Fortran code to save additional information in file explain.txt ' +
+        '(debugging purposes; output varies, or flag may be ignored)')
         o.flag_devel = True
         o = self.__add_option(self.w_fn_logging, 'ihpn', 'fn_logging', None,
-         'log filename',
-         'default: <executable name>_dump.log, <i>e.g.</i>, <b>pfant_dump.log</b>')
+        'log filename',
+        'default: <executable name>_dump.log, <i>e.g.</i>, <b>pfant_dump.log</b>')
         o.type = str
         o.flag_devel = True
         self.__add_option(self.w_fn_main, 'ihpn', 'fn_main', pf.FileMain.default_filename,
-         'input file name: main configuration',
-         'Contains star parameters and additional software configuration.<br><br>'
-         '<b>Attention</b>: the following command-line options, if used, will '
-            'override values in the main configuration file: '
-         '--llzero, --llfin, --pas, --flprefix, --fwhm.')
-        # (*) self.__add_option(self.w_fn_progress, 'ihpn', 'fn_progress', 'file name', 'progress.txt',
+                          'input file name: main configuration',
+                          'Contains star parameters and additional software configuration.<br><br>'
+                          '<b>Attention</b>: the following command-line options, if used, will '
+                          'override values in the main configuration file: '
+                          '--llzero, --llfin, --pas, --flprefix, --fwhm.')
+        # (*) self.__add_option(self.w_fn_progress, 'ihpn', 'fn_progress', 'file name',
+        # 'progress.txt',
         # (*)  'output file name - progress indicator')
 
         #
         # innewmarcs, hydro2, pfant
         #
         self.__add_option(self.w_fn_modeles, 'ihp', 'fn_modeles', aa.FileModBin.default_filename,
-         'atmospheric model file name',
-         'This is a binary file containing information about atmospheric model. '
-         'This file is created by innewmarcs.')
+                          'atmospheric model file name',
+                          'This is a binary file containing information about atmospheric model. '
+                          'This file is created by innewmarcs.')
 
         #
         # innewmarcs, pfant
         #
         self.__add_option(self.w_opa, 'ip', 'opa', False,
-         'Use MARCS opacities?',
-         'Whether or not to include MARCS opacity coefficients (absorption and scattering) in the continuum.')
+        'Use MARCS opacities?',
+        'Whether or not to include MARCS opacity coefficients (absorption and scattering) '
+        'in the continuum.')
         # the following option is a pfant-only option but it is better to put it here
         o = self.__add_option(self.w_absoru, 'p', 'absoru', True,
-         'Use absoru() kappa?',
-         'Whether or not to include coefficients calculated by subroutine absoru() in the continuum.')
+        'Use absoru() kappa?',
+        'Whether or not to include coefficients calculated by subroutine absoru() '
+        'in the continuum.')
         o.flag_devel = False  # True
         self.__add_option(self.w_fn_opa, 'ip', 'fn_opa', aa.FileOpa.default_filename,
-         'Opacities filename',
-         'This is a text file in the MARCS ".opa" format. This file can be generated through '
-         'interpolation using <em>innewmarcs</em>.'
-         '<p>Files downloaded directly from the MARCS '
-         'website should also work, although it is expected that you will use <em>innewmarcs</em>'
-         'to interpolate this opacities file based on a grid of models.')
+        'Opacities filename',
+        'This is a text file in the MARCS ".opa" format. This file can be generated through '
+        'interpolation using <em>innewmarcs</em>.'
+        '<p>Files downloaded directly from the MARCS '
+        'website should also work, although it is expected that you will use <em>innewmarcs</em>'
+        'to interpolate this opacities file based on a grid of models.')
 
         #
         # innewmarcs-only
         #
-        # (*) self.__add_option(self.w_modcode, 'i', 'modcode', 'string up to 25 characters', 'NoName',
+        # (*) self.__add_option(self.w_modcode, 'i', 'modcode', 'string up to 25 characters',
+        # 'NoName',
         # (*)  '"Model name"')
         self.__add_option(self.w_fn_modgrid, 'i', 'fn_modgrid', "grid.mod",
-         'atmospheric model grid (<b>without opacities</b>)',
-         'This is a binary file containing a grid of atmospheric models for interpolation.'
-         '<p>Whether this file or the one specified by <em>--fn_moo</em> will be used '
-         'will depend on the <em>--opa</em>option.')
+        'atmospheric model grid (<b>without opacities</b>)',
+        'This is a binary file containing a grid of atmospheric models for interpolation.'
+        '<p>Whether this file or the one specified by <em>--fn_moo</em> will be used '
+        'will depend on the <em>--opa</em>option.')
         self.__add_option(self.w_fn_moo, 'i', 'fn_moo', aa.FileMoo.default_filename,
-         'atmospheric model grid (<b>with opacities</b>)',
-         'This is a binary file containing a grid of atmospheric models for interpolation, '
-         'opacities included.'
-         '<p>Whether this file or the one specified by <em>--fn_modgrid</em> will be used '
-         'will depend on the <em>--opa</em>option.')
+        'atmospheric model grid (<b>with opacities</b>)',
+        'This is a binary file containing a grid of atmospheric models for interpolation, '
+        'opacities included.'
+        '<p>Whether this file or the one specified by <em>--fn_modgrid</em> will be used '
+        'will depend on the <em>--opa</em>option.')
         self.__add_option(self.w_allow, 'i', 'allow', False,
-         'Allow point out of atmospheric model grid?', 'If this option is disabled, target '
-         ' (glog, teff, asalog) point for interpolation must lie inside the 3D '
-         'atmospheric model grid.')
+        'Allow point out of atmospheric model grid?',
+        'If this option is disabled, target '
+        ' (glog, teff, asalog) point for interpolation must lie inside the 3D '
+        'atmospheric model grid.')
 
         #
         # hydro2-only
         #
         self.__add_option(self.w_amores, 'h', 'amores', True,
-         'AMOrtissement de RESonnance?', '')
+                          'AMOrtissement de RESonnance?', '')
         o = self.__add_option(self.w_kq, 'h', 'kq', 1,
-         'theorie',
-         '<ul>'
-         '<li>0: THEORIE DE GRIEM'+
-         '<li>1: THEORIE QUASISTATIQUE</ul>')
+                              'theorie',
+                              '<ul>'
+                              '<li>0: THEORIE DE GRIEM' +
+                              '<li>1: THEORIE QUASISTATIQUE</ul>')
         o.possible_values = [0, 1]
 
         o = self.__add_option(self.w_zph, 'h', 'zph', 12.,
-         'hydrogen-reference-abundance',
-         'abundance d\'H pour laquelle sont donn&eacute;es les abondances metalliques')
+        'hydrogen-reference-abundance',
+        'abundance d\'H pour laquelle sont donn&eacute;es les abondances metalliques')
         o.min = 0.
         o.max = 24.  # actually I would like to remove this option
 
@@ -397,97 +403,99 @@ class WOptionsEditor(QWidget):
         # hydro2, pfant
         #
         o = self.__add_option(self.w_llzero, 'hp', 'llzero', 6000.,
-         "lower boundary of calculation interval (&Aring;)",
-         'default: &lt;main_llzero&gt; '+_FROM_MAIN)
+                              "lower boundary of calculation interval (&Aring;)",
+                              'default: &lt;main_llzero&gt; ' + _FROM_MAIN)
         o.flag_main = True
         o.color = pf.COLOR_CONFIG
         o.type = float
         o = self.__add_option(self.w_llfin, 'hp', 'llfin', 6200.,
-         'upper boundary of calculation interval (&Aring;)',
-         'default: &lt;main_llfin&gt; '+_FROM_MAIN)
+                              'upper boundary of calculation interval (&Aring;)',
+                              'default: &lt;main_llfin&gt; ' + _FROM_MAIN)
         o.flag_main = True
         o.color = pf.COLOR_CONFIG
         o.type = float
         self.__add_option(self.w_fn_absoru2, 'hp', 'fn_absoru2', pf.FileAbsoru2.default_filename,
-         'input file name - absoru2',
-         'This file contains physical data for pfant and hydro2 "absoru" module')
+                          'input file name - absoru2',
+                          'This file contains physical data for pfant and hydro2 "absoru" module')
         self.__add_option(self.w_fn_hmap, 'hp', 'fn_hmap', pf.FileHmap.default_filename,
-         'input file name - hydrogen lines data',
-         'Contains a table with<pre>'+
-         'filename, niv inf, niv sup, central lambda, kiex, c1</pre>'
-         'for each hydrogen line.')
+                          'input file name - hydrogen lines data',
+                          'Contains a table with<pre>' +
+                          'filename, niv inf, niv sup, central lambda, kiex, c1</pre>'
+                          'for each hydrogen line.')
         o = self.__add_option(self.w_kik, 'hp', 'kik', 0,
-         'option affecting the flux integration',
-         '<ul>'+
-         '<li>0: integration using 6/7 points depending on <em>ptdisk</em> parameter in main configuration file;'+
-         '<li>1: 26-point integration</ul>')
+        'option affecting the flux integration',
+        '<ul>' +
+        '<li>0: integration using 6/7 points depending on <em>ptdisk</em> '
+        'parameter in main configuration file;' +
+        '<li>1: 26-point integration</ul>')
         o.possible_values = [0, 1]
 
         #
         # pfant-only
         #
         o = self.__add_option(self.w_aint, 'p', 'aint', 10,
-         'interval length per iteration (&Aring;)',
-         'default: &lt;main_aint&gt; '+_FROM_MAIN)
+                              'interval length per iteration (&Aring;)',
+                              'default: &lt;main_aint&gt; ' + _FROM_MAIN)
         o.flag_devel = True
         o = self.__add_option(self.w_interp, 'p', 'interp', 1,
-         'interpolation for subroutine turbul()',
-         'interpolation type for subroutine turbul()<ul>'+
-         '<li>1: linear;'+
-         '<li>2: parabolic</ul>')
+                              'interpolation for subroutine turbul()',
+                              'interpolation type for subroutine turbul()<ul>' +
+                              '<li>1: linear;' +
+                              '<li>2: parabolic</ul>')
         o.possible_values = [1, 2]
         # > @todo Find names for each file and update options help
         self.__add_option(self.w_fn_dissoc, 'p', 'fn_dissoc', pf.FileDissoc.default_filename,
-         'input file name - dissociative equilibrium', '')
+                          'input file name - dissociative equilibrium', '')
         self.__add_option(self.w_fn_partit, 'p', 'fn_partit', pf.FilePartit.default_filename,
-         'input file name - partition functions', '')
+                          'input file name - partition functions', '')
         self.__add_option(self.w_fn_abonds, 'p', 'fn_abonds', pf.FileAbonds.default_filename,
-         'input file name - atomic abundances', '')
+                          'input file name - atomic abundances', '')
         self.__add_option(self.w_fn_atoms, 'p', 'fn_atoms', pf.FileAtoms.default_filename,
-         'input file name - atomic lines', '')
-        self.__add_option(self.w_fn_molecules, 'p', 'fn_molecules', pf.FileMolecules.default_filename,
-         'input file name - molecular lines', '')
+                          'input file name - atomic lines', '')
+        self.__add_option(self.w_fn_molecules, 'p', 'fn_molecules',
+                          pf.FileMolecules.default_filename,
+                          'input file name - molecular lines', '')
         self.__add_option(self.w_no_molecules, 'p', 'no_molecules', False,
-         'Skip molecules?',
-         'If set, skips the calculation of molecular lines.')
+                          'Skip molecules?',
+                          'If set, skips the calculation of molecular lines.')
         self.__add_option(self.w_no_atoms, 'p', 'no_atoms', False,
-         'Skip atomic lines?',
-         'If set, skips the calculation of atomic lines (except hydrogen).')
+                          'Skip atomic lines?',
+                          'If set, skips the calculation of atomic lines (except hydrogen).')
         self.__add_option(self.w_no_h, 'p', 'no_h', False,
-         'Skip hydrogen lines?',
-         'If set, skips the calculation of hydrogen lines.')
+                          'Skip hydrogen lines?',
+                          'If set, skips the calculation of hydrogen lines.')
         o = self.__add_option(self.w_zinf, 'p', 'zinf', 0.5,
-         '(zinf per-line in dfile:atoms)',
-         'This is the distance from center of line to consider in atomic line calculation.<br><br>'+
-         'If this option is used, it will override all the zinf defined '+
-         'in the atomic lines file with a single value.')
+        '(zinf per-line in dfile:atoms)',
+        'This is the distance from center of line to consider in atomic line calculation.<br><br>' +
+        'If this option is used, it will override all the zinf defined ' +
+        'in the atomic lines file with a single value.')
         o.flag_devel = True
         o = self.__add_option(self.w_pas, 'p', 'pas', 0.02,
-         'calculation delta-lambda (&Aring;)',
-         'default: &lt;main_pas&gt; '+_FROM_MAIN)
+                              'calculation delta-lambda (&Aring;)',
+                              'default: &lt;main_pas&gt; ' + _FROM_MAIN)
         o.flag_main = True
         o.color = pf.COLOR_CONFIG
         o = self.__add_option(self.w_abs, 'p', 'abs', True,
-         'Use MARCS absorption coefficients?',
-         'Whether or not to include MARCS <b>absorption</b> coefficients in the continuum'
-         '<p>This option only has effect if <em>--opa<em> is True.')
+        'Use MARCS absorption coefficients?',
+        'Whether or not to include MARCS <b>absorption</b> coefficients in the continuum'
+        '<p>This option only has effect if <em>--opa<em> is True.')
         o.flag_devel = True
         o = self.__add_option(self.w_sca, 'p', 'sca', True,
-         'Use MARCS scattering coefficients?',
-         'Whether or not to include MARCS <b>scattering</b> coefficients in the continuum'
-         '<p>This option only has effect if <em>--opa<em> is True.')
+        'Use MARCS scattering coefficients?',
+        'Whether or not to include MARCS <b>scattering</b> coefficients in the continuum'
+        '<p>This option only has effect if <em>--opa<em> is True.')
         o.flag_devel = True
 
         #
         # pfant, nulbad
         #
         o = self.__add_option(self.w_flprefix, 'pn', 'flprefix', 'flux',
-         'pfant output - prefix for flux output files',
-         'Three files will be created based on this prefix:<ul>'+
-         '<li><flprefix>.spec: un-normalized spectrum'+
-         '<li><flprefix>.cont: continuum'+
-         '<li><flprefix>.norm: normalized spectrum</ul><br>'
-         'default: &lt;main_flprefix&gt; '+_FROM_MAIN)
+                              'pfant output - prefix for flux output files',
+                              'Three files will be created based on this prefix:<ul>' +
+                              '<li><flprefix>.spec: un-normalized spectrum' +
+                              '<li><flprefix>.cont: continuum' +
+                              '<li><flprefix>.norm: normalized spectrum</ul><br>'
+                              'default: &lt;main_flprefix&gt; ' + _FROM_MAIN)
         o.flag_main = True
         o.color = pf.COLOR_CONFIG
 
@@ -495,33 +503,31 @@ class WOptionsEditor(QWidget):
         # nulbad-only
         #
         self.__add_option(self.w_fn_flux, 'n', 'fn_flux', 'flux.norm',
-         'nulbad input - flux file name',
-         'default: &lt;main_flprefix>.norm '+_FROM_MAIN)
+                          'nulbad input - flux file name',
+                          'default: &lt;main_flprefix>.norm ' + _FROM_MAIN)
         o.flag_main = True
         o.color = pf.COLOR_CONFIG
         self.__add_option(self.w_flam, 'n', 'flam', False,
-         'Perform Fnu-to-FLambda transformation?',
-         'If True, Fnu-to-FLambda transformation is done before the convolution')
+                          'Perform Fnu-to-FLambda transformation?',
+                          'If True, Fnu-to-FLambda transformation is done before the convolution')
         self.__add_option(self.w_fn_cv, 'n', 'fn_cv', True,
-          'nulbad output -- convolved spectrum file name',
-          'default: &lt;flux file name&gt;.nulbad.&lt;fwhm&gt;')
+                          'nulbad output -- convolved spectrum file name',
+                          'default: &lt;flux file name&gt;.nulbad.&lt;fwhm&gt;')
         self.__add_option(self.w_pat, 'n', 'pat', 0.02,
-          'wavelength delta-lambda of nulbad output spectrum (&Aring;)',
-          'default: same as delta-lambda of input spectrum')
+                          'wavelength delta-lambda of nulbad output spectrum (&Aring;)',
+                          'default: same as delta-lambda of input spectrum')
         self.__add_option(self.w_convol, 'n', 'convol', True,
-          'Apply convolution?', '')
+                          'Apply convolution?', '')
         o = self.__add_option(self.w_fwhm, 'n', 'fwhm', 0.12,
-          'full-width-half-maximum of Gaussian function',
-          'default: &lt;main_fwhm&gt; '+_FROM_MAIN+')')
+                              'full-width-half-maximum of Gaussian function',
+                              'default: &lt;main_fwhm&gt; ' + _FROM_MAIN + ')')
         o.flag_main = True
         o.color = pf.COLOR_CONFIG
 
-        IHPN = "ihpn"
-        NIHPN = len(IHPN)
         for j, letter in enumerate(IHPN):
             label = QLabel("<b>%s</b>" % letter)
             label.setToolTip("Option is used by %s?" % _EXE_NAMES[letter])
-            lo.addWidget(label, 0, 3+j, Qt.AlignCenter)
+            lo.addWidget(label, 0, 3 + j, Qt.AlignCenter)
         label = QLabel("<b>in use?</b>")
         label.setToolTip("Option will appear in command line?")
         lo.addWidget(label, 0, 2)
@@ -532,13 +538,13 @@ class WOptionsEditor(QWidget):
                 for j, letter in enumerate(IHPN):
                     # unicode is for a "v"-like check mark
                     flag_checked = letter in option.ihpn
-                    #label = QLabel(QString(chr(10003)) if flag_checked else "")
+                    # label = QLabel(QString(chr(10003)) if flag_checked else "")
                     label = QLabel("\u2713" if flag_checked else "")
                     if flag_checked:
-                        label.setToolTip("This option is used by %s." % _EXE_NAMES[letter   ])
+                        label.setToolTip("This option is used by %s." % _EXE_NAMES[letter])
 
                     option.other_widgets.append(label)
-                    lo.addWidget(label, i, 3+j, Qt.AlignCenter)
+                    lo.addWidget(label, i, 3 + j, Qt.AlignCenter)
                 label = option.label = \
                     QLabel(option.get_label_text())
                 label.setAlignment(Qt.AlignRight)
@@ -560,13 +566,12 @@ class WOptionsEditor(QWidget):
                 else:
                     edit.textEdited.connect(self.on_edited)
 
-                # todo No consensus yet if it is better to show the default values
-                # option.update_edit_with_default()
+                    # todo No consensus yet if it is better to show the default values
+                    # option.update_edit_with_default()
             except:
                 self.logger.exception("Processing option '%s'" % option.name)
                 raise
         self.__update_from_data(pf.FileOptions(), True)
-
 
         # ### Second widget of splitter
         # layout containing description area and a error label
@@ -592,10 +597,9 @@ class WOptionsEditor(QWidget):
         sp.setStretchFactor(1, 2)
 
         self.__update_gui_visible_options()
-        pf.style_checkboxes(self)
+        aa.style_checkboxes(self)
         self.setEnabled(False)  # disabled until load() is called
         self.flag_process_changes = True
-
 
     # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * #
     # # Interface
@@ -637,7 +641,7 @@ class WOptionsEditor(QWidget):
     def on_edited(self):
         if not self.flag_process_changes:
             return
-        #self._update_file_main()
+        # self._update_file_main()
         option = self.__find_option_by_edit(self.sender())
         self.flag_process_changes = False
         option.checkbox.setChecked(True)
@@ -649,10 +653,6 @@ class WOptionsEditor(QWidget):
     def on_in_use_checkbox_clicked(self):
         if not self.flag_process_changes:
             return
-        checkbox = self.sender()
-        option = self.__find_option_by_in_use_checkbox(checkbox)
-        # if checkbox.isChecked():
-        #     option.set_gui_default_if_never_used()
         self.__update_data()
         self.edited.emit()
 
@@ -668,7 +668,7 @@ class WOptionsEditor(QWidget):
     def on_preview(self):
         args = self.f.get_args()
         print(args)
-        line = "fortran-binary-xxxx "+(" ".join(args))
+        line = "fortran-binary-xxxx " + (" ".join(args))
         w = aa.XText(self, line, "Command line")
         w.show()
 
@@ -677,17 +677,14 @@ class WOptionsEditor(QWidget):
             return
         self.__update_gui_visible_options()
 
-
-
     # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * #
     # # Internal gear
-    
+
     def __add_option(self, widget, ihpn, name, default, short_descr, long_descr):
         o = _Option()
         w = o.checkbox = QCheckBox()
         w.setTristate(False)
         w.stateChanged.connect(self.on_in_use_checkbox_clicked)
-
 
         o.edit = widget
         o.ihpn = ihpn
@@ -766,7 +763,6 @@ class WOptionsEditor(QWidget):
         self.flag_valid = not flag_error
         self.__set_error_text(emsg)
 
-
     def __update_gui_visible_options(self):
         LETTERS = "ihpn"
         ll = []
@@ -775,18 +771,18 @@ class WOptionsEditor(QWidget):
                 ll.append(letter)
         flag_main_goes = self.checkbox_main.isChecked()
         flag_devel_goes = self.checkbox_devel.isChecked()
-        hidden_set_count = 0 # whether there will be set options hidden
+        hidden_set_count = 0  # whether there will be set options hidden
         s_filter = str(self.lineEdit_filter.text()).upper()
         flag_filter = len(s_filter) > 0
         for option in self.omap:
             flag_visible = (flag_main_goes or not option.flag_main) and \
-             (flag_devel_goes or not option.flag_devel) and \
-             any([letter in option.ihpn for letter in ll])
+                           (flag_devel_goes or not option.flag_devel) and \
+                           any([letter in option.ihpn for letter in ll])
 
             if flag_visible and flag_filter:
                 flag_visible = s_filter in option.name.upper() or \
-                 s_filter in option.short_descr.upper() or \
-                 s_filter in option.long_descr.upper()
+                               s_filter in option.short_descr.upper() or \
+                               s_filter in option.long_descr.upper()
 
             option.checkbox.setVisible(flag_visible)
             option.label.setVisible(flag_visible)
@@ -799,7 +795,7 @@ class WOptionsEditor(QWidget):
         t = ""
         if hidden_set_count > 0:
             t = "Hiding %d option%s in use." % \
-             (hidden_set_count, "" if hidden_set_count == 1 else "s")
+                (hidden_set_count, "" if hidden_set_count == 1 else "s")
         self.__set_hiding_text(t)
 
     def __set_error_text(self, x):
@@ -820,12 +816,9 @@ class WOptionsEditor(QWidget):
         l = []
         if self.error_text:
             l.append('<span style="color: %s"><b>Error</b>: %s</span>' %
-                     (pf.COLOR_ERROR, self.error_text))
+                     (aa.COLOR_ERROR, self.error_text))
         if self.hiding_text:
             l.append('<span style="color: %s"><b>Warning</b>: %s</span>' %
-                     (pf.COLOR_WARNING, self.hiding_text))
+                     (aa.COLOR_WARNING, self.hiding_text))
         s = "; ".join(l)
         self.labelError.setText(s)
-
-
-

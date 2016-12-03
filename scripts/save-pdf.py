@@ -1,22 +1,19 @@
 #!/usr/bin/env python3
 
 """
-Looks for file "flux.norm" inside directories session-* and saves one figure per page in a PDF file
-"""
-"""
+Looks for files "*.norm" inside directories session-* and saves one figure per page in a PDF file
+
 References:
 http://stackoverflow.com/questions/17788685
 """
 
-
+import matplotlib.backends.backend_pdf
+import matplotlib.pyplot as plt
+import astroapi as aa
 import glob
 import os
-import matplotlib.backends.backend_pdf
 import argparse
-from pyfant import *
-import matplotlib.pyplot as plt
 import pyfant as pf
-import astroapi as aa
 import logging
 
 
@@ -37,10 +34,9 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    dd = glob.glob(conf.session_prefix+"*")
+    dd = glob.glob(pf.SESSION_PREFIX_SINGULAR+"*")
     dd.sort()
 
-    v = aa.VisSpectrum()
     pdf = matplotlib.backends.backend_pdf.PdfPages(args.fn_output)
 
     aa.format_BLB()
@@ -48,28 +44,35 @@ if __name__ == "__main__":
     for d in dd:
         name = d[8:]
 
-        print("Saving ", name, "...")
+        aa.get_python_logger().info("Looking into session '{}'...".format(name))
 
-        f = aa.FileSpectrumPfant()
-        f.load(os.path.join(d, "flux.norm"))
+        norm_filenames = glob.glob(os.path.join(d, "*.norm"))
+        if len(norm_filenames) == 0:
+            continue
 
-        v.title = "%s" % name
-        v.use(f)
+        for filename in norm_filenames:
+            aa.get_python_logger().info("    File '{}'".format(filename))
+            f = aa.FileSpectrumPfant()
 
-        fig = plt.gcf()
-        if args.samey:
-            plt.ylim([0, 1.02])
-        else:
-            y = f.spectrum.y
-            ymin, ymax = min(y), max(y)
-            margin = .02*(ymax-ymin)
-            plt.ylim([ymin-margin, ymax+margin])
-        ax = plt.gca()
-        p = ax.get_position()
-        p.x0 = 0.11
-        ax.set_position(p)  # Try to apply same position for all figures to improve flicking experience
-        pdf.savefig(fig)
-        plt.close()
+            # Note: takes first .norm file that finds
+            f.load(filename)
+
+            aa.draw_spectra([f.spectrum])  #v.title = "%s" % name
+
+            fig = plt.gcf()
+            if args.samey:
+                plt.ylim([0, 1.02])
+            else:
+                y = f.spectrum.y
+                ymin, ymax = min(y), max(y)
+                margin = .02*(ymax-ymin)
+                plt.ylim([ymin-margin, ymax+margin])
+            ax = plt.gca()
+            p = ax.get_position()
+            p.x0 = 0.11
+            ax.set_position(p)  # Try to apply same position for all figures to improve flicking experience
+            pdf.savefig(fig)
+            plt.close()
 
     # for fig in xrange(1, figure().number): ## will open an empty extra figure :(
     #     pdf.savefig( fig )
