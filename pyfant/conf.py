@@ -9,7 +9,7 @@ __all__ = ["Conf", "FOR_INNEWMARCS", "FOR_HYDRO2", "FOR_PFANT",
 
 import shutil
 import os
-from .lib import *
+from .liblib import *
 import logging
 import subprocess
 from threading import Lock

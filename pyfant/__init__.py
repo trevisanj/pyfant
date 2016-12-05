@@ -20,7 +20,7 @@ COLOR_CONFIG = "#BD6909"
 # # Imports
 #   =======
 from .errors import *
-from .lib import *
+from .liblib import *
 from .datatypes import *
 from .conf import *
 from .runnables import *
@@ -32,7 +32,7 @@ from .multirunnable import *
 from .gui import *
 from .paths import *
 from . import datatypes
-from . import lib
+from . import liblib
 from . import gui
 from . import vis
 

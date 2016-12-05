@@ -65,11 +65,13 @@ installed on your system.
   - fortranformat
   - astropy      
   - configobj
+  - bs4
+  - robobrowser
 
 Possible way to install on Debian-based Linux:
 ```shell
 sudo apt-get install python3-matplotlib python3-scipy python3-pyqt4 python3-astropy python3-pip python3-configobj
-sudo pip3 install fortranformat
+sudo pip3 install fortranformat bs4 robobrowser
 ```
 
 ## 2.2 Clone the repository 

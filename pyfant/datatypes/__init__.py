@@ -9,6 +9,7 @@ from .filemolecules import *
 from .fileoptions import *
 from .filepartit import *
 from .filetoh import *
+from .filehitran import *
 
 from . import filedissoc
 from . import fileabonds
@@ -21,3 +22,4 @@ from . import filemolecules
 from . import fileoptions
 from . import filepartit
 from . import filetoh
+from . import filehitran

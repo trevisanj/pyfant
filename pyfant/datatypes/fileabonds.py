@@ -2,7 +2,7 @@ __all__ = ["FileAbonds"]
 
 import struct
 import astroapi as aa
-from ..lib import adjust_atomic_symbol
+from ..liblib import adjust_atomic_symbol
 import re
 from .filedissoc import FileDissoc
 
