@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 
-import moldb
+from pyfant.convmol import moldb
 
 if __name__ == "__main__":
     moldb.create_db()

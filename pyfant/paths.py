@@ -29,9 +29,9 @@ def get_pfant_path(*args):
     return os.path.abspath(os.path.join(path_prefix, *args))
 
 
-def get_pfant_data_path():
+def get_pfant_data_path(*args):
     """Returns absolute path to PFANT/data"""
-    return get_pfant_path("data")
+    return get_pfant_path("data", *args)
 
 
 def get_pfant_data_subdirs():
@@ -86,4 +86,5 @@ def get_fortrans(max_len=None):
         # piece = name + " " + ("." * (max_len-len(name)))
         # ret.append(("%-"+str(max_len)+"s %s") % (piece, status))
     return ret
+
 

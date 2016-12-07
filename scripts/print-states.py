@@ -7,10 +7,10 @@ If formula is specified, prints data for single formula;
 otherwise, prints full table
 """
 
-import moldb as db
 import pyfant as pf
 import argparse
 import logging
+import astroapi as aa
 
 
 pf.logging_level = logging.INFO
@@ -18,7 +18,7 @@ pf.logging_level = logging.INFO
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
     description=__doc__,
-    formatter_class=pf.SmartFormatter
+    formatter_class=aa.SmartFormatter
     )
     parser.add_argument('-f', type=str, help='Formula of molecule',
                         default='(all)', nargs='?')
@@ -32,4 +32,4 @@ if __name__ == "__main__":
     if args.id is not None:
         kwargs["state.id"] = args.id
 
-    db.print_states(**kwargs)
+    pf.convmol.print_states(**kwargs)

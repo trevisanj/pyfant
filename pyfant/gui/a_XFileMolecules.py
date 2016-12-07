@@ -481,12 +481,12 @@ class XFileMolecules(QMainWindow):
             return
         item = self.listWidgetMol.currentItem()
         r, form = aa.show_edit_form(obj,
-            ["titulo", "fe", "do", "mm", "am", "bm", "ua", "ub", "te", "cro", "s"],
+            ["description", "symbols", "fe", "do", "mm", "am", "bm", "ua", "ub", "te", "cro", "s"],
             item.text())
         flag_changed = False
         if r == QDialog.Accepted:
             kwargs = form.get_kwargs()
-            for name, value in kwargs.iteritems():
+            for name, value in kwargs.items():
                 orig = obj.__getattribute__(name)
                 if orig != value:
                     obj.__setattr__(name, value)
@@ -517,22 +517,22 @@ class XFileMolecules(QMainWindow):
         obj = self.sol
         if obj is None:
             return
-        item = self.listWidgetMol.currentItem()
-        r, form = aa.show_edit_form(self.sol, ["qqv", "ggv", "bbv", "ddv", "fact"],
-                                  item.text())
+        item = self.listWidgetSol.currentItem()
+        r, form = aa.show_edit_form(self.sol, ["vl", "v2l", "qqv", "ggv", "bbv", "ddv", "fact"],
+                                    item.text())
         flag_changed = False
         if r == QDialog.Accepted:
             kwargs = form.get_kwargs()
-            for name, value in kwargs.iteritems():
+            for name, value in kwargs.items():
                 orig = obj.__getattribute__(name)
                 if orig != value:
                     obj.__setattr__(name, value)
                     flag_changed = True
         if flag_changed:
             self.flag_changed = True
-            item.setText(self.get_mol_string(obj))
+            item.setText(self.get_sol_string(self.listWidgetSol.currentRow(), obj))
             # item.setTextColor(QColor(255, 0, 0))
-            self.update_mol_info()
+            self.update_sol_info()
             self.update_window_title()
 
     # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * #
@@ -652,7 +652,7 @@ class XFileMolecules(QMainWindow):
 
     @staticmethod
     def get_mol_string(m):
-        return m.titulo
+        return m.description
 
     @staticmethod
     def get_sol_string(index, sol):

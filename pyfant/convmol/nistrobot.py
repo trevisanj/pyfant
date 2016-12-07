@@ -13,9 +13,11 @@ _conv_img = {"larrow": "←",
              "lrarrow": "↔"}
 
 
-def _slugify_html_formula(tag):
+def _html_formula_to_unicode(tag):
     """
-    Returns a TeX-like string from a bs4.element.Tag from a formula in NIST web book pages
+    Returns a string from a bs4.element.Tag representing a formula in NIST web book pages.
+
+    Some HTML elements are converted to unicode characters
     """
     parts = []
     for item in tag.children:
@@ -33,6 +35,7 @@ def _slugify_html_formula(tag):
 
 
 def _floatify(str_):
+    """Tries to convert to float, stripping brackets if it is the case"""
     try:
         ret = float(str_)
     except:
@@ -44,18 +47,29 @@ def _floatify(str_):
     return ret
 
 def _nonify(x):
+    """Returns None if len(x) == 0, else x"""
     if isinstance(x, str) and len(x.strip()) == 0:
         return None
     return x
 
 
-f_header = _slugify_html_formula
-f_state = _slugify_html_formula
-f_float_or_none = lambda x: _nonify(_floatify(_slugify_html_formula(x)))
-f_str_or_none = lambda x: _nonify(_slugify_html_formula(x))
+# Callables to be used in different conversion situations
+f_header = _html_formula_to_unicode
+f_state = _html_formula_to_unicode
+f_float_or_none = lambda x: _nonify(_floatify(_html_formula_to_unicode(x)))
+f_str_or_none = lambda x: _nonify(_html_formula_to_unicode(x))
 functions = [f_state]+[f_float_or_none]*10+[f_str_or_none, f_float_or_none]
 
+
 def get_nist_webbook_constants(formula):
+    """
+    Navigates through NIST webbook pages to retrieve a table of molecular constants
+
+    Args:
+        formula: example: "OH"
+
+    Returns: tuple: table (list of lists), header (list of strings), name of molecule
+    """
     browser = RoboBrowser(history=True)
     browser.open("http://webbook.nist.gov/chemistry/form-ser.html")
 

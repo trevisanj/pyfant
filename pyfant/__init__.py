@@ -35,6 +35,7 @@ from . import datatypes
 from . import liblib
 from . import gui
 from . import vis
+from . import convmol
 
 
 # # Function to access package-specific config file
@@ -43,6 +44,8 @@ def get_config():
     """Returns PyfantConfigObj object that corresponds to file ~/.pyfant.conf"""
     return aa.get_config_obj(".pyfant.conf")
 
+
+convmol.moldb._setup_db_metadata()
 
 # # # Function to be called from astroapi package
 # #   ==========================================

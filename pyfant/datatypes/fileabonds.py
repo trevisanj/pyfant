@@ -1,8 +1,8 @@
 __all__ = ["FileAbonds"]
 
 import struct
+import pyfant as pf
 import astroapi as aa
-from ..liblib import adjust_atomic_symbol
 import re
 from .filedissoc import FileDissoc
 
@@ -47,7 +47,7 @@ class FileAbonds(aa.DataFile):
                 if not re.search(r'[a-z]', ele, re.IGNORECASE):
                     raise RuntimeError("Invalid element symbol: '%s'" % ele.strip())
 
-                self.ele.append(adjust_atomic_symbol(ele))
+                self.ele.append(pf.adjust_atomic_symbol(ele))
                 self.abol.append(float(abol))
                 self.notes.append(notes.strip())
 

@@ -1,11 +1,14 @@
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
-import pyfant as pf
-from a_WMolecule import WMolecule
-import moldb as db
+from .a_WDBMolecule import WDBMolecule
+from . import moldb as db
+import astroapi as aa
 
 
-class WMolConst(pf.gui.WBase):
+__all__ = ["WMolConst"]
+
+
+class WMolConst(aa.WBase):
     """
     Widget for the user to inform molecular parameters. Has a embedded WDBMolecule
     """
@@ -19,14 +22,14 @@ class WMolConst(pf.gui.WBase):
         return self._fieldnames
 
     def __init__(self, *args):
-        pf.gui.WBase.__init__(self, *args)
+        aa.WBase.__init__(self, *args)
 
         self.flag_populating = False  # activated when populating table
 
         # # Internal state
 
         #
-        self._fieldnames = ["fe", "do", "am", "bm", "ua", "ub", "te", "cro",]
+        self._fieldnames = ["fe", "do", "am", "bm", "ua", "ub", "te", "cro", ]
 
 
         # dictionary {(field name): (edit object), }
@@ -40,7 +43,7 @@ class WMolConst(pf.gui.WBase):
         l.setMargin(1)
 
         # ## State widget
-        a = self.w_mol = WMolecule(self.parent_form)
+        a = self.w_mol = WDBMolecule(self.parent_form)
         l.addWidget(a)
         a.id_changed.connect(self._w_mol_id_changed)
 
@@ -54,13 +57,13 @@ class WMolConst(pf.gui.WBase):
         lg = QGridLayout()
         l.addLayout(lg)
         nr, nc, n = 3, 3, len(self._fieldnames)
-        ti = db.get_table_info("molecule")
+        ti = aa.get_table_info("molecule")
         for j in range(nc):
             # ### One grid layout for each column of fields
             ii = range(j, n, nc)
             for i in range(len(ii)):
                 fieldname = self._fieldnames[ii[i]]
-                info = ti.find(name=fieldname)
+                info = ti[fieldname]
                 caption = info["caption"] or fieldname
                 a = QLabel(caption)
                 e = QLineEdit("")
@@ -118,4 +121,3 @@ class WMolConst(pf.gui.WBase):
             edit.setText(str(value) if value is not None else "")
 
         self.id_changed.emit()
-

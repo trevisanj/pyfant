@@ -1,18 +1,18 @@
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
-import pyfant as pf
-import moldb as db
-from collections import OrderedDict
-from a_WRegistry import WRegistry
-from pyfant.gui import guiaux
+from . import moldb as db
+from astroapi import WDBRegistry
+import astroapi as aa
 
 
-class WDBMolecule(WRegistry):
+__all__ = ["WDBRegistry"]
+
+class WDBMolecule(WDBRegistry):
     """Registry for table 'molecule'"""
 
 
     def __init__(self, *args):
-        WRegistry.__init__(self, *args)
+        WDBRegistry.__init__(self, *args)
 
 
     def _find_formula(self, formula):
@@ -39,11 +39,10 @@ class WDBMolecule(WRegistry):
             curr_row = self.row
 
             t = self.tableWidget
-            fieldnames = [row["name"] for row in db.get_table_info("molecule")]
-            # fieldnames = ["id", "formula", "name"]
-            rows = db.cursor_to_rows(db.query_molecules())
+            fieldnames = list(aa.get_table_info("molecule"))
+            rows = aa.cursor_to_rows(db.query_molecules())
             nr, nc = len(rows), len(fieldnames)
-            pf.gui.ResetTableWidget(t, nr, nc)
+            aa.ResetTableWidget(t, nr, nc)
             t.setHorizontalHeaderLabels(fieldnames)
             if nr > 0:
                 for i, row in enumerate(rows):
@@ -67,8 +66,8 @@ class WDBMolecule(WRegistry):
 
     def _get_edit_params(self):
         """Returns a Parameters object containing information about the fields that may be edited"""
-        ti = db.get_table_info("molecule")
-        params = guiaux.table_info_to_parameters(ti)
+        ti = aa.get_table_info("molecule")
+        params = aa.table_info_to_parameters(ti)
         params = [p for p in params if not p.name.startswith("id")]
         return params
 
@@ -82,7 +81,7 @@ class WDBMolecule(WRegistry):
 
     def _do_on_insert(self):
         params = self._get_edit_params()
-        form = pf.gui.XParametersEditor(specs=params, title="Insert molecule")
+        form = aa.XParametersEditor(specs=params, title="Insert molecule")
         r = form.exec_()
         if r == QDialog.Accepted:
             kwargs = form.get_kwargs()
@@ -96,7 +95,7 @@ class WDBMolecule(WRegistry):
 
 
     def _do_on_edit(self):
-        r, form = pf.gui.show_edit_form(self.row, self._get_edit_field_names(), "Edit molecule")
+        r, form = aa.show_edit_form(self.row, self._get_edit_field_names(), "Edit molecule")
         if r == QDialog.Accepted:
             kwargs = form.get_kwargs()
             s = "update molecule set {} where id = {}".format(

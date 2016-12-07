@@ -1,4 +1,4 @@
-__all__ = ["FileMolecules", "Molecule", "SetOfLines"]
+__all__ = ["FileMolecules", "Molecule", "SetOfLines", ]
 
 
 from ..errors import *
@@ -8,6 +8,10 @@ from astroapi import froze_it, AttrsPart, write_lf, DataFile, float_vector,  ord
                      multirow_str_vector, str_vector, readline_strip, get_python_logger, \
                      int_vector
 import astroapi as aa
+import pyfant as pf
+import re
+
+
 
 
 @froze_it
@@ -41,6 +45,17 @@ class SetOfLines(AttrsPart):
         return "{}({}, {}, {}, {}, {}, {}, {})".format(self.__class__.__name__,
             self.vl, self.v2l, self.qqv, self.ggv, self.bbv, self.ddv, self.fact)
 
+    def __iter__(self):
+        """Creates MyDBRow objects to represent each molecular line"""
+        fieldnames = ["lmbdam", "sj", "jj", "branch"]
+        for t in zip(self.lmbdam, self.sj, self.jj, self.branch):
+            obj = aa.MyDBRow()
+            for fieldname, value in zip(fieldnames, t):
+                obj[fieldname] = value
+            yield obj
+
+
+
     def cut(self, lzero, lfin):
         """Reduces the number of lines to only the ones whose lmbdam is inside [lzero, lfin]"""
         l, s, j, b = [], [], [], []
@@ -61,7 +76,7 @@ class SetOfLines(AttrsPart):
 
 @froze_it
 class Molecule(AttrsPart):
-    attrs = ["titulo", "fe", "do", "mm", "am", "bm", "ua", "ub",
+    attrs = ["description", "symbols", "fe", "do", "mm", "am", "bm", "ua", "ub",
              "te", "cro", "s", "nv", "num_lines"]
 
     @property
@@ -75,7 +90,18 @@ class Molecule(AttrsPart):
 
     def __init__(self):
         AttrsPart.__init__(self)
+
+        # # "titulo" part
+        # (20161206) titulo is now used semantically: it has 3 fields separated by a "#":
+        # 'description # isotopes # transitions'.
+        #
+        # For more information, refer to pfantlib.f90:read_molecules(),
+        # look for where variable km_titulo is read from file
+        #
+        # "titulo" is loaded from file, but not used when saving the file
         self.titulo = None
+        self.description = None
+        self.symbols = None
         self.fe = None
         self.do = None
         self.mm = None
@@ -93,6 +119,13 @@ class Molecule(AttrsPart):
     def __len__(self):
         """Returns number of set-of-lines."""
         return len(self.sol)
+
+    def __iter__(self):
+        return iter(self.sol)
+
+    def __getitem__(self, *args):
+        return self.sol.__getitem__(*args)
+
 
     def cut(self, lzero, lfin):
         """Reduces the number of lines to only the ones whose lmbdam is inside [lzero, lfin]"""
@@ -139,11 +172,17 @@ class FileMolecules(DataFile):
         # Array of Molecule objects
         self.molecules = []
 
-        # Integer number in first row of file.Specifies how many molecules to use
+        # Literal in second row of file, sortta used as a file title/description
         self.titm = None
 
     def __len__(self):
         return len(self.molecules)
+
+    def __iter__(self):
+        return iter(self.molecules)
+
+    def __getitem__(self, *args):
+        return self.molecules.__getitem__(*args)
 
     def _do_load(self, filename):
         """Clears internal lists and loads from file."""
@@ -169,6 +208,19 @@ class FileMolecules(DataFile):
 
                     m.titulo = readline_strip(h)
                     get_python_logger().debug('Reading %d%s molecule \'%s\'' % (im+1, ordinal_suffix(im+1), m.titulo))
+
+                    parts = [s.strip() for s in m.titulo.split("#")]
+                    m.description = parts[0]
+                    if len(parts) > 1:
+                        m.symbols = [pf.adjust_atomic_symbol(s) for s in parts[1].split(" ")]
+                    else:
+                        temp = pf.description_to_symbols(parts[0])
+                        m.symbols = temp or []
+                    transitions = []
+                    if len(parts) > 2:
+                        numbers = [int(x) for x in re.findall('([0-9]+)', parts[2])]
+                        transitions = list(zip(numbers[0::2], numbers[1::2]))
+
                     r += 1
                     m.fe, m.do, m.mm, m.am, m.bm, m.ua, m.ub, m.te, m.cro = float_vector(h)
                     r += 1
@@ -205,13 +257,15 @@ class FileMolecules(DataFile):
                                 (name, im+1, nvi, len(v)))
 
                     # creates sets of lines and appends to molecule
-                    for q, g, b, d, f in zip(qqv, ggv, bbv, ddv, fact):
+                    for isol, (q, g, b, d, f) in enumerate(zip(qqv, ggv, bbv, ddv, fact)):
                         o = SetOfLines()
                         o.qqv = q
                         o.ggv = g
                         o.bbv = b
                         o.ddv = d
                         o.fact = f
+                        if isol < len(transitions):
+                            o.vl, o.v2l = transitions[isol]
                         m.sol.append(o)
 
                     # Now reads lines
@@ -266,8 +320,20 @@ class FileMolecules(DataFile):
             write_lf(h, self.titm)
             write_lf(h, " ".join([str(x.nv) for x in self.molecules]))
             for m in self.molecules:
-                assert isinstance(m, Molecule)
-                write_lf(h, m.titulo)
+
+                # # Assembles "titulo"
+                # ## Transitions
+                ltrans = []
+                for sol in m:
+                    if sol.vl is None or sol.v2l is None:
+                        break
+                    ltrans.append([sol.vl, sol.v2l])
+                new_titulo = "{} # {} # {}".format(m.description, " ".join(m.symbols),
+                                                   "|".join(["{},{}".format(*t) for t in ltrans]))
+
+                # - mled change, incorporate shit
+
+                write_lf(h, new_titulo)
                 write_lf(h, (" ".join(["%.10g"]*9)) % (m.fe, m.do, m.mm, m.am,
                     m.bm, m.ua, m.ub, m.te, m.cro))
                 write_lf(h, "")
@@ -280,7 +346,6 @@ class FileMolecules(DataFile):
 
                 num_sol = len(m.sol)
                 for i, s in enumerate(m.sol):
-                    assert isinstance(s, SetOfLines)
                     num_lines = len(s)  # number of lines for current set-of-lines
                     for j in range(num_lines):
                         numlin = 0 if j < num_lines-1 else 9 if i == num_sol-1 else 1

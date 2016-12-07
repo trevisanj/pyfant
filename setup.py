@@ -17,7 +17,8 @@ setup(
     author_email = 'juliotrevisan@gmail.com',
     url = 'https://github.com/trevisanj/pyfant', # use the URL to the github repo
     keywords= ['astronomy', 'spectral synthesis'],
-    install_requires = ['numpy', 'scipy', 'astropy', 'matplotlib', 'fortranformat', 'bs4', 'robobrowser'],  # matplotlib never gets installed correctly by pip, but anyway...
+    install_requires = ['numpy', 'scipy', 'astropy', 'matplotlib', 'fortranformat', 'bs4', 'robobrowser',
+                        'tabulate'],  # matplotlib never gets installed correctly by pip, but anyway...
     scripts = glob('scripts/*.py')  # Considers system scripts all .py files in 'scripts' directory
 )
 
