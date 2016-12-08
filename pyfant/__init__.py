@@ -31,12 +31,12 @@ from .from_vald import *
 from .multirunnable import *
 from .gui import *
 from .paths import *
+from .convmol import *
 from . import datatypes
 from . import liblib
 from . import gui
 from . import vis
 from . import convmol
-
 
 # # Function to access package-specific config file
 #   ===============================================

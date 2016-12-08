@@ -255,7 +255,7 @@ class WFileAbonds(QWidget):
         try:
             o, t = self.f, self.tableWidget
             n = len(o)
-            aa.ResetTableWidget(t, n, len(ABONDS_HEADERS))
+            aa.reset_table_widget(t, n, len(ABONDS_HEADERS))
             t.setHorizontalHeaderLabels(ABONDS_HEADERS)
 
             # list with the vectors themselves

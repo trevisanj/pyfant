@@ -4,7 +4,7 @@ import astroapi as aa
 # import pyfant as pf
 # from a_WState import WState
 # import moldb as db
-from . import WDBState
+from .a_WDBState import WDBState
 
 
 class WStateConst(aa.WBase):
@@ -15,6 +15,19 @@ class WStateConst(aa.WBase):
     @property
     def fieldnames(self):
         return self._fieldnames
+
+    @property
+    def constants(self):
+        """Returns a dictionary with all molecular constants"""
+        ret = {}
+        for fieldname in self._fieldnames:
+            ret[fieldname] = self[fieldname]
+        return ret
+
+    @property
+    def row(self):
+        """Wraps WDBMolecule.row"""
+        return self.w_mol.row
 
     def __init__(self, *args):
         aa.WBase.__init__(self, *args)
@@ -77,13 +90,6 @@ class WStateConst(aa.WBase):
                 return float(self._edit_map[fieldname].text())
             except ValueError:
                 return None
-
-    def get_all_consts(self):
-        """Returns a dictionary with all molecular constants"""
-        ret = {}
-        for fieldname in self._fieldnames:
-            ret[fieldname] = self[fieldname]
-        return ret
 
     def set_id_molecule(self, id_):
         """Calls WDBState.set_id_molecule"""

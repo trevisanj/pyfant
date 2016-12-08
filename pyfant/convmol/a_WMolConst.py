@@ -21,6 +21,19 @@ class WMolConst(aa.WBase):
     def fieldnames(self):
         return self._fieldnames
 
+    @property
+    def constants(self):
+        """Returns a dictionary with all molecular constants"""
+        ret = {}
+        for fieldname in self._fieldnames:
+            ret[fieldname] = self[fieldname]
+        return ret
+
+    @property
+    def row(self):
+        """Wraps WDBMolecule.row"""
+        return self.w_mol.row
+
     def __init__(self, *args):
         aa.WBase.__init__(self, *args)
 
@@ -29,7 +42,7 @@ class WMolConst(aa.WBase):
         # # Internal state
 
         #
-        self._fieldnames = ["fe", "do", "am", "bm", "ua", "ub", "te", "cro", ]
+        self._fieldnames = ["fe", "do", "am", "bm", "ua", "ub", "te", "cro", "s"]
 
 
         # dictionary {(field name): (edit object), }
@@ -87,14 +100,6 @@ class WMolConst(aa.WBase):
                 return float(self._edit_map[fieldname].text())
             except ValueError:
                 return None
-
-
-    def get_all_consts(self):
-        """Returns a dictionary with all molecular constants"""
-        ret = {}
-        for fieldname in self._fieldnames:
-            ret[fieldname] = self[fieldname]
-        return ret
 
 
     def validate(self):

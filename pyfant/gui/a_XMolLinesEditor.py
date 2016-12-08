@@ -68,7 +68,7 @@ class XMolLinesEditor(QMainWindow):
 
             t = self.tableWidget
             n = len(sol)
-            aa.ResetTableWidget(t, n, len(SOL_HEADERS))
+            aa.reset_table_widget(t, n, len(SOL_HEADERS))
             t.setHorizontalHeaderLabels(SOL_HEADERS)
 
             # list with the vectors themselves

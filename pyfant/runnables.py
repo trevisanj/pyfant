@@ -140,6 +140,10 @@ class Runnable(object):
         if self.sid.id:
             self.sid.clean(False)
 
+    def clean(self, *args):
+        """Wraps self.sid.clean(). See pyfant.SID"""
+        self.sid.clean(*args)
+
     def _get_sid(self):
         raise NotImplementedError()
 
@@ -171,6 +175,16 @@ class Executable(Runnable):
     @conf.setter
     def conf(self, x):
         self.__conf = x
+
+    @property
+    def opt(self):
+        """Wraps self.__conf.opt"""
+        return self.__conf.opt
+
+    @opt.setter
+    def opt(self, x):
+        """Wraps self.__conf.opt"""
+        self.__conf.opt = x
 
     def __init__(self):
         Runnable.__init__(self)

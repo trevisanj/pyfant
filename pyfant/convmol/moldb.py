@@ -67,7 +67,8 @@ def _setup_db_metadata():
             "ua": [None, "value of partition function for first element"],
             "ub": [None, "value of partition function for second element"],
             "te": [None, "electronic term"],
-            "cro": [None, "delta Kronecker (0: sigma transitions; 1: non-Sigma transitions)"]
+            "cro": [None, "delta Kronecker (0: sigma transitions; 1: non-Sigma transitions)"],
+            "s": [None, "?doc?"]
       },
         "state": {
     "omega_e": ["ω<sub>e</sub>", "vibrational constant – first term (cm<sup>-1</sup>)"],
@@ -100,7 +101,8 @@ def create_db():
                                         ua real,
                                         ub real,
                                         te real,
-                                        cro real
+                                        cro real,
+                                        s real
                                        )""")
     # Note that it has no primary key
     c.execute("""create table state (id integer primary key,
@@ -139,7 +141,8 @@ def populate_db():
         try:
             data, _, name = nistrobot.get_nist_webbook_constants(formula)
 
-            fe, do, am, bm, ua, ub, te, cro = None, None, None, None, None, None, None, None
+            fe, do, am, bm, ua, ub, te, cro, s = None, None, None, None, None, None, None, None, \
+                                                 None
 
             # Tries to retrieve "fe", "do" etc from molecules.dat
             symbols = pf.description_to_symbols(formula)
@@ -160,12 +163,13 @@ def populate_db():
                     ub = m.ub
                     te = m.te
                     cro = m.cro
+                    s = m.s
 
             symbols = [x.strip() for x in symbols]
             conn.execute("insert into molecule "
-                         "(formula, name, symbol_a, symbol_b, fe, do, am, bm, ua, ub, te, cro) "
-                         "values (?,?,?,?,?,?,?,?,?,?,?,?)",
-                         (formula, name, *symbols, fe, do, am, bm, ua, ub, te, cro))
+                         "(formula, name, symbol_a, symbol_b, fe, do, am, bm, ua, ub, te, cro, s) "
+                         "values (?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                         (formula, name, symbols[0], symbols[1], fe, do, am, bm, ua, ub, te, cro, s))
 
             id_molecule = conn.execute("select last_insert_rowid() as id").fetchone()["id"]
             for state in data:

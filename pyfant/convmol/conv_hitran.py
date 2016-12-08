@@ -1,5 +1,5 @@
 """
-Calculations
+HITRAN-specific conversion
 
 References:
   [1] Rothman, Laurence S., et al. "The HITRAN 2004 molecular spectroscopic database."
@@ -10,9 +10,9 @@ References:
 
 import pyfant as pf
 import astroapi as aa
-from .calc_qbdg import calc_transition_tio_like
+from .calc_qgbd import calc_qgbd_tio_like
 
-__all__ = ["hitran_to_sol"]
+__all__ = ["hitran_to_sols"]
 
 
 _OH_BRANCH_MAP = {"QQ": "Q", "PP": "P", "RR": "R"}
@@ -77,14 +77,16 @@ def translate_global_quanta(V):
     return ret
 
 
-def hitran_to_sol(lines, qgbd):
+def hitran_to_sols(state_consts, lines, qgbd_calculator):
     """
     Converts HITRAN molecular lines data to PFANT "sets of lines"
 
     Args:
+        state_consts: state-wide constants, i.e., dict-like with keys "omega_e", etc.
+                      (see calc_qbdg_tio_like())
         lines: item from rom hapi.LOCAL_TABLE_CACHE (a dictionary)
-        qgbd: dictionary with keys "qv", "gv", "bv", "dv", "gzero", e.g., as returned by
-              calculate_transition_tio_like()
+        qgbd_calculator: callable that can calculate "qv", "gv", "bv", "dv",
+                         e.g., calc_qbdg_tio_like()
 
     Returns: a list of pyfant.SetOfLines objects
     """
@@ -98,11 +100,7 @@ def hitran_to_sol(lines, qgbd):
     # C     HL: Honl-London factor
     # C     FR: oscillator strength
 
-    qqv = qgbd["qv"]
-    ggv = qgbd["gv"]
-    bbv = qgbd["bv"]
-    ddv = qgbd["dv"]
-    sets = {}  # one item per (vl, v2l) pair
+    sols = {}  # one item per (vl, v2l) pair
 
     header = lines["header"]
     data = lines["data"]
@@ -133,10 +131,16 @@ def hitran_to_sol(lines, qgbd):
 
         J2l_pfant = int(J2l)  # ojo, estamos colocando J2L-0.5! TODO ask BLB: we write J2l or J2l-.5?
 
-        set_key = (V["v1"], V_["v1"])  # (v', v'') transition
-        if set_key not in sets:
-            sets[set_key] = pf.SetOfLines(V["v1"], V_["v1"], qqv, ggv, bbv, ddv, 1.)
-        sol = sets[set_key]
+        sol_key = (V["v1"], V_["v1"])  # (v', v'') transition (v_sup, v_inf)
+        if sol_key not in sols:
+            qgbd = qgbd_calculator(state_consts, sol_key[1])
+            qqv = qgbd["qv"]
+            ggv = qgbd["gv"]
+            bbv = qgbd["bv"]
+            ddv = qgbd["dv"]
+
+            sols[sol_key] = pf.SetOfLines(V["v1"], V_["v1"], qqv, ggv, bbv, ddv, 1.)
+        sol = sols[sol_key]
         sol.append_line(wl, gf, J2l_pfant, Q_["Br"])
 
-    return sets
+    return list(sols.values())

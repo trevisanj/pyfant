@@ -61,7 +61,7 @@ class WDBState(WDBRegistry):
             col_names = fieldnames
             nr, nc = len(rows), len(fieldnames)
 
-            aa.ResetTableWidget(t, nr, nc)
+            aa.reset_table_widget(t, nr, nc)
             t.setHorizontalHeaderLabels(col_names)
 
             if nr > 0:

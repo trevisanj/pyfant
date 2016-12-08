@@ -2,7 +2,7 @@ __all__ = ["XAtomLinesEditor"]
 
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
-from astroapi import MONO_FONT, snap_right, show_error, ResetTableWidget
+from astroapi import MONO_FONT, snap_right, show_error, reset_table_widget
 from ._shared import *
 import pyfant as pf
 
@@ -68,7 +68,7 @@ class XAtomLinesEditor(QMainWindow):
 
             t = self.tableWidget
             n = len(atom)
-            ResetTableWidget(t, n, len(ATOM_HEADERS))
+            reset_table_widget(t, n, len(ATOM_HEADERS))
             t.setHorizontalHeaderLabels(ATOM_HEADERS)
 
             # list with the vectors themselves

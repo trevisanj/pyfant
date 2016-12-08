@@ -338,6 +338,18 @@ class Conf(object):
         file_ = self.get_file_main()
         return file_.flprefix
 
+    def get_fwhm(self, opt=None):
+        """Returns FWHM from command-line option if present, otherwise from main file"""
+
+        if opt is None:
+            opt = self.__opt
+        if opt.flprefix is not None:
+            return opt.fwhm
+        if self.file_main is not None:
+            return self.file_main.fwhm
+        file_ = self.get_file_main()
+        return file_.fwhm
+
     def get_pfant_output_filepath(self, type_="norm"):
         """Returns path to a pfant output filename.
 
@@ -357,14 +369,15 @@ class Conf(object):
         Reproduces nulbad logic in determining its output filename, i.e.,
           1) uses --fn_cv if present; if not,
           2) gets flprefix from main configuration file and adds
-             ".norm" or ".spec"
+             (".norm" or ".spec") + ".nulbad." + <fwhm in 5.3 format>
         """
         if self.__opt.fn_cv is not None:
             filename = self.__opt.fn_cv
         else:
             flprefix = self.get_flprefix()
             # True or None evaluates to "norm"
-            ext = "spec" if self.__opt.norm == False else "norm"
+            ext = ("spec" if self.__opt.norm == False else "norm") + \
+                  ".nulbad.{:5.3f}".format(self.get_fwhm())
             filename = flprefix+"."+ext
         return filename
 

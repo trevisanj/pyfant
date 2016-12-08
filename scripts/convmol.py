@@ -27,9 +27,9 @@ form.w_mol.w_mol._populate()
 form.show()
 app.exec_()
 
-aa = form.get_all_consts()
-for key, value in aa.items():
-    print(key, "=", value)
+# aa = form.get_all_consts()
+# for key, value in aa.items():
+#     print(key, "=", value)
 
 # for fn in form.w_state._fieldnames:
 #     print("{} = {}".format(fn, form.w_state[fn]))

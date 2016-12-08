@@ -42,7 +42,7 @@ class WDBMolecule(WDBRegistry):
             fieldnames = list(aa.get_table_info("molecule"))
             rows = aa.cursor_to_rows(db.query_molecules())
             nr, nc = len(rows), len(fieldnames)
-            aa.ResetTableWidget(t, nr, nc)
+            aa.reset_table_widget(t, nr, nc)
             t.setHorizontalHeaderLabels(fieldnames)
             if nr > 0:
                 for i, row in enumerate(rows):
