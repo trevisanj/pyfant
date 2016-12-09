@@ -53,8 +53,8 @@ class WDBState(WDBRegistry):
             curr_idx = self.tableWidget.currentRow()
 
             t = self.tableWidget
-            rows = aa.cursor_to_rows(db.query_states(id_molecule=self._id_molecule))
-            ti = aa.get_table_info("state")
+            rows = aa.cursor_to_rows(db.query_state(id_molecule=self._id_molecule))
+            ti = aa.get_table_info("moldb", "state")
             fieldnames = [name for name in ti if name not in _FIELDNAMES_OUT]
             # unfortunately QTableWidget is not prepared to show HTML col_names = [row["caption"] or row["name"] for row in ti if not row["name"] in FIELDNAMES_OUT]
             col_names = fieldnames
@@ -81,7 +81,7 @@ class WDBState(WDBRegistry):
 
     def _get_edit_params(self):
         """Returns a Parameters object containing information about the fields that may be edited"""
-        ti = aa.get_table_info("state")
+        ti = aa.get_table_info("moldb", "state")
         params = aa.table_info_to_parameters(ti)
         params = [p for p in params if not p.name.startswith("id")]
         return params

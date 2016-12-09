@@ -32,4 +32,4 @@ if __name__ == "__main__":
     if args.id is not None:
         kwargs["state.id"] = args.id
 
-    pf.convmol.print_states(**kwargs)
+    pf.moldb.print_states(**kwargs)

@@ -15,3 +15,5 @@
   - ~~nulbad load_result~~
   - Warn assumptions in ConvMol
   - Using CookieCutter could be **really nice**
+  - Resolve branches for other molecules
+

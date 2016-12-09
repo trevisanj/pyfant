@@ -70,7 +70,7 @@ class WMolConst(aa.WBase):
         lg = QGridLayout()
         l.addLayout(lg)
         nr, nc, n = 3, 3, len(self._fieldnames)
-        ti = aa.get_table_info("molecule")
+        ti = aa.get_table_info("moldb", "molecule")
         for j in range(nc):
             # ### One grid layout for each column of fields
             ii = range(j, n, nc)

@@ -1,28 +1,14 @@
-"""
->>> for row in aa.get_table_info("molecule"):
-...     print(row)
-MyDBRow([('cid', 0), ('name', 'id'), ('type', 'integer'), ('notnull', 0), ('dflt_value', None), ('pk', 1), ('caption', None), ('tooltip', None)])
-MyDBRow([('cid', 1), ('name', 'formula'), ('type', 'text'), ('notnull', 0), ('dflt_value', None), ('pk', 0), ('caption', None), ('tooltip', None)])
-MyDBRow([('cid', 2), ('name', 'name'), ('type', 'text'), ('notnull', 0), ('dflt_value', None), ('pk', 0), ('caption', None), ('tooltip', "name of molecule, <i>e.g.</i>, 'OH'")])
-MyDBRow([('cid', 3), ('name', 'fe'), ('type', 'real'), ('notnull', 0), ('dflt_value', None), ('pk', 0), ('caption', None), ('tooltip', 'oscillator strength')])
-MyDBRow([('cid', 4), ('name', 'do'), ('type', 'real'), ('notnull', 0), ('dflt_value', None), ('pk', 0), ('caption', None), ('tooltip', 'dissociation constant (eV)')])
-MyDBRow([('cid', 5), ('name', 'am'), ('type', 'real'), ('notnull', 0), ('dflt_value', None), ('pk', 0), ('caption', None), ('tooltip', 'mass of first element')])
-MyDBRow([('cid', 6), ('name', 'bm'), ('type', 'real'), ('notnull', 0), ('dflt_value', None), ('pk', 0), ('caption', None), ('tooltip', 'mass of second element')])
-MyDBRow([('cid', 7), ('name', 'ua'), ('type', 'real'), ('notnull', 0), ('dflt_value', None), ('pk', 0), ('caption', None), ('tooltip', 'value of partition function for first element')])
-MyDBRow([('cid', 8), ('name', 'ub'), ('type', 'real'), ('notnull', 0), ('dflt_value', None), ('pk', 0), ('caption', None), ('tooltip', 'value of partition function for second element')])
-MyDBRow([('cid', 9), ('name', 'te'), ('type', 'real'), ('notnull', 0), ('dflt_value', None), ('pk', 0), ('caption', None), ('tooltip', 'electronic term')])
-MyDBRow([('cid', 10), ('name', 'cro'), ('type', 'real'), ('notnull', 0), ('dflt_value', None), ('pk', 0), ('caption', None), ('tooltip', 'delta Kronecker (0: sigma transitions; 1: non-Sigma transitions)')])
-"""
-
-
 import astroapi as aa
 import pyfant as pf
 import sqlite3
-from . import nistrobot
-
-
-# from nistrobot import get_nist_webbook_constants
 import tabulate
+
+
+__ALIAS = "moldb"
+
+
+def get_conn():
+    return aa.get_conn(__ALIAS)
 
 
 class MoleculeRow(aa.MyDBRow):
@@ -44,7 +30,7 @@ class StateRow(aa.MyDBRow):
     def __init__(self, sth=None):
         aa.MyDBRow.__init__(self)
         if isinstance(sth, int):
-            self.update(aa.get_conn().execute("select * from state where id = 108").fetchone())
+            self.update(get_conn().execute("select * from state where id = 108").fetchone())
         elif sth is not None:
             self.update(sth)
 
@@ -54,8 +40,9 @@ def _setup_db_metadata():
     Invervenes in module astroapi.litedb locals. Called from pyfant.__init__
     """
 
-    # Caption and tooltip for fields
-    aa.litedb._gui_info.update({
+    # TODO maybe save it as ~/.molecular-constants.sqlite when convmol.py is executed first time,
+    # TODO not nice to maintain a file that is inside tha package
+    aa.add_database(__ALIAS, aa.get_path("data", "molecular-constants.sqlite", module=pf), {
         "molecule": {
             "name": [None, "name of molecule, <i>e.g.</i>, 'OH'"],
             "symbol_a": ["Symbol A", "symbol of first element"],
@@ -81,13 +68,10 @@ def _setup_db_metadata():
       }
     })
 
-    # TODO maybe save it as ~/.molecular-constants.sqlite when convmol.py is executed first time,
-    # TODO not nice to maintain a file that is inside tha package
-    aa.litedb.set_path_to_db(aa.get_path("data", "molecular-constants.sqlite", module=pf))
 
 
 def create_db():
-    conn = aa.get_conn()
+    conn = get_conn()
     c = conn.cursor()
     c.execute("""create table molecule (id integer primary key,
                                         formula text unique,
@@ -127,7 +111,7 @@ def create_db():
 
 
 def populate_db():
-    conn = aa.get_conn()
+    conn = get_conn()
     # TODO gather more formulae
     formulae = ["MgH", "C2", "CN", "CH", "NH", "CO", "OH", "FeH", "TiO"]
 
@@ -139,7 +123,7 @@ def populate_db():
 
     for formula in formulae:
         try:
-            data, _, name = nistrobot.get_nist_webbook_constants(formula)
+            data, _, name = pf.get_nist_webbook_constants(formula)
 
             fe, do, am, bm, ua, ub, te, cro, s = None, None, None, None, None, None, None, None, \
                                                  None
@@ -186,7 +170,7 @@ def populate_db():
     conn.close()
 
 
-def query_molecules(**kwargs):
+def query_molecule(**kwargs):
     """Convenience function to query 'molecule' table
 
     Args:
@@ -197,21 +181,21 @@ def query_molecules(**kwargs):
     where = ""
     if len(kwargs) > 0:
         where = " where " + " and ".join([key + " = ?" for key in kwargs])
-    conn = aa.get_conn()
+    conn = get_conn()
     sql = """select * from molecule{} order by formula""".format(where)
     r = conn.execute(sql, list(kwargs.values()))
     return r
 
 
-def query_states(**kwargs):
+def query_state(**kwargs):
     """Convenience function to query 'state' table
 
-    Args, Returns: see query_molecules
+    Args, Returns: see query_molecule
     """
     where = ""
     if len(kwargs) > 0:
         where = " where " + " and ".join([key + " = ?" for key in kwargs])
-    conn = aa.get_conn()
+    conn = get_conn()
     sql = """select molecule.formula, state.* from state
              join molecule on state.id_molecule = molecule.id{}""".format(where)
     r = conn.execute(sql, list(kwargs.values()))
@@ -222,11 +206,11 @@ def test_query_state():
     """
     Test function
 
-    >>> conn = aa.get_conn()
+    >>> conn = get_conn()
     >>> cursor = conn.execute("select * from state where id = 10")
     >>> row = cursor.fetchone()
     >>> print(row)
-    OrderedDict([('id', 10), ('id_molecule', 2), ('State', 'F ⁱPi_u'), ('T_e', 75456.9), ('omega_e', 1557.5), ('omega_ex_e', None), ('omega_ey_e', None), ('B_e', 1.645), ('alpha_e', 0.019), ('gamma_e', None), ('D_e', 6e-06), ('beta_e', None), ('r_e', 1.307), ('Trans', 'F ← X R'), ('nu_00', 74532.9)])
+    MyDBRow([('id', 10), ('id_molecule', 2), ('State', 'F ⁱPi_u'), ('T_e', 75456.9), ('omega_e', 1557.5), ('omega_ex_e', None), ('omega_ey_e', None), ('B_e', 1.645), ('alpha_e', 0.019), ('gamma_e', None), ('D_e', 6e-06), ('beta_e', None), ('r_e', 1.307), ('Trans', 'F ← X R'), ('nu_00', 74532.9)])
     """
 
 
@@ -235,15 +219,16 @@ def print_states(**kwargs):
     Prints states table in console
 
     Args:
-        **kwargs: arguments passed to query_states()
+        **kwargs: arguments passed to query_state()
 
     >>> print_states(formula="OH")
     """
-    r = query_states(**kwargs)
-    ti = aa.get_table_info("state")
+    r = query_state(**kwargs)
     data, header0 = aa.cursor_to_data_header(r)
 
-    #header = [(ti[name]["caption"] or name) if ti.get(name) else name for name in header0]
+    # ti = aa.get_table_info(_ALIAS, "state")
+    # header = [(ti[name]["caption"] or name) if ti.get(name) else name for name in header0]
+
     header = header0
 
     print(tabulate.tabulate(data, header))

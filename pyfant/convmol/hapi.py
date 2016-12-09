@@ -59,8 +59,9 @@ HAPI_VERSION = '1.1.0.6'
 # ADDED PROFILE SELECTION (ALPHA) (ver. 1.1.0.6) 
 
 # version header
-print('HAPI version: %s' % HAPI_VERSION)
-print('To get the most up-to-date version please check http://hitran.org/hapi')
+# (JT; 20161208) No need to print this
+# print('HAPI version: %s' % HAPI_VERSION)
+# print('To get the most up-to-date version please check http://hitran.org/hapi')
 
 # define precision
 __ComplexType__ = complex128

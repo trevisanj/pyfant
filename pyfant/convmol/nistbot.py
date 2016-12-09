@@ -70,7 +70,7 @@ def get_nist_webbook_constants(formula):
 
     Returns: tuple: table (list of lists), header (list of strings), name of molecule
     """
-    browser = RoboBrowser(history=True)
+    browser = RoboBrowser(history=True, parser="lxml")
     browser.open("http://webbook.nist.gov/chemistry/form-ser.html")
 
     # # Page
