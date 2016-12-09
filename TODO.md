@@ -14,3 +14,4 @@
   - ~~easier to work with command line options~~
   - ~~nulbad load_result~~
   - Warn assumptions in ConvMol
+  - Using CookieCutter could be **really nice**
