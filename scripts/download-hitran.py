@@ -10,16 +10,20 @@ import logging
 import astroapi as aa
 import tabulate
 import sys
-
-
-pf.logging_level = logging.INFO
+import os
+from pyfant.convmol import hapi
 
 _DEF_T = '(molecular formula)'
 _DEF_M = '(lists molecules)'
 _DEF_I = '(lists isotopologues)'
 _DEF_LL = None
 
+
 if __name__ == "__main__":
+    aa.logging_level = logging.INFO
+    aa.flag_log_file = True
+    script_name = os.path.basename(__file__)
+
     parser = argparse.ArgumentParser(
     description=__doc__,
     formatter_class=aa.SmartFormatter
@@ -45,13 +49,19 @@ if __name__ == "__main__":
     # default='()', nargs='?')
     args = parser.parse_args()
 
-    db = pf.hitrandb
+    db = pf.convmol.hitrandb
     if args.M == _DEF_M:
         print()
-        print("\n".join(aa.format_h1("Listing all HITRAN molecules")))
+        print("\n".join(aa.format_h1("List of all HITRAN molecules")))
         print()
         # Lists all molecules from local cache of HITRAN molecules
         print(tabulate.tabulate(*aa.cursor_to_data_header(db.query_molecule())))
+        print()
+        print("Now, to list isotopologues for a given molecule, please type:")
+        print()
+        print("    {} <molecule ID>".format(script_name))
+        print()
+        print("where <molecule ID> is one of the IDs listed above.")
     elif args.I == _DEF_I:
         row0 = db.query_molecule(ID=args.M).fetchone()
         if row0 is None:
@@ -59,12 +69,21 @@ if __name__ == "__main__":
             sys.exit()
 
         print()
-        print("\n".join(aa.format_h1("Listing all isotopologues for molecule '{Formula}' ({Name})".
+        print("\n".join(aa.format_h1("List of all isotopologues for molecule '{Formula}' ({Name})".
                                      format(**row0))))
         print()
         # Lists all molecules from local cache of HITRAN molecules
         print(tabulate.tabulate(*aa.cursor_to_data_header(
             db.query_isotopologue(**{"molecule.ID": args.M}))))
+        print()
+        print("Now, to download lines, please type:")
+        print()
+        print("    {} {} <isotopologue ID> <llzero> <llfin>".format(script_name, args.M))
+        print()
+        print("where <isotopologue ID> is one the numbers from the 'ID' column above,")
+        print()
+        print("and [<llzero>, <llfin>] defines the wavelength interval in Angstrom.")
+        print()
     else:
         row0 = db.query_molecule(ID=args.M).fetchone()
         if row0 is None:
@@ -76,27 +95,43 @@ if __name__ == "__main__":
                 aa.print_error("Isotopologue ({}, {}) not found".format(args.M, args.I))
                 sys.exit()
 
+            print()
+            print("\n".join(aa.format_h1("Isotopologue selected:")))
+            print()
             print(tabulate.tabulate(list(row1.items()), ["Field name", "Value"]))
             print()
 
             if args.llzero == _DEF_LL or args.llfin == _DEF_LL:
-                aa.print_error("Please specify wavelength interval")
+                print("To download lines for this isotopologue, please type:")
+                print()
+                print("    {} {} {} <llzero> <llfin>".format(script_name, args.M, args.I))
+                print()
+                print("where [<llzero>, <llfin>] makes the wavelength interval in Angstrom.")
+                print()
                 sys.exit()
 
             print("Wavelength interval (air): [{llzero}, {llfin}] Angstrom".format(**args.__dict__))
             if args.llzero >= args.llfin:
                 aa.print_error("Initial wavelength must be lower than Final wavelength")
                 sys.exit()
+
+            # Here will fetch data
             wn0 = aa.air_to_vacuum(1e8/args.llzero)
             wn1 = aa.air_to_vacuum(1e8/args.llfin)
             print("Wavenumber interval (vacuum): [{}, {}] cm**-1".format(wn1, wn0))
 
-            table_name = args.t if args.t != _DEF_T else row0["Formula"]
+            table_name = args.t if args.t != _DEF_T else row1["Formula"]
             print("Table name: '{}'".format(table_name))
             print()
             print("Fetching data...")
-            pf.hapi.fetch(table_name, int(args.M), int(args.I), wn1, wn0)
+            print("===")
+            print("=== BEGIN messages from HITRAN API ===")
+            print("===")
+            hapi.fetch(table_name, int(args.M), int(args.I), wn1, wn0)
 
+            print("===")
+            print("=== END messages from HITRAN API ===")
+            print("===")
             print("...done")
             print("Please check files '{0}.header', '{0}.data'".format(table_name))
 

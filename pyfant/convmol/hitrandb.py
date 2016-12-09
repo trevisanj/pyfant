@@ -53,7 +53,7 @@ def populate_db():
 
             for iso in isos:
                 try:
-                    conn.execute("insert into isotopologue values(?,?,?,?,?)", [iso[0], mol[0], *iso[1:]])
+                    conn.execute("insert into isotopologue values(?,?,?,?,?)", [iso[0], mol[0]]+iso[1:])
                 except:
                     aa.get_python_logger().exception("Tried to insert this: {}".format(iso))
                     raise

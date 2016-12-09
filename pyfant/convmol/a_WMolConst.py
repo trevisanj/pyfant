@@ -115,6 +115,13 @@ class WMolConst(aa.WBase):
         return ret
 
 
+    def None_to_zero(self):
+        """Fills missing values with zeros"""
+        for edit in self._edit_map.values():
+            if len(edit.text().strip()) == 0:
+                edit.setText("0")
+
+
     def _w_mol_id_changed(self):
         """Transfer values from self.data to edit fields below the table widget"""
         # id_ = print("State id changed to ", self.w_state.id)

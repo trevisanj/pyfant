@@ -2,6 +2,7 @@
 Conversion of molecular lines files.
 """
 
+from .convlog import *
 from .nistbot import *
 from .hitranbot import *
 from . import moldb

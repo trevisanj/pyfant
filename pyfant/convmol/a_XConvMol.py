@@ -118,12 +118,14 @@ class _WSelectSaveFile(aa.WBase):
         lw.addWidget(b)
         b.clicked.connect(self.wants_auto)
         b.setIcon(aa.get_icon("leaf-plant"))
+        b.setToolTip("Make up file name")
         b.setFixedWidth(30)
 
         b = self.button = QToolButton()
         lw.addWidget(b)
         b.clicked.connect(self.on_button_clicked)
         b.setIcon(aa.get_icon("document-save"))
+        b.setToolTip("Choose file name to save as")
         b.setFixedWidth(30)
 
         # Forces paint red if invalid
@@ -209,7 +211,6 @@ class _WHitranPanel(aa.WBase):
         print("OLEOLEOLA", curx, cury, prevx, prevy)
 
     def dir_changed(self):
-        print("dir_changed Ahhh nego", self.w_dir.value)
         self._populate()
 
 
@@ -318,6 +319,10 @@ class XConvMol(aa.XLogMainWindow):
         w.layout().setContentsMargins(15, 1, 1, 1)
         l1.addWidget(w)
 
+        b = self.button_fill = QPushButton("Fill missing values with ZERO")
+        b.clicked.connect(self.on_fill_missing)
+        l1.addWidget(b)
+
         sp.addWidget(w0)
         sp.addWidget(w1)
 
@@ -399,6 +404,7 @@ class XConvMol(aa.XLogMainWindow):
         # Forces only one of the source panels to visible
         self.w_source.index = 0
         self.source_changed()
+        self.setWindowTitle("(to) PFANT Molecular Lines Converter")
 
         aa.nerdify(self)
 
@@ -417,15 +423,17 @@ class XConvMol(aa.XLogMainWindow):
 
         self.w_out.value = filename
 
-
+    def on_fill_missing(self):
+        self.w_mol.None_to_zero()
+        self.w_state.None_to_zero()
 
     def source_changed(self):
         idx = self.w_source.index
-        print("SOURCE IS NOW ", _SOURCES[idx])
+        # print("SOURCE IS NOW ", _SOURCES[idx])
         for i, ds in enumerate(_SOURCES):
             pass
             ds.widget.setVisible(i == idx)
-            print("Widget", ds.widget, "is visible?", ds.widget.isVisible())
+            # print("Widget", ds.widget, "is visible?", ds.widget.isVisible())
 
     def mol_id_changed(self):
         id_ = self.w_mol.w_mol.id
@@ -435,6 +443,7 @@ class XConvMol(aa.XLogMainWindow):
         self.title_state.setText(aa.format_title0(s))
 
     def convert_clicked(self):
+        cm = pf.convmol
         try:
             errors = []
             idx = self.w_source.index
@@ -460,23 +469,36 @@ class XConvMol(aa.XLogMainWindow):
                     if lines is None:
                         errors.append("HITRAN table not selected")
                     else:
-                        sols_calculator = pf.hitran_to_sols
+                        sols_calculator = cm.hitran_to_sols
                 else:
                     aa.show_message("{}-to-PFANT conversion not implemented yet, sorry".
                                     format(_SOURCES[idx].name))
                     return
 
             if len(errors) == 0:
-                # Finnaly the conversion to PFANT molecular lines file
+                # Finally the conversion to PFANT molecular lines file
 
                 # TODO **MAYBE NOT TIO-LIKE***
-                f = pf.make_file_molecules(mol_row, mol_consts, state_consts, lines,
-                                           pf.calc_qgbd_tio_like, sols_calculator)
-                f.save_as(filename)
+                mol_row.update(mol_consts)  # replaces possibly changed values for "fe", "do" etc.
+                f, log = cm.make_file_molecules(mol_row, state_consts, lines,
+                                                cm.calc_qgbd_tio_like, sols_calculator)
+                ne = len(log.errors)
+                if ne > 0:
+                    self.add_log("Error messages:")
+                    self.add_log("\n".join(log.errors))
+                    self.add_log("{} error message{}".format(ne, "" if ne == 1 else "s"))
 
-                self.add_log("File '{}' generated successfully")
+                if log.flag_ok:
+                    f.save_as(filename)
+                    self.add_log(
+                        "Lines converted: {}/{}".format(f.num_lines, log.num_lines_in))
+
+                    self.add_log("File '{}' generated successfully".format(filename))
+                else:
+                    self.add_log_error("Conversion was not possible")
+
             else:
-                aa.show_error("Cannot convert:\n  - " + ("\n  - ".join(errors)))
+                self.add_log_error("Cannot convert:\n  - " + ("\n  - ".join(errors)), True)
 
         except Exception as e:
             aa.get_python_logger().exception("Conversion failed")

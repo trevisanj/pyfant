@@ -18,20 +18,22 @@ import astroapi as aa
 def _format_title0(s):
     return "<h3>{}</h3>".format(s)
 
-pf.logging_level = logging.INFO
 
+if __name__ == "__main__":
+    aa.logging_level = logging.INFO
+    aa.flag_log_file = True
 
-app = aa.get_QApplication([])
-form = pf.convmol.XConvMol()
-form.w_mol.w_mol._populate()
-form.show()
-app.exec_()
+    app = aa.get_QApplication([])
+    form = pf.convmol.XConvMol()
+    form.w_mol.w_mol._populate()
+    form.show()
+    app.exec_()
 
-# aa = form.get_all_consts()
-# for key, value in aa.items():
-#     print(key, "=", value)
+    # aa = form.get_all_consts()
+    # for key, value in aa.items():
+    #     print(key, "=", value)
 
-# for fn in form.w_state._fieldnames:
-#     print("{} = {}".format(fn, form.w_state[fn]))
+    # for fn in form.w_state._fieldnames:
+    #     print("{} = {}".format(fn, form.w_state[fn]))
 
 

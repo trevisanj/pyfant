@@ -31,7 +31,6 @@ from .from_vald import *
 from .multirunnable import *
 from .gui import *
 from .paths import *
-from .convmol import *
 from . import datatypes
 from . import liblib
 from . import gui
@@ -45,8 +44,8 @@ def get_config():
     return aa.get_config_obj(".pyfant.conf")
 
 
-moldb._setup_db_metadata()
-hitrandb._setup_db_metadata()
+convmol.moldb._setup_db_metadata()
+convmol.hitrandb._setup_db_metadata()
 
 # # # Function to be called from astroapi package
 # #   ==========================================

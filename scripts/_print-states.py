@@ -8,6 +8,7 @@ otherwise, prints full table
 """
 
 import pyfant as pf
+import pyfant.convmol as cm
 import argparse
 import logging
 import astroapi as aa
@@ -32,4 +33,4 @@ if __name__ == "__main__":
     if args.id is not None:
         kwargs["state.id"] = args.id
 
-    pf.moldb.print_states(**kwargs)
+    cm.moldb.print_states(**kwargs)

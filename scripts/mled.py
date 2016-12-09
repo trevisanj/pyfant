@@ -10,11 +10,11 @@ import logging
 import pyfant as pf
 import astroapi as aa
 
-aa.logging_level = logging.INFO
-aa.flag_log_file = True
-
 
 if __name__ == "__main__":
+    aa.logging_level = logging.INFO
+    aa.flag_log_file = True
+
     parser = argparse.ArgumentParser(
     description=__doc__,
     formatter_class=aa.SmartFormatter

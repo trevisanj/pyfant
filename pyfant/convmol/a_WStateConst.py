@@ -91,6 +91,12 @@ class WStateConst(aa.WBase):
             except ValueError:
                 return None
 
+    def None_to_zero(self):
+        """Fills missing values with zeros"""
+        for edit in self._edit_map.values():
+            if len(edit.text().strip()) == 0:
+                edit.setText("0")
+
     def set_id_molecule(self, id_):
         """Calls WDBState.set_id_molecule"""
         self.w_state.set_id_molecule(id_)
