@@ -45,7 +45,8 @@ def get_config():
     return aa.get_config_obj(".pyfant.conf")
 
 
-convmol.moldb._setup_db_metadata()
+moldb._setup_db_metadata()
+hitrandb._setup_db_metadata()
 
 # # # Function to be called from astroapi package
 # #   ==========================================

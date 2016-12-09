@@ -42,6 +42,8 @@ def translate_local_lower_quanta(Q2l):
     ret = {}
     if True:
         ret["Br"] = _OH_BRANCH_MAP.get(Q2l[1:3])
+        if ret["Br"] is None:
+            print("VAI DA MERDA")
         ret["J2l"] = float(Q2l[3:8])
         ret["Jl"] = ret["J2l"]+_J2L_MAP.get(ret["Br"])
     else:
@@ -112,7 +114,7 @@ def hitran_to_sols(state_consts, lines, qgbd_calculator):
 
     for i in range(header["number_of_rows"]):
         nu = data["nu"][i]
-        wl = aa.vacuum_nu_to_air_lambda(nu)
+        wl = aa.vacuum_to_air(1e8/nu)
         Q_ = translate_local_lower_quanta(data["local_lower_quanta"][i])
         V = translate_global_quanta(data["global_upper_quanta"][i])
         V_ = translate_global_quanta(data["global_lower_quanta"][i])

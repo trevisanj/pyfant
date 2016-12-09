@@ -85,8 +85,12 @@ class _WSelectSaveFile(aa.WBase):
     def value(self):
         return self._get_value()
 
+    @value.setter
+    def value(self, x):
+        self.edit.setText(x)
+
     # # Emitted whenever the valu property changes **to a valid value**
-    # valueChanged = pyqtSignal()
+    wants_auto = pyqtSignal()
 
     def __init__(self, *args):
         aa.WBase.__init__(self, *args)
@@ -109,6 +113,12 @@ class _WSelectSaveFile(aa.WBase):
         t.setBuddy(e)
         lw.addWidget(e)
         # e.setReadOnly(True)
+
+        b = self.button_auto = QToolButton()
+        lw.addWidget(b)
+        b.clicked.connect(self.wants_auto)
+        b.setIcon(aa.get_icon("leaf-plant"))
+        b.setFixedWidth(30)
 
         b = self.button = QToolButton()
         lw.addWidget(b)
@@ -150,9 +160,6 @@ class _WSelectSaveFile(aa.WBase):
 
     def _get_value(self):
         return self.edit.text().strip()
-
-
-
 
 
 
@@ -363,6 +370,7 @@ class XConvMol(aa.XLogMainWindow):
         # ### Output file specification
 
         w0 = self.w_out = _WSelectSaveFile(self)
+        w0.wants_auto.connect(self.wants_auto)
         lsd.addWidget(w0)
 
         # ### "Convert" button
@@ -375,6 +383,16 @@ class XConvMol(aa.XLogMainWindow):
         lmn.addWidget(b)
 
 
+        # # Log facilities
+
+        sb = self.statusBar()
+        l = self.label_last_log = QLabel()
+        sb.addWidget(l)
+
+        w = self.textEdit_log = QTextEdit()
+        w.setReadOnly(True)
+        tw0.addTab(w, "Log messages (Alt+&L)")
+
         # # Final adjustments
 
         tw0.setCurrentIndex(1)
@@ -383,6 +401,21 @@ class XConvMol(aa.XLogMainWindow):
         self.source_changed()
 
         aa.nerdify(self)
+
+
+    def wants_auto(self):
+        idx = self.w_source.index
+        filename = None
+        if idx == 0:
+            lines = self.w_hitran.data
+            if lines:
+                filename = "{}.dat".format(lines["header"]["table_name"])
+
+        if filename is None:
+            # Default
+            filename = aa.new_filename("mol", "dat")
+
+        self.w_out.value = filename
 
 
 
@@ -440,6 +473,8 @@ class XConvMol(aa.XLogMainWindow):
                 f = pf.make_file_molecules(mol_row, mol_consts, state_consts, lines,
                                            pf.calc_qgbd_tio_like, sols_calculator)
                 f.save_as(filename)
+
+                self.add_log("File '{}' generated successfully")
             else:
                 aa.show_error("Cannot convert:\n  - " + ("\n  - ".join(errors)))
 

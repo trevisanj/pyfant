@@ -13,4 +13,6 @@
   - ~~p.conf.sid.clean() not intuitive~~
   - ~~easier to work with command line options~~
   - ~~nulbad load_result~~
+  - Resolve branches for other molecules
   - Warn assumptions in ConvMol
+  

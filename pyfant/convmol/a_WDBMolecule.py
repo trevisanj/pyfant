@@ -39,8 +39,8 @@ class WDBMolecule(WDBRegistry):
             curr_row = self.row
 
             t = self.tableWidget
-            fieldnames = list(aa.get_table_info("molecule"))
-            rows = aa.cursor_to_rows(db.query_molecules())
+            fieldnames = list(aa.get_table_info("moldb", "molecule"))
+            rows = aa.cursor_to_rows(db.query_molecule())
             nr, nc = len(rows), len(fieldnames)
             aa.reset_table_widget(t, nr, nc)
             t.setHorizontalHeaderLabels(fieldnames)
@@ -66,7 +66,7 @@ class WDBMolecule(WDBRegistry):
 
     def _get_edit_params(self):
         """Returns a Parameters object containing information about the fields that may be edited"""
-        ti = aa.get_table_info("molecule")
+        ti = aa.get_table_info("moldb", "molecule")
         params = aa.table_info_to_parameters(ti)
         params = [p for p in params if not p.name.startswith("id")]
         return params
