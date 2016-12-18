@@ -23,9 +23,10 @@ class _DataSource(aa.AttrsPart):
         return "{}('{}')".format(self.__class__.__name__, self.name)
 
 
-_SOURCES = [_DataSource("HITRAN"),
-            _DataSource("TurboSpectrum"),
-            _DataSource("Kurucz")]
+
+# This defines the order of the panels
+_NAMES = ["HITRAN", "VALD3", "TurboSpectrum", "Kurucz",]
+_SOURCES = [_DataSource(x) for x in _NAMES]
 
 
 class _WSource(aa.WBase):
@@ -164,7 +165,6 @@ class _WSelectSaveFile(aa.WBase):
         return self.edit.text().strip()
 
 
-
 class _WHitranPanel(aa.WBase):
 
     @property
@@ -253,6 +253,104 @@ class _WHitranPanel(aa.WBase):
             # elif restore_mode == "index":
             #     if -1 < curr_idx < t.rowCount():
             #         t.setCurrentCell(curr_idx, 0)
+        finally:
+            self._flag_populating = False
+            # self._wanna_emit_id_changed()
+
+
+class _WVald3Panel(aa.WBase):
+    """
+    This panel allows to load a Vald3 file and browse through its species (molecules only)
+
+    The goal is to choose one molecule
+    """
+
+    @property
+    def data(self):
+        """
+        Returns FileVald3 with a single species"""
+
+        idx = self.tableWidget.currentRow()
+        if idx < 0:
+            return None
+
+        f = pf.FileVald3()
+        f.speciess = [self._f.speciess[idx]]
+        return f
+
+    @property
+    def is_molecule(self):
+        data = self.data
+        return data is not None and data.speciess[0].formula not in aa.symbols
+
+    def __init__(self, *args):
+        aa.WBase.__init__(self, *args)
+
+        self._flag_populating = False
+        self._f = None  # FileVald3
+
+        lw = QVBoxLayout()
+        self.setLayout(lw)
+
+        lw.addWidget(self.keep_ref(QLabel(_SOURCES[0].name)))
+
+
+        w = self.w_file = aa.WSelectFile(self.parent_form)
+        w.label.setText("VALD3 file")
+        w.valueChanged.connect(self.file_changed)
+        lw.addWidget(w)
+
+        a = self.tableWidget = QTableWidget()
+        lw.addWidget(a)
+        a.setSelectionMode(QAbstractItemView.SingleSelection)
+        a.setSelectionBehavior(QAbstractItemView.SelectRows)
+        a.setEditTriggers(QTableWidget.NoEditTriggers)
+        a.setFont(aa.MONO_FONT)
+        a.setAlternatingRowColors(True)
+        a.currentCellChanged.connect(self.on_tableWidget_currentCellChanged)
+
+        l = self.label_warning = QLabel()
+        l.setStyleSheet("QLabel {{color: {}}}".format(aa.COLOR_WARNING))
+        lw.addWidget(l)
+
+        # forces populate table with 'Python HITRAN API data cache' in local directory
+        # self.file_changed()
+
+    def on_tableWidget_currentCellChanged(self, curx, cury, prevx, prevy):
+        print("OOOOOOOOOOOOOOOOO")
+        self.label_warning.setText("Need a molecule, not atom"
+                                   if self.data is not None and not self.is_molecule else "")
+
+    def file_changed(self):
+        self._populate()
+
+
+    def _populate(self):
+        self._flag_populating = True
+        try:
+            f = self._f = pf.FileVald3()
+            f.load(self.w_file.value)
+
+            nr, nc = len(f), 3
+            t = self.tableWidget
+            aa.reset_table_widget(t, nr, nc)
+            t.setHorizontalHeaderLabels(["VALD3 species", "Number of spectral lines", "Atom/Molecule"])
+
+            for i, species in enumerate(f):
+                item = QTableWidgetItem(str(species))
+                t.setItem(i, 0, item)
+                item = QTableWidgetItem(str(len(species)))
+                t.setItem(i, 1, item)
+                item = QTableWidgetItem("Atom" if species.formula in aa.symbols else "Molecule")
+                t.setItem(i, 2, item)
+
+            t.resizeColumnsToContents()
+
+        except Exception as e:
+            self._f = None
+            self.add_log_error("Error reading contents of file '{}': '{}'".format(self.w_file.value, aa.str_exc(e)), True)
+            raise
+
         finally:
             self._flag_populating = False
             # self._wanna_emit_id_changed()
@@ -356,10 +454,12 @@ class XConvMol(aa.XLogMainWindow):
 
         # #### Adds configuration panels for various sources
         # Only one panel should be visible at a time
+        # **Note** The order here doesn't matter
         p0 = self.w_hitran = _WHitranPanel(self)
-        p1 = self.w_turbo = _WTurboSpectrumPanel(self)
-        p2 = self.w_kurucz = _WKuruczPanel(self)
-        pp = [p0, p1, p2]
+        p1 = self.w_vald3 = _WVald3Panel(self)
+        p2 = self.w_turbo = _WTurboSpectrumPanel(self)
+        p3 = self.w_kurucz = _WKuruczPanel(self)
+        pp = [p0, p1, p2, p3]
         for ds, p in zip(_SOURCES, pp):
             ds.widget = p
             lh.addWidget(p)
@@ -447,6 +547,7 @@ class XConvMol(aa.XLogMainWindow):
         try:
             errors = []
             idx = self.w_source.index
+            name = _SOURCES[idx].name
             mol_row = self.w_mol.row
             mol_consts = self.w_mol.constants
             state_consts = self.w_state.constants
@@ -463,16 +564,22 @@ class XConvMol(aa.XLogMainWindow):
             lines, sols_calculator = None, None
             if len(errors) == 0:
                 # Source-dependant calculation of "sets of lines"
-                if idx == 0:
+                if name == "HITRAN":
                     lines = self.w_hitran.data
 
                     if lines is None:
                         errors.append("HITRAN table not selected")
                     else:
                         sols_calculator = cm.hitran_to_sols
+                elif name == "VALD3":
+                    if not self.w_vald3.is_molecule:
+                        errors.append("Need a VALD3 molecule")
+                    else:
+                        lines = self.w_vald3.data
+                        sols_calculator = cm.vald3_to_sols
                 else:
                     aa.show_message("{}-to-PFANT conversion not implemented yet, sorry".
-                                    format(_SOURCES[idx].name))
+                                    format(name))
                     return
 
             if len(errors) == 0:

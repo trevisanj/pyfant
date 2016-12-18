@@ -12,6 +12,7 @@ import pyfant as pf
 import astroapi as aa
 from .calc_qgbd import calc_qgbd_tio_like
 from .convlog import *
+from .branch import *
 from collections import OrderedDict
 
 __all__ = ["hitran_to_sols"]
@@ -19,13 +20,6 @@ __all__ = ["hitran_to_sols"]
 
 _OH_BRANCH_MAP_OH = {"QQ": "Q", "PP": "P", "RR": "R"}
 
-
-_J2L_MAP = {"P": -1, "Q": 0, "R": 1}
-
-
-def _Jl(Br, J2l):
-    """Returns J superior given J inferior and the branch"""
-    return J2l + _J2L_MAP[Br]
 
 
 def _parse_local_lower_quanta_OH(Q2l):
@@ -179,7 +173,7 @@ def hitran_to_sols(mol_row, state_row, lines, qgbd_calculator):
             nu = data["nu"][i]
             wl = aa.vacuum_to_air(1e8/nu)
             Br, J2l = f_group(data["local_lower_quanta"][i])
-            Jl = _Jl(Br, J2l)
+            Jl = global_quanta_to_branch(Br, J2l)
             V = f_class(data["global_upper_quanta"][i])
             V_ = f_class(data["global_lower_quanta"][i])
             A = data["a"][i]

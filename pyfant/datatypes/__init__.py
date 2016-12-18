@@ -10,6 +10,7 @@ from .fileoptions import *
 from .filepartit import *
 from .filetoh import *
 from .filehitran import *
+from .filevald3 import *
 
 from . import filedissoc
 from . import fileabonds
@@ -23,3 +24,4 @@ from . import fileoptions
 from . import filepartit
 from . import filetoh
 from . import filehitran
+from . import filevald3

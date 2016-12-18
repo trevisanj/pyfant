@@ -17,3 +17,8 @@
   - Using CookieCutter could be **really nice**
   - Resolve branches for other molecules
 
+
+# Molecules conversion
+
+  - How to calculate the Franck-Condon factors
+  - 
