@@ -15,5 +15,12 @@
   - ~~nulbad load_result~~
   - Warn assumptions in ConvMol
   - Using CookieCutter could be **really nice**
-  - Resolve branches for other molecules
+  - ~~Resolve branches for other molecules~~ HITRAN OK
 
+
+## CONVMOL
+
+  - Find out how to calculate the Franck-Condon Factor (`qqv`), assumed 1.
+  - Branches HITRAN so far only P/Q/R (P1, Q1 etc. not yet)
+  - Check with BLB `calg_qgbd.py` (Taken from TiO, are others the same?)
+  - 

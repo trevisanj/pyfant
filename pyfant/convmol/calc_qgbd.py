@@ -33,7 +33,7 @@ def calc_qgbd_tio_like(state_consts, v_lo):
     Returns: qbdg, i.e., a dictionary with keys:
             "qv", "gv", "bv", "dv", "gzero"
 
-    >>> state_row = db.StateRow(108)
+    >>> TODO no longer state_row = db.StateRow(108)
     >>> state_row.None_to_zero()
     >>> calc_qgbd_tio_like(state_row, 10)
     OrderedDict([('qv', 1.0), ('bv', 0.5063099999999999), ('dv', 5900000.0), ('gv', 9664.0), ('gzero', 503.67499999999995)])
@@ -66,4 +66,3 @@ def calc_qgbd_tio_like(state_consts, v_lo):
     qbdg = OrderedDict((("qv", qv), ("gv", gv), ("bv", bv), ("dv", dv), ("gzero", gzero)))
 
     return qbdg
-

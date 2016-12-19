@@ -50,11 +50,18 @@ class WDBState(WDBRegistry):
         """
         self._flag_populating = True
         try:
+            # Dunno if this will be useful or not
+            # t = self.tableWidget
+            # if self._f is None:
+            #     aa.reset_table_widget(t, 0, 0)
+            #     return
+
+
             curr_idx = self.tableWidget.currentRow()
 
             t = self.tableWidget
-            rows = aa.cursor_to_rows(db.query_state(id_molecule=self._id_molecule))
-            ti = aa.get_table_info("moldb", "state")
+            rows = aa.cursor_to_rows(self._f.query_state(id_molecule=self._id_molecule))
+            ti = self._f.get_table_info("state")
             fieldnames = [name for name in ti if name not in _FIELDNAMES_OUT]
             # unfortunately QTableWidget is not prepared to show HTML col_names = [row["caption"] or row["name"] for row in ti if not row["name"] in FIELDNAMES_OUT]
             col_names = fieldnames
@@ -81,7 +88,7 @@ class WDBState(WDBRegistry):
 
     def _get_edit_params(self):
         """Returns a Parameters object containing information about the fields that may be edited"""
-        ti = aa.get_table_info("moldb", "state")
+        ti = self._f.get_table_info("state")
         params = aa.table_info_to_parameters(ti)
         params = [p for p in params if not p.name.startswith("id")]
         return params
@@ -98,7 +105,7 @@ class WDBState(WDBRegistry):
         r = form.exec_()
         if r == QDialog.Accepted:
             kwargs = form.get_kwargs()
-            conn = db.get_conn()
+            conn = self._f.get_conn()
             s = "insert into state (id_molecule, {}) values ({}, {})".\
                 format(", ".join([p.name for p in params]),
                        self._id_molecule,
@@ -116,7 +123,7 @@ class WDBState(WDBRegistry):
             id_ = self.row["id"]
             s = "update state set {} where id = {}".format(
                 ", ".join(["{} = '{}'".format(a, b) for a, b in kwargs.items()]), id_)
-            conn = db.get_conn()
+            conn = self._f.get_conn()
             conn.execute(s)
             conn.commit()
             self._populate()
@@ -128,7 +135,7 @@ class WDBState(WDBRegistry):
                                  "Are you sure?",
                                  QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
         if r == QMessageBox.Yes:
-            conn = db.get_conn()
+            conn = self._f.get_conn()
             id_ = self.row["id"]
             conn.execute("delete from state where id = ?", [id_])
             conn.commit()

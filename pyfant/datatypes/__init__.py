@@ -10,6 +10,7 @@ from .fileoptions import *
 from .filepartit import *
 from .filetoh import *
 from .filehitran import *
+from .filemoldb import *
 
 from . import filedissoc
 from . import fileabonds
