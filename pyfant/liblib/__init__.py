@@ -8,3 +8,4 @@ Self-contained sub-library
 """
 
 from .conversion import *
+from .misc import *

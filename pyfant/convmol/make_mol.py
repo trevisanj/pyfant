@@ -5,8 +5,6 @@ __all__ = ["make_file_molecules"]
 
 
 
-
-
 def make_file_molecules(mol_row, state_consts, lines, qgbd_calculator, sols_calculator):
     """
 

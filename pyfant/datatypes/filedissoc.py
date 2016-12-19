@@ -3,11 +3,11 @@ __all__ = ["FileDissoc"]
 
 import fortranformat as ff
 from pyfant import adjust_atomic_symbol
-from astroapi import froze_it, DataFile, write_lf
+import astroapi as aa
 
 
-@froze_it
-class FileDissoc(DataFile):
+@aa.froze_it
+class FileDissoc(aa.DataFile):
     """PFANT Stellar Dissociation Equilibrium Information"""
     default_filename = "dissoc.dat"
 
@@ -15,7 +15,7 @@ class FileDissoc(DataFile):
              'nmol', 'mol', 'c', 'mmax', 'nelem', 'natom', 'eps', 'switer']
 
     def __init__(self):
-        DataFile.__init__(self)
+        aa.DataFile.__init__(self)
         # atom-related
         self.nmetal = None
         self.nimax = None
@@ -89,14 +89,14 @@ class FileDissoc(DataFile):
             #               for i in xrange(len(self))])
             # h.writelines(['1\n', '1\n'])
 
-            write_lf(h, "%5d%5d%10.5f%10.5f %s" % (self.nmetal, self.nimax, self.eps, self.switer, self.title))
+            aa.write_lf(h, "%5d%5d%10.5f%10.5f %s" % (self.nmetal, self.nimax, self.eps, self.switer, self.title))
 
             # atoms part
             fr = ff.FortranRecordReader('(a2, 2x, i6, f10.3, 2i5, f10.5)')
             for elems, nelemx, ip, ig0, ig1, cclog in \
                     zip(self.elems, self.nelemx, self.ip, self.ig0, self.ig1, self.cclog):
                 elems = elems.upper().strip()  # to follow convention: right-aligned upper case
-                write_lf(h, '%2s  %6d%10.3f%5d%5d%10.5f' % (elems, nelemx, ip, ig0, ig1, cclog))
+                aa.write_lf(h, '%2s  %6d%10.3f%5d%5d%10.5f' % (elems, nelemx, ip, ig0, ig1, cclog))
 
 
             for mol, c, mmax, nelem, natom in \
@@ -106,9 +106,9 @@ class FileDissoc(DataFile):
                 for nelemm, natomm in zip(nelem, natom):
                     l.append("%2d%1d" % (nelemm, natomm))
                 s = "".join(l)
-                write_lf(h, s)
+                aa.write_lf(h, s)
 
-            write_lf(h, "")
-            write_lf(h, "")  # two blank lines to signal end-of-file
+            aa.write_lf(h, "")
+            aa.write_lf(h, "")  # two blank lines to signal end-of-file
 
 
