@@ -218,7 +218,7 @@ class FileMolecules(DataFile):
                         m.symbols = temp or []
                     transitions = []
                     if len(parts) > 2:
-                        numbers = [int(x) for x in re.findall('([0-9]+)', parts[2])]
+                        numbers = [int(float(x)) for x in re.findall('([0-9.]+)', parts[2])]
                         transitions = list(zip(numbers[0::2], numbers[1::2]))
 
                     r += 1
@@ -329,7 +329,7 @@ class FileMolecules(DataFile):
                         break
                     ltrans.append([sol.vl, sol.v2l])
                 new_titulo = "{} # {} # {}".format(m.description, " ".join(m.symbols),
-                                                   "|".join(["{},{}".format(*t) for t in ltrans]))
+                                                   "|".join(["{:.0f},{:.0f}".format(*t) for t in ltrans]))
 
                 # - mled change, incorporate shit
 

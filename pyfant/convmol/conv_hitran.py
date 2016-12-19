@@ -189,7 +189,7 @@ def hitran_to_sols(mol_row, state_row, lines, qgbd_calculator):
 
             J2l_pfant = int(J2l)  # ojo, estamos colocando J2L-0.5! TODO ask BLB: we write J2l or J2l-.5?
         except Exception as e:
-            log.errors.append("#{}{} line: {}".format(i+1, aa.ordinal_suffix(i+1), str(e)))
+            log.errors.append("#{}{} line: {}".format(i+1, aa.ordinal_suffix(i+1), aa.str_exc(e)))
             continue
 
         sol_key = (V, V_)  # (v', v'') transition (v_sup, v_inf)

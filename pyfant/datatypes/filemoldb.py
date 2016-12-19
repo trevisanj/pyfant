@@ -14,11 +14,6 @@ __all__ = ["FileMolDB"]
 #     return aa.get_conn(__ALIAS)
 
 
-class MoleculeRow(aa.MyDBRow):
-    pass
-
-
-
 class FileMolDB(aa.FileSQLiteDB):
     description = "Database of Molecular Constants"
     default_filename = "moldb.sqlite"

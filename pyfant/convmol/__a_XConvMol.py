@@ -6,7 +6,6 @@ import pyfant as pf
 # import moldb as db
 from .a_WStateConst import WStateConst
 from .a_WMolConst import WMolConst
-from .a_WFileMolDB import *
 from . import hapi
 import os
 import datetime
@@ -188,7 +187,7 @@ class _WHitranPanel(aa.WBase):
         lw = QVBoxLayout()
         self.setLayout(lw)
 
-        lw.addWidget(self.keep_ref(QLabel("HITRAN")))
+        lw.addWidget(self.keep_ref(QLabel(_SOURCES[0].name)))
 
 
         w = self.w_dir = aa.WSelectDir(self.parent_form)
@@ -293,11 +292,11 @@ class _WVald3Panel(aa.WBase):
         lw = QVBoxLayout()
         self.setLayout(lw)
 
-        lw.addWidget(self.keep_ref(QLabel("VALD3")))
+        lw.addWidget(self.keep_ref(QLabel(_SOURCES[0].name)))
 
 
         w = self.w_file = aa.WSelectFile(self.parent_form)
-        w.label.setText("VALD3 extended-format file")
+        w.label.setText("VALD3 file")
         w.valueChanged.connect(self.file_changed)
         lw.addWidget(w)
 
@@ -378,35 +377,58 @@ class _WKuruczPanel(aa.WBase):
         lw.addWidget(self.keep_ref(QLabel(_SOURCES[2].name)))
 
 
-class XConvMol(aa.XFileMainWindow):
-    def __init__(self, parent=None, fileobj=None):
-        aa.XFileMainWindow.__init__(self, parent)
+class XConvMol(aa.XLogMainWindow):
+    def __init__(self, *args):
+        aa.XLogMainWindow.__init__(self, *args)
 
-        # # Synchronized sequences
-        _VVV = pf.FileMolDB.description
-        self.tab_texts =  ["{} (Alt+&1)".format(_VVV), "Conversion (Alt+&2)", "Log (Alt+&3)"]
-        self.flags_changed = [False, False]
-        self.save_as_texts = ["Save %s as..." % _VVV, None, None]
-        self.open_texts = ["Load %s" % _VVV, None, None]
-        self.clss = [pf.FileMolDB, None, None]  # save class
-        self.clsss = [(pf.FileMolDB,), None, None]  # accepted load classes
-        self.wilds = ["*.sqlite", None, None]  # e.g. '*.fits'
-        self.editors = [aa.NullEditor(), aa.NullEditor(), aa.NullEditor()]  # editor widgets, must comply ...
-        tw0 = self.tabWidget
-        tw0.setTabText(1, self.tab_texts[2])
+        tw0 = self.keep_ref(QTabWidget())
+        self.setCentralWidget(tw0)
+
+        # # First tab: polluted!!
+
+        sp = self.keep_ref(QSplitter(Qt.Vertical))
+        tw0.addTab(sp, "Molecular constants (Alt+&1)")
+
+        # ## First widget of splitter
+        w0 = self.keep_ref(QWidget())
+        l0 = QVBoxLayout(w0)
+        l0.setMargin(2)
+        l0.setSpacing(2)
+
+        a = self.title_mol = QLabel(aa.format_title0("Select a molecule:"))
+        l0.addWidget(a)
+
+        w = self.w_mol = WMolConst(self)
+        w.layout().setContentsMargins(15, 1, 1, 1)
+        w.id_changed.connect(self.mol_id_changed)
+        l0.addWidget(w)
 
 
-        lv = self.keep_ref(QVBoxLayout(self.gotting))
-        me = self.moldb_editor = WFileMolDB(self)
-        lv.addWidget(me)
-        me.edited.connect(self._on_edited)
-        self.editors[0] = me
+        # ## Second widget of splitter
+        w1 = self.keep_ref(QWidget())
+        l1 = QVBoxLayout(w1)
+        l1.setMargin(2)
+        l1.setSpacing(2)
+
+        a = self.title_state = self.keep_ref(QLabel(aa.format_title0("States")))
+        l1.addWidget(a)
+
+        w = self.w_state = WStateConst(self)
+        w.layout().setContentsMargins(15, 1, 1, 1)
+        l1.addWidget(w)
+
+        b = self.button_fill = QPushButton("Fill missing values with ZERO")
+        b.clicked.connect(self.on_fill_missing)
+        l1.addWidget(b)
+
+        sp.addWidget(w0)
+        sp.addWidget(w1)
 
 
         # # Second tab: files
 
         w = self.keep_ref(QWidget())
-        tw0.insertTab(1, w, self.tab_texts[1])
+        tw0.addTab(w, "Conversion (Alt+&2)")
 
 
         # ## Vertical layout: source and destination stacked
@@ -466,19 +488,19 @@ class XConvMol(aa.XFileMainWindow):
         lmn.addWidget(b)
 
 
-        # # # Log facilities
-        #
-        # sb = self.statusBar()
-        # l = self.label_last_log = QLabel()
-        # sb.addWidget(l)
-        #
-        # w = self.textEdit_log = QTextEdit()
-        # w.setReadOnly(True)
-        # tw0.addTab(w, "Log messages (Alt+&L)")
-        #
+        # # Log facilities
+
+        sb = self.statusBar()
+        l = self.label_last_log = QLabel()
+        sb.addWidget(l)
+
+        w = self.textEdit_log = QTextEdit()
+        w.setReadOnly(True)
+        tw0.addTab(w, "Log messages (Alt+&L)")
+
         # # Final adjustments
 
-        tw0.setCurrentIndex(0)
+        tw0.setCurrentIndex(1)
         # Forces only one of the source panels to visible
         self.w_source.index = 0
         self.source_changed()
@@ -486,17 +508,11 @@ class XConvMol(aa.XFileMainWindow):
 
         aa.nerdify(self)
 
-        if fileobj is not None:
-            self.load(fileobj)
-
-
-
 
     def wants_auto(self):
         idx = self.w_source.index
-        name = _SOURCES[idx].name
         filename = None
-        if name == "HITRAN":
+        if idx == 0:
             lines = self.w_hitran.data
             if lines:
                 filename = "{}.dat".format(lines["header"]["table_name"])
@@ -504,12 +520,12 @@ class XConvMol(aa.XFileMainWindow):
         if filename is None:
             # Default
             filename = aa.new_filename("mol", "dat")
+
         self.w_out.value = filename
 
-
-    # def on_fill_missing(self):
-    #     self.w_mol.None_to_zero()
-    #     self.w_state.None_to_zero()
+    def on_fill_missing(self):
+        self.w_mol.None_to_zero()
+        self.w_state.None_to_zero()
 
     def source_changed(self):
         idx = self.w_source.index
@@ -519,12 +535,12 @@ class XConvMol(aa.XFileMainWindow):
             ds.widget.setVisible(i == idx)
             # print("Widget", ds.widget, "is visible?", ds.widget.isVisible())
 
-    # def mol_id_changed(self):
-    #     id_ = self.w_mol.w_mol.id
-    #     row = self.w_mol.w_mol.row
-    #     self.w_state.set_id_molecule(id_)
-    #     s = "States (no molecule selected)" if not row else "Select a State for molecule '{}'".format(row["formula"])
-    #     self.title_state.setText(aa.format_title0(s))
+    def mol_id_changed(self):
+        id_ = self.w_mol.w_mol.id
+        row = self.w_mol.w_mol.row
+        self.w_state.set_id_molecule(id_)
+        s = "States (no molecule selected)" if not row else "Select a State for molecule '{}'".format(row["formula"])
+        self.title_state.setText(aa.format_title0(s))
 
     def convert_clicked(self):
         cm = pf.convmol
@@ -532,11 +548,9 @@ class XConvMol(aa.XFileMainWindow):
             errors = []
             idx = self.w_source.index
             name = _SOURCES[idx].name
-            w_mol = self.moldb_editor.w_mol
-            w_state = self.moldb_editor.w_state
-            mol_row = w_mol.row
-            mol_consts = mol_row
-            state_consts = w_state.row
+            mol_row = self.w_mol.row
+            mol_consts = self.w_mol.constants
+            state_consts = self.w_state.constants
             filename = self.w_out.value
             if not mol_row:
                 errors.append("Molecule not selected")

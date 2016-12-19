@@ -86,15 +86,15 @@ def vald3_to_sols(mol_row, state_row, file_vald3, qgbd_calculator):
             log.errors.append("#{}{} line: {}".format(i+1, aa.ordinal_suffix(i+1), str(e)))
             continue
 
-        sol_key = (line.vl, line.v2l)  # (v', v'') transition (v_sup, v_inf)
+        sol_key = "%3d%3d" % (line.vl, line.v2l)  # (v', v'') transition (v_sup, v_inf)
         if sol_key not in sols:
-            qgbd = qgbd_calculator(state_row, sol_key[1])
+            qgbd = qgbd_calculator(state_row, line.v2l)
             qqv = qgbd["qv"]
             ggv = qgbd["gv"]
             bbv = qgbd["bv"]
             ddv = qgbd["dv"]
-
             sols[sol_key] = pf.SetOfLines(line.vl, line.v2l, qqv, ggv, bbv, ddv, 1.)
+
         sol = sols[sol_key]
         sol.append_line(wl, gf_pfant, J2l_pfant, global_quanta_to_branch(line.Jl, line.J2l))
 

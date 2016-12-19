@@ -10,11 +10,9 @@ from .fileoptions import *
 from .filepartit import *
 from .filetoh import *
 from .filehitran import *
-<<<<<<< HEAD
-from .filemoldb import *
-=======
 from .filevald3 import *
->>>>>>> 15271b71ff3fa8b26ae807b016322196d96ce31a
+from .filemoldb import *
+from .filehitrandb import *
 
 from . import filedissoc
 from . import fileabonds

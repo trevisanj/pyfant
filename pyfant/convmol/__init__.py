@@ -5,8 +5,6 @@ Conversion of molecular lines files.
 from .convlog import *
 from .nistbot import *
 from .hitranbot import *
-from . import moldb
-from . import hitrandb
 from .calc_qgbd import *
 from .conv_hitran import *
 from .conv_vald3 import *

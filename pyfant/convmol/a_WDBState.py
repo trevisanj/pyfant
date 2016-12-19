@@ -1,6 +1,5 @@
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
-from . import moldb as db
 from astroapi import WDBRegistry
 import astroapi as aa
 

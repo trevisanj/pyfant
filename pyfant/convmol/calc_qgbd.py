@@ -6,7 +6,6 @@ References:
 """
 
 from collections import OrderedDict
-from . import moldb as db
 
 
 __all__ = ["calc_qgbd_tio_like"]
@@ -32,11 +31,6 @@ def calc_qgbd_tio_like(state_consts, v_lo):
 
     Returns: qbdg, i.e., a dictionary with keys:
             "qv", "gv", "bv", "dv", "gzero"
-
-    >>> TODO no longer state_row = db.StateRow(108)
-    >>> state_row.None_to_zero()
-    >>> calc_qgbd_tio_like(state_row, 10)
-    OrderedDict([('qv', 1.0), ('bv', 0.5063099999999999), ('dv', 5900000.0), ('gv', 9664.0), ('gzero', 503.67499999999995)])
     """
 
     omega_e = state_consts["omega_e"]

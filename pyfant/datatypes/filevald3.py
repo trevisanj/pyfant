@@ -44,6 +44,9 @@ class Vald3Species(aa.AttrsPart):
     def __repr__(self):
         return "'%s%s'" % (self.formula, self.ioni)
 
+    def __iter__(self):
+        return iter(self.lines)
+
     def _cut(self, llzero, llfin):
         """Keeps only the lines with their llzero <= lambda_ <= llfin."""
         for i in reversed(list(range(len(self)))):

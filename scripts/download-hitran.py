@@ -49,7 +49,8 @@ if __name__ == "__main__":
     # default='()', nargs='?')
     args = parser.parse_args()
 
-    db = pf.convmol.hitrandb
+    db = pf.FileHitranDB()
+    db.init_default()
     if args.M == _DEF_M:
         print()
         print("\n".join(aa.format_h1("List of all HITRAN molecules")))

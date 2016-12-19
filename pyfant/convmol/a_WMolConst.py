@@ -1,7 +1,6 @@
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from .a_WDBMolecule import WDBMolecule
-from . import moldb as db
 import astroapi as aa
 
 
@@ -70,6 +69,7 @@ class WMolConst(aa.WBase):
         lg = QGridLayout()
         l.addLayout(lg)
         nr, nc, n = 3, 3, len(self._fieldnames)
+        # TODO not working but maybe wont use this widget anymore
         ti = aa.get_table_info("moldb", "molecule")
         for j in range(nc):
             # ### One grid layout for each column of fields

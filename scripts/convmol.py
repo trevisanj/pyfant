@@ -1,39 +1,46 @@
 #!/usr/bin/env python3
 
-"""Testing widget"""
+"""Converion of molecular lines data to PFANT format"""
 
-import pyfant as pf
-from pyfant import *
 import sys
-from PyQt4.QtGui import *
-from PyQt4.QtCore import *
 import argparse
-import logging
-# import a_WStateConst
-from pyfant.convmol import a_WMolConst, moldb
+import pyfant as pf
 import astroapi as aa
+import logging
+import os
 
-# from pyfant.gui import guiaux
 
-def _format_title0(s):
-    return "<h3>{}</h3>".format(s)
+aa.logging_level = logging.INFO
+aa.flag_log_file = True
 
 
 if __name__ == "__main__":
-    aa.logging_level = logging.INFO
-    aa.flag_log_file = True
 
+    deffn = pf.FileMolDB.default_filename
+
+    parser = argparse.ArgumentParser(
+    description=__doc__,
+    formatter_class=aa.SmartFormatter
+    )
+    parser.add_argument('fn', type=str, help='Molecular constants database file name',
+                        default=deffn, nargs='?')
+    args = parser.parse_args()
+
+    if args.fn == deffn and not os.path.isfile(deffn):
+        args.fn = None
+
+    m = None
+    if args.fn is not None:
+        m = pf.FileMolDB()
+        m.load(args.fn)
     app = aa.get_QApplication([])
-    form = pf.convmol.XConvMol()
-    form.w_mol.w_mol._populate()
+    form = pf.convmol.XConvMol(None, m)
     form.show()
-    app.exec_()
+    sys.exit(app.exec_())
 
-    # aa = form.get_all_consts()
-    # for key, value in aa.items():
-    #     print(key, "=", value)
 
-    # for fn in form.w_state._fieldnames:
-    #     print("{} = {}".format(fn, form.w_state[fn]))
+
+
+
 
 
