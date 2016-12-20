@@ -60,8 +60,8 @@ The result will be
 
 # Relating tablewidget column headers with set-of-lines attributes
 # This is shared between XFileMolecules and XMolLinesEditor
-SOL_HEADERS = ["lambda", "sj", "jj"]
-SOL_ATTR_NAMES = ["lmbdam", "sj", "jj"]
+SOL_HEADERS = ["lambda", "sj", "jj", "branch"]
+SOL_ATTR_NAMES = ["lmbdam", "sj", "jj", "branch"]
 
 
 # Relating tablewidget column headers with Atom atributes

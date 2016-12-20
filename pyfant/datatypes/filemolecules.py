@@ -349,4 +349,5 @@ class FileMolecules(DataFile):
                     num_lines = len(s)  # number of lines for current set-of-lines
                     for j in range(num_lines):
                         numlin = 0 if j < num_lines-1 else 9 if i == num_sol-1 else 1
-                        write_lf(h, "%.10g %.10g %.10g 0 %d" % (s.lmbdam[j], s.sj[j], s.jj[j], numlin))
+                        write_lf(h, "%.10g %.10g %.10g %d %d" % (s.lmbdam[j], s.sj[j], s.jj[j],
+                                                                 s.branch[j], numlin))
