@@ -1,6 +1,7 @@
 __all__ = ["FileMolecules", "Molecule", "SetOfLines", ]
 
 
+
 from ..errors import *
 import sys
 import numpy as np
@@ -10,8 +11,6 @@ from astroapi import froze_it, AttrsPart, write_lf, DataFile, float_vector,  ord
 import astroapi as aa
 import pyfant as pf
 import re
-
-
 
 
 @froze_it
@@ -87,6 +86,10 @@ class Molecule(AttrsPart):
     def num_lines(self):
         ret = sum(map(len, self.sol))
         return ret
+
+    @property
+    def formula(self):
+        return "".join([s[0]+s[1].lower() if len(s.strip()) == 2 else s.strip() for s in self.symbols])
 
     def __init__(self):
         AttrsPart.__init__(self)
@@ -349,5 +352,5 @@ class FileMolecules(DataFile):
                     num_lines = len(s)  # number of lines for current set-of-lines
                     for j in range(num_lines):
                         numlin = 0 if j < num_lines-1 else 9 if i == num_sol-1 else 1
-                        write_lf(h, "%.10g %.10g %.10g %d %d" % (s.lmbdam[j], s.sj[j], s.jj[j],
+                        write_lf(h, "%.10g %.10g %.10g %s %d" % (s.lmbdam[j], s.sj[j], s.jj[j],
                                                                  s.branch[j], numlin))

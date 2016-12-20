@@ -1,28 +1,49 @@
 """VALD3 atomic or molecular lines file"""
 
 
-__all__ = ["Vald3Species", "FileVald3", "Vald3Line"]
+__all__ = ["KuruczMolLine", "FileKuruczMolecule"]
 
 # from ..liblib import *
 import sys
 import astroapi as aa
 import io
-
+import fortranformat as ff
+import os
 
 
 @aa.froze_it
 class KuruczMolLine(aa.AttrsPart):
-    attrs = ["lambda_", "loggf", "Jl", "J2l", "vl", "v2l"]
+    attrs = ["lambda_", "loggf", "J2l", "E2l", "Jl", "El", "atomn0", "atomn1", "state2l", "v2l",
+             "lambda_doubling2l", "spin2l", "statel", "vl", "lambda_doublingl", "spinl", "iso",]
 
-    def __init__(self):
+    def __init__(self, lambda_=None, loggf=None, J2l=None, E2l=None, Jl=None, El=None, atomn0=None,
+                 atomn1=None, state2l=None, v2l=None, lambda_doubling2l=None, spin2l=None,
+                 statel=None, vl=None, lambda_doublingl=None, spinl=None, iso=None):
         aa.AttrsPart.__init__(self)
+        self.lambda_ = lambda_
+        self.loggf = loggf
+        self.J2l = J2l
+        self.E2l = E2l
+        self.Jl = Jl
+        self.El = El
+        self.atomn0 = atomn0
+        self.atomn1 = atomn1
+        self.state2l = state2l
+        self.v2l = v2l
+        self.lambda_doubling2l = lambda_doubling2l
+        self.spin2l = spin2l
+        self.statel = statel
+        self.vl = vl
+        self.lambda_doublingl = lambda_doublingl
+        self.spinl = spinl
+        self.iso = iso
 
-        self.lambda_ = None
-        self.loggf = None
-        self.Jl = None
-        self.J2l = None
-        self.vl = None
-        self.v2l = None
+    def __repr__(self):
+        return "{}({})".format(self.__class__.__name__, "{}, "*16+"{}").format(self.lambda_,
+            self.loggf, self.J2l, self.E2l, self.Jl, self.El, self.atomn0, self.atomn1,
+            self.state2l, self.v2l, self.lambda_doubling2l, self.spin2l, self.statel, self.vl,
+            self.lambda_doublingl, self.spinl, self.iso,)
+
 
 
 class FileKuruczMolecule(aa.DataFile):
@@ -35,138 +56,138 @@ class FileKuruczMolecule(aa.DataFile):
     **Note** Load only
     """
 
-    attrs = ["speciess", "num_lines"]
+    attrs = ["num_lines"]
 
     @property
     def num_lines(self):
-        ret = sum(map(len, self.speciess))
+        ret = sum(map(len, self.lines))
         return ret
 
     def __len__(self):
-        return len(self.speciess)
+        return len(self.lines)
 
     def __init__(self):
         aa.DataFile.__init__(self)
 
-        # list of Atom objects
-        self.speciess = []
+        # list of KuruczMolLine objects
+        self.lines = []
 
     def __iter__(self):
-        return iter(self.speciess)
-
-    def remove_formula(self, formula):
-        """Removes given element (any ionization level)."""
-        formula = aa.adjust_atomic_symbol(formula)
-        for i in reversed(list(range(len(self)))):
-            atom = self.speciess[i]
-            if atom.formula == formula:
-                del self.speciess[i]
+        return iter(self.lines)
 
 
     def _do_load(self, filename):
-        """Clears internal lists and loads from file."""
+
+        # **note** Kurucz puts always the "double-line" values before the "line" values
+        #
+        #   Wl(nm)   loggf   J"    E(cm-1)  J'   E(cm-1)   H
+        #   |        |       |     |        |    |         |O
+        #   |        |       |     |        |    |         || electronic state
+        #   |        |       |     |        |    |         || |v"=00
+        #   |        |       |     |        |    |         || || lambda-doubling component
+        #   |        |       |     |        |    |         || || |spin
+        #   |        |       |     |        |    |         || || ||
+        #   204.5126 -7.917  2.5    83.925  2.5  48964.990 108X00f1   A07e1   16
+        #   204.7561 -7.745  3.5   202.380  3.5  49025.320 108X00f1   A07e1   16
+        #   204.9400 -7.883  5.5   543.596  6.5  49322.740 108X00e1   A07e1   16
+        #   205.0076 -7.931  3.5   201.931  2.5  48964.990 108X00e1   A07e1   16
+        #   205.0652 -7.621  4.5   355.915  4.5  49105.280 108X00f1   A07e1   16
+        #   205.0652 -7.621  4.5   355.915  4.5  49105.280 108X00f1   A07e1   16
+        # 1         11     18   23        33   38         49          61      69 1-based
+        # 0         10     17   22        32   37         48          60      68 0-based (pythonic)
+        #
+        # FORMAT(F10.4.F7.3,F5.1,F10.3,F5.1,F11.3,I4,A1,I2,A1,I1,3X,A1,I2,A1,I1,3X,I2)
+        # "
+        # The code for the diatomic molecules is two 2-digit element numbers in
+        # ascending order.  The labels consist of the electronic state, the vibrational
+        # level, the lambda-doubling component, and the spin state.  Sometimes two
+        # characters are required for the electronic state and the format becomes
+        # ,A2,I2,A1,i1,2X,.  Negative energies are predicted or extrapolated"
+        #
+        # http://kurucz.harvard.edu/linelists/0linelists.readme
+
+        filesize = os.path.getsize(filename)
+        num_lines = int(filesize/70)
 
         with open(filename, "r") as h:
-            self._do_load_h(h, filename)
+            self._do_load_h(h, filename, num_lines)
 
-    def _do_load_h(self, h, filename):
-        # ---SAMPLE FILE---
-        #                                                                    Lande factors      Damping parameters
-        # Elm Ion      WL_air(A)   log gf* E_low(eV) J lo  E_up(eV) J up  lower  upper   mean   Rad.  Stark  Waals
-        # 'OH 1',       16401.409,  -8.587,  4.0602, 39.5,  4.8160, 39.5,99.000,99.000,99.000, 0.000, 0.000, 0.000,
-        # '  Hb                                                     2s2.3s2.1p3          X,2,1,f,40,3'
-        # '  Hb                                                 2s2.3s2.1p3              X,2,1,f,39,7'
-
+    def _do_load_h(self, h, filename, num_lines=0):
+        # Thank you Kurucz
+        fr = ff.FortranRecordReader(
+            '(F10.4,F7.3,F5.1,F10.3,F5.1,F11.3,I2,I2,A1,I2,A1,I1,3X,A1,I2,A1,I1,3X,I2)')
         r = 0  # counts rows of file
-        speciess = {}
+        ii = 0
         try:
-            # Uses header as "magic characters"
-            s = h.readline().strip("\n")
-            if s != "                                                                   Lande factors      Damping parameters":
-                raise RuntimeError("This doesn't appear to be a VALD3 extended-format atomic/molecular lines file")
-            r += 1
-            h.readline()
-            r += 1
-
+            self.lines = []
             while True:
-                line = Vald3Line()
-
-                s = h.readline().strip()
-                if len(s) == 0 or not s.startswith("'"):
-                    # EOF: blank line or references section
+                s = h.readline().strip("\n")
+                if len(s) == 0:
                     break
 
-                fields = s.split(",")
-                formula, s_ioni = fields[0][1:-1].split(" ")
-                line.lambda_ = float(fields[1])
-                line.loggf = float(fields[2])
-                line.Jl = float(fields[6])  # J_up
-                line.J2l = float(fields[4])  # J_lo
+                line = KuruczMolLine()
+                # FortranFormat too slow
+                # line.lambda_, line.loggf, line.J2l, line.E2l, line.Jl, line.El, line.atomn0, \
+                # line.atomn1, line.state2l, line.v2l, line.lambda_doubling2l, line.spin2l, \
+                # line.statel, line.vl, line.lambda_doublingl, line.spinl, line.iso = fr.read(s)
+
+                line.lambda_ = float(s[0:10])
+                line.loggf = float(s[10:17])
+                line.J2l = float(s[17:22])
+                line.E2l = float(s[22:32])
+                line.Jl = float(s[32:37])
+                line.El = float(s[37:48])
+                line.atomn0 = int(s[48:50])
+                line.atomn1 = int(s[50:52])
+                line.state2l = s[52:53]
+                line.v2l = int(s[53:55])
+                line.lambda_doubling2l = s[55:56]
+                line.spin2l = int(s[56:57])
+                line.statel = s[60:61]
+                line.vl = int(s[61:63])
+                line.lambda_doublingl = s[63:64]
+                line.spinl = int(s[64:65])
+                line.iso = s[69:71]
+                self.lines.append(line)
                 r += 1
+                ii += 1
+                if ii == 103:
+                    aa.get_python_logger().info(
+                        "Loading '{}': {}".format(filename, aa.format_progress(r, num_lines)))
+                    ii = 0
 
-
-                if formula in aa.symbols:
-                    # Skips energy levels information for the atoms
-                    for _ in range(2):
-                        h.readline()
-                        r += 1
-                else:
-                    s = h.readline().strip()
-                    line.vl = float(s[s.rfind(",") + 1:-1])  # v superior / v upper
-                    r += 1
-                    s = h.readline().strip()
-                    line.v2l = float(s[s.rfind(",") + 1:-1])  # v inferior / v lower
-                    r += 1
-
-                key = formula + s_ioni  # will gb.py elements by this key
-                if key in speciess:
-                    a = speciess[key]
-                else:
-                    a = speciess[key] = Vald3Species()
-                    a.formula = formula
-                    a.ioni = int(s_ioni)
-                    self.speciess.append(a)
-                a.lines.append(line)
-
-                # Skips the citation line
-                h.readline()
-                r += 1
 
         except Exception as e:
-            raise type(e)(("Error around %d%s row of file '%s'" %
-                           (r + 1, aa.ordinal_suffix(r + 1), filename)) + ": " + str(
-                e)).with_traceback(sys.exc_info()[2])
+            # f = type(e)(("Error around %d%s row of file '%s'" %
+            #              (r + 1, aa.ordinal_suffix(r + 1), filename)) + ": " + str(
+            #     e)).with_traceback(sys.exc_info()[2])
+            raise RuntimeError("Error around %d%s row of file '%s': \"%s\"" %
+                               (r + 1, aa.ordinal_suffix(r + 1), filename, aa.str_exc(e))) from e
 
 
 def _fake_file():
     """Returns StringIO file to test FileVald3 class"""
 
     f = io.StringIO()
-    f.write("""                                                                   Lande factors      Damping parameters
-Elm Ion      WL_air(A)   log gf* E_low(eV) J lo  E_up(eV) J up  lower  upper   mean   Rad.  Stark  Waals
-'Fe 1',       16400.045,  -4.131,  6.5922,  6.0,  7.3480,  5.0, 1.320, 1.090, 1.910, 8.140,-3.840,-7.330,
-'  LS                                                                       3d7.(4F).4d f5G'
-'  JK                                                             3d7.(4F<7/2>).4f 2[11/2]*'
-'K14               Kurucz Fe I 2014   1 K14       1 K14       1 K14       1 K14       1 K14       1 K14       1 K14       1 K14       1 K14     Fe            '
-'CO 1',       16400.058,  -5.951,  1.3820, 38.0,  2.1378, 39.0,99.000,99.000,99.000, 2.000, 0.000, 0.000,
-'  Hb                                                4s2.5s2.1p4              X,2,0,,none,4'
-'  Hb                                                    4s2.5s2.1p4          X,2,0,,none,7'
-'KCO                                  2 KCO       2 KCO       2 KCO       2 KCO       2 KCO       2 KCO       2 KCO       2 KCO       2 KCO     (12)C(16)O    '
-'CO 1',       16400.090,  -8.995,  1.1482, 53.0,  1.9040, 54.0,99.000,99.000,99.000, 2.000, 0.000, 0.000,
-'  Hb                                                4s2.5s2.1p4              X,2,0,,none,2'
-'  Hb                                                    4s2.5s2.1p4          X,2,0,,none,5'
-'KCO                                  2 KCO       2 KCO       2 KCO       2 KCO       2 KCO       2 KCO       2 KCO       2 KCO       2 KCO     (12)C(18)O    '
+    f.write("""  204.5126 -7.917  2.5    83.925  2.5  48964.990 108X00f1   A07e1   16
+  204.7561 -7.745  3.5   202.380  3.5  49025.320 108X00f1   A07e1   16
+  204.9400 -7.883  5.5   543.596  6.5  49322.740 108X00e1   A07e1   16
+  205.0076 -7.931  3.5   201.931  2.5  48964.990 108X00e1   A07e1   16
+  205.0652 -7.621  4.5   355.915  4.5  49105.280 108X00f1   A07e1   16
 """)
 
     f.seek(0)
     return f
 
+
 def _test():
     """Test code in docstring
 
     >>> h = _fake_file()
-    >>> f = FileVald3()
+    >>> f = FileKuruczMolecule()
     >>> f._do_load_h(h, "_fake_file")
+    >>> print(f.lines[0])
+    KuruczMolLine(204.5126, -7.917, 2.5, 83.925, 2.5, 48964.99, 1, 8, X, 00, f, 1, A, 07, e, 1, 6)
     """
     return
 

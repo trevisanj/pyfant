@@ -13,6 +13,7 @@ from .filehitran import *
 from .filevald3 import *
 from .filemoldb import *
 from .filehitrandb import *
+from .filekuruczmol import *
 
 from . import filedissoc
 from . import fileabonds

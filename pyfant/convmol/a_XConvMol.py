@@ -10,6 +10,7 @@ from .a_WFileMolDB import *
 from . import hapi
 import os
 import datetime
+from collections import OrderedDict
 
 
 class _DataSource(aa.AttrsPart):
@@ -26,8 +27,8 @@ class _DataSource(aa.AttrsPart):
 
 
 # This defines the order of the panels
-_NAMES = ["HITRAN", "VALD3", "TurboSpectrum", "Kurucz",]
-_SOURCES = [_DataSource(x) for x in _NAMES]
+_NAMES = ["HITRAN", "VALD3", "Kurucz", "TurboSpectrum", ]
+_SOURCES = OrderedDict([[name, _DataSource(name)] for name in _NAMES])
 
 
 class _WSource(aa.WBase):
@@ -48,7 +49,7 @@ class _WSource(aa.WBase):
         i = self._get_index()
         if i < 0:
             return None
-        return _SOURCES[i]
+        return _SOURCES[_NAMES[i]]
 
     index_changed = pyqtSignal()
 
@@ -61,7 +62,7 @@ class _WSource(aa.WBase):
         lw = QVBoxLayout()
         self.setLayout(lw)
 
-        for ds in _SOURCES:
+        for ds in _SOURCES.values():
             b = self.keep_ref(QRadioButton(ds.name))
             b.clicked.connect(self._button_clicked)
             self._buttons.append(b)
@@ -318,7 +319,6 @@ class _WVald3Panel(aa.WBase):
         # self.file_changed()
 
     def on_tableWidget_currentCellChanged(self, curx, cury, prevx, prevy):
-        print("OOOOOOOOOOOOOOOOO")
         self.label_warning.setText("Need a molecule, not atom"
                                    if self.data is not None and not self.is_molecule else "")
 
@@ -356,6 +356,41 @@ class _WVald3Panel(aa.WBase):
             self._flag_populating = False
             # self._wanna_emit_id_changed()
 
+class _WKuruczPanel(aa.WBase):
+    """
+    This panel allows to load a Kurucz molecular lines file
+    """
+
+    @property
+    def data(self):
+        """Returns FileKuruczMolecule or None"""
+        return self._f
+
+    def __init__(self, *args):
+        aa.WBase.__init__(self, *args)
+
+        self._f = None  # FileKuruczMolecule
+
+        lw = QVBoxLayout()
+        self.setLayout(lw)
+
+        lw.addWidget(self.keep_ref(QLabel("Kurucz")))
+
+        w = self.w_file = aa.WSelectFile(self.parent_form)
+        w.label.setText("Kurucz molecular lines file")
+        w.valueChanged.connect(self.file_changed)
+        lw.addWidget(w)
+
+        lw.addSpacerItem(QSpacerItem(0, 0, QSizePolicy.Minimum, QSizePolicy.Expanding))
+
+    def file_changed(self):
+        try:
+            f = self._f = pf.FileKuruczMolecule()
+            f.load(self.w_file.value)
+        except Exception as e:
+            self._f = None
+            self.add_log_error("Error reading contents of file '{}': '{}'".format(self.w_file.value, aa.str_exc(e)), True)
+            raise
 
 
 class _WTurboSpectrumPanel(aa.WBase):
@@ -365,17 +400,8 @@ class _WTurboSpectrumPanel(aa.WBase):
         lw = QVBoxLayout()
         self.setLayout(lw)
 
-        lw.addWidget(self.keep_ref(QLabel(_SOURCES[1].name)))
+        lw.addWidget(self.keep_ref(QLabel("TurboSpectrum")))
 
-
-class _WKuruczPanel(aa.WBase):
-    def __init__(self, *args):
-        aa.WBase.__init__(self, *args)
-
-        lw = QVBoxLayout()
-        self.setLayout(lw)
-
-        lw.addWidget(self.keep_ref(QLabel(_SOURCES[2].name)))
 
 
 class XConvMol(aa.XFileMainWindow):
@@ -433,22 +459,16 @@ class XConvMol(aa.XFileMainWindow):
         # #### Adds configuration panels for various sources
         # Only one panel should be visible at a time
         # **Note** The order here doesn't matter
-        p0 = self.w_hitran = _WHitranPanel(self)
-        p1 = self.w_vald3 = _WVald3Panel(self)
-        p2 = self.w_turbo = _WTurboSpectrumPanel(self)
-        p3 = self.w_kurucz = _WKuruczPanel(self)
-        pp = [p0, p1, p2, p3]
-        for ds, p in zip(_SOURCES, pp):
+        panels = {}
+        panels["HITRAN"] = self.w_hitran = _WHitranPanel(self)
+        panels["VALD3"] = self.w_vald3 = _WVald3Panel(self)
+        panels["TurboSpectrum"] = self.w_turbo = _WTurboSpectrumPanel(self)
+        panels["Kurucz"] = self.w_kurucz = _WKuruczPanel(self)
+        for name in _NAMES:
+            p = panels[name]
+            ds = _SOURCES[name]
             ds.widget = p
             lh.addWidget(p)
-
-
-        # tw1 = self.wt_source = QTabWidget()
-        # lh.addWidget(tw1)
-        # tw1.addTab(self.keep_ref(QLabel(_SOURCES[0].name)), _SOURCES[0].name)
-        # tw1.addTab(self.keep_ref(QLabel(_SOURCES[1].name)), _SOURCES[1].name)
-        # tw1.addTab(self.keep_ref(QLabel(_SOURCES[2].name)), _SOURCES[2].name)
-
 
         # ### Output file specification
 
@@ -463,6 +483,9 @@ class XConvMol(aa.XFileMainWindow):
         lmn.addSpacerItem(QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum))
         b = self.button_convert = QPushButton("&Run Conversion")
         b.clicked.connect(self.convert_clicked)
+        lmn.addWidget(b)
+        b = self.button_convert = QPushButton("&Open file")
+        b.clicked.connect(self.open_mol_clicked)
         lmn.addWidget(b)
 
 
@@ -493,8 +516,7 @@ class XConvMol(aa.XFileMainWindow):
 
 
     def wants_auto(self):
-        idx = self.w_source.index
-        name = _SOURCES[idx].name
+        name = _NAMES[self.w_source.index]
         filename = None
         if name == "HITRAN":
             lines = self.w_hitran.data
@@ -513,9 +535,7 @@ class XConvMol(aa.XFileMainWindow):
 
     def source_changed(self):
         idx = self.w_source.index
-        # print("SOURCE IS NOW ", _SOURCES[idx])
-        for i, ds in enumerate(_SOURCES):
-            pass
+        for i, ds in enumerate(_SOURCES.values()):
             ds.widget.setVisible(i == idx)
             # print("Widget", ds.widget, "is visible?", ds.widget.isVisible())
 
@@ -530,8 +550,7 @@ class XConvMol(aa.XFileMainWindow):
         cm = pf.convmol
         try:
             errors = []
-            idx = self.w_source.index
-            name = _SOURCES[idx].name
+            name = self.w_source.source.name
             w_mol = self.moldb_editor.w_mol
             w_state = self.moldb_editor.w_state
             mol_row = w_mol.row
@@ -540,9 +559,11 @@ class XConvMol(aa.XFileMainWindow):
             filename = self.w_out.value
             if not mol_row:
                 errors.append("Molecule not selected")
-            if any([x is None for x in mol_consts.values()]):
+            elif any([x is None for x in mol_consts.values()]):
                 errors.append("There are empty molecule-wide constants")
-            if any([x is None for x in state_consts.values()]):
+            if not state_consts:
+                errors.append("State not selected")
+            elif any([x is None for x in state_consts.values()]):
                 errors.append("There are empty state-wide constants")
             if not self.w_out.validate():
                 errors.append("Output filename is invalid")
@@ -563,6 +584,9 @@ class XConvMol(aa.XFileMainWindow):
                     else:
                         lines = self.w_vald3.data
                         sols_calculator = cm.vald3_to_sols
+                elif name == "Kurucz":
+                    lines = self.w_kurucz.data
+                    sols_calculator = cm.kurucz_to_sols
                 else:
                     aa.show_message("{}-to-PFANT conversion not implemented yet, sorry".
                                     format(name))
@@ -596,3 +620,12 @@ class XConvMol(aa.XFileMainWindow):
         except Exception as e:
             aa.get_python_logger().exception("Conversion failed")
             self.add_log_error("Conversion failed: {}".format(aa.str_exc(e)), True)
+
+
+    def open_mol_clicked(self):
+        filename = self.w_out.value
+        if len(filename) > 0:
+            f = pf.FileMolecules()
+            f.load(filename)
+            vis = pf.VisMolecules()
+            vis.use(f)

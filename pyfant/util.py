@@ -32,6 +32,7 @@ def run_parallel(rr, max_simultaneous=None, flag_console=True, runnable_manager=
 
     Returns: the RunnableManager object
     """
+
     # Adds to pool
     logger = aa.get_python_logger()
     if runnable_manager:
@@ -74,10 +75,10 @@ def run_parallel(rr, max_simultaneous=None, flag_console=True, runnable_manager=
         if flag_had_to_start:
             rm.exit()
 
-    print(
+    aa.get_python_logger().info(
         ("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%" + (" ALIVE" if rm.is_alive() else " DEAD")))
-    print("test-tm2 [SUPPOSED TO HAVE] EXITED")
-    print(rm)
+    aa.get_python_logger().info("test-tm2 [SUPPOSED TO HAVE] EXITED")
+    aa.get_python_logger().info(rm)
 
     return rm
 

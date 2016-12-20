@@ -426,8 +426,9 @@ class XFileMolecules(QMainWindow):
 
             n = sum([info.flag for info in self.plot_info])  # number of subplots (0, 1 or 2)
             # map to reuse plotting routine, contains what differs between each plot
-            map_ = [(SOL_HEADERS[i], o.__getattribute__(SOL_ATTR_NAMES[i]))
-                    for i in range(1, len(SOL_HEADERS))]
+
+            map_ = [(SOL_HEADERS_PLOT[i], o.__getattribute__(SOL_ATTR_NAMES[i]))
+                    for i in range(1, len(SOL_HEADERS_PLOT))]
 
             i_subplot = 1
             for i in range(len(map_)):

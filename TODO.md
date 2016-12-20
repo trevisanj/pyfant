@@ -3,6 +3,15 @@
   - ~~OK implement ToScalar_UseNumPyFunc~~
   - ~~OK add combobox to XToScalar~~
   - ~~OK Smarter loading of Full Cube~~
+  
+  
+  
+  - FIX MOLECULES FILE!!!!!
+    comparing old x new moleculagrade
+    perhaps best it is to keep both versions: contemplating diversity and whoever did whatever
+    best would be to create an editor to mingle the molecules
+  
+  
   - Normalize("1") cause re-sampling, sth is not right
   - Fill origin when converting from FileFullCube to FileSpectrumList (somehow)
   - Get rid of WSpectrumList "More..." tab (make sure everything is implemented as blocks)
@@ -27,7 +36,8 @@
   
  ### Plan
  
- 1. Try to reproduce the OH from source of lines **Kurucz OHAX**
+ - Try to reproduce the OH from source of lines **Kurucz OHAX**
+ - Compare formulas Kovacs x PMNAS1970 
     
     
     

@@ -67,12 +67,17 @@ installed on your system.
   - configobj
   - bs4
   - robobrowser
+  - requests
 
 Possible way to install on Debian-based Linux:
 ```shell
-sudo apt-get install python3-matplotlib python3-scipy python3-pyqt4 python3-astropy python3-pip python3-configobj
-sudo pip3 install fortranformat bs4 robobrowser
+sudo apt-get install python3-matplotlib python3-scipy python3-pyqt4 python3-astropy python3-pip
+sudo pip3 install fortranformat bs4 robobrowser configobj requests
 ```
+
+**Note** package `requests` may have to be removed, then reinstalled. In at least one situation, 
+I had to remove directories `/usr/local/lib/python3.4/dist-packages/request*`, then run `sudo pip3 install requests`
+ 
 
 ## 2.2 Clone the repository 
 
