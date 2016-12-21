@@ -215,7 +215,8 @@ class FileMolecules(DataFile):
                     parts = [s.strip() for s in m.titulo.split("#")]
                     m.description = parts[0]
                     if len(parts) > 1:
-                        m.symbols = [pf.adjust_atomic_symbol(s) for s in parts[1].split(" ")]
+                        m.symbols = [pf.adjust_atomic_symbol(s) for s in
+                                     [s.strip() for s in parts[1].split(" ") if len(s.strip()) > 0]]
                     else:
                         temp = pf.description_to_symbols(parts[0])
                         m.symbols = temp or []
@@ -331,8 +332,10 @@ class FileMolecules(DataFile):
                     if sol.vl is None or sol.v2l is None:
                         break
                     ltrans.append([sol.vl, sol.v2l])
-                new_titulo = "{} # {} # {}".format(m.description, " ".join(m.symbols),
-                                                   "|".join(["{:.0f},{:.0f}".format(*t) for t in ltrans]))
+                new_titulo = "{} # {} # {}".\
+                    format(m.description,
+                           " ".join([s.strip() for s in m.symbols]),
+                           "|".join(["{:.0f},{:.0f}".format(*t) for t in ltrans]))
 
                 # - mled change, incorporate shit
 

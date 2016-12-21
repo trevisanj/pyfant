@@ -20,7 +20,7 @@ import pyfant as pf
 __all__ = ["XFileMolecules"]
 
 
-NUM_PLOTS = len(SOL_HEADERS)-1  # -1 because whe "lambda" does not have its plot
+NUM_PLOTS = len(SOL_HEADERS_PLOT)-1  # -1 because whe "lambda" does not have its plot
 
 
 class XFileMolecules(QMainWindow):
