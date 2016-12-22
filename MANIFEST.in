@@ -1,1 +1,1 @@
-recursive-include pyfant/data *
+include pyfant/data/*
