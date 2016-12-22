@@ -9,6 +9,7 @@ from glob import glob
 setup(
     name = 'pyfant',
     packages = find_packages(),
+    include_package_data=True,
     version = '0.16.12.19',
     license = 'GNU GPLv3',
     platforms = 'any',
