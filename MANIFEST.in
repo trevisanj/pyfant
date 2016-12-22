@@ -1,3 +1,2 @@
 recursive-include pyfant/data/*
-recursive-include pyfant/data/*
 # include pyfant/data/default/*
