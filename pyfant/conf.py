@@ -251,6 +251,8 @@ class Conf(object):
         self.file_hmap = None
         # ## FileAtoms instance
         self.file_atoms = None
+        # ## FileMolecules instance
+        self.file_molecules = None
 
         # # Command-line options
         self.__opt = pf.FileOptions()

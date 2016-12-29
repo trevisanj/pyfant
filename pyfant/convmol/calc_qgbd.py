@@ -57,6 +57,6 @@ def calc_qgbd_tio_like(state_consts, v_lo):
     # rotational term " G_A"
     gv = omega_e * v_lo5 - omega_ex_e * v_lo5 ** 2 + omega_ey_e * v_lo5 ** 3 - gzero
 
-    qbdg = OrderedDict((("qv", qv), ("gv", gv), ("bv", bv), ("dv", dv), ("gzero", gzero)))
+    qgbd = OrderedDict((("qv", qv), ("gv", gv), ("bv", bv), ("dv", dv), ("gzero", gzero)))
 
-    return qbdg
+    return qgbd

@@ -7,6 +7,7 @@ import logging
 import sys
 import numpy as np
 from astroapi import froze_it, AttrsPart, DataFile, write_lf, str_vector, ordinal_suffix, float_vector
+import tabulate
 
 
 @froze_it
@@ -54,7 +55,10 @@ class Atom(AttrsPart):
         return len(self.lines)
 
     def __str__(self):
-        return "%s%s" % (self.elem, self.ioni)
+        return "'{} {}' ({} lines)".format(self.elem, self.ioni, len(self))
+
+    def one_liner_str(self):
+        return self.__str__()
 
     def __repr__(self):
         return "'%s%s'" % (self.elem, self.ioni)
@@ -144,6 +148,11 @@ class FileAtoms(DataFile):
         # list of Atom objects
         self.atoms = []
 
+    def __str__(self):
+        data = [["{} {}".format(atom.elem, atom.ioni), len(atom)] for atom in self]
+        headers = ["Species", "Number of lines"]
+        return tabulate.tabulate(data, headers)
+
     def cut(self, llzero, llfin):
         """Keeps only the lines with their llzero <= lambda_ <= llfin."""
         for i in reversed(list(range(len(self)))):
@@ -186,6 +195,9 @@ class FileAtoms(DataFile):
             if atom.elem == elem:
                 del self.atoms[i]
 
+
+    def __iter__(self):
+        return iter(self.atoms)
 
     def _do_load(self, filename):
         """Clears internal lists and loads from file."""

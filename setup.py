@@ -10,7 +10,7 @@ setup(
     name = 'pyfant',
     packages = find_packages(),
     include_package_data=True,
-    version = '0.16.12.19',
+    version = '0.16.12.27a',
     license = 'GNU GPLv3',
     platforms = 'any',
     description = 'Python API and Graphical applications for PFANT (github.com/trevisanj/PFANT) Spectral Synthesis Software',
@@ -19,7 +19,7 @@ setup(
     url = 'https://github.com/trevisanj/pyfant', # use the URL to the github repo
     keywords= ['astronomy', 'spectral synthesis'],
     install_requires = ['numpy', 'scipy', 'astropy', 'matplotlib', 'fortranformat', 'bs4', 'robobrowser',
-                        'tabulate', 'astroapi==0.16.12.19'],  # matplotlib never gets installed correctly by pip, but anyway...
+                        'tabulate', 'astroapi==0.16.12.27a'],  # matplotlib never gets installed correctly by pip, but anyway...
     scripts = glob('scripts/*.py')  # Considers system scripts all .py files in 'scripts' directory
 )
 

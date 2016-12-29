@@ -136,19 +136,16 @@ def hitran_to_sols(mol_row, state_row, lines, qgbd_calculator):
     # C     HL: Honl-London factor
     # C     FR: oscillator strength
 
-    sols = {}  # one item per (vl, v2l) pair
-
     header = lines["header"]
     data = lines["data"]
 
-    # TODO: find this S
-    S = 0.5   # dubleto: X2 PI
-    DELTAK = 0  # TODO ask BLB ?doc?
+    S = mol_row["s"]
+    DELTAK = mol_row["cro"]
+    formula = mol_row["formula"]
 
     n = header["number_of_rows"]
     log = MolConversionLog(n)
-
-    formula = mol_row["formula"]
+    sols = OrderedDict()  # one item per (vl, v2l) pair
 
     try:
         f_class = _CLASS_DICT[formula]

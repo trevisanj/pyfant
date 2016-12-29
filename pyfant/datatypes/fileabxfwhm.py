@@ -7,7 +7,7 @@ __all__ = ["FileAbXFwhm"]
 from pyfant import adjust_atomic_symbol
 import imp
 import numpy as np
-from astroapi import DataFile
+from astroapi import FilePy
 
 
 _COMMENT0 = """# Specification of differential abundances for each chemical.
@@ -20,7 +20,7 @@ _COMMENT2 = """# Convolutions specification for fwhm parameter:
 # [first value, last value, step]"""
 
 
-class FileAbXFwhm(DataFile):
+class FileAbXFwhm(FilePy):
     __doc__ = """`x.py` Differential Abundances and FWHMs (Python source)
 
 This file is actually Python source. Here is a sample:
@@ -95,7 +95,7 @@ conv = [0.08, 0.6,  0.04]
         self.__parse(x)
 
     def __init__(self):
-        DataFile.__init__(self)
+        FilePy.__init__(self)
 
         self.__flag_parsed = False
         self.__flag_rebuild = False
@@ -165,7 +165,7 @@ conv = [0.08, 0.6,  0.04]
         self.__source = x
 
     def __rebuild_source(self):
-        self.__source = "%s\n%s\n\n%s\n%s\n" % (_COMMENT0,
+        self.__source = self._get_magic()+"\n%s\n%s\n\n%s\n%s\n" % (_COMMENT0,
          "ab = "+repr(self.__ab).replace("], ", "],\n      "),
          _COMMENT1, "conv = "+repr(self.__conv))
 

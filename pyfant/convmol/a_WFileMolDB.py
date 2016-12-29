@@ -25,6 +25,7 @@ class WFileMolDB(aa.WBase):
         aa.WBase.__init__(self, *args)
 
         self._f = None
+        self.flag_valid = True  # To keep XFileMainWindow happy
 
         # # Main layout & splitter
         lmain = self.keep_ref(QVBoxLayout(self))

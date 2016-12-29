@@ -91,6 +91,22 @@ class Molecule(AttrsPart):
     def formula(self):
         return "".join([s[0]+s[1].lower() if len(s.strip()) == 2 else s.strip() for s in self.symbols])
 
+    @property
+    def qqv(self):
+        return [x.qqv for x in self.sol]
+
+    @property
+    def ggv(self):
+        return [x.qqv for x in self.sol]
+
+    @property
+    def bbv(self):
+        return [x.qqv for x in self.sol]
+
+    @property
+    def ddv(self):
+        return [x.qqv for x in self.sol]
+
     def __init__(self):
         AttrsPart.__init__(self)
 
@@ -168,6 +184,66 @@ class FileMolecules(DataFile):
     @property
     def jj(self):
         return np.hstack([np.hstack([x.jj for x in m.sol]) for m in self.molecules])
+
+    @property
+    def qqv(self):
+        return np.hstack([x.qqv for x in self.molecules])
+
+    @property
+    def ggv(self):
+        return np.hstack([x.ggv for x in self.molecules])
+
+    @property
+    def bbv(self):
+        return np.hstack([x.bbv for x in self.molecules])
+
+    @property
+    def ddv(self):
+        return np.hstack([x.ddv for x in self.molecules])
+
+    @property
+    def description(self):
+        return [m.description for m in self.molecules]
+
+    @property
+    def fe(self):
+        return [m.fe for m in self.molecules]
+
+    @property
+    def do(self):
+        return [m.do for m in self.molecules]
+
+    @property
+    def mm(self):
+        return [m.mm for m in self.molecules]
+
+    @property
+    def am(self):
+        return [m.am for m in self.molecules]
+
+    @property
+    def bm(self):
+        return [m.bm for m in self.molecules]
+
+    @property
+    def ua(self):
+        return [m.ua for m in self.molecules]
+
+    @property
+    def ub(self):
+        return [m.ub for m in self.molecules]
+
+    @property
+    def te(self):
+        return [m.te for m in self.molecules]
+
+    @property
+    def cro(self):
+        return [m.cro for m in self.molecules]
+
+    @property
+    def s(self):
+        return [m.s for m in self.molecules]
 
     def __init__(self):
         DataFile.__init__(self)
@@ -344,11 +420,11 @@ class FileMolecules(DataFile):
                     m.bm, m.ua, m.ub, m.te, m.cro))
                 write_lf(h, "")
                 write_lf(h, str(m.s))
-                write_lf(h, " ".join([str(x.qqv) for x in m.sol]))
-                write_lf(h, " ".join([str(x.ggv) for x in m.sol]))
-                write_lf(h, " ".join([str(x.bbv) for x in m.sol]))
-                write_lf(h, " ".join([str(x.ddv) for x in m.sol]))
-                write_lf(h, " ".join([str(x.fact) for x in m.sol]))
+                write_lf(h, " ".join(["{:g}".format(x.qqv) for x in m.sol]))
+                write_lf(h, " ".join(["{:.2f}".format(x.ggv) for x in m.sol]))
+                write_lf(h, " ".join(["{:.5f}".format(x.bbv) for x in m.sol]))
+                write_lf(h, " ".join(["{:.2f}".format(x.ddv) for x in m.sol]))
+                write_lf(h, " ".join(["{:g}".format(x.fact) for x in m.sol]))
 
                 num_sol = len(m.sol)
                 for i, s in enumerate(m.sol):

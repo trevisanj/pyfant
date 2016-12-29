@@ -20,6 +20,7 @@ class KuruczMolLine(aa.AttrsPart):
                  atomn1=None, state2l=None, v2l=None, lambda_doubling2l=None, spin2l=None,
                  statel=None, vl=None, lambda_doublingl=None, spinl=None, iso=None):
         aa.AttrsPart.__init__(self)
+        # Wavelength in **Angstrom*** (although it is is stored in nm)
         self.lambda_ = lambda_
         self.loggf = loggf
         self.J2l = J2l
@@ -39,11 +40,11 @@ class KuruczMolLine(aa.AttrsPart):
         self.iso = iso
 
     def __repr__(self):
-        return "{}({})".format(self.__class__.__name__, "{}, "*16+"{}").format(self.lambda_,
+        return "{}({}, {}, {}, {}, {}, {}, {}, {}, '{}', {}, '{}', {}, '{}', {}, '{}', {}, {})".\
+            format(self.__class__.__name__, self.lambda_,
             self.loggf, self.J2l, self.E2l, self.Jl, self.El, self.atomn0, self.atomn1,
             self.state2l, self.v2l, self.lambda_doubling2l, self.spin2l, self.statel, self.vl,
             self.lambda_doublingl, self.spinl, self.iso,)
-
 
 
 class FileKuruczMolecule(aa.DataFile):
@@ -60,8 +61,7 @@ class FileKuruczMolecule(aa.DataFile):
 
     @property
     def num_lines(self):
-        ret = sum(map(len, self.lines))
-        return ret
+        return len(self)
 
     def __len__(self):
         return len(self.lines)
@@ -131,7 +131,8 @@ class FileKuruczMolecule(aa.DataFile):
                 # line.atomn1, line.state2l, line.v2l, line.lambda_doubling2l, line.spin2l, \
                 # line.statel, line.vl, line.lambda_doublingl, line.spinl, line.iso = fr.read(s)
 
-                line.lambda_ = float(s[0:10])
+                #
+                line.lambda_ = float(s[0:10])*10
                 line.loggf = float(s[10:17])
                 line.J2l = float(s[17:22])
                 line.E2l = float(s[22:32])
@@ -187,7 +188,7 @@ def _test():
     >>> f = FileKuruczMolecule()
     >>> f._do_load_h(h, "_fake_file")
     >>> print(f.lines[0])
-    KuruczMolLine(204.5126, -7.917, 2.5, 83.925, 2.5, 48964.99, 1, 8, X, 00, f, 1, A, 07, e, 1, 6)
+    KuruczMolLine(2045.126, -7.917, 2.5, 83.925, 2.5, 48964.99, 1, 8, 'X', 0, 'f', 1, 'A', 7, 'e', 1, 6)
     """
     return
 

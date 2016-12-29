@@ -1,3 +1,5 @@
+# -*- FilePy: FileAbXFwhm -*-
+#
 # Specification of differential abundances for each chemical.
 # Differential abundance is a number to add to original value in abonds.dat.
 # All lists of abundances for each element must have the same length.

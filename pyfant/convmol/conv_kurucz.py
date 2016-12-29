@@ -5,7 +5,6 @@ VALD3-specific conversion
 
 import pyfant as pf
 import astroapi as aa
-from .calc_qgbd import calc_qgbd_tio_like
 from .convlog import *
 from .branch import *
 from collections import OrderedDict
@@ -45,7 +44,6 @@ def kurucz_to_sols(mol_row, state_row, fileobj, qgbd_calculator):
     # C     HL: Honl-London factor
     # C     FR: oscillator strength
 
-    sols = {}  # one item per (vl, v2l) pair
 
     if not isinstance(fileobj, pf.FileKuruczMolecule):
         raise TypeError("Invalid type for argument 'fileobj': {}".format(type(fileobj).__name__))
@@ -53,20 +51,30 @@ def kurucz_to_sols(mol_row, state_row, fileobj, qgbd_calculator):
     lines = fileobj.lines
     n = len(lines)
 
-    # TODO: ask BLB about this S
-    S = 0.5   # dubleto: X2 PI
-    DELTAK = 0  # TODO ask BLB ?doc?
+    S = mol_row["s"]
+    DELTAK = mol_row["cro"]
 
+    sols = OrderedDict()  # one item per (vl, v2l) pair
     log = MolConversionLog(n)
+
+
+    # This factor allows to reproduce the Hônl-London factors in `moleculagrade.dat` for OH blue,
+    # first set-of-lines
+    scale_factor = 730.485807466
 
     for i, line in enumerate(lines):
         assert isinstance(line, pf.KuruczMolLine)
         try:
             wl = line.lambda_
-            Normaliza = 1/((2.0*line.J2l+1)*(2.0*S+1)*(2.0-DELTAK))
+
+            # s_now = line.spin2l
+            s_now = S
+
+#            Normaliza = 1/((2.0*line.J2l+1)*(2.0*S+1)*(2.0-DELTAK))
+            Normaliza = scale_factor * 1 / ((2.0*line.J2l+1)*(2.0*s_now+1)*(2.0-DELTAK))
             gf_pfant = Normaliza*10**line.loggf
 
-            J2l_pfant = int(line.J2l)  # ojo, estamos colocando J2L-0.5! TODO ask BLB: we write J2l or J2l-.5?
+            J2l_pfant = line.J2l
         except Exception as e:
             log.errors.append("#{}{} line: {}".format(i+1, aa.ordinal_suffix(i+1), str(e)))
             continue

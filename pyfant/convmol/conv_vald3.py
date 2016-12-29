@@ -45,9 +45,6 @@ def vald3_to_sols(mol_row, state_row, file_vald3, qgbd_calculator):
     # C     HL: Honl-London factor
     # C     FR: oscillator strength
 
-    sols = {}  # one item per (vl, v2l) pair
-
-
     if not isinstance(file_vald3, pf.FileVald3):
         raise TypeError("Invalid type for argument 'file_vald3': {}".format(type(file_vald3)))
     if len(file_vald3) > 1:
@@ -56,10 +53,10 @@ def vald3_to_sols(mol_row, state_row, file_vald3, qgbd_calculator):
     lines = file_vald3.speciess[0].lines
     n = len(lines)
 
-    # TODO: ask BLB about this S
-    S = 0.5   # dubleto: X2 PI
-    DELTAK = 0  # TODO ask BLB ?doc?
+    S = mol_row["s"]
+    DELTAK = mol_row["cro"]
 
+    sols = OrderedDict()  # one item per (vl, v2l) pair
     log = MolConversionLog(n)
 
     for i, line in enumerate(lines):

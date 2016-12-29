@@ -2,6 +2,7 @@ __all__ = ["FileHmap", "HmapRow"]
 
 
 from astroapi import froze_it, AttrsPart, DataFile, write_lf
+import tabulate
 
 
 @froze_it
@@ -38,6 +39,12 @@ class FileHmap(DataFile):
 
         # List of HmapRow objects
         self.rows = []
+
+    def __str__(self):
+        headers = HmapRow.attrs
+        data = [[getattr(row, name) for name in headers] for row in self.rows]
+        return tabulate.tabulate(data, headers)
+
 
     def __len__(self):
         return len(self.rows)

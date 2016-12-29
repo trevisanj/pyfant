@@ -26,6 +26,11 @@ def global_quanta_to_branch(Jl, J2l):
 
 
 _iz_to_branch_map = {"1": "P", "2": "Q", "3": "R", "4": "P1", "5": "Q1", "6": "R1", "7": "P2", "8": "Q2", "9": "R2", "10": "P3", "11": "Q3", "12": "R3",}
+_branch_to_iz_map = dict(((value, key) for key, value in _iz_to_branch_map.items()))
 def iz_to_branch(iz):
-    """Converts BLB's 'iz' code to string P/Q/R/P1 ..."""
+    """Converts BLB's 'iz' code to string P/Q/R/P1 ... (see pfantlib.90:read_molecules()"""
+    return _iz_to_branch_map[str(iz)]
+
+def branch_to_iz(iz):
+    """Converts branch P/Q/R/P1, etc. into BLB's 'iz' code"""
     return _iz_to_branch_map[str(iz)]

@@ -5,6 +5,7 @@ import pyfant as pf
 import astroapi as aa
 import re
 from .filedissoc import FileDissoc
+import tabulate
 
 
 class FileAbonds(aa.DataFile):
@@ -20,27 +21,33 @@ class FileAbonds(aa.DataFile):
         self.abol = []  # corresponding abundances
         self.notes = []  # ignored by pfant
 
-    def __repr__(self):
-        nn = max(0 if x is None else len(x) for x in self.notes)
-        return "\n".join(
-         ["El  Abund Notes",
-          "-- ------ "+"-"*nn]+
-         ["{:>2s} {:>6.2f} {}".format(a, b, c)
-          for a, b, c in zip(self.ele, self.abol, self.notes)])
+    def __str__(self):
+        data = zip(self.ele, self.abol, self.notes)
+        headers = ["El", "Abund", "Notes"]
+        return tabulate.tabulate(data, headers)
+        # nn = max(0 if x is None else len(x) for x in self.notes)
+        # return "\n".join(
+        #  ["El  Abund Notes",
+        #   "-- ------ "+"-"*nn]+
+        #  ["{:>2s} {:>6.2f} {}".format(a, b, c)
+        #   for a, b, c in zip(self.ele, self.abol, self.notes)])
 
     def __len__(self):
         """Returns length of "ele" attribute."""
         return len(self.ele)
 
     def _do_load(self, filename):
-        """Clears internal lists and loads from file."""
-        self.abol, self.ele = [], []
+        self.abol, self.ele, self.notes = [], [], []
 
         ostr = struct.Struct("1x 2s 6s")
         with open(filename, "r") as h:
             for s in h:
                 if len(s) > 0:
                     if s[0] == "1":  # sign to stop reading file
+                        if len(self) == 0:
+                            # We need at least one element in order increase the amount of
+                            # file validation
+                            raise RuntimeError("'EOF' marker found at beginning of file, I need at least one element")
                         break
                 [ele, abol, notes] = s[1:3], s[3:9], s[10:]
 
