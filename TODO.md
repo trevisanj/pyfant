@@ -30,8 +30,6 @@
 
 ### General
 
-  - ASK BLB why from loggf some transitions have such different scales?
-
   - Yes allow one to change the constants in the GUI, especially the molecule-wide constants, 
     because apparently some of them are **not molecule-wide** 
     (such as `S` (found this cue: `S = 0.5   # dubleto: X2 PI`), or
@@ -45,11 +43,27 @@
   - Maybe S and DELTA_K are state-specific
   - Find scaling factor for Kurucz linelists ON THE WAY ...
   - Compare the two and show BLB
-  - I am now saving the half-integer J2l, despite "ojo, estamos colocando J2L-0.5!": ask BLB to be sure
 
 ### Questions to BLB
 
-  - J2l: do we write integer or half-integer value?
+  - J2l: do we write integer or half-integer value? (I am now saving the half-integer J2l, despite "ojo, estamos colocando J2L-0.5!")
+  - Why different scale factors for each transition? tried 730 for 0-29 but does not apply to others
+    it is weird because loggf Kurucz varies greatly in magnitude from transition to transition, but HLFs in PFANT do not so much
+  - Could the (P/Q/R from delta_J) + (spin 1/2) + (e/f determine the branch?) (I could check this)
+  - Where does the normalization of the HLF come from?
+  - FVVP, FVVQ, FVVR ??
+  - P/Q/R is for singlet & P1/P2/Q1/Q2/R1/R2 for dublet?
+  - The only thing we need from the molecular lines file is the wavelength and the branch, right?
+  - Normalization: times 2 or times 1.499 ...
+  - Most important seems to be the BRANCH!! Or work around with loggf
+  - FEL in molecular lines file not like Bruno page 29 (and some have fel=1.0 which gives huge lines)!!!!!
+  
+### Show BLB
+
+  - Plots from cli-...:
+    - 0..29
+    - 2..51 with/without scaling
+     
   
   
 ### Franck-Condon factors
