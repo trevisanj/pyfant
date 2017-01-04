@@ -1,14 +1,14 @@
 import re
 import sys
 import imp
-import astroapi as aa
+import pyscellanea as pa
 
 
 __all__ = ["FileOptions"]
 
 
-@aa.froze_it
-class FileOptions(aa.FilePy):
+@pa.froze_it
+class FileOptions(pa.FilePy):
     """
     `x.py` Command-line Options
 
@@ -23,7 +23,7 @@ class FileOptions(aa.FilePy):
     attrs = []
 
     def __init__(self):
-        aa.FilePy.__init__(self)
+        pa.FilePy.__init__(self)
 
         # innewmarcs, hydro2, pfant, nulbad
         self.logging_level = None
@@ -96,7 +96,7 @@ class FileOptions(aa.FilePy):
 
     def get_names(self):
         """Returns a list with the names of all the options. Names come sorted"""
-        d = dir(aa.DataFile())
+        d = dir(pa.DataFile())
         return [x for x in dir(self) if not x.startswith(('_', 'get_')) and
          x not in d]
 

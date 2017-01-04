@@ -1,10 +1,10 @@
 __all__ = ["FilePartit"]
 
 
-import astroapi as aa
+import pyscellanea as pa
 
 
-class FilePartit(aa.DataFile):
+class FilePartit(pa.DataFile):
     """
     PFANT Partition Function
 
@@ -14,7 +14,7 @@ class FilePartit(aa.DataFile):
     default_filename = "partit.dat"
 
     def __init__(self):
-        aa.DataFile.__init__(self)
+        pa.DataFile.__init__(self)
 
     def _do_load(self, filename):
         raise NotImplementedError("This class is a stub ATM")

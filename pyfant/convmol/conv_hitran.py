@@ -9,7 +9,7 @@ References:
 
 
 import pyfant as pf
-import astroapi as aa
+import pyscellanea as pa
 from .calc_qgbd import calc_qgbd_tio_like
 from .convlog import *
 from .branch import *
@@ -125,7 +125,7 @@ def hitran_to_sols(mol_row, state_row, lines, qgbd_calculator):
     """
 
     def append_error(msg):
-        log.errors.append("#{}{} line: {}".format(i + 1, aa.ordinal_suffix(i + 1), str(msg)))
+        log.errors.append("#{}{} line: {}".format(i + 1, pa.ordinal_suffix(i + 1), str(msg)))
 
     # C     BAND (v',v'')=(VL,V2L)
     # C     WN: vacuum wavenumber   WL : air wavelength
@@ -168,7 +168,7 @@ def hitran_to_sols(mol_row, state_row, lines, qgbd_calculator):
 
         try:
             nu = data["nu"][i]
-            wl = aa.vacuum_to_air(1e8/nu)
+            wl = pa.vacuum_to_air(1e8/nu)
             Br, J2l = f_group(data["local_lower_quanta"][i])
             Jl = global_quanta_to_branch(Br, J2l)
             V = f_class(data["global_upper_quanta"][i])
@@ -186,7 +186,7 @@ def hitran_to_sols(mol_row, state_row, lines, qgbd_calculator):
 
             J2l_pfant = int(J2l)  # ojo, estamos colocando J2L-0.5! TODO ask BLB: we write J2l or J2l-.5?
         except Exception as e:
-            log.errors.append("#{}{} line: {}".format(i+1, aa.ordinal_suffix(i+1), aa.str_exc(e)))
+            log.errors.append("#{}{} line: {}".format(i+1, pa.ordinal_suffix(i+1), pa.str_exc(e)))
             continue
 
         sol_key = (V, V_)  # (v', v'') transition (v_sup, v_inf)

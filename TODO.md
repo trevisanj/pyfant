@@ -30,7 +30,7 @@
 
 ### General
 
-  - Spectral lines are too strong, what is wrong??
+  - ASK BLB why from loggf some transitions have such different scales?
 
   - Yes allow one to change the constants in the GUI, especially the molecule-wide constants, 
     because apparently some of them are **not molecule-wide** 

@@ -2,13 +2,13 @@ __all__ = ["FileAbonds"]
 
 import struct
 import pyfant as pf
-import astroapi as aa
+import pyscellanea as pa
 import re
 from .filedissoc import FileDissoc
 import tabulate
 
 
-class FileAbonds(aa.DataFile):
+class FileAbonds(pa.DataFile):
     """PFANT Stellar Chemical Abundances"""
 
     description = "chemical abundances"
@@ -16,7 +16,7 @@ class FileAbonds(aa.DataFile):
     attrs = ["ele", "abol", "notes"]
 
     def __init__(self):
-        aa.DataFile.__init__(self)
+        pa.DataFile.__init__(self)
         self.ele = []   # list of atomic symbols
         self.abol = []  # corresponding abundances
         self.notes = []  # ignored by pfant
@@ -93,19 +93,19 @@ class FileAbonds(aa.DataFile):
         """
 
         # determines the atomic numbers of the elements
-        atomic_numbers, aa = [], []
+        atomic_numbers, pa = [], []
         for symbol, abundance in zip(self.ele, self.abol):
             s = symbol.strip()
             try:
-                atomic_numbers.append("%3d" % (aa.SYMBOLS.index(s)+1))
-                aa.append(abundance)
+                atomic_numbers.append("%3d" % (pa.SYMBOLS.index(s)+1))
+                pa.append(abundance)
             except ValueError:
                 pass  # skips elements whose symbol is not in the periodic table
         # sorts by atomic number
         indexes = sorted(list(range(len(atomic_numbers))), key=lambda k: atomic_numbers[k])
         # mounts string
         l = ["'INDIVIDUAL ABUNDANCES:'   '%d'" % len(indexes)]+\
-            ["%s %g" % (atomic_numbers[i], aa[i]) for i in indexes]
+            ["%s %g" % (atomic_numbers[i], pa[i]) for i in indexes]
         return "\n".join(l)
 
     def sort_a(self):
@@ -135,7 +135,7 @@ class FileAbonds(aa.DataFile):
         for symbol in self.ele:
             s = symbol.strip()
             try:
-                atomic_numbers.append("%3d" % (aa.SYMBOLS.index(s)+1))
+                atomic_numbers.append("%3d" % (pa.SYMBOLS.index(s)+1))
             except ValueError:
                 atomic_numbers.append("    "+s)
                 not_found.append(symbol)

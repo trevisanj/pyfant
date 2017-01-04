@@ -4,21 +4,21 @@
 Compares two molecular lines files and prints report with differences
 """
 
-import astroapi as aa
+import pyscellanea as pa
 import pyfant as pf
 import tabulate
 import logging
 import argparse
 
 
-aa.logging_level = logging.INFO
-aa.flag_log_file = True
+pa.logging_level = logging.INFO
+pa.flag_log_file = True
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
      description=__doc__,
-     formatter_class=aa.SmartFormatter
+     formatter_class=pa.SmartFormatter
      )
     parser.add_argument('fn1', type=str, help='input file name', nargs=1)
     parser.add_argument('fn2', type=str, help='output file name', nargs=1)

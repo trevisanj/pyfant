@@ -3,11 +3,11 @@
 import argparse
 import logging
 import pyfant as pf
-import astroapi as aa
+import pyscellanea as pa
 
 
-aa.logging_level = logging.INFO
-aa.flag_log_file = True
+pa.logging_level = logging.INFO
+pa.flag_log_file = True
 
 
 __doc__ = """PFANT Launcher -- Graphical Interface for Spectral Synthesis\n\nSingle and multi modes.\n\n
@@ -20,11 +20,11 @@ Multi mode
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
      description=__doc__,
-     formatter_class=aa.SmartFormatter
+     formatter_class=pa.SmartFormatter
      )
     args = parser.parse_args()
 
-    app = aa.get_QApplication([])
+    app = pa.get_QApplication([])
 
     form0 = pf.XMulti()
     # this would start with "multi" tab selected form0.tabWidget.setCurrentIndex(3)

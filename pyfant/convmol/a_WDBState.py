@@ -1,7 +1,7 @@
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from astroapi import WDBRegistry
-import astroapi as aa
+import pyscellanea as pa
 
 
 __all__ = ["WDBState"]
@@ -52,21 +52,21 @@ class WDBState(WDBRegistry):
             # Dunno if this will be useful or not
             # t = self.tableWidget
             # if self._f is None:
-            #     aa.reset_table_widget(t, 0, 0)
+            #     pa.reset_table_widget(t, 0, 0)
             #     return
 
 
             curr_idx = self.tableWidget.currentRow()
 
             t = self.tableWidget
-            rows = aa.cursor_to_rows(self._f.query_state(id_molecule=self._id_molecule))
+            rows = pa.cursor_to_rows(self._f.query_state(id_molecule=self._id_molecule))
             ti = self._f.get_table_info("state")
             fieldnames = [name for name in ti if name not in _FIELDNAMES_OUT]
             # unfortunately QTableWidget is not prepared to show HTML col_names = [row["caption"] or row["name"] for row in ti if not row["name"] in FIELDNAMES_OUT]
             col_names = fieldnames
             nr, nc = len(rows), len(fieldnames)
 
-            aa.reset_table_widget(t, nr, nc)
+            pa.reset_table_widget(t, nr, nc)
             t.setHorizontalHeaderLabels(col_names)
 
             if nr > 0:
@@ -88,7 +88,7 @@ class WDBState(WDBRegistry):
     def _get_edit_params(self):
         """Returns a Parameters object containing information about the fields that may be edited"""
         ti = self._f.get_table_info("state")
-        params = aa.table_info_to_parameters(ti)
+        params = pa.table_info_to_parameters(ti)
         params = [p for p in params if not p.name.startswith("id")]
         return params
 
@@ -100,7 +100,7 @@ class WDBState(WDBRegistry):
 
     def _do_on_insert(self):
         params = self._get_edit_params()
-        form = aa.XParametersEditor(specs=params, title="Insert Molecular State")
+        form = pa.XParametersEditor(specs=params, title="Insert Molecular State")
         r = form.exec_()
         if r == QDialog.Accepted:
             kwargs = form.get_kwargs()
@@ -116,7 +116,7 @@ class WDBState(WDBRegistry):
 
 
     def _do_on_edit(self):
-        r, form = aa.show_edit_form(self.row, self._get_edit_field_names(), "Edit Molecular State")
+        r, form = pa.show_edit_form(self.row, self._get_edit_field_names(), "Edit Molecular State")
         if r == QDialog.Accepted:
             kwargs = form.get_kwargs()
             id_ = self.row["id"]

@@ -6,13 +6,13 @@ __all__ = ["vald3_to_atoms"]
 
 import csv
 import pyfant as pf
-import astroapi as aa
+import pyscellanea as pa
 
 import sys
 
 
 
-_logger = aa.get_python_logger()
+_logger = pa.get_python_logger()
 
 
 # Temporary: no partition function for this
@@ -66,7 +66,7 @@ def vald3_to_atoms(file_obj):
 #                continue  # skips molecule
 
             elem = row[0][1:row[0].index(" ")]
-            if not elem in aa.SYMBOLS:
+            if not elem in pa.SYMBOLS:
                 #x = raw_input("Skipping #"+elem+"#")
                 num_skip_mol += 1
                 continue  # skips molecule
@@ -139,7 +139,7 @@ def vald3_to_atoms(file_obj):
             a.lines.append(line)
     except Exception as e:
         raise type(e)(("Error around %d%s row of VALD3 file" %
-            (r+1, aa.ordinal_suffix(r)))+": "+str(e)).with_traceback(sys.exc_info()[2])
+            (r+1, pa.ordinal_suffix(r)))+": "+str(e)).with_traceback(sys.exc_info()[2])
     _logger.debug("VALD3-to-atoms conversion successful!")
     _logger.info("Number of lines skipped (molecules): %d" % num_skip_mol)
     _logger.info("Number of lines skipped (ioni > 2): %d" % num_skip_ioni)

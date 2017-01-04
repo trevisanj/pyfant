@@ -9,12 +9,12 @@ __all__ = ["Conf", "FOR_INNEWMARCS", "FOR_HYDRO2", "FOR_PFANT",
 
 import shutil
 import os
-from .liblib import *
+from .gear import *
 import logging
 import subprocess
 from threading import Lock
 import pyfant as pf
-import astroapi as aa
+import pyscellanea as pa
 
 
 # Indexes to use in Conf.sequence property
@@ -24,7 +24,7 @@ FOR_PFANT = 2
 FOR_NULBAD = 3
 
 
-@aa.froze_it
+@pa.froze_it
 class SID(object):
     """
     SID -- Session Id and Directory
@@ -164,7 +164,7 @@ class IdMaker(object):
         d1 = self.session_prefix_singular+str(self.__i_id)
         return os.path.join(d0, d1)
 
-@aa.froze_it
+@pa.froze_it
 class Conf(object):
     """
     Class holds the configuration of an executable.
@@ -208,7 +208,7 @@ class Conf(object):
     @property
     def logger(self):
         if not self.__logger:
-            self.__logger = aa.get_python_logger()
+            self.__logger = pa.get_python_logger()
         return self.__logger
 
     @logger.setter
@@ -273,7 +273,7 @@ class Conf(object):
         if it has been called before and skip most operations if so.
         """
         if not self.__flag_configured_before:
-            self.__logger = aa.get_python_logger()
+            self.__logger = pa.get_python_logger()
             self.__sid.make_id()
             if self.__flag_output_to_dir:
                 self.__rename_outputs(sequence)
@@ -284,7 +284,7 @@ class Conf(object):
         if self.__flag_log_file:
             log_path = self.__sid.join_with_session_dir("fortran.log")
             if self.__flag_log_console:
-                stdout_ = aa.LogTwo(log_path)
+                stdout_ = pa.LogTwo(log_path)
             else:
                 stdout_ = open(log_path, "w")
         else:
@@ -385,7 +385,7 @@ class Conf(object):
 
     def get_fn_modeles(self):
         """Returns name of atmospheric model file."""
-        return aa.FileModBin.default_filename if self.__opt.fn_modeles is None \
+        return pa.FileModBin.default_filename if self.__opt.fn_modeles is None \
          else self.__opt.fn_modeles
 
     def get_args(self):
@@ -419,7 +419,7 @@ class Conf(object):
                 obj = self.__getattribute__(attr_name)
 
                 if obj is not None:
-                    assert isinstance(obj, aa.DataFile)
+                    assert isinstance(obj, pa.DataFile)
                     fn_attr_name = "fn_"+attr_name[5:]
                     curr_fn = self.__opt.__getattribute__(fn_attr_name)
                     # Tries to preserve custom file name given to file
@@ -441,10 +441,10 @@ class Conf(object):
             # # innewmarcs -> (hydro2, pfant)
             opt.fn_modeles = sid.join_with_session_dir(
              os.path.basename(opt.fn_modeles) if opt.fn_modeles is not None
-             else aa.FileModBin.default_filename)
+             else pa.FileModBin.default_filename)
             opt.fn_opa = sid.join_with_session_dir(
              os.path.basename(opt.fn_opa) if opt.fn_opa is not None
-             else aa.FileOpa.default_filename)
+             else pa.FileOpa.default_filename)
 
         if FOR_HYDRO2 in sequence:
             # # hydro2 -> pfant

@@ -6,25 +6,25 @@ import sys
 from PyQt4.QtGui import *
 import argparse
 import pyfant as pf
-import astroapi as aa
+import pyscellanea as pa
 import logging
 
 
-aa.logging_level = logging.INFO
-aa.flag_log_file = True
+pa.logging_level = logging.INFO
+pa.flag_log_file = True
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
     description=__doc__,
-    formatter_class=aa.SmartFormatter
+    formatter_class=pa.SmartFormatter
     )
     parser.add_argument('fn', type=str, help='abundances file name', default='abonds.dat', nargs='?')
     args = parser.parse_args()
 
     m = pf.FileAbonds()
     m.load(args.fn)
-    app = aa.get_QApplication([])
+    app = pa.get_QApplication([])
     form = pf.XFileAbonds()
     form.show()
     form.load(m)

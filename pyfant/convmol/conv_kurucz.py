@@ -4,7 +4,7 @@ VALD3-specific conversion
 
 
 import pyfant as pf
-import astroapi as aa
+import pyscellanea as pa
 from .convlog import *
 from .branch import *
 from collections import OrderedDict
@@ -33,7 +33,7 @@ def kurucz_to_sols(mol_row, state_row, fileobj, qgbd_calculator):
     """
 
     def append_error(msg):
-        log.errors.append("#{}{} line: {}".format(i + 1, aa.ordinal_suffix(i + 1), str(msg)))
+        log.errors.append("#{}{} line: {}".format(i + 1, pa.ordinal_suffix(i + 1), str(msg)))
 
     # C     BAND (v',v'')=(VL,V2L)
     # C     WN: vacuum wavenumber   WL : air wavelength
@@ -70,13 +70,13 @@ def kurucz_to_sols(mol_row, state_row, fileobj, qgbd_calculator):
             # s_now = line.spin2l
             s_now = S
 
-#            Normaliza = 1/((2.0*line.J2l+1)*(2.0*S+1)*(2.0-DELTAK))
+            # Normaliza = 1/((2.0*line.J2l+1)*(2.0*S+1)*(2.0-DELTAK))
             Normaliza = scale_factor * 1 / ((2.0*line.J2l+1)*(2.0*s_now+1)*(2.0-DELTAK))
             gf_pfant = Normaliza*10**line.loggf
 
             J2l_pfant = line.J2l
         except Exception as e:
-            log.errors.append("#{}{} line: {}".format(i+1, aa.ordinal_suffix(i+1), str(e)))
+            log.errors.append("#{}{} line: {}".format(i+1, pa.ordinal_suffix(i+1), str(e)))
             continue
 
         sol_key = "%3d%3d" % (line.vl, line.v2l)  # (v', v'') transition (v_sup, v_inf)

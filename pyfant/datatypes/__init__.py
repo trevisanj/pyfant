@@ -1,3 +1,4 @@
+from .filemod import *
 from .filedissoc import *
 from .fileabonds import *
 from .fileabsoru2 import *
@@ -15,6 +16,7 @@ from .filemoldb import *
 from .filehitrandb import *
 from .filekuruczmol import *
 
+from . import filemod
 from . import filedissoc
 from . import fileabonds
 from . import fileabsoru2

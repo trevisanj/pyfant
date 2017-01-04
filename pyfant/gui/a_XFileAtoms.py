@@ -14,7 +14,7 @@ from .a_XAtomLinesEditor import *
 import os.path
 import webbrowser
 import sys
-import astroapi as aa
+import pyscellanea as pa
 import pyfant as pf
 from ._shared import *
 
@@ -164,9 +164,9 @@ class XFileAtoms(QMainWindow):
         # * # * # * # * # * # * # *
         # Final adjustments
 
-        self.splitter.setFont(aa.MONO_FONT)
+        self.splitter.setFont(pa.MONO_FONT)
         self.setCentralWidget(self.splitter)
-        aa.place_left_top(self)
+        pa.place_left_top(self)
 
     # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * #
     # Qt override
@@ -208,9 +208,9 @@ class XFileAtoms(QMainWindow):
         base_dir = os.path.dirname(sys.argv[0])
         try:
             webbrowser.open_new(os.path.join(base_dir, "ated.html"))
-            aa.show_message("Help file ated.html was opened in web browser.")
+            pa.show_message("Help file ated.html was opened in web browser.")
         except Exception as e:
-            aa.show_error(str(e))
+            pa.show_error(str(e))
             raise
 
     def on_save(self, _):
@@ -218,7 +218,7 @@ class XFileAtoms(QMainWindow):
         try:
             self.save()
         except Exception as e:
-            aa.show_error(str(e))
+            pa.show_error(str(e))
             raise
         finally:
             self.enable_save_actions()
@@ -233,7 +233,7 @@ class XFileAtoms(QMainWindow):
                     self.save_dir, _ = os.path.split(str(new_filename))
                     self.save_as(new_filename)
         except Exception as e:
-            aa.show_error(str(e))
+            pa.show_error(str(e))
             raise
         finally:
             self.enable_save_actions()
@@ -329,7 +329,7 @@ class XFileAtoms(QMainWindow):
                         x = _x[ii]
                         y = _y[ii]
 
-                    aa.format_BLB()
+                    pa.format_BLB()
 
                     self.figure.add_subplot(SL[n-1][0], SL[n-1][1], i_subplot)
                     pi.axis = ax = self.figure.gca()
@@ -425,7 +425,7 @@ class XFileAtoms(QMainWindow):
     def clear_markers(self):
         for o in self.plot_info:
             if o.mpl_obj:
-                aa.remove_line(o.mpl_obj)
+                pa.remove_line(o.mpl_obj)
                 o.mpl_obj = None
 
     def draw_markers(self):
@@ -448,7 +448,7 @@ class XFileAtoms(QMainWindow):
     def on_plot_click(self, event):
         lambda_ = event.xdata
         if lambda_ is not None and self.form_lines is not None:
-            idx = aa.index_nearest(self.atom.lambda_, lambda_)
+            idx = pa.index_nearest(self.atom.lambda_, lambda_)
             self.form_lines.set_row(idx)
             # self.set_marker_row(idx)
 

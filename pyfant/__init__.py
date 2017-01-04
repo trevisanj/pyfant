@@ -1,7 +1,7 @@
 # # Temporary imports
 #   =================
 # These modules should be be del'eted at the end
-import astroapi as aa
+import pyscellanea as pa
 
 
 # # Setup
@@ -20,7 +20,7 @@ COLOR_CONFIG = "#BD6909"
 # # Imports
 #   =======
 from .errors import *
-from .liblib import *
+from .gear import *
 from .datatypes import *
 from .conf import *
 from .runnables import *
@@ -32,7 +32,7 @@ from .multirunnable import *
 from .gui import *
 from .paths import *
 from . import datatypes
-from . import liblib
+from . import gear
 from . import gui
 from . import vis
 from . import convmol
@@ -41,7 +41,7 @@ from . import convmol
 #   ===============================================
 def get_config():
     """Returns PyfantConfigObj object that corresponds to file ~/.pyfant.conf"""
-    return aa.get_config_obj(".pyfant.conf")
+    return pa.get_config_obj(".pyfant.conf")
 
 
 # # # Function to be called from astroapi package
@@ -50,13 +50,12 @@ def get_config():
 # def _setup_astroapi():
 #     """Adds entries to the astroapi module"""
 #
-#     aa._classes_txt.extend([FileAbsoru2, FileHmap, FileMain, FileDissoc,
+#     pa._classes_txt.extend([FileAbsoru2, FileHmap, FileMain, FileDissoc,
 #                            FileToH, FileAbonds, FileAtoms, FileMolecules])
-#     aa._classes_file.extend(aa.get_classes_in_module(datatypes, aa.DataFile))
-#     aa._classes_vis.extend(aa.get_classes_in_module(vis, aa.Vis))
+#     pa._classes_file.extend(pa.get_classes_in_module(datatypes, pa.DataFile))
+#     pa._classes_vis.extend(pa.get_classes_in_module(vis, pa.Vis))
 #
 
 # # Finally, gets rid of unwanted symbols in the workspace
 #   ======================================================
-del aa
-
+del pa

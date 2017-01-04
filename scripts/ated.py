@@ -8,18 +8,18 @@ import sys
 import argparse
 import logging
 import pyfant as pf
-import astroapi as aa
+import pyscellanea as pa
 import logging
 
 
-aa.logging_level = logging.INFO
-aa.flag_log_file = True
+pa.logging_level = logging.INFO
+pa.flag_log_file = True
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
     description=__doc__,
-    formatter_class=aa.SmartFormatter
+    formatter_class=pa.SmartFormatter
     )
     parser.add_argument('fn', type=str, help='atoms file name',
                         default=pf.FileAtoms.default_filename, nargs='?')
@@ -27,7 +27,7 @@ if __name__ == "__main__":
 
     m = pf.FileAtoms()
     m.load(args.fn)
-    app = aa.get_QApplication([])
+    app = pa.get_QApplication([])
     form = pf.XFileAtoms()
     form.show()
     form.load(m)

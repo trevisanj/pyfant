@@ -12,7 +12,7 @@ __all__ = [
 import os
 import glob
 import shutil
-import astroapi as aa
+import pyscellanea as pa
 import pyfant as pf
 
 
@@ -34,7 +34,7 @@ def run_parallel(rr, max_simultaneous=None, flag_console=True, runnable_manager=
     """
 
     # Adds to pool
-    logger = aa.get_python_logger()
+    logger = pa.get_python_logger()
     if runnable_manager:
         assert isinstance(runnable_manager, pf.RunnableManager)
         rm = runnable_manager
@@ -75,10 +75,10 @@ def run_parallel(rr, max_simultaneous=None, flag_console=True, runnable_manager=
         if flag_had_to_start:
             rm.exit()
 
-    aa.get_python_logger().info(
+    pa.get_python_logger().info(
         ("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%" + (" ALIVE" if rm.is_alive() else " DEAD")))
-    aa.get_python_logger().info("test-tm2 [SUPPOSED TO HAVE] EXITED")
-    aa.get_python_logger().info(rm)
+    pa.get_python_logger().info("test-tm2 [SUPPOSED TO HAVE] EXITED")
+    pa.get_python_logger().info(rm)
 
     return rm
 
@@ -98,7 +98,7 @@ def setup_inputs(dest_dir='.', star='sun-asplund-2009', common='common', h=True,
       opa=True -- whether to look for grid.moo
     """
 
-    logger = aa.get_python_logger()
+    logger = pa.get_python_logger()
     dd = pf.get_pfant_path("data")
 
     # Functions that return full path, given a filename, to ...
@@ -174,18 +174,18 @@ def create_or_replace_or_skip_links(ff, dest_dir="."):
         flag_skip = False
         print(("Considering file '%s' ..." % name))
         if os.path.isfile(ptd) and not os.path.islink(ptd):
-            aa.print_skipped("file exists in local directory")
+            pa.print_skipped("file exists in local directory")
             flag_skip = True
         else:
-            obj = aa.load_with_classes(f, [pf.FileMain, pf.FileAbonds, pf.FileDissoc, pf.FileToH])
+            obj = pa.load_with_classes(f, [pf.FileMain, pf.FileAbonds, pf.FileDissoc, pf.FileToH])
             if obj is not None:
-                aa.print_skipped("detected type %s" % obj.__class__.__name__)
+                pa.print_skipped("detected type %s" % obj.__class__.__name__)
                 flag_skip = True
             else:
-                obj = aa.load_with_classes(f, [aa.FileModBin])
+                obj = pa.load_with_classes(f, [pa.FileModBin])
                 if obj is not None:
                     if len(obj) == 1:
-                        aa.print_skipped("%s of only one record" % obj.__class__.__name__)
+                        pa.print_skipped("%s of only one record" % obj.__class__.__name__)
                         flag_skip = True
 
         if not flag_skip:
@@ -195,10 +195,10 @@ def create_or_replace_or_skip_links(ff, dest_dir="."):
                     s_action = "replaced existing"
                 else:
                     s_action = "created"
-                aa.create_symlink(f, ptd)
+                pa.create_symlink(f, ptd)
                 print(("   ... %s link" % s_action))
             except Exception as e:
-                aa.print_error("Error creating link: %s" % str(e))
+                pa.print_error("Error creating link: %s" % str(e))
 
 
 def copy_or_skip_files(ff, dest_dir="."):
@@ -215,14 +215,14 @@ def copy_or_skip_files(ff, dest_dir="."):
         flag_skip = False
         print(("Considering file '%s' ..." % name))
         if os.path.isfile(name):
-            aa.print_skipped("file exists in local directory")
+            pa.print_skipped("file exists in local directory")
             flag_skip = True
         else:
-            obj = aa.load_with_classes(f, [pf.FileMain, pf.FileAbonds, pf.FileDissoc])
+            obj = pa.load_with_classes(f, [pf.FileMain, pf.FileAbonds, pf.FileDissoc])
             if obj is not None:
                 pass
             else:
-                aa.print_skipped("neither main, abonds, nor dissoc file")
+                pa.print_skipped("neither main, abonds, nor dissoc file")
                 flag_skip = True
 
         if not flag_skip:
@@ -230,5 +230,5 @@ def copy_or_skip_files(ff, dest_dir="."):
                 shutil.copy(f, dest_dir)
                 print("   ... file copied")
             except Exception as e:
-                aa.print_error("Error copying file: %s" % str(e))
+                pa.print_error("Error copying file: %s" % str(e))
 

@@ -9,17 +9,17 @@ The interval is [llzero, llfin]
 import argparse
 import logging
 import pyfant as pf
-import astroapi as aa
+import pyscellanea as pa
 
 
-aa.logging_level = logging.INFO
-aa.flag_log_file = True
+pa.logging_level = logging.INFO
+pa.flag_log_file = True
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
      description=__doc__,
-     formatter_class=aa.SmartFormatter
+     formatter_class=pa.SmartFormatter
      )
     parser.add_argument('llzero', type=float, nargs=1,
      help='lower wavelength boundary (angstrom)')

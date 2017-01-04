@@ -2,7 +2,7 @@
 
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
-import astroapi as aa
+import pyscellanea as pa
 import pyfant as pf
 
 __all__ = ["WOptionsEditor"]
@@ -14,12 +14,12 @@ IHPN = "ihpn"
 NIHPN = len(IHPN)
 
 
-@aa.froze_it
-class _Option(aa.AttrsPart):
+@pa.froze_it
+class _Option(pa.AttrsPart):
     attrs = ["name", "argname", "descr"]
 
     def __init__(self):
-        aa.AttrsPart.__init__(self)
+        pa.AttrsPart.__init__(self)
         self.checkbox = None
         self.label = None
         self.edit = None
@@ -34,7 +34,7 @@ class _Option(aa.AttrsPart):
         # Whether or not the option is considered to be an option for developers
         # (to aid debuggin etc)
         self.flag_devel = False
-        self.color = aa.COLOR_DESCR
+        self.color = pa.COLOR_DESCR
         # other widgets to be shown/hidden (besides .checkbox, .label, .edit)
         self.other_widgets = []
         # Type (e.g. float, str). Only required for options whose default is None
@@ -85,7 +85,7 @@ class _Option(aa.AttrsPart):
             self.update_edit_with_default()
 
     def get_label_text(self):
-        return aa.enc_name_descr("--%s" % self.name, self.short_descr, self.color)
+        return pa.enc_name_descr("--%s" % self.name, self.short_descr, self.color)
 
     def get_value(self):
         type_ = type(self.default) if self.default is not None else self.type
@@ -134,7 +134,7 @@ class WOptionsEditor(QWidget):
         # Whether all the values in the fields are valid or not
         self.flag_valid = False
         self.f = None  # FileOptions object
-        self.logger = aa.get_python_logger()
+        self.logger = pa.get_python_logger()
 
         # # Internal stuff that must not be accessed from outside
 
@@ -332,7 +332,7 @@ class WOptionsEditor(QWidget):
         #
         # innewmarcs, hydro2, pfant
         #
-        self.__add_option(self.w_fn_modeles, 'ihp', 'fn_modeles', aa.FileModBin.default_filename,
+        self.__add_option(self.w_fn_modeles, 'ihp', 'fn_modeles', pa.FileModBin.default_filename,
                           'atmospheric model file name',
                           'This is a binary file containing information about atmospheric model. '
                           'This file is created by innewmarcs.')
@@ -350,7 +350,7 @@ class WOptionsEditor(QWidget):
         'Whether or not to include coefficients calculated by subroutine absoru() '
         'in the continuum.')
         o.flag_devel = False  # True
-        self.__add_option(self.w_fn_opa, 'ip', 'fn_opa', aa.FileOpa.default_filename,
+        self.__add_option(self.w_fn_opa, 'ip', 'fn_opa', pa.FileOpa.default_filename,
         'Opacities filename',
         'This is a text file in the MARCS ".opa" format. This file can be generated through '
         'interpolation using <em>innewmarcs</em>.'
@@ -369,7 +369,7 @@ class WOptionsEditor(QWidget):
         'This is a binary file containing a grid of atmospheric models for interpolation.'
         '<p>Whether this file or the one specified by <em>--fn_moo</em> will be used '
         'will depend on the <em>--opa</em>option.')
-        self.__add_option(self.w_fn_moo, 'i', 'fn_moo', aa.FileMoo.default_filename,
+        self.__add_option(self.w_fn_moo, 'i', 'fn_moo', pa.FileMoo.default_filename,
         'atmospheric model grid (<b>with opacities</b>)',
         'This is a binary file containing a grid of atmospheric models for interpolation, '
         'opacities included.'
@@ -583,11 +583,11 @@ class WOptionsEditor(QWidget):
         x.setReadOnly(True)
         # x.setGeometry(0, 0, 100, 0)
         # x.setWordWrap(True)
-        x.setStyleSheet("QTextEdit {color: %s}" % aa.COLOR_DESCR)
+        x.setStyleSheet("QTextEdit {color: %s}" % pa.COLOR_DESCR)
         lu.addWidget(x)
 
         x = self.labelError = QLabel(self)
-        x.setStyleSheet("QLabel {color: %s}" % aa.COLOR_ERROR)
+        x.setStyleSheet("QLabel {color: %s}" % pa.COLOR_ERROR)
         lu.addWidget(x)
 
         sp.addWidget(wlu)
@@ -597,7 +597,7 @@ class WOptionsEditor(QWidget):
         sp.setStretchFactor(1, 2)
 
         self.__update_gui_visible_options()
-        aa.style_checkboxes(self)
+        pa.style_checkboxes(self)
         self.setEnabled(False)  # disabled until load() is called
         self.flag_process_changes = True
 
@@ -629,7 +629,7 @@ class WOptionsEditor(QWidget):
             option = self.__find_option_by_widget(obj_focused)
             if option:
                 text = "%s<br><br>%s" % \
-                       (aa.enc_name(option.name.replace("&", ""), option.color),
+                       (pa.enc_name(option.name.replace("&", ""), option.color),
                         option.long_descr)
                 self.__set_descr_text(text)
 
@@ -669,7 +669,7 @@ class WOptionsEditor(QWidget):
         args = self.f.get_args()
         print(args)
         line = "fortran-binary-xxxx " + (" ".join(args))
-        w = aa.XText(self, line, "Command line")
+        w = pa.XText(self, line, "Command line")
         w.show()
 
     def on_filter(self):
@@ -758,7 +758,7 @@ class WOptionsEditor(QWidget):
                 emsg = "Option <em>--%s</em>: %s" % (ss, str(E))
             else:
                 emsg = str(E)
-            aa.get_python_logger().exception("Updating Options object")
+            pa.get_python_logger().exception("Updating Options object")
 
         self.flag_valid = not flag_error
         self.__set_error_text(emsg)
@@ -816,9 +816,9 @@ class WOptionsEditor(QWidget):
         l = []
         if self.error_text:
             l.append('<span style="color: %s"><b>Error</b>: %s</span>' %
-                     (aa.COLOR_ERROR, self.error_text))
+                     (pa.COLOR_ERROR, self.error_text))
         if self.hiding_text:
             l.append('<span style="color: %s"><b>Warning</b>: %s</span>' %
-                     (aa.COLOR_WARNING, self.hiding_text))
+                     (pa.COLOR_WARNING, self.hiding_text))
         s = "; ".join(l)
         self.labelError.setText(s)

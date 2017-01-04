@@ -1,13 +1,13 @@
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
-import astroapi as aa
+import pyscellanea as pa
 # import pyfant as pf
 # from a_WState import WState
 # import moldb as db
 from .a_WDBState import WDBState
 
 
-class WStateConst(aa.WBase):
+class WStateConst(pa.WBase):
     """
     Widget for the user to select/modify state-specific constants. Has a embedded WDBState
     """
@@ -30,7 +30,7 @@ class WStateConst(aa.WBase):
         return self.w_mol.row
 
     def __init__(self, *args):
-        aa.WBase.__init__(self, *args)
+        pa.WBase.__init__(self, *args)
 
         self.flag_populating = False  # activated when populating table
 
@@ -65,7 +65,7 @@ class WStateConst(aa.WBase):
         lg = QGridLayout()
         l.addLayout(lg)
         nr, nc, n = 3, 3, len(self._fieldnames)
-        ti = aa.get_table_info("moldb", "state")
+        ti = pa.get_table_info("moldb", "state")
         for j in range(nc):
             # ### One grid layout for each column of fields
             ii = range(j, n, nc)

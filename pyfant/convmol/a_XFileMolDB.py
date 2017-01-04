@@ -1,6 +1,6 @@
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
-import astroapi as aa
+import pyscellanea as pa
 import pyfant as pf
 # from a_WState import WState
 # import moldb as db
@@ -11,9 +11,9 @@ import os
 __all__ = ["XFileMolDB"]
 
 
-class XFileMolDB(aa.XFileMainWindow):
+class XFileMolDB(pa.XFileMainWindow):
     def __init__(self, parent=None, fileobj=None):
-        aa.XFileMainWindow.__init__(self, parent)
+        pa.XFileMainWindow.__init__(self, parent)
 
         # # Synchronized sequences
         _VVV = pf.FileMolDB.description
@@ -46,7 +46,7 @@ class XFileMolDB(aa.XFileMainWindow):
 
         if filename is None:
             # Default
-            filename = aa.new_filename("mol", "dat")
+            filename = pa.new_filename("mol", "dat")
 
         self.w_out.value = filename
 
@@ -60,7 +60,7 @@ class XFileMolDB(aa.XFileMainWindow):
     #     row = self.w_mol.w_mol.row
     #     self.w_state.set_id_molecule(id_)
     #     s = "States (no molecule selected)" if not row else "Select a State for molecule '{}'".format(row["formula"])
-    #     self.title_state.setText(aa.format_title0(s))
+    #     self.title_state.setText(pa.format_title0(s))
 
 
     # # Override

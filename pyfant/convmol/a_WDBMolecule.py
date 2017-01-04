@@ -1,7 +1,7 @@
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from astroapi import WDBRegistry
-import astroapi as aa
+import pyscellanea as pa
 
 
 __all__ = ["WDBRegistry"]
@@ -40,16 +40,16 @@ class WDBMolecule(WDBRegistry):
         try:
             t = self.tableWidget
             if self._f is None:
-                aa.reset_table_widget(t, 0, 0)
+                pa.reset_table_widget(t, 0, 0)
                 return
 
             curr_idx = self.tableWidget.currentRow()
             curr_row = self.row
 
             fieldnames = list(self._f.get_table_info("molecule"))
-            rows = aa.cursor_to_rows(self._f.query_molecule())
+            rows = pa.cursor_to_rows(self._f.query_molecule())
             nr, nc = len(rows), len(fieldnames)
-            aa.reset_table_widget(t, nr, nc)
+            pa.reset_table_widget(t, nr, nc)
             t.setHorizontalHeaderLabels(fieldnames)
             if nr > 0:
                 for i, row in enumerate(rows):
@@ -74,7 +74,7 @@ class WDBMolecule(WDBRegistry):
     def _get_edit_params(self):
         """Returns a Parameters object containing information about the fields that may be edited"""
         ti = self._f.get_table_info("molecule")
-        params = aa.table_info_to_parameters(ti)
+        params = pa.table_info_to_parameters(ti)
         params = [p for p in params if not p.name.startswith("id")]
         return params
 
@@ -88,7 +88,7 @@ class WDBMolecule(WDBRegistry):
 
     def _do_on_insert(self):
         params = self._get_edit_params()
-        form = aa.XParametersEditor(specs=params, title="Insert molecule")
+        form = pa.XParametersEditor(specs=params, title="Insert molecule")
         r = form.exec_()
         if r == QDialog.Accepted:
             kwargs = form.get_kwargs()
@@ -102,7 +102,7 @@ class WDBMolecule(WDBRegistry):
 
 
     def _do_on_edit(self):
-        r, form = aa.show_edit_form(self.row, self._get_edit_field_names(), "Edit molecule")
+        r, form = pa.show_edit_form(self.row, self._get_edit_field_names(), "Edit molecule")
         if r == QDialog.Accepted:
             kwargs = form.get_kwargs()
             s = "update molecule set {} where id = {}".format(

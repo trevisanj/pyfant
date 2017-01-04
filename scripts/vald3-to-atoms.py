@@ -11,11 +11,11 @@ import logging
 import numpy as np
 import sys
 import pyfant as pf
-import astroapi as aa
+import pyscellanea as pa
 
 
-aa.logging_level = logging.INFO
-aa.flag_log_file = True
+pa.logging_level = logging.INFO
+pa.flag_log_file = True
 
 
 DEFOUT = "atoms-untuned-<fn_input>"
@@ -23,7 +23,7 @@ DEFOUT = "atoms-untuned-<fn_input>"
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
      description=__doc__,
-     formatter_class=aa.SmartFormatter
+     formatter_class=pa.SmartFormatter
      )
     parser.add_argument('fn_input', type=str, help='input file name', nargs=1)
     parser.add_argument('fn_output', type=str, help='output file name', nargs="?",
@@ -34,7 +34,7 @@ if __name__ == "__main__":
      help='maximum kiex')
 
     args = parser.parse_args()
-    logger = aa.get_python_logger()
+    logger = pa.get_python_logger()
 
     fn_out = args.fn_output
     if fn_out == DEFOUT:

@@ -1,6 +1,6 @@
 """Represents SQLite database of molecular constants"""
 
-import astroapi as aa
+import pyscellanea as pa
 import pyfant as pf
 import tabulate
 
@@ -10,10 +10,10 @@ __all__ = ["FileHitranDB"]
 #
 # __fileobj = None
 # def get_conn():
-#     return aa.get_conn(__ALIAS)
+#     return pa.get_conn(__ALIAS)
 
 
-class FileHitranDB(aa.FileSQLiteDB):
+class FileHitranDB(pa.FileSQLiteDB):
     description = "HITRAN Molecules Catalogue"
     default_filename = "hitrandb.sqlite"
     gui_data = {
@@ -71,7 +71,7 @@ class FileHitranDB(aa.FileSQLiteDB):
 
             conn.executemany("insert into molecule values (?,?,?)", mols)
 
-            aa.get_python_logger().info("Inserted {} molecules".format(len(mols)))
+            pa.get_python_logger().info("Inserted {} molecules".format(len(mols)))
 
             for mol in mols:
                 isos, _ = pf.convmol.get_hitran_isotopologues(mol[0])
@@ -81,10 +81,10 @@ class FileHitranDB(aa.FileSQLiteDB):
                         conn.execute("insert into isotopologue values(?,?,?,?,?)",
                                      [iso[0], mol[0]] + iso[1:])
                     except:
-                        aa.get_python_logger().exception("Tried to insert this: {}".format(iso))
+                        pa.get_python_logger().exception("Tried to insert this: {}".format(iso))
                         raise
 
-                aa.get_python_logger().info("Inserted {} isotopologues for molecule '{}' ({})".
+                pa.get_python_logger().info("Inserted {} isotopologues for molecule '{}' ({})".
                                             format(len(isos), *mol[1:3]))
         finally:
             conn.commit()
@@ -140,5 +140,5 @@ class FileHitranDB(aa.FileSQLiteDB):
         >>> f.print_isotopologues(**{"molecule.formula": "CO"})
         """
         r = self.query_isotopologue(**kwargs)
-        data, header = aa.cursor_to_data_header(r)
+        data, header = pa.cursor_to_data_header(r)
         print(tabulate.tabulate(data, header))

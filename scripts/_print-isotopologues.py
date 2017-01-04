@@ -10,7 +10,7 @@ otherwise, prints full table
 import pyfant as pf
 import argparse
 import logging
-import astroapi as aa
+import pyscellanea as pa
 
 
 pf.logging_level = logging.INFO
@@ -18,7 +18,7 @@ pf.logging_level = logging.INFO
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
     description=__doc__,
-    formatter_class=aa.SmartFormatter
+    formatter_class=pa.SmartFormatter
     )
     parser.add_argument('ID', type=str, help='HITRAN Molecule ID',
                         default='(all)', nargs='?')

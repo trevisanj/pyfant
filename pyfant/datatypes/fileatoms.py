@@ -1,6 +1,6 @@
 __all__ = ["FileAtoms", "Atom", "AtomicLine"]
 
-from ..liblib import *
+from ..gear import *
 from ..errors import *
 import struct
 import logging

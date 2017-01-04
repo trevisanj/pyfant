@@ -1,7 +1,7 @@
 import os
 import glob
 import platform
-import astroapi as aa
+import pyscellanea as pa
 
 
 __all__ = [
@@ -82,7 +82,7 @@ def get_fortrans(max_len=None):
         if has_it(name):
             status = "found"
 
-        ret.append(aa.ExeInfo(name, status, flag_gui=None))
+        ret.append(pa.ExeInfo(name, status, flag_gui=None))
         # piece = name + " " + ("." * (max_len-len(name)))
         # ret.append(("%-"+str(max_len)+"s %s") % (piece, status))
     return ret
