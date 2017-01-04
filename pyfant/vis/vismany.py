@@ -5,8 +5,8 @@ import matplotlib.pyplot as plt
 import matplotlib as mpl
 from mpl_toolkits.mplot3d import Axes3D  # yes, required (see below)
 import pyfant as pf
-import pyscellanea as pa
-from astroapi import Vis
+import astrogear as ag
+from astrogear import Vis
 from pyfant.datatypes import *
 
 
@@ -47,7 +47,7 @@ class VisAtoms(Vis):
 
     def _do_use(self, r):
 
-        form = pa.keep_ref(pf.XFileAtoms(self.parent_form))
+        form = ag.keep_ref(pf.XFileAtoms(self.parent_form))
         form.load(r)
         form.show()
 
@@ -58,7 +58,7 @@ class VisMolecules(Vis):
     action = "Edit using molecular lines editor"
 
     def _do_use(self, r):
-        form = pa.keep_ref(pf.XFileMolecules(self.parent_form))
+        form = ag.keep_ref(pf.XFileMolecules(self.parent_form))
         form.load(r)
         form.show()
 
@@ -69,7 +69,7 @@ class VisMain(Vis):
     action = "Edit using main configuration file editor"
 
     def _do_use(self, r):
-        form = pa.keep_ref(pf.XFileMain(self.parent_form, r))
+        form = ag.keep_ref(pf.XFileMain(self.parent_form, r))
         form.show()
 
 
@@ -79,5 +79,5 @@ class VisAbonds(Vis):
     action = "Edit using abundances file editor"
 
     def _do_use(self, r):
-        form = pa.keep_ref(pf.XFileAbonds(self.parent_form, r))
+        form = ag.keep_ref(pf.XFileAbonds(self.parent_form, r))
         form.show()

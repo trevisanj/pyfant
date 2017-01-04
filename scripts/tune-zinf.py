@@ -30,12 +30,12 @@ import copy
 import numpy as np
 import os.path
 import pyfant as pf
-import pyscellanea as pa
+import astrogear as ag
 
 
-pa.logging_level = logging.INFO
-pa.flag_log_file = True
-pa.flag_log_console = True
+ag.logging_level = logging.INFO
+ag.flag_log_file = True
+ag.flag_log_console = True
 
 # Fraction of peak to be considered its "settlement"
 EPSILON = 1e-4
@@ -67,7 +67,7 @@ def _get_zinf(lambda_centre, norm):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
      description=__doc__,
-     formatter_class=pa.SmartFormatter
+     formatter_class=ag.SmartFormatter
      )
     parser.add_argument('--min', type=float, nargs='?', default=.1,
      help='minimum zinf. If zinf found for a particular line is smaller than '
@@ -90,7 +90,7 @@ if __name__ == "__main__":
     help='If set, will not remove the session directories.')
 
     args = parser.parse_args()
-    logger = pa.get_python_logger()
+    logger = ag.get_python_logger()
 
     fn_out = args.fn_output
     if fn_out == DEFOUT:
@@ -188,7 +188,7 @@ if __name__ == "__main__":
             i += 1
             ii += 1
             if ii == 1000:
-                print(pa.format_progress(i, n))
+                print(ag.format_progress(i, n))
                 ii = 0
 
     # # Runs pfant
@@ -209,7 +209,7 @@ if __name__ == "__main__":
 
     rm = pf.RunnableManager()
     rm.add_runnables(pp)
-    app = pa.get_QApplication([])
+    app = ag.get_QApplication([])
     form = pf.XRunnableManager(None, rm)
     form.show()
     # it is good to start the manager as late as possible, otherwise
@@ -238,7 +238,7 @@ if __name__ == "__main__":
         n = len(pp)
         X = np.zeros((n, 3))  # [algf, kiex, zinf], ...]
         ii = 0
-        print(pa.format_progress(0, n))
+        print(ag.format_progress(0, n))
         cnt_min = 0
         cnt_max = 0
         for i, (a, combo) in enumerate(zip(ll, pp)):
@@ -276,9 +276,9 @@ if __name__ == "__main__":
             i += 1
             ii += 1
             if ii == 100:
-                print(pa.format_progress(i, n))
+                print(ag.format_progress(i, n))
                 ii = 0
-        print(pa.format_progress(n, n))
+        print(ag.format_progress(n, n))
         logger.info("zinf's clipped to minimum: %d" % cnt_min)
         logger.info("zinf's clipped to maximum: %d" % cnt_max)
 

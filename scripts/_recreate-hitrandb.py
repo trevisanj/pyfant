@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 
 from pyfant import hitrandb as db
-import pyscellanea as pa
+import astrogear as ag
 import os
 import sys
 
 
 if __name__ == "__main__":
-    path_ = pa.get_path_to_db("hitrandb")
+    path_ = ag.get_path_to_db("hitrandb")
     if os.path.isfile(path_):
         while True:
             ans = input("File '{}' already exists, overwrite it (Y/n)? ".format(path_)).upper()
@@ -19,4 +19,4 @@ if __name__ == "__main__":
 
     db.create_db()
     db.populate_db()
-    pa.get_python_logger().info("Successfully created file '{}'".format(path_))
+    ag.get_python_logger().info("Successfully created file '{}'".format(path_))

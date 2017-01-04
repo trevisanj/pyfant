@@ -13,17 +13,17 @@ Example:
 import tabulate
 import sys
 from pyfant.convmol.nistbot import get_nist_webbook_constants
-import pyscellanea as pa
+import astrogear as ag
 import logging
 import argparse
 
 
-pa.logging_level = logging.INFO
-pa.flag_log_file = True
+ag.logging_level = logging.INFO
+ag.flag_log_file = True
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description=__doc__, formatter_class=pa.SmartFormatter)
+    parser = argparse.ArgumentParser(description=__doc__, formatter_class=ag.SmartFormatter)
     parser.add_argument('formula', type=str, help='NIST formula', nargs=1)
     args = parser.parse_args()
 

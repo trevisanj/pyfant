@@ -6,7 +6,7 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from ._shared import *
 from pyfant import FileMain, COLOR_STAR, COLOR_CONFIG
-from astroapi import enc_name_descr, enc_name, COLOR_DESCR, COLOR_ERROR, style_checkboxes
+from astrogear import enc_name_descr, enc_name, COLOR_DESCR, COLOR_ERROR, style_checkboxes
 
 
 class WFileMain(QWidget):

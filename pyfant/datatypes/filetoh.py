@@ -4,10 +4,10 @@ from ..errors import *
 import math
 import numpy as np
 import fortranformat as ff
-import pyscellanea as pa
+import astrogear as ag
 
 
-class FileToH(pa.DataFile):
+class FileToH(ag.DataFile):
     """
     PFANT Hydrogen Line Profile
 
@@ -22,7 +22,7 @@ class FileToH(pa.DataFile):
     attrs = ["titre", "ntot", "zut1", "zut2", "zut3", "th", "lambdh", "jmax"]
 
     def __init__(self):
-        pa.DataFile.__init__(self)
+        ag.DataFile.__init__(self)
         self.titre = None
 
         # second row
@@ -60,7 +60,7 @@ class FileToH(pa.DataFile):
             nr = num_rows(self.jmax)
             v = []
             for i in range(nr):
-                v.extend([float(x) for x in pa.chunk_string(pa.readline_strip(h), FLOAT_SIZE)])
+                v.extend([float(x) for x in ag.chunk_string(ag.readline_strip(h), FLOAT_SIZE)])
             self.lambdh = np.array(v)
 
             if not (len(self.lambdh) == self.jmax):
@@ -71,7 +71,7 @@ class FileToH(pa.DataFile):
             FLOAT_SIZE = 12  # size of stored float value in characters
             for s in h.readlines():
                 s = s.strip('\n')
-                v.extend([float(x) for x in pa.chunk_string(s, FLOAT_SIZE)])
+                v.extend([float(x) for x in ag.chunk_string(s, FLOAT_SIZE)])
             if len(v)/self.jmax != self.ntot:
                 raise FileConsistencyError("Should have found %d values for th matrix (found %d)" %
                                            (self.jmax*self.ntot, len(v)))

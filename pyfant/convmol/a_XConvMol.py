@@ -1,6 +1,6 @@
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
-import pyscellanea as pa
+import astrogear as ag
 import pyfant as pf
 # from a_WState import WState
 # import moldb as db
@@ -13,11 +13,11 @@ import datetime
 from collections import OrderedDict
 
 
-class _DataSource(pa.AttrsPart):
+class _DataSource(ag.AttrsPart):
     """Represents a data source for molecular lines"""
 
     def __init__(self, name):
-        pa.AttrsPart.__init__(self)
+        ag.AttrsPart.__init__(self)
         self.name = name
         self.widget = None
 
@@ -31,7 +31,7 @@ _NAMES = ["HITRAN", "VALD3", "Kurucz", "TurboSpectrum", ]
 _SOURCES = OrderedDict([[name, _DataSource(name)] for name in _NAMES])
 
 
-class _WSource(pa.WBase):
+class _WSource(ag.WBase):
     """Lists sources for molecular lines data"""
 
 
@@ -54,7 +54,7 @@ class _WSource(pa.WBase):
     index_changed = pyqtSignal()
 
     def __init__(self, *args):
-        pa.WBase.__init__(self, *args)
+        ag.WBase.__init__(self, *args)
 
         self._buttons = []
         self._last_index = -1
@@ -83,7 +83,7 @@ class _WSource(pa.WBase):
         return -1
 
 
-class _WSelectSaveFile(pa.WBase):
+class _WSelectSaveFile(ag.WBase):
     @property
     def value(self):
         return self._get_value()
@@ -96,7 +96,7 @@ class _WSelectSaveFile(pa.WBase):
     wants_auto = pyqtSignal()
 
     def __init__(self, *args):
-        pa.WBase.__init__(self, *args)
+        ag.WBase.__init__(self, *args)
 
         self._last_value = None
 
@@ -120,14 +120,14 @@ class _WSelectSaveFile(pa.WBase):
         b = self.button_auto = QToolButton()
         lw.addWidget(b)
         b.clicked.connect(self.wants_auto)
-        b.setIcon(pa.get_icon("leaf-plant"))
+        b.setIcon(ag.get_icon("leaf-plant"))
         b.setToolTip("Make up file name")
         b.setFixedWidth(30)
 
         b = self.button = QToolButton()
         lw.addWidget(b)
         b.clicked.connect(self.on_button_clicked)
-        b.setIcon(pa.get_icon("document-save"))
+        b.setIcon(ag.get_icon("document-save"))
         b.setToolTip("Choose file name to save as")
         b.setFixedWidth(30)
 
@@ -139,7 +139,7 @@ class _WSelectSaveFile(pa.WBase):
 
     def edit_changed(self):
         flag_valid = self.validate()
-        pa.style_widget_valid(self.edit, not flag_valid)
+        ag.style_widget_valid(self.edit, not flag_valid)
         # if flag_valid:
         #     self._wanna_emit()
 
@@ -167,7 +167,7 @@ class _WSelectSaveFile(pa.WBase):
         return self.edit.text().strip()
 
 
-class _WHitranPanel(pa.WBase):
+class _WHitranPanel(ag.WBase):
 
     @property
     def data(self):
@@ -182,7 +182,7 @@ class _WHitranPanel(pa.WBase):
         return hapi.LOCAL_TABLE_CACHE[self.tableWidget.item(idx, 0).text()]
 
     def __init__(self, *args):
-        pa.WBase.__init__(self, *args)
+        ag.WBase.__init__(self, *args)
 
         self._flag_populating = False
 
@@ -192,7 +192,7 @@ class _WHitranPanel(pa.WBase):
         lw.addWidget(self.keep_ref(QLabel("HITRAN")))
 
 
-        w = self.w_dir = pa.WSelectDir(self.parent_form)
+        w = self.w_dir = ag.WSelectDir(self.parent_form)
         w.label.setText("HITRAN 'data cache' directory")
         w.valueChanged.connect(self.dir_changed)
         lw.addWidget(w)
@@ -202,7 +202,7 @@ class _WHitranPanel(pa.WBase):
         a.setSelectionMode(QAbstractItemView.SingleSelection)
         a.setSelectionBehavior(QAbstractItemView.SelectRows)
         a.setEditTriggers(QTableWidget.NoEditTriggers)
-        a.setFont(pa.MONO_FONT)
+        a.setFont(ag.MONO_FONT)
         a.setAlternatingRowColors(True)
         a.currentCellChanged.connect(self.on_tableWidget_currentCellChanged)
 
@@ -227,7 +227,7 @@ class _WHitranPanel(pa.WBase):
             # Discounts "sampletab" table from HAPI cache, hence the "-1" below
             nr, nc = len(hapi.LOCAL_TABLE_CACHE)-1, 2
             t = self.tableWidget
-            pa.reset_table_widget(t, nr, nc)
+            ag.reset_table_widget(t, nr, nc)
             t.setHorizontalHeaderLabels(["Table filename (.data & .header)", "Number of spectral lines"])
 
             i = 0
@@ -260,7 +260,7 @@ class _WHitranPanel(pa.WBase):
             # self._wanna_emit_id_changed()
 
 
-class _WVald3Panel(pa.WBase):
+class _WVald3Panel(ag.WBase):
     """
     This panel allows to load a Vald3 file and browse through its species (molecules only)
 
@@ -283,10 +283,10 @@ class _WVald3Panel(pa.WBase):
     @property
     def is_molecule(self):
         data = self.data
-        return data is not None and data.speciess[0].formula not in pa.symbols
+        return data is not None and data.speciess[0].formula not in ag.symbols
 
     def __init__(self, *args):
-        pa.WBase.__init__(self, *args)
+        ag.WBase.__init__(self, *args)
 
         self._flag_populating = False
         self._f = None  # FileVald3
@@ -297,7 +297,7 @@ class _WVald3Panel(pa.WBase):
         lw.addWidget(self.keep_ref(QLabel("VALD3")))
 
 
-        w = self.w_file = pa.WSelectFile(self.parent_form)
+        w = self.w_file = ag.WSelectFile(self.parent_form)
         w.label.setText("VALD3 extended-format file")
         w.valueChanged.connect(self.file_changed)
         lw.addWidget(w)
@@ -307,12 +307,12 @@ class _WVald3Panel(pa.WBase):
         a.setSelectionMode(QAbstractItemView.SingleSelection)
         a.setSelectionBehavior(QAbstractItemView.SelectRows)
         a.setEditTriggers(QTableWidget.NoEditTriggers)
-        a.setFont(pa.MONO_FONT)
+        a.setFont(ag.MONO_FONT)
         a.setAlternatingRowColors(True)
         a.currentCellChanged.connect(self.on_tableWidget_currentCellChanged)
 
         l = self.label_warning = QLabel()
-        l.setStyleSheet("QLabel {{color: {}}}".format(pa.COLOR_WARNING))
+        l.setStyleSheet("QLabel {{color: {}}}".format(ag.COLOR_WARNING))
         lw.addWidget(l)
 
         # forces populate table with 'Python HITRAN API data cache' in local directory
@@ -334,7 +334,7 @@ class _WVald3Panel(pa.WBase):
 
             nr, nc = len(f), 3
             t = self.tableWidget
-            pa.reset_table_widget(t, nr, nc)
+            ag.reset_table_widget(t, nr, nc)
             t.setHorizontalHeaderLabels(["VALD3 species", "Number of spectral lines", "Atom/Molecule"])
 
             for i, species in enumerate(f):
@@ -342,21 +342,21 @@ class _WVald3Panel(pa.WBase):
                 t.setItem(i, 0, item)
                 item = QTableWidgetItem(str(len(species)))
                 t.setItem(i, 1, item)
-                item = QTableWidgetItem("Atom" if species.formula in pa.symbols else "Molecule")
+                item = QTableWidgetItem("Atom" if species.formula in ag.symbols else "Molecule")
                 t.setItem(i, 2, item)
 
             t.resizeColumnsToContents()
 
         except Exception as e:
             self._f = None
-            self.add_log_error("Error reading contents of file '{}': '{}'".format(self.w_file.value, pa.str_exc(e)), True)
+            self.add_log_error("Error reading contents of file '{}': '{}'".format(self.w_file.value, ag.str_exc(e)), True)
             raise
 
         finally:
             self._flag_populating = False
             # self._wanna_emit_id_changed()
 
-class _WKuruczPanel(pa.WBase):
+class _WKuruczPanel(ag.WBase):
     """
     This panel allows to load a Kurucz molecular lines file
     """
@@ -367,7 +367,7 @@ class _WKuruczPanel(pa.WBase):
         return self._f
 
     def __init__(self, *args):
-        pa.WBase.__init__(self, *args)
+        ag.WBase.__init__(self, *args)
 
         self._f = None  # FileKuruczMolecule
 
@@ -376,7 +376,7 @@ class _WKuruczPanel(pa.WBase):
 
         lw.addWidget(self.keep_ref(QLabel("Kurucz")))
 
-        w = self.w_file = pa.WSelectFile(self.parent_form)
+        w = self.w_file = ag.WSelectFile(self.parent_form)
         w.label.setText("Kurucz molecular lines file")
         w.valueChanged.connect(self.file_changed)
         lw.addWidget(w)
@@ -389,13 +389,13 @@ class _WKuruczPanel(pa.WBase):
             f.load(self.w_file.value)
         except Exception as e:
             self._f = None
-            self.add_log_error("Error reading contents of file '{}': '{}'".format(self.w_file.value, pa.str_exc(e)), True)
+            self.add_log_error("Error reading contents of file '{}': '{}'".format(self.w_file.value, ag.str_exc(e)), True)
             raise
 
 
-class _WTurboSpectrumPanel(pa.WBase):
+class _WTurboSpectrumPanel(ag.WBase):
     def __init__(self, *args):
-        pa.WBase.__init__(self, *args)
+        ag.WBase.__init__(self, *args)
 
         lw = QVBoxLayout()
         self.setLayout(lw)
@@ -404,9 +404,9 @@ class _WTurboSpectrumPanel(pa.WBase):
 
 
 
-class XConvMol(pa.XFileMainWindow):
+class XConvMol(ag.XFileMainWindow):
     def __init__(self, parent=None, fileobj=None):
-        pa.XFileMainWindow.__init__(self, parent)
+        ag.XFileMainWindow.__init__(self, parent)
 
         # # Synchronized sequences
         _VVV = pf.FileMolDB.description
@@ -417,7 +417,7 @@ class XConvMol(pa.XFileMainWindow):
         self.clss = [pf.FileMolDB, None, None]  # save class
         self.clsss = [(pf.FileMolDB,), None, None]  # accepted load classes
         self.wilds = ["*.sqlite", None, None]  # e.g. '*.fits'
-        self.editors = [pa.NullEditor(), pa.NullEditor(), pa.NullEditor()]  # editor widgets, must comply ...
+        self.editors = [ag.NullEditor(), ag.NullEditor(), ag.NullEditor()]  # editor widgets, must comply ...
         tw0 = self.tabWidget
         tw0.setTabText(1, self.tab_texts[2])
 
@@ -507,7 +507,7 @@ class XConvMol(pa.XFileMainWindow):
         self.source_changed()
         self.setWindowTitle("(to) PFANT Molecular Lines Converter")
 
-        pa.nerdify(self)
+        ag.nerdify(self)
 
         if fileobj is not None:
             self.load(fileobj)
@@ -525,7 +525,7 @@ class XConvMol(pa.XFileMainWindow):
 
         if filename is None:
             # Default
-            filename = pa.new_filename("mol", "dat")
+            filename = ag.new_filename("mol", "dat")
         self.w_out.value = filename
 
 
@@ -544,7 +544,7 @@ class XConvMol(pa.XFileMainWindow):
     #     row = self.w_mol.w_mol.row
     #     self.w_state.set_id_molecule(id_)
     #     s = "States (no molecule selected)" if not row else "Select a State for molecule '{}'".format(row["formula"])
-    #     self.title_state.setText(pa.format_title0(s))
+    #     self.title_state.setText(ag.format_title0(s))
 
     def convert_clicked(self):
         cm = pf.convmol
@@ -588,7 +588,7 @@ class XConvMol(pa.XFileMainWindow):
                     lines = self.w_kurucz.data
                     sols_calculator = cm.kurucz_to_sols
                 else:
-                    pa.show_message("{}-to-PFANT conversion not implemented yet, sorry".
+                    ag.show_message("{}-to-PFANT conversion not implemented yet, sorry".
                                     format(name))
                     return
 
@@ -618,8 +618,8 @@ class XConvMol(pa.XFileMainWindow):
                 self.add_log_error("Cannot convert:\n  - " + ("\n  - ".join(errors)), True)
 
         except Exception as e:
-            pa.get_python_logger().exception("Conversion failed")
-            self.add_log_error("Conversion failed: {}".format(pa.str_exc(e)), True)
+            ag.get_python_logger().exception("Conversion failed")
+            self.add_log_error("Conversion failed: {}".format(ag.str_exc(e)), True)
 
 
     def open_mol_clicked(self):

@@ -1,14 +1,14 @@
 import re
 import sys
 import imp
-import pyscellanea as pa
+import astrogear as ag
 
 
 __all__ = ["FileOptions"]
 
 
-@pa.froze_it
-class FileOptions(pa.FilePy):
+@ag.froze_it
+class FileOptions(ag.FilePy):
     """
     `x.py` Command-line Options
 
@@ -23,7 +23,7 @@ class FileOptions(pa.FilePy):
     attrs = []
 
     def __init__(self):
-        pa.FilePy.__init__(self)
+        ag.FilePy.__init__(self)
 
         # innewmarcs, hydro2, pfant, nulbad
         self.logging_level = None
@@ -96,7 +96,7 @@ class FileOptions(pa.FilePy):
 
     def get_names(self):
         """Returns a list with the names of all the options. Names come sorted"""
-        d = dir(pa.DataFile())
+        d = dir(ag.DataFile())
         return [x for x in dir(self) if not x.startswith(('_', 'get_')) and
          x not in d]
 

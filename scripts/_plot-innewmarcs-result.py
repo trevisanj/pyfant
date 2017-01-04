@@ -17,12 +17,12 @@ import re
 import numpy as np
 from itertools import cycle
 from mpl_toolkits.mplot3d import Axes3D  # yes, required
-import pyscellanea as pa
+import astrogear as ag
 import logging
 
 
-pa.logging_level = logging.INFO
-pa.flag_log_file = True
+ag.logging_level = logging.INFO
+ag.flag_log_file = True
 
 
 def parse_explain_file(filename):
@@ -48,7 +48,7 @@ VARS = ['nh', 'teta', 'pe', 'pg', 'log_tau_ross']
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
      description=__doc__,
-     formatter_class=pa.SmartFormatter
+     formatter_class=ag.SmartFormatter
      )
     parser.add_argument('--inum', type=int, default=1, help='Record number (>= 1)')
     parser.add_argument('--var', type=str, help='Variable to plot', default=VARS[0], choices=VARS)
@@ -60,13 +60,13 @@ if __name__ == "__main__":
     fn_output = tokens['innewmarcs output file']
     indexes = np.array(np.matrix(tokens['innewmarcs indexes'])).flatten()
     records = []  # ModRecord, name
-    m = pa.FileModBin()
+    m = pf.FileModBin()
     m.load(fn_grid)
     for i in indexes:
         record_name = '%s#%d' % (fn_grid, i)
         records.append((m.records[i-1], record_name))
 
-    mod = pa.FileModBin()
+    mod = pf.FileModBin()
     mod.load(fn_output)
     rm = mod.records[0]
 

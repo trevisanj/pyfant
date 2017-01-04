@@ -9,7 +9,7 @@ http://stackoverflow.com/questions/17788685
 
 import matplotlib.backends.backend_pdf
 import matplotlib.pyplot as plt
-import pyscellanea as pa
+import astrogear as ag
 import glob
 import os
 import argparse
@@ -17,14 +17,14 @@ import pyfant as pf
 import logging
 
 
-pa.logging_level = logging.INFO
-pa.flag_log_file = True
+ag.logging_level = logging.INFO
+ag.flag_log_file = True
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
      description=__doc__,
-     formatter_class=pa.SmartFormatter
+     formatter_class=ag.SmartFormatter
      )
 
     parser.add_argument('--samey',
@@ -39,25 +39,25 @@ if __name__ == "__main__":
 
     pdf = matplotlib.backends.backend_pdf.PdfPages(args.fn_output)
 
-    pa.format_BLB()
+    ag.format_BLB()
 
     for d in dd:
         name = d[8:]
 
-        pa.get_python_logger().info("Looking into session '{}'...".format(name))
+        ag.get_python_logger().info("Looking into session '{}'...".format(name))
 
         norm_filenames = glob.glob(os.path.join(d, "*.norm"))
         if len(norm_filenames) == 0:
             continue
 
         for filename in norm_filenames:
-            pa.get_python_logger().info("    File '{}'".format(filename))
-            f = pa.FileSpectrumPfant()
+            ag.get_python_logger().info("    File '{}'".format(filename))
+            f = ag.FileSpectrumPfant()
 
             # Note: takes first .norm file that finds
             f.load(filename)
 
-            pa.draw_spectra([f.spectrum])  #v.title = "%s" % name
+            ag.draw_spectra([f.spectrum])  #v.title = "%s" % name
 
             fig = plt.gcf()
             if args.samey:

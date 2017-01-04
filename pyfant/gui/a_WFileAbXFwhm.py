@@ -6,7 +6,7 @@ from PyQt4.QtGui import *
 import sys
 import types
 import traceback
-from astroapi import get_python_logger, PythonHighlighter, style_checkboxes, COLOR_DESCR, COLOR_ERROR
+from astrogear import get_python_logger, PythonHighlighter, style_checkboxes, COLOR_DESCR, COLOR_ERROR
 from pyfant import FileAbXFwhm
 
 

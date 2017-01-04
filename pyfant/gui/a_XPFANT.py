@@ -8,7 +8,7 @@ from .a_XMainAbonds import *
 import os.path
 import copy
 import shutil
-import pyscellanea as pa
+import astrogear as ag
 
 
 ################################################################################
@@ -79,9 +79,9 @@ class XPFANT(XMainAbonds):
                 self.__submit_job()
             except Exception as e:
                 errors.append(str(e))
-                pa.get_python_logger().exception("Cannot submit job")
+                ag.get_python_logger().exception("Cannot submit job")
         if len(errors) > 0:
-            pa.show_error("Cannot submit job:\n  - "+("\n  - ".join(errors)))
+            ag.show_error("Cannot submit job:\n  - "+("\n  - ".join(errors)))
 
     def on_checkbox_custom_id_state_changed(self):
         self.__update_lineEdit_custom_id()

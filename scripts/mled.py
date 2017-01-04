@@ -8,16 +8,16 @@ from PyQt4.QtCore import *
 import argparse
 import logging
 import pyfant as pf
-import pyscellanea as pa
+import astrogear as ag
 
 
 if __name__ == "__main__":
-    pa.logging_level = logging.INFO
-    pa.flag_log_file = True
+    ag.logging_level = logging.INFO
+    ag.flag_log_file = True
 
     parser = argparse.ArgumentParser(
     description=__doc__,
-    formatter_class=pa.SmartFormatter
+    formatter_class=ag.SmartFormatter
     )
     parser.add_argument('fn', type=str, help='molecules file name',
                         default=pf.FileMolecules.default_filename, nargs='?')
@@ -25,7 +25,7 @@ if __name__ == "__main__":
 
     m = pf.FileMolecules()
     m.load(args.fn)
-    app = pa.get_QApplication([])
+    app = ag.get_QApplication([])
     form = pf.XFileMolecules()
     form.show()
     form.load(m)

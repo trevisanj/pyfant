@@ -1,7 +1,7 @@
 import os
 import glob
 import platform
-import pyscellanea as pa
+import astrogear as ag
 
 
 __all__ = [
@@ -62,7 +62,7 @@ def get_fortrans(max_len=None):
       max_len -- (optional) if passed, will use it, otherwise will be the
                  maximum number of characters among all Fortran executable names.
 
-    Returns: list of astroapi.ExeInfo
+    Returns: list of astrogear.ExeInfo
     """
 
     ret = []
@@ -82,7 +82,7 @@ def get_fortrans(max_len=None):
         if has_it(name):
             status = "found"
 
-        ret.append(pa.ExeInfo(name, status, flag_gui=None))
+        ret.append(ag.ExeInfo(name, status, flag_gui=None))
         # piece = name + " " + ("." * (max_len-len(name)))
         # ret.append(("%-"+str(max_len)+"s %s") % (piece, status))
     return ret

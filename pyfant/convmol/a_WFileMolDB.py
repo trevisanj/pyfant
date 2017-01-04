@@ -1,6 +1,6 @@
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
-import pyscellanea as pa
+import astrogear as ag
 from .a_WDBMolecule import WDBMolecule
 from .a_WDBState import WDBState
 import os
@@ -9,7 +9,7 @@ import os
 __all__ = ["WFileMolDB"]
 
 
-class WFileMolDB(pa.WBase):
+class WFileMolDB(ag.WBase):
 
     @property
     def f(self):
@@ -22,7 +22,7 @@ class WFileMolDB(pa.WBase):
     #     self.w_state.f = x
 
     def __init__(self, *args):
-        pa.WBase.__init__(self, *args)
+        ag.WBase.__init__(self, *args)
 
         self._f = None
         self.flag_valid = True  # To keep XFileMainWindow happy
@@ -48,7 +48,7 @@ class WFileMolDB(pa.WBase):
         l0.setMargin(2)
         l0.setSpacing(2)
 
-        a = self.title_mol = QLabel(pa.format_title0("Select a molecule:"))
+        a = self.title_mol = QLabel(ag.format_title0("Select a molecule:"))
         l0.addWidget(a)
 
         w = self.w_mol = WDBMolecule(self.parent_form)
@@ -62,7 +62,7 @@ class WFileMolDB(pa.WBase):
         l1.setMargin(2)
         l1.setSpacing(2)
 
-        a = self.title_state = self.keep_ref(QLabel(pa.format_title0("States")))
+        a = self.title_state = self.keep_ref(QLabel(ag.format_title0("States")))
         l1.addWidget(a)
 
         w = self.w_state = WDBState(self.parent_form)
@@ -74,7 +74,7 @@ class WFileMolDB(pa.WBase):
         lmain.addWidget(sp)
 
         # # Final adjustments
-        pa.nerdify(self)
+        ag.nerdify(self)
 
     def load(self, x):
         self._f = x
@@ -89,7 +89,7 @@ class WFileMolDB(pa.WBase):
         self.w_state.set_id_molecule(id_)
         s = "States (no molecule selected)" if not row else "Select a State for molecule '{}'".format(
             row["formula"])
-        self.title_state.setText(pa.format_title0(s))
+        self.title_state.setText(ag.format_title0(s))
 
 
     # # Override

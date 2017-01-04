@@ -1,6 +1,6 @@
 """Represents SQLite database of molecular constants"""
 
-import pyscellanea as pa
+import astrogear as ag
 import pyfant as pf
 import sqlite3
 import tabulate
@@ -11,10 +11,10 @@ __all__ = ["FileMolDB"]
 #
 # __fileobj = None
 # def get_conn():
-#     return pa.get_conn(__ALIAS)
+#     return ag.get_conn(__ALIAS)
 
 
-class FileMolDB(pa.FileSQLiteDB):
+class FileMolDB(ag.FileSQLiteDB):
     description = "Database of Molecular Constants"
     default_filename = "moldb.sqlite"
     gui_data = {
@@ -111,7 +111,7 @@ class FileMolDB(pa.FileSQLiteDB):
                 # Tries to retrieve "fe", "do" etc from molecules.dat
                 symbols = pf.description_to_symbols(formula)
                 if not symbols:
-                    pa.get_python_logger().warning("Formula '{}' not in internal BUILTIN_FORMULAS, "
+                    ag.get_python_logger().warning("Formula '{}' not in internal BUILTIN_FORMULAS, "
                         "and probably this molecule is also not in PFANT/data/common/molecules.dat".
                         format(formula))
 
@@ -145,7 +145,7 @@ class FileMolDB(pa.FileSQLiteDB):
                 conn.commit()
 
             except:
-                pa.get_python_logger().exception("Failed for molecule '{}'".format(formula))
+                ag.get_python_logger().exception("Failed for molecule '{}'".format(formula))
 
         conn.close()
 
@@ -208,9 +208,9 @@ class FileMolDB(pa.FileSQLiteDB):
         >>> f.print_states(formula="OH")
         """
         r = self.query_state(**kwargs)
-        data, header0 = pa.cursor_to_data_header(r)
+        data, header0 = ag.cursor_to_data_header(r)
 
-        # ti = pa.get_table_info(_ALIAS, "state")
+        # ti = ag.get_table_info(_ALIAS, "state")
         # header = [(ti[name]["caption"] or name) if ti.get(name) else name for name in header0]
 
         header = header0

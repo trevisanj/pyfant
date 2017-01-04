@@ -1,13 +1,13 @@
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from .a_WDBMolecule import WDBMolecule
-import pyscellanea as pa
+import astrogear as ag
 
 
 __all__ = ["WMolConst"]
 
 
-class WMolConst(pa.WBase):
+class WMolConst(ag.WBase):
     """
     Widget for the user to inform molecular parameters. Has a embedded WDBMolecule
     """
@@ -34,7 +34,7 @@ class WMolConst(pa.WBase):
         return self.w_mol.row
 
     def __init__(self, *args):
-        pa.WBase.__init__(self, *args)
+        ag.WBase.__init__(self, *args)
 
         self.flag_populating = False  # activated when populating table
 
@@ -70,7 +70,7 @@ class WMolConst(pa.WBase):
         l.addLayout(lg)
         nr, nc, n = 3, 3, len(self._fieldnames)
         # TODO not working but maybe wont use this widget anymore
-        ti = pa.get_table_info("moldb", "molecule")
+        ti = ag.get_table_info("moldb", "molecule")
         for j in range(nc):
             # ### One grid layout for each column of fields
             ii = range(j, n, nc)

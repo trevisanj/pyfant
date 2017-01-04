@@ -1,6 +1,6 @@
 __all__ = ["FileMain"]
 from ..errors import *
-from astroapi import write_lf, DataFile, float_vector, str_vector, str2bool, bool2str
+from astrogear import write_lf, DataFile, float_vector, str_vector, str2bool, bool2str
 
 NINE_HUNDRED = 900
 

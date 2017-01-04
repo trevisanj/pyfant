@@ -9,7 +9,7 @@ from PyQt4.QtGui import *
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qt4agg import NavigationToolbar2QT # as NavigationToolbar2QT
 import matplotlib.pyplot as plt
-from astroapi import MONO_FONT, place_center, format_BLB
+from astrogear import MONO_FONT, place_center, format_BLB
 from ._shared import *
 
 

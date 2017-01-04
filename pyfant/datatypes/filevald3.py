@@ -5,12 +5,12 @@ __all__ = ["Vald3Species", "FileVald3", "Vald3Line"]
 
 # from ..gear import *
 import sys
-import pyscellanea as pa
+import astrogear as ag
 import io
 
 
-@pa.froze_it
-class Vald3Species(pa.AttrsPart):
+@ag.froze_it
+class Vald3Species(ag.AttrsPart):
     """
     Represents species of VALD3 **extended format** atomic/molecular lines file
 
@@ -30,7 +30,7 @@ class Vald3Species(pa.AttrsPart):
     #     return np.array([x.lambda_ for x in self.lines])
 
     def __init__(self, formula=None, ioni=None):
-        pa.AttrsPart.__init__(self)
+        ag.AttrsPart.__init__(self)
         self.lines = []  # list of Vald3Line
         self.formula = None
         self.ioni = None
@@ -54,12 +54,12 @@ class Vald3Species(pa.AttrsPart):
                 del self.lines[i]
 
 
-@pa.froze_it
-class Vald3Line(pa.AttrsPart):
+@ag.froze_it
+class Vald3Line(ag.AttrsPart):
     attrs = ["lambda_", "loggf", "Jl", "J2l", "vl", "v2l"]
 
     def __init__(self):
-        pa.AttrsPart.__init__(self)
+        ag.AttrsPart.__init__(self)
 
         self.lambda_ = None
         self.loggf = None
@@ -69,7 +69,7 @@ class Vald3Line(pa.AttrsPart):
         self.v2l = None
 
 
-class FileVald3(pa.DataFile):
+class FileVald3(ag.DataFile):
     """
     VALD3 atomic or molecular lines file
 
@@ -90,7 +90,7 @@ class FileVald3(pa.DataFile):
         return len(self.speciess)
 
     def __init__(self):
-        pa.DataFile.__init__(self)
+        ag.DataFile.__init__(self)
 
         # list of Atom objects
         self.speciess = []
@@ -100,7 +100,7 @@ class FileVald3(pa.DataFile):
 
     def remove_formula(self, formula):
         """Removes given element (any ionization level)."""
-        formula = pa.adjust_atomic_symbol(formula)
+        formula = ag.adjust_atomic_symbol(formula)
         for i in reversed(list(range(len(self)))):
             atom = self.speciess[i]
             if atom.formula == formula:
@@ -149,7 +149,7 @@ class FileVald3(pa.DataFile):
                 r += 1
 
 
-                if formula in pa.symbols:
+                if formula in ag.symbols:
                     # Skips energy levels information for the atoms
                     for _ in range(2):
                         h.readline()
@@ -178,7 +178,7 @@ class FileVald3(pa.DataFile):
 
         except Exception as e:
             raise type(e)(("Error around %d%s row of file '%s'" %
-                           (r + 1, pa.ordinal_suffix(r + 1), filename)) + ": " + str(
+                           (r + 1, ag.ordinal_suffix(r + 1), filename)) + ": " + str(
                 e)).with_traceback(sys.exc_info()[2])
 
 

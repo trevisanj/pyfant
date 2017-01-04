@@ -6,7 +6,7 @@ import struct
 import logging
 import sys
 import numpy as np
-from astroapi import froze_it, AttrsPart, DataFile, write_lf, str_vector, ordinal_suffix, float_vector
+from astrogear import froze_it, AttrsPart, DataFile, write_lf, str_vector, ordinal_suffix, float_vector
 import tabulate
 
 

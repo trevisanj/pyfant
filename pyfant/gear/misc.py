@@ -1,7 +1,7 @@
 # # Maybe I can use this one day. But the purpose was to validate elements, but confusing CO with Co is not nice
 
 # import pyfant as pf
-# import pyscellanea as pa
+# import astrogear as ag
 #
 #
 # __all__ = ["is_element"]
@@ -13,7 +13,7 @@
 # def SYMBOLS_ADJUSTED():
 #     global __SYMBOLS_ADJUSTED
 #     if __SYMBOLS_ADJUSTED is None:
-#         __SYMBOLS_ADJUSTED = [pf.adjust_atomic_symbol(x) for x in pa.symbols]
+#         __SYMBOLS_ADJUSTED = [pf.adjust_atomic_symbol(x) for x in ag.symbols]
 #     return __SYMBOLS_ADJUSTED
 #
 # def is_element(symbol):

@@ -5,10 +5,10 @@ __all__ = ["FileMolecules", "Molecule", "SetOfLines", ]
 from ..errors import *
 import sys
 import numpy as np
-from astroapi import froze_it, AttrsPart, write_lf, DataFile, float_vector,  ordinal_suffix, \
+from astrogear import froze_it, AttrsPart, write_lf, DataFile, float_vector,  ordinal_suffix, \
                      multirow_str_vector, str_vector, readline_strip, get_python_logger, \
                      int_vector
-import pyscellanea as pa
+import astrogear as ag
 import pyfant as pf
 import re
 
@@ -48,7 +48,7 @@ class SetOfLines(AttrsPart):
         """Creates MyDBRow objects to represent each molecular line"""
         fieldnames = ["lmbdam", "sj", "jj", "branch"]
         for t in zip(self.lmbdam, self.sj, self.jj, self.branch):
-            obj = pa.MyDBRow()
+            obj = ag.MyDBRow()
             for fieldname, value in zip(fieldnames, t):
                 obj[fieldname] = value
             yield obj
@@ -375,7 +375,7 @@ class FileMolecules(DataFile):
                                 break
                             o = next(sol_iter)
 
-                    get_python_logger().info("Loading '{}': {}".format(filename, pa.format_progress(im+1, num_mol)))
+                    get_python_logger().info("Loading '{}': {}".format(filename, ag.format_progress(im+1, num_mol)))
 
                     if im+1 == num_mol:
                         break

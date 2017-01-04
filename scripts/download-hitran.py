@@ -7,7 +7,7 @@ Downloads molecular lines from HITRAN database
 import pyfant as pf
 import argparse
 import logging
-import pyscellanea as pa
+import astrogear as ag
 import tabulate
 import sys
 import os
@@ -20,13 +20,13 @@ _DEF_LL = None
 
 
 if __name__ == "__main__":
-    pa.logging_level = logging.INFO
-    pa.flag_log_file = True
+    ag.logging_level = logging.INFO
+    ag.flag_log_file = True
     script_name = os.path.basename(__file__)
 
     parser = argparse.ArgumentParser(
     description=__doc__,
-    formatter_class=pa.SmartFormatter
+    formatter_class=ag.SmartFormatter
     )
     parser.add_argument('-t', type=str, help='Table Name',
                         default=_DEF_T, nargs=1)
@@ -53,10 +53,10 @@ if __name__ == "__main__":
     db.init_default()
     if args.M == _DEF_M:
         print()
-        print("\n".join(pa.format_h1("List of all HITRAN molecules")))
+        print("\n".join(ag.format_h1("List of all HITRAN molecules")))
         print()
         # Lists all molecules from local cache of HITRAN molecules
-        print(tabulate.tabulate(*pa.cursor_to_data_header(db.query_molecule())))
+        print(tabulate.tabulate(*ag.cursor_to_data_header(db.query_molecule())))
         print()
         print("Now, to list isotopologues for a given molecule, please type:")
         print()
@@ -66,15 +66,15 @@ if __name__ == "__main__":
     elif args.I == _DEF_I:
         row0 = db.query_molecule(ID=args.M).fetchone()
         if row0 is None:
-            pa.print_error("Molecule ID {} not found".format(args.M))
+            ag.print_error("Molecule ID {} not found".format(args.M))
             sys.exit()
 
         print()
-        print("\n".join(pa.format_h1("List of all isotopologues for molecule '{Formula}' ({Name})".
+        print("\n".join(ag.format_h1("List of all isotopologues for molecule '{Formula}' ({Name})".
                                      format(**row0))))
         print()
         # Lists all molecules from local cache of HITRAN molecules
-        print(tabulate.tabulate(*pa.cursor_to_data_header(
+        print(tabulate.tabulate(*ag.cursor_to_data_header(
             db.query_isotopologue(**{"molecule.ID": args.M}))))
         print()
         print("Now, to download lines, please type:")
@@ -88,16 +88,16 @@ if __name__ == "__main__":
     else:
         row0 = db.query_molecule(ID=args.M).fetchone()
         if row0 is None:
-            pa.print_error("Molecule ID {} not found".format(args.M))
+            ag.print_error("Molecule ID {} not found".format(args.M))
         else:
             kwargs = {"molecule.id": args.M, "isotopologue.ID": args.I}
             row1 = db.query_isotopologue(**kwargs).fetchone()
             if row1 is None:
-                pa.print_error("Isotopologue ({}, {}) not found".format(args.M, args.I))
+                ag.print_error("Isotopologue ({}, {}) not found".format(args.M, args.I))
                 sys.exit()
 
             print()
-            print("\n".join(pa.format_h1("Isotopologue selected:")))
+            print("\n".join(ag.format_h1("Isotopologue selected:")))
             print()
             print(tabulate.tabulate(list(row1.items()), ["Field name", "Value"]))
             print()
@@ -113,12 +113,12 @@ if __name__ == "__main__":
 
             print("Wavelength interval (air): [{llzero}, {llfin}] Angstrom".format(**args.__dict__))
             if args.llzero >= args.llfin:
-                pa.print_error("Initial wavelength must be lower than Final wavelength")
+                ag.print_error("Initial wavelength must be lower than Final wavelength")
                 sys.exit()
 
             # Here will fetch data
-            wn0 = pa.air_to_vacuum(1e8/args.llzero)
-            wn1 = pa.air_to_vacuum(1e8/args.llfin)
+            wn0 = ag.air_to_vacuum(1e8/args.llzero)
+            wn1 = ag.air_to_vacuum(1e8/args.llfin)
             print("Wavenumber interval (vacuum): [{}, {}] cm**-1".format(wn1, wn0))
 
             table_name = args.t if args.t != _DEF_T else row1["Formula"]

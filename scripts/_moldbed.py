@@ -8,13 +8,13 @@ import sys
 import argparse
 import logging
 import pyfant as pf
-import pyscellanea as pa
+import astrogear as ag
 import logging
 import os
 
 
-pa.logging_level = logging.INFO
-pa.flag_log_file = True
+ag.logging_level = logging.INFO
+ag.flag_log_file = True
 
 
 if __name__ == "__main__":
@@ -23,7 +23,7 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(
     description=__doc__,
-    formatter_class=pa.SmartFormatter
+    formatter_class=ag.SmartFormatter
     )
     parser.add_argument('fn', type=str, help='SQLite file name',
                         default=deffn, nargs='?')
@@ -36,7 +36,7 @@ if __name__ == "__main__":
     if args.fn is not None:
         m = pf.FileMolDB()
         m.load(args.fn)
-    app = pa.get_QApplication([])
+    app = ag.get_QApplication([])
     form = pf.convmol.XFileMolDB(None, m)
     form.show()
     sys.exit(app.exec_())

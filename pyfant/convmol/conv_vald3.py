@@ -4,7 +4,7 @@ VALD3-specific conversion
 
 
 import pyfant as pf
-import pyscellanea as pa
+import astrogear as ag
 from .calc_qgbd import calc_qgbd_tio_like
 from .convlog import *
 from .branch import *
@@ -34,7 +34,7 @@ def vald3_to_sols(mol_row, state_row, file_vald3, qgbd_calculator):
     """
 
     def append_error(msg):
-        log.errors.append("#{}{} line: {}".format(i + 1, pa.ordinal_suffix(i + 1), str(msg)))
+        log.errors.append("#{}{} line: {}".format(i + 1, ag.ordinal_suffix(i + 1), str(msg)))
 
     # C     BAND (v',v'')=(VL,V2L)
     # C     WN: vacuum wavenumber   WL : air wavelength
@@ -80,7 +80,7 @@ def vald3_to_sols(mol_row, state_row, file_vald3, qgbd_calculator):
 
             J2l_pfant = int(line.J2l)  # ojo, estamos colocando J2L-0.5! TODO ask BLB: we write J2l or J2l-.5?
         except Exception as e:
-            log.errors.append("#{}{} line: {}".format(i+1, pa.ordinal_suffix(i+1), str(e)))
+            log.errors.append("#{}{} line: {}".format(i+1, ag.ordinal_suffix(i+1), str(e)))
             continue
 
         sol_key = "%3d%3d" % (line.vl, line.v2l)  # (v', v'') transition (v_sup, v_inf)

@@ -7,7 +7,7 @@ from . import a_WFileAbonds
 import os
 from ._shared import *
 from pyfant import FileAbonds, FileDissoc
-from astroapi import are_you_sure, show_error, place_left_top, XText, MONO_FONT
+from astrogear import are_you_sure, show_error, place_left_top, XText, MONO_FONT
 
 
 ################################################################################

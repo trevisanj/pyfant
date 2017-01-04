@@ -7,18 +7,18 @@ Check session directory "session-<number>" for log files.
 
 import argparse
 import pyfant as pf
-import pyscellanea as pa
+import astrogear as ag
 import logging
 
 
-pa.logging_level = logging.INFO
-pa.flag_log_file = True
+ag.logging_level = logging.INFO
+ag.flag_log_file = True
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
     description=__doc__,
-    formatter_class=pa.SmartFormatter
+    formatter_class=ag.SmartFormatter
     )
 
     names = pf.Conf().opt.get_names() # option names
@@ -31,7 +31,7 @@ if __name__ == "__main__":
 
 
     # Configuration for Python logging messages.
-    logger = pa.get_python_logger()
+    logger = ag.get_python_logger()
 
     c = pf.Combo()
     c.conf.flag_log_file = True  # Configuration for Fortran messages

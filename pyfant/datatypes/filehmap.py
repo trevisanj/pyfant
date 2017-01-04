@@ -1,7 +1,7 @@
 __all__ = ["FileHmap", "HmapRow"]
 
 
-from astroapi import froze_it, AttrsPart, DataFile, write_lf
+from astrogear import froze_it, AttrsPart, DataFile, write_lf
 import tabulate
 
 

@@ -6,7 +6,7 @@ from PyQt4.QtGui import *
 from . import a_WFileMain
 import os.path
 from pyfant import FileMain
-from astroapi import MONO_FONT, place_left_top, show_error, are_you_sure
+from astrogear import MONO_FONT, place_left_top, show_error, are_you_sure
 from ._shared import *
 
 ################################################################################

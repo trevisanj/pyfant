@@ -1,7 +1,7 @@
 """ThreadManager2 class."""
 __all__ = ["RunnableManager"]
 
-from astroapi import random_name, seconds2str, get_python_logger, MyLock, froze_it
+from astrogear import random_name, seconds2str, get_python_logger, MyLock, froze_it
 import threading
 from PyQt4.QtCore import QObject, pyqtSignal
 import multiprocessing

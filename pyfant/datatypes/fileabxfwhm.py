@@ -7,7 +7,7 @@ __all__ = ["FileAbXFwhm"]
 from pyfant import adjust_atomic_symbol
 import imp
 import numpy as np
-from astroapi import FilePy
+from astrogear import FilePy
 
 
 _COMMENT0 = """# Specification of differential abundances for each chemical.

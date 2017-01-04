@@ -3,7 +3,7 @@ __all__ = ["XMolLinesEditor"]
 
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
-import pyscellanea as pa
+import astrogear as ag
 from ._shared import *
 
 class XMolLinesEditor(QMainWindow):
@@ -21,12 +21,12 @@ class XMolLinesEditor(QMainWindow):
         a.currentCellChanged.connect(self.on_tableWidget_currentCellChanged)
         a.cellChanged.connect(self.on_tableWidget_cellChanged)
         a.setEditTriggers(QAbstractItemView.DoubleClicked | QAbstractItemView.EditKeyPressed)
-        a.setFont(pa.MONO_FONT)
+        a.setFont(ag.MONO_FONT)
         a.installEventFilter(self)
 
 
         self.setCentralWidget(a)
-        pa.snap_right(self, 200)
+        ag.snap_right(self, 200)
 
     def on_tableWidget_currentCellChanged(self, currentRow, currentColumn, previousRow,
                                           previousColumn):
@@ -39,7 +39,7 @@ class XMolLinesEditor(QMainWindow):
                 value = float(item.text())
             except ValueError:
                 # restores original value
-                pa.show_error("Invalid floating point value: %s" % item.text())
+                ag.show_error("Invalid floating point value: %s" % item.text())
                 item.setText(str(self.parent.sol.__getattribute__(SOL_ATTR_NAMES[column])[row]))
             else:
                 self.parent.MolLinesEditor_cell_changed(row, column, value)
@@ -68,7 +68,7 @@ class XMolLinesEditor(QMainWindow):
 
             t = self.tableWidget
             n = len(sol)
-            pa.reset_table_widget(t, n, len(SOL_HEADERS))
+            ag.reset_table_widget(t, n, len(SOL_HEADERS))
             t.setHorizontalHeaderLabels(SOL_HEADERS)
 
             # list with the vectors themselves

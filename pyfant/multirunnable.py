@@ -10,7 +10,7 @@ import pyfant as pf
 import copy
 import os
 import logging
-from astroapi import get_python_logger, froze_it
+from astrogear import get_python_logger, froze_it
 
 
 _multi_id_maker = pf.IdMaker()

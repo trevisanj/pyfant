@@ -8,7 +8,7 @@ from .a_XPFANT import *
 from .a_WFileAbXFwhm import *
 import shutil
 from ._shared import *
-import pyscellanea as pa
+import astrogear as ag
 import pyfant as pf
 
 WINDOW_WIDTH = 700
@@ -98,7 +98,7 @@ class XMulti(XPFANT):
             self.on_file_abonds_loaded()
         self._update_labels_fn()
 
-        pa.snap_left(self, 720)
+        ag.snap_left(self, 720)
 
     # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * #
     # Slots for Qt library signals
@@ -139,12 +139,12 @@ class XMulti(XPFANT):
                 self._manager_form.show()
             except Exception as e:
                 errors.append(str(e))
-                pa.get_python_logger().exception("Cannot submit multi-job")
+                ag.get_python_logger().exception("Cannot submit multi-job")
             finally:
                 self.setEnabled(True)
 
         if len(errors) > 0:
-            pa.show_error("Cannot submit multi-job:\n  - "+("\n  - ".join(errors)))
+            ag.show_error("Cannot submit multi-job:\n  - "+("\n  - ".join(errors)))
 
     def on_checkbox_multi_custom_id_state_changed(self):
         self.__update_lineEdit_multi_custom_id()

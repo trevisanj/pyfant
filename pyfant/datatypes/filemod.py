@@ -1,18 +1,16 @@
-__all__ = ["FileModBin", "ModRecord", "FileModTxt", "FileOpa", "FileMoo",
-           "MooRecord"]
-from .datafile import *
-from ..gear import *
 import struct
 import numpy as np
 import os
+import astrogear as ag
 
 
-# TODO plugin-based multiple selection visualization in a_XExplorer.py so that I can move this filetype away from this package
+__all__ = ["FileModBin", "ModRecord", "FileModTxt", "FileOpa", "FileMoo",
+           "MooRecord"]
 
 
-class ModRecord(AttrsPart):
+class ModRecord(ag.AttrsPart):
     """
-    Single record from pa atmospheric model file
+    Single record from ag atmospheric model file
 
     Note: while a infile:modeles may have several 1200-byte records stored in it,
     this class only stores one of these records, specified by "inum"  argument
@@ -28,7 +26,7 @@ class ModRecord(AttrsPart):
     less_attrs = ["teff", "glog", "asalog"]
 
     def __init__(self):
-        AttrsPart.__init__(self)
+        ag.AttrsPart.__init__(self)
         self.ntot = None
         self.teff = None
         self.glog = None
@@ -50,7 +48,7 @@ class ModRecord(AttrsPart):
 MOD_REC_SIZE = 1200
 
 
-class FileModBin(DataFile):
+class FileModBin(ag.DataFile):
   """
   PFANT Atmospheric Model (binary file)
 
@@ -67,7 +65,7 @@ class FileModBin(DataFile):
   flag_txt = False
 
   def __init__(self):
-    DataFile.__init__(self)
+    ag.DataFile.__init__(self)
     self.records = None
 
   def __len__(self):
@@ -77,7 +75,7 @@ class FileModBin(DataFile):
 
   def _do_load(self, filename):
 
-    if is_text_file(filename):
+    if ag.is_text_file(filename):
         raise RuntimeError("File must be binary")
 
     b = os.path.getsize(filename)
@@ -110,7 +108,7 @@ class FileModBin(DataFile):
     raise RuntimeError("Not applicable")
 
 
-class FileModTxt(DataFile):
+class FileModTxt(ag.DataFile):
     """
     MARCS Atmospheric Model (text file)
 
@@ -127,14 +125,14 @@ class FileModTxt(DataFile):
     attrs = ["record"]
 
     def __init__(self):
-        DataFile.__init__(self)
+        ag.DataFile.__init__(self)
         self.record = None
 
     def __len__(self):
         return 1
 
     def _do_load(self, filename):
-        if not is_text_file(filename):
+        if not ag.is_text_file(filename):
             raise RuntimeError("File must be a text file")
         r = ModRecord()
         with open(filename, "r") as h:
@@ -188,7 +186,7 @@ class FileModTxt(DataFile):
         self.record = r
 
 
-class FileOpa(DataFile):
+class FileOpa(ag.DataFile):
     """MARCS ".opa" (opacity model) file format.
 
     Reference: http://marcs.astro.uu.se
@@ -198,7 +196,7 @@ class FileOpa(DataFile):
     attrs = ["ndp", "swave", "nwav"]
 
     def __init__(self):
-        DataFile.__init__(self)
+        ag.DataFile.__init__(self)
 
         # # Global properties of the opacity model file
         # the 4-byte standard model code 'MRXF'
@@ -260,7 +258,7 @@ class FileOpa(DataFile):
         """
 
         with open(filename, "r") as h:
-            self.mcode, self.ndp, self.swave = struct.unpack("1x 4s 5s 10s", readline_strip(h))
+            self.mcode, self.ndp, self.swave = struct.unpack("1x 4s 5s 10s", ag.readline_strip(h))
             if self.mcode != "MRXF":
                 # Does not satisfy magic string
                 raise RuntimeError("Model code '{0!s}' is not 'MRXF'".format(self.mcode))
@@ -269,7 +267,7 @@ class FileOpa(DataFile):
 
             self.nwav = int(h.readline())
 
-            v, n_rows = multirow_str_vector(h, self.nwav)
+            v, n_rows = ag.multirow_str_vector(h, self.nwav)
             self.wav = np.array(list(map(float, v)))
 
             self.rad, self.tau, self.t, self.pe, self.pg, self.rho, self.xi, \
@@ -280,19 +278,19 @@ class FileOpa(DataFile):
             self.sca = np.zeros((self.nwav, self.ndp))
             for k in range(self.ndp):
                 self.rad[k], self.tau[k], self.t[k], self.pe[k], self.pg[k], \
-                self.rho[k], self.xi[k], self.ops[k] = float_vector(h)
-                v, n_rows = multirow_str_vector(h, 2*self.nwav)
+                self.rho[k], self.xi[k], self.ops[k] = ag.float_vector(h)
+                v, n_rows = ag.multirow_str_vector(h, 2*self.nwav)
                 abs_sca = np.array(list(map(float, v)))
                 # This multiplication is performed as in original readopa.f
                 self.abs[:, k] = abs_sca[0::2]*self.ops[k]
                 self.sca[:, k] = abs_sca[1::2]*self.ops[k]
 
-            v, n_rows = multirow_str_vector(h, 92)
+            v, n_rows = ag.multirow_str_vector(h, 92)
             self.abund = np.array(list(map(float, v)))
 
 
 
-class MooRecord(AttrsPart):
+class MooRecord(ag.AttrsPart):
     """
     Single record from a ".moo" file
 
@@ -307,7 +305,7 @@ class MooRecord(AttrsPart):
     less_attrs = ["teff", "glog", "asalog"]
 
     def __init__(self):
-        AttrsPart.__init__(self)
+        ag.AttrsPart.__init__(self)
         self.ntot = None
         self.teff = None
         self.glog = None
@@ -367,7 +365,7 @@ MOG_REC_SIZE = MOD_REC_SIZE+OPA_REC_SIZE
 NTOT = 56    # must be 56
 NWAV = 1071  # must be 1071
 
-class FileMoo(DataFile):
+class FileMoo(ag.DataFile):
     """
     Atmospheric model or grid of models (with opacities included)
 
@@ -378,7 +376,7 @@ class FileMoo(DataFile):
     flag_txt = False
 
     def __init__(self):
-        DataFile.__init__(self)
+        ag.DataFile.__init__(self)
         self.records = None
 
     def __len__(self):
@@ -388,7 +386,7 @@ class FileMoo(DataFile):
 
     def _do_load(self, filename):
 
-        if is_text_file(filename):
+        if ag.is_text_file(filename):
             raise RuntimeError("File must be binary")
 
         b = os.path.getsize(filename)

@@ -3,7 +3,7 @@ Constants shared among windows, and resources that are not general enough to be 
 """
 
 
-import pyscellanea as pa
+import astrogear as ag
 import pyfant as pf
 
 
@@ -11,7 +11,7 @@ import pyfant as pf
 INITIALIZES_SUN = "Initializes fields with default parameters (Sun)"
 PARAMS_INVALID = "Can't save, invalid parameter values(s)!"
 LLZERO_LLFIN = "The calculation interval for the synthetic spectrum is given by "\
-  "["+pa.enc_name("llzero", pf.COLOR_CONFIG)+", "+pa.enc_name("llfin", pf.COLOR_CONFIG)+"]."\
+  "["+ag.enc_name("llzero", pf.COLOR_CONFIG)+", "+ag.enc_name("llfin", pf.COLOR_CONFIG)+"]."\
 """
 <pre>
           aint

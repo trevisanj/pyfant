@@ -5,7 +5,7 @@ __all__ = ["WFileAbonds"]
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from pyfant import FileAbonds, adjust_atomic_symbol, FileDissoc
-import pyscellanea as pa
+import astrogear as ag
 import pyfant as pf
 
 
@@ -93,7 +93,7 @@ class WFileAbonds(QWidget):
         # a.currentCellChanged.connect(self.on_tableWidget_currentCellChanged)
         a.cellChanged.connect(self.on_tableWidget_cellChanged)
         a.setEditTriggers(QAbstractItemView.DoubleClicked | QAbstractItemView.EditKeyPressed)
-        a.setFont(pa.MONO_FONT)
+        a.setFont(ag.MONO_FONT)
         a.installEventFilter(self)
 
         # ## The errors area
@@ -110,8 +110,8 @@ class WFileAbonds(QWidget):
         x = self.textEditError = QTextEdit(self)
         l.addWidget(x)
         x.setReadOnly(True)
-        x.setStyleSheet("QTextEdit {color: %s}" % pa.COLOR_ERROR)
-        x.setFont(pa.MONO_FONT)
+        x.setStyleSheet("QTextEdit {color: %s}" % ag.COLOR_ERROR)
+        x.setFont(ag.MONO_FONT)
 
         # ## Splitter stretch factors
         # These need to be set a posteriori otherwise they do
@@ -175,7 +175,7 @@ class WFileAbonds(QWidget):
                         item.setText(self._validate_element(row, item.text()))
                         flag_done = True
                     except Exception as E:
-                        pa.show_error(str(E))
+                        ag.show_error(str(E))
 
                 if flag_done:
                     self._update_file_abonds()
@@ -203,7 +203,7 @@ class WFileAbonds(QWidget):
         self._update_file_abonds()
         self.edited.emit()
         if len(not_found) > 0:
-            pa.show_message("Symbols not found in the periodic table:\n\n"+
+            ag.show_message("Symbols not found in the periodic table:\n\n"+
                             str([x.strip() for x in not_found])+"\n\n"+
                             "These symbols will appear first and will be ordered alphabetically.")
 
@@ -255,7 +255,7 @@ class WFileAbonds(QWidget):
         try:
             o, t = self.f, self.tableWidget
             n = len(o)
-            pa.reset_table_widget(t, n, len(ABONDS_HEADERS))
+            ag.reset_table_widget(t, n, len(ABONDS_HEADERS))
             t.setHorizontalHeaderLabels(ABONDS_HEADERS)
 
             # list with the vectors themselves

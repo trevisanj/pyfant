@@ -1,6 +1,6 @@
 __all__ = ["FileAbsoru2"]
 
-from astroapi import DataFile
+from astrogear import DataFile
 
 
 class FileAbsoru2(DataFile):

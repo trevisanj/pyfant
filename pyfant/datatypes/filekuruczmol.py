@@ -5,21 +5,21 @@ __all__ = ["KuruczMolLine", "FileKuruczMolecule"]
 
 # from ..gear import *
 import sys
-import pyscellanea as pa
+import astrogear as ag
 import io
 import fortranformat as ff
 import os
 
 
-@pa.froze_it
-class KuruczMolLine(pa.AttrsPart):
+@ag.froze_it
+class KuruczMolLine(ag.AttrsPart):
     attrs = ["lambda_", "loggf", "J2l", "E2l", "Jl", "El", "atomn0", "atomn1", "state2l", "v2l",
              "lambda_doubling2l", "spin2l", "statel", "vl", "lambda_doublingl", "spinl", "iso",]
 
     def __init__(self, lambda_=None, loggf=None, J2l=None, E2l=None, Jl=None, El=None, atomn0=None,
                  atomn1=None, state2l=None, v2l=None, lambda_doubling2l=None, spin2l=None,
                  statel=None, vl=None, lambda_doublingl=None, spinl=None, iso=None):
-        pa.AttrsPart.__init__(self)
+        ag.AttrsPart.__init__(self)
         # Wavelength in **Angstrom*** (although it is is stored in nm)
         self.lambda_ = lambda_
         self.loggf = loggf
@@ -47,7 +47,7 @@ class KuruczMolLine(pa.AttrsPart):
             self.lambda_doublingl, self.spinl, self.iso,)
 
 
-class FileKuruczMolecule(pa.DataFile):
+class FileKuruczMolecule(ag.DataFile):
     """
     Kurucz molecular lines file
 
@@ -67,7 +67,7 @@ class FileKuruczMolecule(pa.DataFile):
         return len(self.lines)
 
     def __init__(self):
-        pa.DataFile.__init__(self)
+        ag.DataFile.__init__(self)
 
         # list of KuruczMolLine objects
         self.lines = []
@@ -153,17 +153,17 @@ class FileKuruczMolecule(pa.DataFile):
                 r += 1
                 ii += 1
                 if ii == 103:
-                    pa.get_python_logger().info(
-                        "Loading '{}': {}".format(filename, pa.format_progress(r, num_lines)))
+                    ag.get_python_logger().info(
+                        "Loading '{}': {}".format(filename, ag.format_progress(r, num_lines)))
                     ii = 0
 
 
         except Exception as e:
             # f = type(e)(("Error around %d%s row of file '%s'" %
-            #              (r + 1, pa.ordinal_suffix(r + 1), filename)) + ": " + str(
+            #              (r + 1, ag.ordinal_suffix(r + 1), filename)) + ": " + str(
             #     e)).with_traceback(sys.exc_info()[2])
             raise RuntimeError("Error around %d%s row of file '%s': \"%s\"" %
-                               (r + 1, pa.ordinal_suffix(r + 1), filename, pa.str_exc(e))) from e
+                               (r + 1, ag.ordinal_suffix(r + 1), filename, ag.str_exc(e))) from e
 
 
 def _fake_file():

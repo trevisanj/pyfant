@@ -9,30 +9,30 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 from mpl_toolkits.mplot3d import Axes3D  # yes, required (see below)
-import pyblioteca as pa
-from . import Vis
-from pyblioteca.datatypes import *
+import astrogear as ag
+import pyfant as pf
+from astrogear.datatypes import *
 
 
 __all__ = [
 "VisMarcs", "VisOpa", "VisModCurves", "VisMarcsSaveAsMod", "VisVector", "VisGrid", "VisModRecord", ]
 
-class VisModRecord(Vis):
+class VisModRecord(ag.Vis):
     """
     Plots vectors (nh, teta, pe, pg, log_tau_ross) of ".mod" file in 5 subplots sharing
     the same x-axis.
     """
 
-    input_classes = (pa.FileModBin,)
+    input_classes = (pf.FileModBin,)
     action = "Visualize single record"
 
     def __init__(self):
-        Vis.__init__(self)
+        ag.Vis.__init__(self)
         # 1-based (first is 1 (as in Fortran), not 0) record index in .mod file
         self.inum = None
 
     def _do_use(self, obj):
-        assert isinstance(obj, FileModBin)
+        assert isinstance(obj, pf.FileModBin)
         n = len(obj.records)
 
         if n == 1 and self.inum is None:
@@ -48,38 +48,38 @@ class VisModRecord(Vis):
             _plot_mod_record("{0!s} - {1!s}".format(self.title, repr(r)), r)
 
 
-class VisMarcs(Vis):
+class VisMarcs(ag.Vis):
     """
     Similar to VisModRecord but accepts FileModTxt
     """
 
-    input_classes = (FileModTxt,)
+    input_classes = (pf.FileModTxt,)
     action = "Visualize model"
 
     def __init__(self):
-        Vis.__init__(self)
+        ag.Vis.__init__(self)
 
     def _do_use(self, obj):
         _plot_mod_record(self.title, obj.record)
 
 
-class VisMarcsSaveAsMod(Vis):
+class VisMarcsSaveAsMod(ag.Vis):
     """
     Asks user for file name and saves as a binary .mod file
     """
 
-    input_classes = (FileModTxt,)
+    input_classes = (pf.FileModTxt,)
     action = 'Save as a binary ".mod" file'
 
     def __init__(self):
-        Vis.__init__(self)
+        ag.Vis.__init__(self)
 
     def _do_use(self, obj):
         d = "."  # todo find a way to pass current directory in a_Xexplorer (not pwd)
         new_filename = QFileDialog.getSaveFileName(None,
          self.action.capitalize(), d, "*.mod")
         if new_filename:
-            f = FileModBin()
+            f = pf.FileModBin()
             f.records = [obj.record]
             f.save_as(str(new_filename))
         return False
@@ -108,14 +108,14 @@ def _plot_mod_record(title, r):
     plt.show()
 
 
-class VisModCurves(Vis):
+class VisModCurves(ag.Vis):
     """
     Plots vectors
     (teff, glog, asalog, asalalf, nhe) in 2D (record #)x(value) plots, and
     (nh, teta, pe, pg, log_tau_ross) (layer #)x(record #)x(value) 3D plots
     """
 
-    input_classes = (FileMoo, FileModBin)
+    input_classes = (pf.FileMoo, pf.FileModBin)
     action = "(nh, teta, pe, pg, log_tau_ross) per layer curves in 3D"
 
     def _do_use(self, m):
@@ -146,10 +146,10 @@ class VisModCurves(Vis):
         plt.show()
 
 
-class VisGrid(Vis):
+class VisGrid(ag.Vis):
     __doc__ = """(glog, teff, [Fe/H]) 3D scatterplot"""
 
-    input_classes = (FileMoo, FileModBin)
+    input_classes = (pf.FileMoo, pf.FileModBin)
     action = __doc__
 
     def _do_use(self, m):
@@ -171,10 +171,10 @@ class VisGrid(Vis):
         plt.show()
 
 
-class VisVector(Vis):
+class VisVector(ag.Vis):
     __doc__ = """(glog, teff, [Fe/H]) same-x-axis stacked subplots"""
 
-    input_classes = (FileMoo, FileModBin)
+    input_classes = (pf.FileMoo, pf.FileModBin)
     action = __doc__
 
     def _do_use(self, m):
@@ -201,18 +201,18 @@ class VisVector(Vis):
         plt.show()
 
 
-class VisOpa(Vis):
+class VisOpa(ag.Vis):
     """
     Visualizer for FileOpa class
 
     Plots vectors ???
     """
 
-    input_classes = (FileOpa,)
+    input_classes = (pf.FileOpa,)
     action = "Visualize opacities file"
 
     def _do_use(self, obj):
-        assert isinstance(obj, FileOpa)
+        assert isinstance(obj, pf.FileOpa)
 
         # 8 subplots sharing same x-axis
         ll = ["rad", "tau", "t", "pe", "pg", "rho", "xi", "ops"]
