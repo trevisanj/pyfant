@@ -60,7 +60,7 @@ def kurucz_to_sols(mol_row, state_row, fileobj, qgbd_calculator):
 
     # This factor allows to reproduce the Hônl-London factors in `moleculagrade.dat` for OH blue,
     # first set-of-lines
-    scale_factor = 730.485807466
+    scale_factor = 730.485807466/2
 
     for i, line in enumerate(lines):
         assert isinstance(line, pf.KuruczMolLine)
@@ -71,8 +71,15 @@ def kurucz_to_sols(mol_row, state_row, fileobj, qgbd_calculator):
             s_now = S
 
             # Normaliza = 1/((2.0*line.J2l+1)*(2.0*S+1)*(2.0-DELTAK))
-            Normaliza = scale_factor * 1 / ((2.0*line.J2l+1)*(2.0*s_now+1)*(2.0-DELTAK))
-            gf_pfant = Normaliza*10**line.loggf
+
+            k = 2 / ((2.0*line.J2l+1)*(2.0*s_now+1)*(2.0-DELTAK))
+
+
+            if False:
+                Normaliza = scale_factor * k
+                gf_pfant = Normaliza*10**line.loggf
+            else:
+
 
             J2l_pfant = line.J2l
         except Exception as e:
