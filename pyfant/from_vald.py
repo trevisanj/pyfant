@@ -12,7 +12,6 @@ import sys
 
 
 
-_logger = ag.get_python_logger()
 
 
 # Temporary: no partition function for this
@@ -30,6 +29,8 @@ def vald3_to_atoms(file_obj):
 
     VALD3 website: http://vald.astro.uu.se/
     """
+
+    _logger = ag.get_python_logger()
 
     def log_skipping(r, reason, row):
         _logger.info("Skipping row #%d (%s)" % (r, reason))

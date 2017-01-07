@@ -3,6 +3,9 @@ import bs4
 import re
 
 
+__all__ = ["get_hitran_molecules", "get_hitran_isotopologues"]
+
+
 def get_hitran_molecules():
     """
     Accesses http://hitran.org/lbl/# and reads its table

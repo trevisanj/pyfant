@@ -46,18 +46,26 @@
 
 ### Questions to BLB
 
-  - J2l: do we write integer or half-integer value? (I am now saving the half-integer J2l, despite "ojo, estamos colocando J2L-0.5!")
-  - Why different scale factors for each transition? tried 730 for 0-29 but does not apply to others
-    it is weird because loggf Kurucz varies greatly in magnitude from transition to transition, but HLFs in PFANT do not so much
+  - ~~J2l: do we write integer or half-integer value? (I am now saving the half-integer J2l, despite "ojo, estamos colocando J2L-0.5!")~~
+  - ~~Why different scale factors for each transition? tried 730 for 0-29 but does not apply to others
+    it is weird because loggf Kurucz varies greatly in magnitude from transition to transition, but HLFs in PFANT do not so much~~
+    **A: Franck-Condon Factors sometimes incorporated, sometimes in transition "header"**
+  - ~~FEL in molecular lines file not like Bruno page 29 (and some have fel=1.0 which gives huge lines)!!!!!~~
+    **Same as previous question: FEL sometimes incorporated, sometimes in transition "header"**
   - Are Kurucz lines with spin 1/2 either triplet/quintet?
-  - Could the (P/Q/R from delta_J) + (spin 1/2) + (e/f determine the branch?) (I could check this)
-  - Where does the normalization of the HLF come from?
-  - FVVP, FVVQ, FVVR ??
-  - P/Q/R is for singlet & P1/P2/Q1/Q2/R1/R2 for dublet?
-  - The only thing we need from the molecular lines file is the wavelength and the branch, right?
-  - Normalization: times 2 or times 1.499 ...
-  - Most important seems to be the BRANCH!! Or work around with loggf
-  - FEL in molecular lines file not like Bruno page 29 (and some have fel=1.0 which gives huge lines)!!!!!
+    **Actually Apparently not, since the old `OHbrunook.dat` has branch up to 9
+  - **Could the (P/Q/R from delta_J) + (spin 1/2) + (e/f determine the branch?) (I could check this)**
+    **Apparently yes, but ths spli 1/2 didn't yield as expected**
+  - ~~Where does the normalization of the HLF come from?~~
+  - ~~Normalization: times 2 or times 1.499 ...~~   
+  - ~~FVVP, FVVQ, FVVR ??~~
+    **Franck-Condon Factors**
+  - ~~P/Q/R is for singlet & P1/P2/Q1/Q2/R1/R2 for dublet?~~
+    **ŷêŝ**
+  - ~~The only thing we need from the molecular lines file is the wavelength and the branch, right?~~
+    **ýéś**
+  - ~~Most important seems to be the BRANCH!! Or work around with loggf~~
+    **Understand what Bruno did, then maybe work with loggf**
   
 **FeH, C2 & CN (the latter especially red)** PFANT is from laboratory & is better
 
@@ -142,7 +150,7 @@ but the calculations were not verified.
  ### Plan
  
  - Try to reproduce the OH from source of lines **Kurucz OHAX**
- - Compare formulas Kovacs x PMNAS1970 
+  
     
     
     

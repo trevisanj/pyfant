@@ -22,7 +22,6 @@ WINDOW_HEIGHT = 700
 FLAG_SHOW_STATUS = True
 FLAG_SHOW_RUNNABLES = True
 
-_logger = ag.get_python_logger()
 
 class XRunnableManager(QMainWindow):
     """
@@ -253,7 +252,7 @@ class XRunnableManager(QMainWindow):
             self.rm.retry_failed()
         except Exception as e:
             MSG = "Could not retry failed"
-            _logger.exception(MSG)
+            ag.get_python_logger().exception(MSG)
             ag.show_error("%s: %s" % (MSG, str(e)))
 
     def on_collect_errors(self):
@@ -264,7 +263,7 @@ class XRunnableManager(QMainWindow):
             w.show()
         except Exception as e:
             MSG = "Could not collect errors"
-            _logger.exception(MSG)
+            ag.get_python_logger().exception(MSG)
             ag.show_error("%s: %s" % (MSG, str(e)))
 
     # def on_timer_timeout(self):
@@ -282,7 +281,7 @@ class XRunnableManager(QMainWindow):
             self.__explore_directory()
         except Exception as e:
             MSG = "Could explore directory"
-            _logger.exception(MSG)
+            ag.get_python_logger().exception(MSG)
             ag.show_error("%s: %s" % (MSG, str(e)))
 
 
@@ -315,11 +314,11 @@ class XRunnableManager(QMainWindow):
 
     def __update(self):
         """Updates second column of table widget."""
-        # _logger.info("UPDATE UPDATE UPDATE UPDATE UPDATE ")
+        # ag.get_python_logger().info("UPDATE UPDATE UPDATE UPDATE UPDATE ")
         t = time.time()
         self.__update_status()
         self.__update_table()
-        # _logger.info("&&&&&&&&&&&&&&& time to update: %g" % (time.time()-t,))
+        # ag.get_python_logger().info("&&&&&&&&&&&&&&& time to update: %g" % (time.time()-t,))
 
     def __update_table(self):
         with self.__lock_table:

@@ -13,6 +13,8 @@ import pyfant as pf
 import re
 
 
+# TODO convert all sequences to numpy arrays
+
 @froze_it
 class SetOfLines(AttrsPart):
     attrs = ["vl", "v2l", "qqv", "ggv", "bbv", "ddv", "fact", "num_lines"]
@@ -70,6 +72,8 @@ class SetOfLines(AttrsPart):
         self.lmbdam.append(lmbdam)
         self.sj.append(sj)
         self.jj.append(jj)
+        if isinstance(branch, str):
+            branch = pf.branch_to_iz(branch)
         self.branch.append(branch)
 
 
@@ -360,7 +364,7 @@ class FileMolecules(DataFile):
                         lmbdam = float(temp[0])
                         sj = float(temp[1])
                         jj = float(temp[2])
-                        iz = temp[3]
+                        iz = int(temp[3])
                         numlin = int(temp[4])
 
                         r += 1

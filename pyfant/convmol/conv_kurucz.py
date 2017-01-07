@@ -1,20 +1,18 @@
 """
-VALD3-specific conversion
 """
 
 
 import pyfant as pf
 import astrogear as ag
 from .convlog import *
-from .branch import *
 from collections import OrderedDict
-
+import sys
 
 __all__ = ["kurucz_to_sols"]
 
 
 
-def kurucz_to_sols(mol_row, state_row, fileobj, qgbd_calculator):
+def kurucz_to_sols(mol_row, state_row, fileobj, qgbd_calculator, flag_hlf=False):
     """
     Converts Kurucz molecular lines data to PFANT "sets of lines"
 
@@ -28,6 +26,8 @@ def kurucz_to_sols(mol_row, state_row, fileobj, qgbd_calculator):
         fileobj: FileVald3 instance with only one species
         qgbd_calculator: callable that can calculate "qv", "gv", "bv", "dv",
                          e.g., calc_qbdg_tio_like()
+        flag_hlf: Whether to calculate the gf's using Honl-London factors or
+                  use Kurucz's loggf instead
 
     Returns: (a list of pyfant.SetOfLines objects, a MolConversionLog object)
     """
@@ -54,6 +54,12 @@ def kurucz_to_sols(mol_row, state_row, fileobj, qgbd_calculator):
     S = mol_row["s"]
     DELTAK = mol_row["cro"]
 
+    # TODO of course this hard-wire needs change; now just a text for OH A2Sigma-X2Pi
+    LAML = 0  # Sigma
+    LAM2L = 1 # Pi
+
+    if flag_hlf:
+        formulas = ag.doublet.get_honllondon_formulas(LAML, LAM2L)
     sols = OrderedDict()  # one item per (vl, v2l) pair
     log = MolConversionLog(n)
 
@@ -64,26 +70,33 @@ def kurucz_to_sols(mol_row, state_row, fileobj, qgbd_calculator):
 
     for i, line in enumerate(lines):
         assert isinstance(line, pf.KuruczMolLine)
+        # TODO is it spin 2l?
+        branch = ag.doublet.quanta_to_branch(line.Jl, line.J2l, line.spin2l)
         try:
             wl = line.lambda_
 
-            # s_now = line.spin2l
-            s_now = S
-
             # Normaliza = 1/((2.0*line.J2l+1)*(2.0*S+1)*(2.0-DELTAK))
 
-            k = 2 / ((2.0*line.J2l+1)*(2.0*s_now+1)*(2.0-DELTAK))
+            k = 2 / ((2.0*line.J2l+1)*(2.0*S+1)*(2.0-DELTAK))
 
 
-            if False:
+            if flag_hlf:
+                hlf = formulas[branch](line.J2l)
+                gf_pfant = hlf*k
+            else:
                 Normaliza = scale_factor * k
                 gf_pfant = Normaliza*10**line.loggf
-            else:
-
 
             J2l_pfant = line.J2l
         except Exception as e:
-            log.errors.append("#{}{} line: {}".format(i+1, ag.ordinal_suffix(i+1), str(e)))
+            # if isinstance(e, ZeroDivisionError):
+            #     print("OOOOOOOOOOOOOOOOOOOOOO")
+            #     print(str(line))
+            #     sys.exit()
+
+            msg = "#{}{} line: {}".format(i + 1, ag.ordinal_suffix(i + 1), ag.str_exc(e))
+            log.errors.append(msg)
+            ag.get_python_logger().exception(msg)
             continue
 
         sol_key = "%3d%3d" % (line.vl, line.v2l)  # (v', v'') transition (v_sup, v_inf)
@@ -96,6 +109,6 @@ def kurucz_to_sols(mol_row, state_row, fileobj, qgbd_calculator):
             sols[sol_key] = pf.SetOfLines(line.vl, line.v2l, qqv, ggv, bbv, ddv, 1.)
 
         sol = sols[sol_key]
-        sol.append_line(wl, gf_pfant, J2l_pfant, global_quanta_to_branch(line.Jl, line.J2l))
+        sol.append_line(wl, gf_pfant, J2l_pfant, branch)
 
     return (list(sols.values()), log)

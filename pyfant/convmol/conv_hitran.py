@@ -12,7 +12,6 @@ import pyfant as pf
 import astrogear as ag
 from .calc_qgbd import calc_qgbd_tio_like
 from .convlog import *
-from .branch import *
 from collections import OrderedDict
 
 __all__ = ["hitran_to_sols"]
@@ -170,7 +169,8 @@ def hitran_to_sols(mol_row, state_row, lines, qgbd_calculator):
             nu = data["nu"][i]
             wl = ag.vacuum_to_air(1e8/nu)
             Br, J2l = f_group(data["local_lower_quanta"][i])
-            Jl = global_quanta_to_branch(Br, J2l)
+            # TODO assuming singlet!!!
+            Jl = ag.singlet.quanta_to_branch(Br, J2l)
             V = f_class(data["global_upper_quanta"][i])
             V_ = f_class(data["global_lower_quanta"][i])
             A = data["a"][i]

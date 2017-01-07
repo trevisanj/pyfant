@@ -13,6 +13,9 @@ import datetime
 from collections import OrderedDict
 
 
+__all__ = ["XConvMol"]
+
+
 class _DataSource(ag.AttrsPart):
     """Represents a data source for molecular lines"""
 
@@ -192,10 +195,15 @@ class _WHitranPanel(ag.WBase):
         lw.addWidget(self.keep_ref(QLabel("HITRAN")))
 
 
+        lg = QGridLayout()
+        lw.addLayout(lg)
+
+        a = self.keep_ref(QLabel("HITRAN 'data cache' directory"))
         w = self.w_dir = ag.WSelectDir(self.parent_form)
-        w.label.setText("HITRAN 'data cache' directory")
+        a.setBuddy(w)
         w.valueChanged.connect(self.dir_changed)
-        lw.addWidget(w)
+        lg.addWidget(a, 0, 0)
+        lg.addWidget(w, 0, 1)
 
         a = self.tableWidget = QTableWidget()
         lw.addWidget(a)
@@ -296,11 +304,17 @@ class _WVald3Panel(ag.WBase):
 
         lw.addWidget(self.keep_ref(QLabel("VALD3")))
 
+        lg = QGridLayout()
+        lw.addLayout(lg)
 
+        a = self.keep_ref(QLabel("VALD3 extended-format file"))
         w = self.w_file = ag.WSelectFile(self.parent_form)
-        w.label.setText("VALD3 extended-format file")
+        a.setBuddy(w)
         w.valueChanged.connect(self.file_changed)
         lw.addWidget(w)
+        lg.addWidget(a, 0, 0)
+        lg.addWidget(w, 0, 1)
+
 
         a = self.tableWidget = QTableWidget()
         lw.addWidget(a)
@@ -366,6 +380,10 @@ class _WKuruczPanel(ag.WBase):
         """Returns FileKuruczMolecule or None"""
         return self._f
 
+    @property
+    def flag_hlf(self):
+        return self.checkbox_hlf.isChecked()
+
     def __init__(self, *args):
         ag.WBase.__init__(self, *args)
 
@@ -376,10 +394,23 @@ class _WKuruczPanel(ag.WBase):
 
         lw.addWidget(self.keep_ref(QLabel("Kurucz")))
 
+        lg = QGridLayout()
+        lw.addLayout(lg)
+
+        a = self.keep_ref(QLabel("Kurucz molecular lines file"))
         w = self.w_file = ag.WSelectFile(self.parent_form)
-        w.label.setText("Kurucz molecular lines file")
         w.valueChanged.connect(self.file_changed)
-        lw.addWidget(w)
+        lg.addWidget(a, 0, 0)
+        lg.addWidget(w, 0, 1)
+
+        TT = "If selected, will ignore 'loggf' from Kurucz file and\n" \
+             "calculate 'gf' using Hönl-London factors formulas taken from Kovacz (1969)"
+        a = self.keep_ref(QLabel("Calculate 'gf' based on Hönl-London factors"))
+        w = self.checkbox_hlf = QCheckBox()
+        w.setToolTip(TT)
+        lg.addWidget(a, 1, 0)
+        lg.addWidget(w, 1, 1)
+
 
         lw.addSpacerItem(QSpacerItem(0, 0, QSizePolicy.Minimum, QSizePolicy.Expanding))
 
@@ -586,7 +617,9 @@ class XConvMol(ag.XFileMainWindow):
                         sols_calculator = cm.vald3_to_sols
                 elif name == "Kurucz":
                     lines = self.w_kurucz.data
-                    sols_calculator = cm.kurucz_to_sols
+
+                    sols_calculator = lambda *args: cm.kurucz_to_sols(*args,
+                        flag_hlf=self.w_kurucz.flag_hlf)
                 else:
                     ag.show_message("{}-to-PFANT conversion not implemented yet, sorry".
                                     format(name))

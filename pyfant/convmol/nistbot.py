@@ -5,6 +5,7 @@ import re
 
 __all__ = ["get_nist_webbook_constants"]
 
+
 _conv_sup = {"1": "\u2071",
              "2": "\u00b2",
              "3": "\u00b3",

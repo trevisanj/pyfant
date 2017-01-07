@@ -7,7 +7,6 @@ import pyfant as pf
 import astrogear as ag
 from .calc_qgbd import calc_qgbd_tio_like
 from .convlog import *
-from .branch import *
 from collections import OrderedDict
 
 
@@ -93,6 +92,7 @@ def vald3_to_sols(mol_row, state_row, file_vald3, qgbd_calculator):
             sols[sol_key] = pf.SetOfLines(line.vl, line.v2l, qqv, ggv, bbv, ddv, 1.)
 
         sol = sols[sol_key]
-        sol.append_line(wl, gf_pfant, J2l_pfant, global_quanta_to_branch(line.Jl, line.J2l))
+        # TODO assuming singlet!!!
+        sol.append_line(wl, gf_pfant, J2l_pfant, ag.singlet.quanta_to_branch(line.Jl, line.J2l))
 
     return (list(sols.values()), log)

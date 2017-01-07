@@ -7,6 +7,9 @@ import astrogear as ag
 from .a_WDBState import WDBState
 
 
+__all__ = ["WStateConst"]
+
+
 class WStateConst(ag.WBase):
     """
     Widget for the user to select/modify state-specific constants. Has a embedded WDBState

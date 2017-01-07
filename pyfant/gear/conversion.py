@@ -1,7 +1,7 @@
 import re
 
 
-__all__ = ["adjust_atomic_symbol", "description_to_symbols"]
+__all__ = ["adjust_atomic_symbol", "description_to_symbols", "iz_to_branch", "branch_to_iz"]
 
 
 def adjust_atomic_symbol(x):
@@ -50,3 +50,14 @@ def description_to_symbols(descr):
             return [adjust_atomic_symbol(x) for x in symbols]
     return None
     # raise RuntimeError("Could not find a valid formula in description '{}'".format(descr))
+
+
+_iz_to_branch_map = {"1": "P", "2": "Q", "3": "R", "4": "P1", "5": "Q1", "6": "R1", "7": "P2", "8": "Q2", "9": "R2", "10": "P3", "11": "Q3", "12": "R3",}
+_branch_to_iz_map = dict(((value, key) for key, value in _iz_to_branch_map.items()))
+def iz_to_branch(iz):
+    """Converts BLB's 'iz' code to string P/Q/R/P1 ... (see pfantlib.90:read_molecules()"""
+    return _iz_to_branch_map[str(iz)]
+
+def branch_to_iz(br):
+    """Converts branch P/Q/R/P1, etc. into BLB's 'iz' code"""
+    return _branch_to_iz_map[br]
