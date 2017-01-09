@@ -57,7 +57,7 @@
   - **Could the (P/Q/R from delta_J) + (spin 1/2) + (e/f determine the branch?) (I could check this)**
     **Apparently yes, but ths spli 1/2 didn't yield as expected**
   - ~~Where does the normalization of the HLF come from?~~
-  - ~~Normalization: times 2 or times 1.499 ...~~   
+  - ~~Normalization: times 2 or times 1.499 ...~~ 
   - ~~FVVP, FVVQ, FVVR ??~~
     **Franck-Condon Factors**
   - ~~P/Q/R is for singlet & P1/P2/Q1/Q2/R1/R2 for dublet?~~
