@@ -12,7 +12,7 @@ __all__ = ["kurucz_to_sols"]
 
 
 
-def kurucz_to_sols(mol_row, state_row, fileobj, qgbd_calculator, flag_hlf=False):
+def kurucz_to_sols(mol_row, state_row, fileobj, qgbd_calculator, flag_hlf=False, flag_fcf=False):
     """
     Converts Kurucz molecular lines data to PFANT "sets of lines"
 
@@ -83,9 +83,23 @@ def kurucz_to_sols(mol_row, state_row, fileobj, qgbd_calculator, flag_hlf=False)
             if flag_hlf:
                 hlf = formulas[branch](line.J2l)
                 gf_pfant = hlf*k
+
             else:
                 Normaliza = scale_factor * k
                 gf_pfant = Normaliza*10**line.loggf
+
+            if flag_fcf:
+                # TODO ask BLB for references
+                x = line.J2l*(line.J2l+1)
+
+                if branch[0] == "P":
+                    gf_pfant *= 3.651E-2 * (1 + 4.309E-6 * x + 1.86E-10 * (x ** 2)) ** 2
+                elif branch[0] == "Q":
+                    gf_pfant *= 3.674E-2 * (1 + 6.634E-6 * x + 1.34E-10 * (x ** 2)) ** 2
+                elif branch[0] == "R":
+                    gf_pfant *= 3.698E-2 * (1 + 1.101E-5 * x + 7.77E-11 * (x ** 2)) ** 2
+                else:
+                    raise RuntimeError("Shouldn't fall in here (branch ie neither P/Q/R)")
 
             J2l_pfant = line.J2l
         except Exception as e:

@@ -384,6 +384,10 @@ class _WKuruczPanel(ag.WBase):
     def flag_hlf(self):
         return self.checkbox_hlf.isChecked()
 
+    @property
+    def flag_fcf(self):
+        return self.checkbox_fcf.isChecked()
+
     def __init__(self, *args):
         ag.WBase.__init__(self, *args)
 
@@ -403,13 +407,19 @@ class _WKuruczPanel(ag.WBase):
         lg.addWidget(a, 0, 0)
         lg.addWidget(w, 0, 1)
 
-        TT = "If selected, will ignore 'loggf' from Kurucz file and\n" \
-             "calculate 'gf' using Hönl-London factors formulas taken from Kovacz (1969)"
         a = self.keep_ref(QLabel("Calculate 'gf' based on Hönl-London factors"))
         w = self.checkbox_hlf = QCheckBox()
-        w.setToolTip(TT)
+        w.setToolTip("If selected, will ignore 'loggf' from Kurucz file and\n"
+                     "calculate 'gf' using Hönl-London factors formulas taken from Kovacz (1969)")
         lg.addWidget(a, 1, 0)
         lg.addWidget(w, 1, 1)
+
+        a = self.keep_ref(QLabel("Multiply calculated 'gf' by Franck-Condon factor"))
+        w = self.checkbox_fcf = QCheckBox()
+        w.setToolTip("If selected, incorporates internally calculated Franck-Condon factor"
+                     "into the calculated 'gf'")
+        lg.addWidget(a, 2, 0)
+        lg.addWidget(w, 2, 1)
 
 
         lw.addSpacerItem(QSpacerItem(0, 0, QSizePolicy.Minimum, QSizePolicy.Expanding))
@@ -619,7 +629,7 @@ class XConvMol(ag.XFileMainWindow):
                     lines = self.w_kurucz.data
 
                     sols_calculator = lambda *args: cm.kurucz_to_sols(*args,
-                        flag_hlf=self.w_kurucz.flag_hlf)
+                        flag_hlf=self.w_kurucz.flag_hlf, flag_fcf=self.w_kurucz.flag_fcf)
                 else:
                     ag.show_message("{}-to-PFANT conversion not implemented yet, sorry".
                                     format(name))

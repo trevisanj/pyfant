@@ -167,7 +167,7 @@ class FileKuruczMolecule(ag.DataFile):
 
 
 def _fake_file():
-    """Returns StringIO file to test FileVald3 class"""
+    """Returns StringIO for a fragment of a Kurucz molecular lines file"""
 
     f = io.StringIO()
     f.write("""  204.5126 -7.917  2.5    83.925  2.5  48964.990 108X00f1   A07e1   16
@@ -187,7 +187,7 @@ def _test():
     >>> h = _fake_file()
     >>> f = FileKuruczMolecule()
     >>> f._do_load_h(h, "_fake_file")
-    >>> print(f.lines[0])
+    >>> f.lines[0]
     KuruczMolLine(2045.126, -7.917, 2.5, 83.925, 2.5, 48964.99, 1, 8, 'X', 0, 'f', 1, 'A', 7, 'e', 1, 6)
     """
     return

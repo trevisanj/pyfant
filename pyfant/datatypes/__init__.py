@@ -30,3 +30,4 @@ from . import filepartit
 from . import filetoh
 from . import filehitran
 from . import filevald3
+from . import filekuruczmol
