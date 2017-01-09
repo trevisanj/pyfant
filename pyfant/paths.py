@@ -19,7 +19,12 @@ def get_pfant_path(*args):
 
     Arguments passed will be incorporated into path
     """
-    p = os.getenv("PATH")
+
+
+    p = ag.which("pfant")
+    if p is None:
+        raise RuntimeError("Cannot find 'pfant' executable")
+    # p = os.getenv("PATH")
     pos1 = p.rfind("PFANT")
     pos0 = p.rfind(os.pathsep, 0, pos1)
 
