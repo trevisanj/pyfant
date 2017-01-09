@@ -79,7 +79,6 @@ def kurucz_to_sols(mol_row, state_row, fileobj, qgbd_calculator, flag_hlf=False,
 
             k = 2 / ((2.0*line.J2l+1)*(2.0*S+1)*(2.0-DELTAK))
 
-
             if flag_hlf:
                 hlf = formulas[branch](line.J2l)
                 gf_pfant = hlf*k

@@ -7,5 +7,6 @@ class MolConversionLog(object):
         self.flag_ok = flag_ok
 
     def __repr__(self):
-        return "{}({}, {})".format(self.num_lines_in, self.errors, self.flag_ok)
+        return "{}({}, {}, {})".format(self.__class__.__name__, self.num_lines_in, self.errors,
+                                       self.flag_ok)
     

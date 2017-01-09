@@ -30,13 +30,13 @@ def test_conv_kurucz(tmpdir):
     os.chdir(str(tmpdir))
     db = pf.FileMolDB()
     db.init_default()
-    conn = db.get_conn()
+    # conn = db.get_conn()
     mol_row = db.query_molecule(id=7).fetchone()  # supposed to be OH
-    state_row = db.query_molecule(id=97).fetchone()  # supposed to be "X ²Pi_i"
+    state_row = db.query_state(**{"state.id": 97}).fetchone()  # supposed to be "X ²Pi_i"
 
     h = _fake_file()
     fileobj = pf.FileKuruczMolecule()
     fileobj._do_load_h(h, "_fake_file")
 
-
-    pf.convmol.kurucz_to_sols(mol_row, state_row, fileobj, pf.convmol.calc_qgbd_tio_like, flag_hlf=True, flag_fcf=True)
+    sols, log = pf.convmol.kurucz_to_sols(mol_row, state_row, fileobj,
+        pf.convmol.calc_qgbd_tio_like, flag_hlf=True, flag_fcf=True)
