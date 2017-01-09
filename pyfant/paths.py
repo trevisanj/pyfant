@@ -21,8 +21,8 @@ def get_pfant_path(*args):
     """
 
 
-    p = ag.which("pfant")
-    if p is None:
+    path_to_exe = ag.which("pfant")
+    if path_to_exe is None:
         raise RuntimeError("Cannot find 'pfant' executable")
     # p = os.getenv("PATH")
     # pos1 = p.rfind("PFANT")
@@ -33,6 +33,8 @@ def get_pfant_path(*args):
 
     # return os.path.abspath(os.path.join(path_prefix, *args))
 
+
+    p, _ = os.path.split(path_to_exe)
 
     return os.path.abspath(os.path.join(p, "..", "..", *args))
 
