@@ -12,7 +12,8 @@ __all__ = ["kurucz_to_sols"]
 
 
 
-def kurucz_to_sols(mol_row, state_row, fileobj, qgbd_calculator, flag_hlf=False, flag_fcf=False):
+def kurucz_to_sols(mol_row, state_row, fileobj, qgbd_calculator, flag_hlf=False, flag_normhlf=False,
+                   flag_fcf=False):
     """
     Converts Kurucz molecular lines data to PFANT "sets of lines"
 
@@ -28,6 +29,9 @@ def kurucz_to_sols(mol_row, state_row, fileobj, qgbd_calculator, flag_hlf=False,
                          e.g., calc_qbdg_tio_like()
         flag_hlf: Whether to calculate the gf's using Honl-London factors or
                   use Kurucz's loggf instead
+
+        flag_normhlf: Whether to multiply calculated gf's by normalization factor
+
 
     Returns: (a list of pyfant.SetOfLines objects, a MolConversionLog object)
     """
@@ -77,7 +81,12 @@ def kurucz_to_sols(mol_row, state_row, fileobj, qgbd_calculator, flag_hlf=False,
 
             # Normaliza = 1/((2.0*line.J2l+1)*(2.0*S+1)*(2.0-DELTAK))
 
-            k = 2 / ((2.0*line.J2l+1)*(2.0*S+1)*(2.0-DELTAK))
+            if flag_normhlf:
+                # k = 2 / ((2.0*line.J2l+1)*(2.0*S+1)*(2.0-DELTAK))
+                k = 2 / ((2.0*line.J2l+1))
+                # k = (2.0*line.J2l+1)
+            else:
+                k = 1
 
             if flag_hlf:
                 hlf = formulas[branch](line.J2l)
