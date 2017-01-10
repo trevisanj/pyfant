@@ -385,6 +385,10 @@ class _WKuruczPanel(ag.WBase):
         return self.checkbox_hlf.isChecked()
 
     @property
+    def flag_normhlf(self):
+        return self.checkbox_normhlf.isChecked()
+
+    @property
     def flag_fcf(self):
         return self.checkbox_fcf.isChecked()
 
@@ -407,19 +411,26 @@ class _WKuruczPanel(ag.WBase):
         lg.addWidget(a, 0, 0)
         lg.addWidget(w, 0, 1)
 
-        a = self.keep_ref(QLabel("Calculate 'gf' based on Hönl-London factors"))
+        a = self.keep_ref(QLabel("Calculate 'gf' based on Hönl-London factors (HLFs)"))
         w = self.checkbox_hlf = QCheckBox()
         w.setToolTip("If selected, will ignore 'loggf' from Kurucz file and\n"
                      "calculate 'gf' using Hönl-London factors formulas taken from Kovacz (1969)")
         lg.addWidget(a, 1, 0)
         lg.addWidget(w, 1, 1)
 
+        a = self.keep_ref(QLabel("Apply normalization factor for HLFs to add up to 1 (for fixed J)"))
+        w = self.checkbox_normhlf = QCheckBox()
+        w.setToolTip("If selected, calculated 'gf's will be divided by\n"
+                     "2 / ((2 * J2l + 1) * (2 * S + 1)*(2 - DELTAK))")
+        lg.addWidget(a, 2, 0)
+        lg.addWidget(w, 2, 1)
+
         a = self.keep_ref(QLabel("Multiply calculated 'gf' by Franck-Condon factor"))
         w = self.checkbox_fcf = QCheckBox()
         w.setToolTip("If selected, incorporates internally calculated Franck-Condon factor"
                      "into the calculated 'gf'")
-        lg.addWidget(a, 2, 0)
-        lg.addWidget(w, 2, 1)
+        lg.addWidget(a, 3, 0)
+        lg.addWidget(w, 3, 1)
 
 
         lw.addSpacerItem(QSpacerItem(0, 0, QSizePolicy.Minimum, QSizePolicy.Expanding))
@@ -640,7 +651,8 @@ class XConvMol(ag.XFileMainWindow):
                     lines = self.w_kurucz.data
 
                     sols_calculator = lambda *args: cm.kurucz_to_sols(*args,
-                        flag_hlf=self.w_kurucz.flag_hlf, flag_fcf=self.w_kurucz.flag_fcf)
+                        flag_hlf=self.w_kurucz.flag_hlf, flag_normhlf=self.w_kurucz.flag_normhlf,
+                        flag_fcf=self.w_kurucz.flag_fcf)
                 else:
                     ag.show_message("{}-to-PFANT conversion not implemented yet, sorry".
                                     format(name))

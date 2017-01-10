@@ -379,6 +379,13 @@ class FileMolecules(DataFile):
                                 break
                             o = next(sol_iter)
 
+
+                    # TODO review this
+                    o.lmbdam = np.array(o.lmbdam)
+                    o.sj = np.array(o.sj)
+                    o.jj = np.array(o.jj)
+                    o.branch = np.array(o.branch)
+
                     get_python_logger().info("Loading '{}': {}".format(filename, ag.format_progress(im+1, num_mol)))
 
                     if im+1 == num_mol:
