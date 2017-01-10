@@ -84,11 +84,11 @@ def kurucz_to_sols(mol_row, state_row, fileobj, qgbd_calculator, flag_hlf=False,
                 gf_pfant = hlf*k
 
             else:
-                Normaliza = scale_factor * k
-                gf_pfant = Normaliza*10**line.loggf
+                # Normaliza = scale_factor * k
+                gf_pfant = k*10**line.loggf
 
             if flag_fcf:
-                # TODO ask BLB for references
+                # TODO ask BLB for references on these Franck-Condon Factors & try to generalize (these are for OH only I think)
                 x = line.J2l*(line.J2l+1)
 
                 if branch[0] == "P":

@@ -553,8 +553,19 @@ class XConvMol(ag.XFileMainWindow):
         if fileobj is not None:
             self.load(fileobj)
 
+        self.installEventFilter(self)
 
-
+    def eventFilter(self, obj_focused, event):
+        if event.type() == QEvent.KeyPress:
+            # To help my debugging
+            if event.key() == Qt.Key_F12:
+                self.moldb_editor.w_mol.tableWidget.setCurrentCell(6, 0)
+                self.moldb_editor.w_state.tableWidget.setCurrentCell(5, 0)
+                self.w_source._buttons[2].setChecked(True)
+                self.source_changed()
+                self.w_kurucz.w_file.edit.setText("ohaxupdate.asc")
+                self.tabWidget.setCurrentIndex(1)
+        return False
 
     def wants_auto(self):
         name = _NAMES[self.w_source.index]
