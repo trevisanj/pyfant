@@ -51,7 +51,7 @@ class WStateConst(ag.WBase):
         # # GUI design
 
         l = QVBoxLayout(self)
-        l.setMargin(1)
+        ag.set_margin(l, 1)
 
         # ## State widget
         a = self.w_state = WDBState(self.parent_form)

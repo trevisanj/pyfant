@@ -36,7 +36,7 @@ class WFileMolDB(ag.WBase):
         # ## Line showing the File Name
         l1 = self.keep_ref(QHBoxLayout())
         lmain.addLayout(l1)
-        l1.setMargin(0)
+        ag.set_margin(l1, 0)
         l1.addWidget(self.keep_ref(QLabel("<b>File:<b>")))
         w = self.label_fn = QLabel()
         l1.addWidget(w)
@@ -46,7 +46,7 @@ class WFileMolDB(ag.WBase):
         # ## First widget of splitter
         w0 = self.keep_ref(QWidget())
         l0 = QVBoxLayout(w0)
-        l0.setMargin(2)
+        ag.set_margin(l0, 2)
         l0.setSpacing(2)
 
         a = self.title_mol = QLabel(ag.format_title0("Select a molecule:"))
@@ -60,7 +60,7 @@ class WFileMolDB(ag.WBase):
         # ## Second widget of splitter
         w1 = self.keep_ref(QWidget())
         l1 = QVBoxLayout(w1)
-        l1.setMargin(2)
+        ag.set_margin(l1, 2)
         l1.setSpacing(2)
 
         a = self.title_state = self.keep_ref(QLabel(ag.format_title0("States")))

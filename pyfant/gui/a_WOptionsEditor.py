@@ -149,7 +149,7 @@ class WOptionsEditor(QWidget):
         # # Central layout
 
         la = self.centralLayout = QVBoxLayout()
-        la.setMargin(0)
+        ag.set_margin(la, 0)
         self.setLayout(la)
 
         # ## Toolbar: checkboxes with executables
@@ -578,7 +578,7 @@ class WOptionsEditor(QWidget):
         # layout containing description area and a error label
         wlu = QWidget()
         lu = QVBoxLayout(wlu)
-        lu.setMargin(0)
+        ag.set_margin(lu, 0)
         lu.setSpacing(4)
         x = self.textEditDescr = QTextEdit(self)
         x.setReadOnly(True)

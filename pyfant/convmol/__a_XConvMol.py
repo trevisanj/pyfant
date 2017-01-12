@@ -393,7 +393,7 @@ class XConvMol(ag.XLogMainWindow):
         # ## First widget of splitter
         w0 = self.keep_ref(QWidget())
         l0 = QVBoxLayout(w0)
-        l0.setMargin(2)
+        ag.set_margin(l0, 2)
         l0.setSpacing(2)
 
         a = self.title_mol = QLabel(ag.format_title0("Select a molecule:"))
@@ -408,7 +408,7 @@ class XConvMol(ag.XLogMainWindow):
         # ## Second widget of splitter
         w1 = self.keep_ref(QWidget())
         l1 = QVBoxLayout(w1)
-        l1.setMargin(2)
+        ag.set_margin(l1, 2)
         l1.setSpacing(2)
 
         a = self.title_state = self.keep_ref(QLabel(ag.format_title0("States")))

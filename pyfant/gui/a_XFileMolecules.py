@@ -64,7 +64,7 @@ class XFileMolecules(QMainWindow):
         a.installEventFilter(self)
 
         l = self.layoutMol = QVBoxLayout()
-        l.setMargin(0)
+        ag.set_margin(l, 0)
         l.setSpacing(1)
         l.addWidget(self.labelMol)
         l.addWidget(self.listWidgetMol)
@@ -96,7 +96,7 @@ class XFileMolecules(QMainWindow):
         a.installEventFilter(self)
 
         l = self.layoutSol = QVBoxLayout()
-        l.setMargin(0)
+        ag.set_margin(l, 0)
         l.setSpacing(1)
         l.addWidget(self.labelSol)
         l.addWidget(self.listWidgetSol)
@@ -138,7 +138,7 @@ class XFileMolecules(QMainWindow):
         l0.addWidget(a11)
         l0.addWidget(a2)
         l0.addItem(a3)
-        l0.setMargin(1)
+        ag.set_margin(l0, 1)
         a = self.widgetSolToolbar = QWidget()
         a.setLayout(l0)
         a.setFixedHeight(40)
@@ -159,7 +159,7 @@ class XFileMolecules(QMainWindow):
         layout = QVBoxLayout()
         layout.addWidget(self.toolbar)
         layout.addWidget(self.canvas)
-        layout.setMargin(0)
+        ag.set_margin(layout, 0)
 
         a = self.widgetSolPlot = QWidget()
         a.setLayout(layout)
@@ -167,7 +167,7 @@ class XFileMolecules(QMainWindow):
         l1 = self.layoutSolPlot = QVBoxLayout()
         l1.addWidget(self.widgetSolToolbar)
         l1.addWidget(self.widgetSolPlot)
-        l1.setMargin(0)
+        ag.set_margin(l1, 0)
 
         a = self.widgetSolPlot = QWidget()
         a.setLayout(l1)

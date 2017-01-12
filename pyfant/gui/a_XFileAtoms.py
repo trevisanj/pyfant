@@ -56,7 +56,7 @@ class XFileAtoms(QMainWindow):
         self.labelAtoms.setBuddy(self.listWidgetAtoms)
 
         l = self.layoutAtoms = QVBoxLayout()
-        l.setMargin(0)
+        ag.set_margin(l, 0)
         l.setSpacing(1)
         l.addWidget(self.labelAtoms)
         l.addWidget(self.listWidgetAtoms)
@@ -101,7 +101,7 @@ class XFileAtoms(QMainWindow):
         l0.addWidget(a11)
         l0.addWidget(a2)
         l0.addItem(a3)
-        l0.setMargin(1)
+        ag.set_margin(l0, 1)
         a = self.widgetPlotToolbar = QWidget()
         a.setLayout(l0)
         a.setFixedHeight(40)
@@ -116,7 +116,7 @@ class XFileAtoms(QMainWindow):
         layout = QVBoxLayout()
         layout.addWidget(self.toolbar)
         layout.addWidget(self.canvas)
-        layout.setMargin(0)
+        ag.set_margin(layout, 0)
 
         a = self.widgetPlot = QWidget()
         a.setLayout(layout)
@@ -124,7 +124,7 @@ class XFileAtoms(QMainWindow):
         l1 = self.layoutPlot = QVBoxLayout()
         l1.addWidget(self.widgetPlotToolbar)
         l1.addWidget(self.widgetPlot)
-        l1.setMargin(0)
+        ag.set_margin(l1, 0)
 
         a = self.widgetPlot = QWidget()
         a.setLayout(l1)

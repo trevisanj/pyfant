@@ -53,7 +53,7 @@ class WMolConst(ag.WBase):
         # # GUI design
 
         l = QVBoxLayout(self)
-        l.setMargin(1)
+        ag.set_margin(l, 1)
 
         # ## State widget
         a = self.w_mol = WDBMolecule(self.parent_form)

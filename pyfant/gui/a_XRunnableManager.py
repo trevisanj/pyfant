@@ -155,7 +155,7 @@ class XRunnableManager(QMainWindow):
         for w in ww:
             l2.addWidget(w)
         # l2.addWidget(self.widgetPlot)
-        l2.setMargin(0)
+        ag.set_margin(l2, 0)
         a = self.centralWidget = QWidget()
         a.setLayout(l2)
         a.setFont(ag.MONO_FONT)

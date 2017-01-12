@@ -32,7 +32,7 @@ class WFileMain(QWidget):
 
         # # Central layout
         la = self.centralLayout = QVBoxLayout()
-        la.setMargin(0)
+        ag.set_margin(la, 0)
         self.setLayout(la)
 
         # ## Splitter with scroll area and descripton+error area
@@ -58,7 +58,7 @@ class WFileMain(QWidget):
         # Form layout
         lg = self.formLayout = QGridLayout()
         lw.addLayout(lg)
-        lg.setMargin(0)
+        ag.set_margin(lg, 0)
         lg.setVerticalSpacing(4)
         lg.setHorizontalSpacing(5)
         lw.addSpacerItem(QSpacerItem(0, 0, QSizePolicy.Minimum, QSizePolicy.Expanding))
@@ -234,7 +234,7 @@ class WFileMain(QWidget):
         # layout containing description area and a error label
         wlu = QWidget()
         lu = QVBoxLayout(wlu)
-        lu.setMargin(0)
+        ag.set_margin(lu, 0)
         lu.setSpacing(1)
         x = self.c23862 = QLabel("<b>Help</b>")
         lu.addWidget(x)

@@ -158,6 +158,7 @@ class _WSelectSaveFile(ag.WBase):
             path_ = self.dialog_path
         res = QFileDialog.getSaveFileName(self, self.dialog_title, path_, self.dialog_wild)
         if res:
+            res = res[0]
             self.edit.setText(res)
             self.dialog_path = res
 

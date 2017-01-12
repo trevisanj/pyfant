@@ -44,7 +44,7 @@ class WFileAbonds(QWidget):
         d.init_default()
 
         la = self.formLayout = QVBoxLayout()
-        la.setMargin(0)
+        ag.set_margin(la, 0)
         la.setSpacing(4)
 
         self.setLayout(la)
@@ -54,7 +54,7 @@ class WFileAbonds(QWidget):
 
         l = self.c29378 = QHBoxLayout()
         la.addLayout(l)
-        l.setMargin(0)
+        ag.set_margin(l, 0)
         l.setSpacing(4)
         b = self.button_sort_a = QPushButton("Sort &alphabetically")
         l.addWidget(b)
@@ -67,7 +67,7 @@ class WFileAbonds(QWidget):
 
         l = self.c34985 = QHBoxLayout()
         la.addLayout(l)
-        l.setMargin(0)
+        ag.set_margin(l, 0)
         l.setSpacing(4)
         b = self.button_insert = QPushButton("&Insert")
         l.addWidget(b)
@@ -102,7 +102,7 @@ class WFileAbonds(QWidget):
         w = self.csslff = QWidget()
         sp.addWidget(w)
         l = self.c49378 = QVBoxLayout(w)
-        l.setMargin(0)
+        ag.set_margin(l, 0)
         l.setSpacing(1)
 
         x = self.c88888 = QLabel("<b>Errors</b>")

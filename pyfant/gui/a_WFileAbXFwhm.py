@@ -48,7 +48,7 @@ class WFileAbXFwhm(QWidget):
         # # Central layout
 
         la = self.centralLayout = QVBoxLayout()
-        la.setMargin(0)
+        ag.set_margin(la, 0)
         self.setLayout(la)
 
         # ## Splitter with scroll area and descripton+error area
@@ -70,7 +70,7 @@ class WFileAbXFwhm(QWidget):
         # layout containing description area and a error label
         wlu = QWidget()
         lu = QVBoxLayout(wlu)
-        lu.setMargin(0)
+        ag.set_margin(lu, 0)
         lu.setSpacing(4)
         x = self.textEditInfo = QTextEdit(self)
         x.setReadOnly(True)

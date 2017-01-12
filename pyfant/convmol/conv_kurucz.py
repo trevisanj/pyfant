@@ -57,6 +57,7 @@ def kurucz_to_sols(mol_row, state_row, fileobj, qgbd_calculator, flag_hlf=False,
 
     S = mol_row["s"]
     DELTAK = mol_row["cro"]
+    fe = mol_row["fe"]
 
     # TODO of course this hard-wire needs change; now just a text for OH A2Sigma-X2Pi
     LAML = 0  # Sigma
@@ -83,10 +84,13 @@ def kurucz_to_sols(mol_row, state_row, fileobj, qgbd_calculator, flag_hlf=False,
 
             if flag_normhlf:
                 # k = 2 / ((2.0*line.J2l+1)*(2.0*S+1)*(2.0-DELTAK))
-                k = 2 / ((2.0*line.J2l+1))
+                # k = 2 / ((2.0*line.J2l+1))
+                k = 2/ ((2*S+1) * (2*line.J2l+1) * (2-DELTAK))
                 # k = (2.0*line.J2l+1)
             else:
                 k = 1
+
+#            k *= fe
 
             if flag_hlf:
                 hlf = formulas[branch](line.J2l)
@@ -96,18 +100,32 @@ def kurucz_to_sols(mol_row, state_row, fileobj, qgbd_calculator, flag_hlf=False,
                 # Normaliza = scale_factor * k
                 gf_pfant = k*10**line.loggf
 
-            if flag_fcf:
-                # TODO ask BLB for references on these Franck-Condon Factors & try to generalize (these are for OH only I think)
-                x = line.J2l*(line.J2l+1)
+            # # TODO ask BLB for references on these Franck-Condon Factors & try to generalize (these are for OH only I think)
+            # x = line.J2l * (line.J2l + 1)
+            # if branch[0] == "P":
+            #     fcf = 3.651E-2 * (1 + 4.309E-6 * x + 1.86E-10 * (x ** 2)) ** 2
+            # elif branch[0] == "Q":
+            #     fcf = 3.674E-2 * (1 + 6.634E-6 * x + 1.34E-10 * (x ** 2)) ** 2
+            # elif branch[0] == "R":
+            #     fcf = 3.698E-2 * (1 + 1.101E-5 * x + 7.77E-11 * (x ** 2)) ** 2
+            # else:
+            #     raise RuntimeError("Shouldn't fall in here (branch ie neither P/Q/R)")
 
-                if branch[0] == "P":
-                    gf_pfant *= 3.651E-2 * (1 + 4.309E-6 * x + 1.86E-10 * (x ** 2)) ** 2
-                elif branch[0] == "Q":
-                    gf_pfant *= 3.674E-2 * (1 + 6.634E-6 * x + 1.34E-10 * (x ** 2)) ** 2
-                elif branch[0] == "R":
-                    gf_pfant *= 3.698E-2 * (1 + 1.101E-5 * x + 7.77E-11 * (x ** 2)) ** 2
-                else:
-                    raise RuntimeError("Shouldn't fall in here (branch ie neither P/Q/R)")
+ #           fcf = 1.3201e-1
+
+            if flag_fcf:
+                fcf = pf.convmol.get_fcf_oh(line.vl, line.v2l)
+
+                gf_pfant *= fcf
+
+                # if branch[0] == "P":
+                #     gf_pfant *= 3.651E-2 * (1 + 4.309E-6 * x + 1.86E-10 * (x ** 2)) ** 2
+                # elif branch[0] == "Q":
+                #     gf_pfant *= 3.674E-2 * (1 + 6.634E-6 * x + 1.34E-10 * (x ** 2)) ** 2
+                # elif branch[0] == "R":
+                #     gf_pfant *= 3.698E-2 * (1 + 1.101E-5 * x + 7.77E-11 * (x ** 2)) ** 2
+                # else:
+                #     raise RuntimeError("Shouldn't fall in here (branch ie neither P/Q/R)")
 
             J2l_pfant = line.J2l
         except Exception as e:
