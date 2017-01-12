@@ -3,8 +3,9 @@ Visualization classes for atmospheric models
 """
 
 
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib as mpl

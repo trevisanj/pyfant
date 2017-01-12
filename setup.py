@@ -6,8 +6,9 @@ if sys.version_info[0] < 3:
 from setuptools import setup, find_packages
 from glob import glob
 
+NAME = 'pyfant'
 setup(
-    name = 'pyfant',
+    name =NAME,
     packages = find_packages(),
     include_package_data=True,
     version = '0.17.1.4',
@@ -19,7 +20,7 @@ setup(
     url = 'https://github.com/trevisanj/pyfant', # use the URL to the github repo
     keywords= ['astronomy', 'spectral synthesis'],
     install_requires = ['numpy', 'scipy', 'astropy', 'matplotlib', 'fortranformat', 'bs4', 'robobrowser',
-                        'tabulate', 'astrogear'],  # matplotlib never gets installed correctly by pip, but anyway...
-    scripts = glob('scripts/*.py')  # Considers system scripts all .py files in 'scripts' directory
+                        'tabulate'],  # matplotlib never gets installed correctly by pip, but anyway...
+    scripts = glob(NAME+'/scripts/*.py')  # Considers system scripts all .py files in 'scripts' directory
 )
 

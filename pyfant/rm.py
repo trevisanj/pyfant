@@ -3,7 +3,7 @@ __all__ = ["RunnableManager"]
 
 from astrogear import random_name, seconds2str, get_python_logger, MyLock, froze_it
 import threading
-from PyQt4.QtCore import QObject, pyqtSignal
+from PyQt5.QtCore import QObject, pyqtSignal
 import multiprocessing
 import copy
 import time

@@ -2,7 +2,8 @@
 
 __all__ = ["XFileMain"]
 
-from PyQt4.QtGui import *
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
 from . import a_WFileMain
 import os.path
 from pyfant import FileMain

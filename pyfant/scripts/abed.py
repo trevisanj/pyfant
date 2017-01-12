@@ -3,7 +3,8 @@
 """Abundances file editor"""
 
 import sys
-from PyQt4.QtGui import *
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
 import argparse
 import pyfant as pf
 import astrogear as ag

@@ -1,8 +1,9 @@
 __all__ = ["XRunnableManager"]
 
 
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
 from ..rm import RunnableManager
 from threading import Lock
 import time

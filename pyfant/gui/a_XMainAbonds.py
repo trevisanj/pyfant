@@ -1,8 +1,9 @@
 """Window to edit both main and abundances"""
 
 
-from PyQt4.QtGui import *
-from PyQt4.QtCore import *
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
+from PyQt5.QtCore import *
 from .a_WFileMain import *
 from .a_WFileAbonds import *
 from .a_WOptionsEditor import *

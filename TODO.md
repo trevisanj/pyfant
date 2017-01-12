@@ -1,5 +1,8 @@
 # TODO list
 
+  - **SEE WHY PYFANT SETUP IS MESSING ASTROGEAR!!!!!!**
+
+
   - ~~OK implement ToScalar_UseNumPyFunc~~
   - ~~OK add combobox to XToScalar~~
   - ~~OK Smarter loading of Full Cube~~

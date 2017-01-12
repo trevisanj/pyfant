@@ -2,7 +2,8 @@
 
 __all__ = ["XFileAbonds"]
 
-from PyQt4.QtGui import *
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
 from . import a_WFileAbonds
 import os
 from ._shared import *

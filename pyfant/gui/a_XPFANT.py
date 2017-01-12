@@ -2,7 +2,8 @@
 
 __all__ = ["XPFANT"]
 
-from PyQt4.QtGui import *
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
 from pyfant import *
 from .a_XMainAbonds import *
 import os.path

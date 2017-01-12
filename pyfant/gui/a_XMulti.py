@@ -2,7 +2,8 @@
 
 __all__ = ["XMulti"]
 
-from PyQt4.QtGui import *
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
 import os.path
 from .a_XPFANT import *
 from .a_WFileAbXFwhm import *

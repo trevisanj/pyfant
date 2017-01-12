@@ -2,8 +2,9 @@
 
 __all__ = ["WFileAbonds"]
 
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
 from pyfant import FileAbonds, adjust_atomic_symbol, FileDissoc
 import astrogear as ag
 import pyfant as pf

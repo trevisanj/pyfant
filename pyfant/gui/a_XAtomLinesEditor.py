@@ -1,7 +1,8 @@
 __all__ = ["XAtomLinesEditor"]
 
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
 from astrogear import MONO_FONT, snap_right, show_error, reset_table_widget
 from ._shared import *
 import pyfant as pf
