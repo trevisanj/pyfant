@@ -78,6 +78,9 @@ def kurucz_to_sols(mol_row, state_row, fileobj, qgbd_calculator, flag_hlf=False,
         # TODO is it spin 2l?
         branch = ag.doublet.quanta_to_branch(line.Jl, line.J2l, line.spin2l)
         try:
+            # TODO take this outta here, for now just to filter to match others
+            fcf = pf.convmol.get_fcf_oh(line.vl, line.v2l)
+
             wl = line.lambda_
 
             # Normaliza = 1/((2.0*line.J2l+1)*(2.0*S+1)*(2.0-DELTAK))
@@ -87,6 +90,7 @@ def kurucz_to_sols(mol_row, state_row, fileobj, qgbd_calculator, flag_hlf=False,
                 # k = 2 / ((2.0*line.J2l+1))
                 k = 2/ ((2*S+1) * (2*line.J2l+1) * (2-DELTAK))
                 # k = (2.0*line.J2l+1)
+                # k = (2*S+1) * (2*line.J2l+1) * (2-DELTAK)
             else:
                 k = 1
 
