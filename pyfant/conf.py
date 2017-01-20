@@ -6,14 +6,15 @@ executables.
 __all__ = ["Conf", "FOR_INNEWMARCS", "FOR_HYDRO2", "FOR_PFANT",
            "FOR_NULBAD", "IdMaker", "SID"]
 
-from pyfant.datatypes import DataFile, FileHmap, FileModBin, FileMain, FileOpa, FileOptions
+
 import shutil
 import os
-from .misc import *
+from .gear import *
 import logging
 import subprocess
 from threading import Lock
-from .constants import *
+import pyfant as pf
+import hypydrive as hpd
 
 
 # Indexes to use in Conf.sequence property
@@ -23,7 +24,7 @@ FOR_PFANT = 2
 FOR_NULBAD = 3
 
 
-@froze_it
+@hpd.froze_it
 class SID(object):
     """
     SID -- Session Id and Directory
@@ -133,8 +134,8 @@ class IdMaker(object):
 
     def __init__(self):
         self.dirs_per_dir = 1000  # only if flag_split_dirs
-        self.session_prefix_singular = SESSION_PREFIX_SINGULAR
-        self.session_prefix_plural = SESSION_PREFIX_PLURAL
+        self.session_prefix_singular = pf.SESSION_PREFIX_SINGULAR
+        self.session_prefix_plural = pf.SESSION_PREFIX_PLURAL
         # Lock is necessary to make unique session ids
         self.__lock_session_id = Lock()
         self.__i_id = 0
@@ -163,7 +164,7 @@ class IdMaker(object):
         d1 = self.session_prefix_singular+str(self.__i_id)
         return os.path.join(d0, d1)
 
-@froze_it
+@hpd.froze_it
 class Conf(object):
     """
     Class holds the configuration of an executable.
@@ -207,7 +208,7 @@ class Conf(object):
     @property
     def logger(self):
         if not self.__logger:
-            self.__logger = get_python_logger()
+            self.__logger = hpd.get_python_logger()
         return self.__logger
 
     @logger.setter
@@ -250,9 +251,11 @@ class Conf(object):
         self.file_hmap = None
         # ## FileAtoms instance
         self.file_atoms = None
+        # ## FileMolecules instance
+        self.file_molecules = None
 
         # # Command-line options
-        self.__opt = FileOptions()
+        self.__opt = pf.FileOptions()
 
         # # Read-only properties
         self.__popen_text_dest = None
@@ -270,7 +273,7 @@ class Conf(object):
         if it has been called before and skip most operations if so.
         """
         if not self.__flag_configured_before:
-            self.__logger = get_python_logger()
+            self.__logger = hpd.get_python_logger()
             self.__sid.make_id()
             if self.__flag_output_to_dir:
                 self.__rename_outputs(sequence)
@@ -281,7 +284,7 @@ class Conf(object):
         if self.__flag_log_file:
             log_path = self.__sid.join_with_session_dir("fortran.log")
             if self.__flag_log_console:
-                stdout_ = LogTwo(log_path)
+                stdout_ = hpd.LogTwo(log_path)
             else:
                 stdout_ = open(log_path, "w")
         else:
@@ -310,7 +313,7 @@ class Conf(object):
             opt = self.__opt
         if self.file_main is not None:
             return self.file_main
-        file_ = FileMain()
+        file_ = pf.FileMain()
         if opt.fn_main is None:
             file_.load()  # will try to load default file
         else:
@@ -337,6 +340,18 @@ class Conf(object):
         file_ = self.get_file_main()
         return file_.flprefix
 
+    def get_fwhm(self, opt=None):
+        """Returns FWHM from command-line option if present, otherwise from main file"""
+
+        if opt is None:
+            opt = self.__opt
+        if opt.flprefix is not None:
+            return opt.fwhm
+        if self.file_main is not None:
+            return self.file_main.fwhm
+        file_ = self.get_file_main()
+        return file_.fwhm
+
     def get_pfant_output_filepath(self, type_="norm"):
         """Returns path to a pfant output filename.
 
@@ -356,20 +371,21 @@ class Conf(object):
         Reproduces nulbad logic in determining its output filename, i.e.,
           1) uses --fn_cv if present; if not,
           2) gets flprefix from main configuration file and adds
-             ".norm" or ".spec"
+             (".norm" or ".spec") + ".nulbad." + <fwhm in 5.3 format>
         """
         if self.__opt.fn_cv is not None:
             filename = self.__opt.fn_cv
         else:
             flprefix = self.get_flprefix()
             # True or None evaluates to "norm"
-            ext = "spec" if self.__opt.norm == False else "norm"
+            ext = ("spec" if self.__opt.norm == False else "norm") + \
+                  ".nulbad.{:5.3f}".format(self.get_fwhm())
             filename = flprefix+"."+ext
         return filename
 
     def get_fn_modeles(self):
         """Returns name of atmospheric model file."""
-        return FileModBin.default_filename if self.__opt.fn_modeles is None \
+        return pf.FileModBin.default_filename if self.__opt.fn_modeles is None \
          else self.__opt.fn_modeles
 
     def get_args(self):
@@ -403,7 +419,7 @@ class Conf(object):
                 obj = self.__getattribute__(attr_name)
 
                 if obj is not None:
-                    assert isinstance(obj, DataFile)
+                    assert isinstance(obj, hpd.DataFile)
                     fn_attr_name = "fn_"+attr_name[5:]
                     curr_fn = self.__opt.__getattribute__(fn_attr_name)
                     # Tries to preserve custom file name given to file
@@ -425,10 +441,10 @@ class Conf(object):
             # # innewmarcs -> (hydro2, pfant)
             opt.fn_modeles = sid.join_with_session_dir(
              os.path.basename(opt.fn_modeles) if opt.fn_modeles is not None
-             else FileModBin.default_filename)
+             else pf.FileModBin.default_filename)
             opt.fn_opa = sid.join_with_session_dir(
              os.path.basename(opt.fn_opa) if opt.fn_opa is not None
-             else FileOpa.default_filename)
+             else pf.FileOpa.default_filename)
 
         if FOR_HYDRO2 in sequence:
             # # hydro2 -> pfant
@@ -437,9 +453,9 @@ class Conf(object):
 
             if not self.file_hmap:
                 # if self doesn't have a Hmap object, will load from file
-                o = self.file_hmap = FileHmap()
+                o = self.file_hmap = pf.FileHmap()
                 fn = opt.fn_hmap if opt.fn_hmap is not None else \
-                 FileHmap.default_filename
+                 pf.FileHmap.default_filename
                 o.load(fn)
             else:
                 o = self.file_hmap

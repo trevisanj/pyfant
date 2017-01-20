@@ -2,11 +2,13 @@
 
 __all__ = ["WFileMain"]
 
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
-from .guiaux import *
-from pyfant import FileMain
-
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
+from ._shared import *
+from pyfant import FileMain, COLOR_STAR, COLOR_CONFIG
+from hypydrive import enc_name_descr, enc_name, COLOR_DESCR, COLOR_ERROR, style_checkboxes
+import hypydrive as hpd
 
 class WFileMain(QWidget):
     """
@@ -30,7 +32,7 @@ class WFileMain(QWidget):
 
         # # Central layout
         la = self.centralLayout = QVBoxLayout()
-        la.setMargin(0)
+        hpd.set_margin(la, 0)
         self.setLayout(la)
 
         # ## Splitter with scroll area and descripton+error area
@@ -56,7 +58,7 @@ class WFileMain(QWidget):
         # Form layout
         lg = self.formLayout = QGridLayout()
         lw.addLayout(lg)
-        lg.setMargin(0)
+        hpd.set_margin(lg, 0)
         lg.setVerticalSpacing(4)
         lg.setHorizontalSpacing(5)
         lw.addSpacerItem(QSpacerItem(0, 0, QSizePolicy.Minimum, QSizePolicy.Expanding))
@@ -65,7 +67,7 @@ class WFileMain(QWidget):
 
         # field map: [(label widget, edit widget, field name, short description,
         #              field name color, long description), ...]
-        pp = self._map = []
+        map = self._map = []
 
         x = self.label_titrav = QLabel()
         y = self.lineEdit_titrav = QLineEdit()
@@ -73,7 +75,7 @@ class WFileMain(QWidget):
         y.textEdited.connect(self.on_edited)
         y.installEventFilter(self)
         x.setBuddy(y)
-        pp.append((x, y, "t&itrav", "star name", COLOR_STAR,
+        map.append((x, y, "t&itrav", "star name", COLOR_STAR,
          "Name of the star"))
 
         x = self.label_teff = QLabel()
@@ -82,7 +84,7 @@ class WFileMain(QWidget):
         y.installEventFilter(self)
         y.setValidator(QDoubleValidator(0, 1e10, 0))
         x.setBuddy(y)
-        pp.append((x, y, "&teff", "effective temperature", COLOR_STAR,
+        map.append((x, y, "&teff", "effective temperature", COLOR_STAR,
          "Sun: 5777"))
 
         x = self.label_glog = QLabel()
@@ -91,7 +93,7 @@ class WFileMain(QWidget):
         y.installEventFilter(self)
         y.setValidator(QDoubleValidator(0, 1e10, 5))
         x.setBuddy(y)
-        pp.append((x, y, "&glog", "gravity", COLOR_STAR,
+        map.append((x, y, "&glog", "gravity", COLOR_STAR,
          "Sun: 4.44"))
 
         x = self.label_asalog = QLabel()
@@ -100,7 +102,7 @@ class WFileMain(QWidget):
         y.installEventFilter(self)
         y.setValidator(QDoubleValidator(-10, 10, 5))
         x.setBuddy(y)
-        pp.append((x, y, "&asalog", "metallicity", COLOR_STAR,
+        map.append((x, y, "&asalog", "metallicity", COLOR_STAR,
          "Sun: 0"))
 
         x = self.label_vvt = QLabel()
@@ -109,7 +111,7 @@ class WFileMain(QWidget):
         y.installEventFilter(self)
         y.setValidator(QDoubleValidator(0, 900, 2))
         x.setBuddy(y)
-        pp.append((x, y, "&vvt", "velocity of microturbulence", COLOR_STAR,
+        map.append((x, y, "&vvt", "velocity of microturbulence", COLOR_STAR,
          "Sun: 0.9"))
 
         x = self.label_nhe = QLabel()
@@ -118,7 +120,7 @@ class WFileMain(QWidget):
         y.installEventFilter(self)
         y.setValidator(QDoubleValidator(0, 10, 5))
         x.setBuddy(y)
-        pp.append((x, y, "&nhe", "abundance of Helium", COLOR_STAR,
+        map.append((x, y, "&nhe", "abundance of Helium", COLOR_STAR,
          "Sun: 0.1"))
 
         x = self.label_ptdisk = QLabel()
@@ -127,7 +129,7 @@ class WFileMain(QWidget):
         y.installEventFilter(self)
         y.stateChanged.connect(self.on_edited)
         x.setBuddy(y)
-        pp.append((x, y, "pt&disk", "point of disk?", COLOR_CONFIG,
+        map.append((x, y, "pt&disk", "point of disk?", COLOR_CONFIG,
          DESCR_PTDISK))
 
         x = self.label_mu = QLabel()
@@ -136,10 +138,11 @@ class WFileMain(QWidget):
         y.textEdited.connect(self.on_edited)
         y.setValidator(QDoubleValidator(-1, 1, 5))
         x.setBuddy(y)
-        pp.append((x, y, "&mu", "cosine of angle", COLOR_CONFIG,
+        map.append((x, y, "&mu", "cosine of angle", COLOR_CONFIG,
          "This is the cosine of the angle formed by center of "
          "the star disk, the point of observation, and the Earth as vertex. "
-         "<br><br>This value will be used only if "+enc_name("ptdisk", COLOR_CONFIG)+" is True.<br>\n<pre>\n"
+         "<br><br>This value will be used only if "+enc_name("ptdisk", COLOR_CONFIG)+
+         " is True.<br>\n<pre>\n"
          "             point of observation   \n"
          "            /                       \n"
          "           /                        \n"
@@ -155,7 +158,7 @@ class WFileMain(QWidget):
         y.textEdited.connect(self.on_edited)
         y.installEventFilter(self)
         x.setBuddy(y)
-        pp.append((x, y, "flprefi&x", "prefix of filename", COLOR_CONFIG,
+        map.append((x, y, "flprefi&x", "prefix of filename", COLOR_CONFIG,
          "pfant will create three output files:<ul>"
          "<li>"+enc_name("flprefix", COLOR_CONFIG)+".cont (continuum),"
          "<li>"+enc_name("flprefix", COLOR_CONFIG)+".norm (normalized spectrum), and"
@@ -167,8 +170,9 @@ class WFileMain(QWidget):
         y.textEdited.connect(self.on_edited)
         y.setValidator(QDoubleValidator(0, 10, 5))
         x.setBuddy(y)
-        pp.append((x, y, "&pas", "calculation step (&Aring;)", COLOR_CONFIG,
-         "The synthetic spectrum will have points "+enc_name("pas", COLOR_CONFIG)+" &Aring; distant from "
+        map.append((x, y, "&pas", "calculation step (&Aring;)", COLOR_CONFIG,
+         "The synthetic spectrum will have points "+enc_name("pas", COLOR_CONFIG)+
+         " &Aring; distant from "
          "each other.<br><br>Use this to specify the resolution of the synthetic spectrum."))
 
         x = self.label_llzero = QLabel()
@@ -177,7 +181,8 @@ class WFileMain(QWidget):
         y.textEdited.connect(self.on_edited)
         y.setValidator(QDoubleValidator(0, 10, 5))
         x.setBuddy(y)
-        pp.append((x, y, "ll&zero", "lower boundary of synthesis interval (&Aring;)", COLOR_CONFIG, LLZERO_LLFIN))
+        map.append((x, y, "ll&zero", "lower boundary of synthesis interval (&Aring;)",
+                   COLOR_CONFIG, LLZERO_LLFIN))
 
         x = self.label_llfin = QLabel()
         y = self.lineEdit_llfin = QLineEdit()
@@ -185,7 +190,8 @@ class WFileMain(QWidget):
         y.textEdited.connect(self.on_edited)
         y.setValidator(QDoubleValidator(0, 10, 5))
         x.setBuddy(y)
-        pp.append((x, y, "&llfin", "upper boundary of synthesis interval (&Aring;)", COLOR_CONFIG, LLZERO_LLFIN))
+        map.append((x, y, "&llfin", "upper boundary of synthesis interval (&Aring;)",
+                   COLOR_CONFIG, LLZERO_LLFIN))
 
         x = self.label_aint = QLabel()
         y = self.lineEdit_aint = QLineEdit()
@@ -193,10 +199,13 @@ class WFileMain(QWidget):
         y.textEdited.connect(self.on_edited)
         y.setValidator(QDoubleValidator(0, 10, 5))
         x.setBuddy(y)
-        pp.append((x, y, "&aint", "length of sub-interval (&Aring;)", COLOR_CONFIG,
+        map.append((x, y, "&aint", "length of sub-interval (&Aring;)", COLOR_CONFIG,
         "This is length of each calculation sub-interval "
-        "(the calculation interval ["+enc_name("llzero", COLOR_CONFIG)+", "+enc_name("llfin", COLOR_CONFIG)+"] is split in sub-intervals of roughly "+enc_name("aint", COLOR_CONFIG)+" &Aring;)."
-        "<br><br>Note: "+enc_name("aint", COLOR_CONFIG)+" must be a multiple of "+enc_name("pas", COLOR_CONFIG)+"."+LLZERO_LLFIN))
+        "(the calculation interval ["+enc_name("llzero", COLOR_CONFIG)+", "+
+        enc_name("llfin", COLOR_CONFIG)+"] is split in sub-intervals of roughly "+
+        enc_name("aint", COLOR_CONFIG)+" &Aring;)."
+        "<br><br>Note: "+enc_name("aint", COLOR_CONFIG)+" must be a multiple of "+
+        enc_name("pas", COLOR_CONFIG)+"."+LLZERO_LLFIN))
 
         x = self.label_fwhm = QLabel()
         y = self.lineEdit_fwhm = QLineEdit()
@@ -204,13 +213,13 @@ class WFileMain(QWidget):
         y.textEdited.connect(self.on_edited)
         y.setValidator(QDoubleValidator(0, 10, 5))
         x.setBuddy(y)
-        pp.append((x, y, "f&whm", "convolution full-width-half-maximum", COLOR_CONFIG,
+        map.append((x, y, "f&whm", "convolution full-width-half-maximum", COLOR_CONFIG,
          "This parameter specifies the full-width-half-maximum "
          "of a Gaussian curve to convolve the synthetic spectrum with. <br><br>It is "
          "used by <em>nulbad</em> (Fortran code that calculates such convolution)."))
 
 
-        for i, (label, edit, name, short_descr, color, long_descr) in enumerate(pp):
+        for i, (label, edit, name, short_descr, color, long_descr) in enumerate(map):
             # label.setStyleSheet("QLabel {text-align: right}")
             assert isinstance(label, QLabel)
             label.setText(enc_name_descr(name, short_descr, color))
@@ -225,7 +234,7 @@ class WFileMain(QWidget):
         # layout containing description area and a error label
         wlu = QWidget()
         lu = QVBoxLayout(wlu)
-        lu.setMargin(0)
+        hpd.set_margin(lu, 0)
         lu.setSpacing(1)
         x = self.c23862 = QLabel("<b>Help</b>")
         lu.addWidget(x)

@@ -2,18 +2,15 @@
 
 __all__ = ["XPFANT"]
 
-from PyQt4.QtGui import *
-from pyfant import *
-from .guiaux import *
-from . import XRunnableManager
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
 from pyfant import *
 from .a_XMainAbonds import *
 import os.path
-import matplotlib.pyplot as plt
-import traceback
 import copy
-import syntax
 import shutil
+import hypydrive as hpd
+
 
 ################################################################################
 class XPFANT(XMainAbonds):
@@ -83,9 +80,9 @@ class XPFANT(XMainAbonds):
                 self.__submit_job()
             except Exception as e:
                 errors.append(str(e))
-                get_python_logger().exception("Cannot submit job")
+                hpd.get_python_logger().exception("Cannot submit job")
         if len(errors) > 0:
-            show_error("Cannot submit job:\n  - "+("\n  - ".join(errors)))
+            hpd.show_error("Cannot submit job:\n  - "+("\n  - ".join(errors)))
 
     def on_checkbox_custom_id_state_changed(self):
         self.__update_lineEdit_custom_id()

@@ -1,10 +1,11 @@
 
 __all__ = ["XMolLinesEditor"]
 
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
-from pyfant import *
-from .guiaux import *
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
+import hypydrive as hpd
+from ._shared import *
 
 class XMolLinesEditor(QMainWindow):
 
@@ -21,12 +22,12 @@ class XMolLinesEditor(QMainWindow):
         a.currentCellChanged.connect(self.on_tableWidget_currentCellChanged)
         a.cellChanged.connect(self.on_tableWidget_cellChanged)
         a.setEditTriggers(QAbstractItemView.DoubleClicked | QAbstractItemView.EditKeyPressed)
-        a.setFont(MONO_FONT)
+        a.setFont(hpd.MONO_FONT)
         a.installEventFilter(self)
 
 
         self.setCentralWidget(a)
-        snap_right(self, 200)
+        hpd.snap_right(self, 200)
 
     def on_tableWidget_currentCellChanged(self, currentRow, currentColumn, previousRow,
                                           previousColumn):
@@ -39,7 +40,7 @@ class XMolLinesEditor(QMainWindow):
                 value = float(item.text())
             except ValueError:
                 # restores original value
-                show_error("Invalid floating point value: %s" % item.text())
+                hpd.show_error("Invalid floating point value: %s" % item.text())
                 item.setText(str(self.parent.sol.__getattribute__(SOL_ATTR_NAMES[column])[row]))
             else:
                 self.parent.MolLinesEditor_cell_changed(row, column, value)
@@ -60,7 +61,7 @@ class XMolLinesEditor(QMainWindow):
     def set_sol(self, sol, title):
         """Sets set of lines."""
 
-        assert isinstance(sol, SetOfLines)
+        assert isinstance(sol, pf.SetOfLines)
 
         self.flag_populating = True
         try:
@@ -68,13 +69,13 @@ class XMolLinesEditor(QMainWindow):
 
             t = self.tableWidget
             n = len(sol)
-            ResetTableWidget(t, n, len(SOL_HEADERS))
+            hpd.reset_table_widget(t, n, len(SOL_HEADERS))
             t.setHorizontalHeaderLabels(SOL_HEADERS)
 
             # list with the vectors themselves
             attrs = [sol.__getattribute__(x) for x in SOL_ATTR_NAMES]
 
-            for i in xrange(len(sol)):
+            for i in range(len(sol)):
                 for j, attr in enumerate(attrs):
                     item = QTableWidgetItem(str(attr[i]))
                     t.setItem(i, j, item)

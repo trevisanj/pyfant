@@ -4,19 +4,20 @@
 
 __all__ = ["XFileAtoms"]
 
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
-from pyfant import *
-from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
-from matplotlib.backends.backend_qt4agg import NavigationToolbar2QT # as NavigationToolbar2QT
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT # as NavigationToolbar2QT
 import matplotlib.pyplot as plt
 import numpy as np
 from .a_XAtomLinesEditor import *
-from .guiaux import *
 import os.path
 import webbrowser
 import sys
-from . import XFileAtomsHistogram
+import hypydrive as hpd
+import pyfant as pf
+from ._shared import *
 
 
 NUM_PLOTS = len(ATOM_HEADERS)-1  # -1 because whe "lambda" does not have its plot
@@ -38,7 +39,7 @@ class XFileAtoms(QMainWindow):
 
         # Information about the plots
         self.marker_row = None  # points into current atom, self.atom
-        self.plot_info = [PlotInfo() for i in range(NUM_PLOTS)]
+        self.plot_info = [PlotInfo() for _ in range(NUM_PLOTS)]
         # keptself.set_flag_plot(ATOM_ATTR_NAMES.index("kiex")-1, True)
         self.set_flag_plot(ATOM_ATTR_NAMES.index("algf")-1, True)
 
@@ -55,7 +56,7 @@ class XFileAtoms(QMainWindow):
         self.labelAtoms.setBuddy(self.listWidgetAtoms)
 
         l = self.layoutAtoms = QVBoxLayout()
-        l.setMargin(0)
+        hpd.set_margin(l, 0)
         l.setSpacing(1)
         l.addWidget(self.labelAtoms)
         l.addWidget(self.listWidgetAtoms)
@@ -100,7 +101,7 @@ class XFileAtoms(QMainWindow):
         l0.addWidget(a11)
         l0.addWidget(a2)
         l0.addItem(a3)
-        l0.setMargin(1)
+        hpd.set_margin(l0, 1)
         a = self.widgetPlotToolbar = QWidget()
         a.setLayout(l0)
         a.setFixedHeight(40)
@@ -115,7 +116,7 @@ class XFileAtoms(QMainWindow):
         layout = QVBoxLayout()
         layout.addWidget(self.toolbar)
         layout.addWidget(self.canvas)
-        layout.setMargin(0)
+        hpd.set_margin(layout, 0)
 
         a = self.widgetPlot = QWidget()
         a.setLayout(layout)
@@ -123,7 +124,7 @@ class XFileAtoms(QMainWindow):
         l1 = self.layoutPlot = QVBoxLayout()
         l1.addWidget(self.widgetPlotToolbar)
         l1.addWidget(self.widgetPlot)
-        l1.setMargin(0)
+        hpd.set_margin(l1, 0)
 
         a = self.widgetPlot = QWidget()
         a.setLayout(l1)
@@ -142,7 +143,7 @@ class XFileAtoms(QMainWindow):
 
         # self.menubar = QMenuBar(self)
         # self.menubar.setGeometry(QRect(0, 0, 772, 18))
-        #self.menubar.setObjectName(_fromUtf8("menubar"))
+        # self.menubar.setObjectName(_fromUtf8("menubar"))
         b = self.menuBar()
         m = self.menu_file = b.addMenu("&File")
         self.act_save = ac = m.addAction("&Save")
@@ -164,9 +165,9 @@ class XFileAtoms(QMainWindow):
         # * # * # * # * # * # * # *
         # Final adjustments
 
-        self.splitter.setFont(MONO_FONT)
+        self.splitter.setFont(hpd.MONO_FONT)
         self.setCentralWidget(self.splitter)
-        place_left_top(self)
+        hpd.place_left_top(self)
 
     # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * #
     # Qt override
@@ -177,7 +178,7 @@ class XFileAtoms(QMainWindow):
             r = QMessageBox.question(self,
                         "About to exit",
                         "File \"%s\" has unsaved changes. Save now?" % self.f.filename,
-                        QMessageBox.Yes|QMessageBox.No|
+                        QMessageBox.Yes | QMessageBox.No|
                         QMessageBox.Cancel)
             if r == QMessageBox.Cancel:
                 event.ignore()
@@ -208,9 +209,9 @@ class XFileAtoms(QMainWindow):
         base_dir = os.path.dirname(sys.argv[0])
         try:
             webbrowser.open_new(os.path.join(base_dir, "ated.html"))
-            show_message("Help file ated.html was opened in web browser.")
+            hpd.show_message("Help file ated.html was opened in web browser.")
         except Exception as e:
-            show_error(str(e))
+            hpd.show_error(str(e))
             raise
 
     def on_save(self, _):
@@ -218,7 +219,7 @@ class XFileAtoms(QMainWindow):
         try:
             self.save()
         except Exception as e:
-            show_error(str(e))
+            hpd.show_error(str(e))
             raise
         finally:
             self.enable_save_actions()
@@ -228,12 +229,12 @@ class XFileAtoms(QMainWindow):
         try:
             if self.f:
                 new_filename = QFileDialog.getSaveFileName(self, "Save file",
-                 self.save_dir, "*.dat")
+                 self.save_dir, "*.dat")[0]
                 if new_filename:
                     self.save_dir, _ = os.path.split(str(new_filename))
                     self.save_as(new_filename)
         except Exception as e:
-            show_error(str(e))
+            hpd.show_error(str(e))
             raise
         finally:
             self.enable_save_actions()
@@ -255,7 +256,7 @@ class XFileAtoms(QMainWindow):
 
     def on_histogram(self, _):
         if self.form_histogram is None:
-            self.form_histogram = XFileAtomsHistogram(self.f)
+            self.form_histogram = pf.XFileAtomsHistogram(self.f)
         self.form_histogram.show()
 
 
@@ -263,12 +264,12 @@ class XFileAtoms(QMainWindow):
 
     def load(self, f):
         """Loads file into GUI."""
-        assert isinstance(f, FileAtoms)
+        assert isinstance(f, pf.FileAtoms)
 
         self.f = f
 
         for m in f.atoms:
-            assert isinstance(m, Atom)
+            assert isinstance(m, pf.Atom)
             item = QListWidgetItem(self.get_atom_string(m))
             # not going to allow editing yet item.setFlags(item.flags() | Qt.ItemIsEditable)
             self.listWidgetAtoms.addItem(item)
@@ -306,7 +307,7 @@ class XFileAtoms(QMainWindow):
 
             n = sum([info.flag for info in self.plot_info])  # number of subplots (0, 1 or 2)
             # map to reuse plotting routine, contains what differs between each plot
-            map_ = [(ATOM_HEADERS[i], o.__getattribute__(ATOM_ATTR_NAMES[i])) \
+            map_ = [(ATOM_HEADERS[i], o.__getattribute__(ATOM_ATTR_NAMES[i]))
                     for i in range(1, len(ATOM_HEADERS))]
 
             # number of rows and columns for each different number of subplots
@@ -329,7 +330,7 @@ class XFileAtoms(QMainWindow):
                         x = _x[ii]
                         y = _y[ii]
 
-                    format_BLB()
+                    hpd.format_BLB()
 
                     self.figure.add_subplot(SL[n-1][0], SL[n-1][1], i_subplot)
                     pi.axis = ax = self.figure.gca()
@@ -350,7 +351,8 @@ class XFileAtoms(QMainWindow):
 
                     i_subplot += 1
 
-            if i_subplot > 1: plt.tight_layout()
+            if i_subplot > 1:
+                plt.tight_layout()
 
             self.canvas.draw()
             self.draw_markers()
@@ -364,7 +366,8 @@ class XFileAtoms(QMainWindow):
         self.labelNumLines.setText('Number of lines: %d' % (n,))
 
     def update_window_title(self):
-        self.setWindowTitle("ated -- %s" % (self.f.filename+("" if not self.flag_changed else " (changed)"), ))
+        self.setWindowTitle("ated -- %s" %
+                            (self.f.filename+("" if not self.flag_changed else " (changed)"), ))
 
     def enable_save_actions(self):
         self.act_save.setEnabled(True)
@@ -423,7 +426,7 @@ class XFileAtoms(QMainWindow):
     def clear_markers(self):
         for o in self.plot_info:
             if o.mpl_obj:
-                remove_line(o.mpl_obj)
+                hpd.remove_line(o.mpl_obj)
                 o.mpl_obj = None
 
     def draw_markers(self):
@@ -446,7 +449,7 @@ class XFileAtoms(QMainWindow):
     def on_plot_click(self, event):
         lambda_ = event.xdata
         if lambda_ is not None and self.form_lines is not None:
-            idx = index_nearest(self.atom.lambda_, lambda_)
+            idx = hpd.index_nearest(self.atom.lambda_, lambda_)
             self.form_lines.set_row(idx)
             # self.set_marker_row(idx)
 
@@ -457,6 +460,5 @@ class XFileAtoms(QMainWindow):
 
     @staticmethod
     def get_atom_string(a):
-        assert isinstance(a, Atom)
+        assert isinstance(a, pf.Atom)
         return "%-3s (%4d)" % (str(a).strip(), len(a))
-

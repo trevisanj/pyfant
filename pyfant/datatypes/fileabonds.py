@@ -1,14 +1,14 @@
 __all__ = ["FileAbonds"]
 
 import struct
-from .datafile import *
-from ..misc import adjust_atomic_symbol
+import pyfant as pf
+import hypydrive as hpd
 import re
-from . import FileDissoc
-from ..misc import SYMBOLS
+from .filedissoc import FileDissoc
+import tabulate
 
 
-class FileAbonds(DataFile):
+class FileAbonds(hpd.DataFile):
     """PFANT Stellar Chemical Abundances"""
 
     description = "chemical abundances"
@@ -16,39 +16,45 @@ class FileAbonds(DataFile):
     attrs = ["ele", "abol", "notes"]
 
     def __init__(self):
-        DataFile.__init__(self)
+        hpd.DataFile.__init__(self)
         self.ele = []   # list of atomic symbols
         self.abol = []  # corresponding abundances
         self.notes = []  # ignored by pfant
 
-    def __repr__(self):
-        nn = max(0 if x is None else len(x) for x in self.notes)
-        return "\n".join(
-         ["El  Abund Notes",
-          "-- ------ "+"-"*nn]+
-         ["{:>2s} {:>6.2f} {}".format(a, b, c)
-          for a, b, c in zip(self.ele, self.abol, self.notes)])
+    def __str__(self):
+        data = zip(self.ele, self.abol, self.notes)
+        headers = ["El", "Abund", "Notes"]
+        return tabulate.tabulate(data, headers)
+        # nn = max(0 if x is None else len(x) for x in self.notes)
+        # return "\n".join(
+        #  ["El  Abund Notes",
+        #   "-- ------ "+"-"*nn]+
+        #  ["{:>2s} {:>6.2f} {}".format(a, b, c)
+        #   for a, b, c in zip(self.ele, self.abol, self.notes)])
 
     def __len__(self):
         """Returns length of "ele" attribute."""
         return len(self.ele)
 
     def _do_load(self, filename):
-        """Clears internal lists and loads from file."""
-        self.abol, self.ele = [], []
+        self.abol, self.ele, self.notes = [], [], []
 
         ostr = struct.Struct("1x 2s 6s")
         with open(filename, "r") as h:
             for s in h:
                 if len(s) > 0:
                     if s[0] == "1":  # sign to stop reading file
+                        if len(self) == 0:
+                            # We need at least one element in order increase the amount of
+                            # file validation
+                            raise RuntimeError("'EOF' marker found at beginning of file, I need at least one element")
                         break
                 [ele, abol, notes] = s[1:3], s[3:9], s[10:]
 
                 if not re.search(r'[a-z]', ele, re.IGNORECASE):
                     raise RuntimeError("Invalid element symbol: '%s'" % ele.strip())
 
-                self.ele.append(adjust_atomic_symbol(ele))
+                self.ele.append(pf.adjust_atomic_symbol(ele))
                 self.abol.append(float(abol))
                 self.notes.append(notes.strip())
 
@@ -87,19 +93,19 @@ class FileAbonds(DataFile):
         """
 
         # determines the atomic numbers of the elements
-        atomic_numbers, aa = [], []
+        atomic_numbers, hpd = [], []
         for symbol, abundance in zip(self.ele, self.abol):
             s = symbol.strip()
             try:
-                atomic_numbers.append("%3d" % (SYMBOLS.index(s)+1))
-                aa.append(abundance)
+                atomic_numbers.append("%3d" % (hpd.SYMBOLS.index(s)+1))
+                map.append(abundance)
             except ValueError:
                 pass  # skips elements whose symbol is not in the periodic table
         # sorts by atomic number
-        indexes = sorted(range(len(atomic_numbers)), key=lambda k: atomic_numbers[k])
+        indexes = sorted(list(range(len(atomic_numbers))), key=lambda k: atomic_numbers[k])
         # mounts string
         l = ["'INDIVIDUAL ABUNDANCES:'   '%d'" % len(indexes)]+\
-            ["%s %g" % (atomic_numbers[i], aa[i]) for i in indexes]
+            ["%s %g" % (atomic_numbers[i], hpd[i]) for i in indexes]
         return "\n".join(l)
 
     def sort_a(self):
@@ -109,7 +115,7 @@ class FileAbonds(DataFile):
         alphabetically.
         """
 
-        indexes = sorted(range(len(self)), key=lambda k: self.ele[k].strip())
+        indexes = sorted(list(range(len(self))), key=lambda k: self.ele[k].strip())
         self.ele = [self.ele[i] for i in indexes]
         self.abol = [self.abol[i] for i in indexes]
         self.notes = [self.notes[i] for i in indexes]
@@ -129,12 +135,12 @@ class FileAbonds(DataFile):
         for symbol in self.ele:
             s = symbol.strip()
             try:
-                atomic_numbers.append("%3d" % (SYMBOLS.index(s)+1))
+                atomic_numbers.append("%3d" % (hpd.SYMBOLS.index(s)+1))
             except ValueError:
                 atomic_numbers.append("    "+s)
                 not_found.append(symbol)
 
-        indexes = sorted(range(len(atomic_numbers)), key=lambda k: atomic_numbers[k])
+        indexes = sorted(list(range(len(atomic_numbers))), key=lambda k: atomic_numbers[k])
         self.ele = [self.ele[i] for i in indexes]
         self.abol = [self.abol[i] for i in indexes]
         self.notes = [self.notes[i] for i in indexes]
@@ -175,6 +181,6 @@ class FileAbonds(DataFile):
     def _do_save_as(self, filename):
         with open(filename, "w") as h:
             h.writelines([' %-2s%6.2f %s\n' % (self.ele[i], self.abol[i], self.notes[i])
-                          for i in xrange(len(self))])
+                          for i in range(len(self))])
             h.writelines(['1\n', '1\n'])
 

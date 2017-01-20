@@ -4,13 +4,14 @@
 
 __all__ = ["XFileAtomsHistogram"]
 
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
-from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
-from matplotlib.backends.backend_qt4agg import NavigationToolbar2QT # as NavigationToolbar2QT
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT # as NavigationToolbar2QT
 import matplotlib.pyplot as plt
-from pyfant import *
-from .guiaux import *
+from hypydrive import MONO_FONT, place_center, format_BLB
+from ._shared import *
 
 
 MAX_NUM_BINS = 500
@@ -66,7 +67,7 @@ class XFileAtomsHistogram(QMainWindow):
         l1 = self.layoutPlot = QVBoxLayout()
         l1.addWidget(self.toolbar)
         l1.addWidget(self.canvas)
-        l1.setMargin(0)
+        hpd.set_margin(l1, 0)
         # a = self.widgetPlot = QWidget()
         # a.setLayout(l1)
 
@@ -75,7 +76,7 @@ class XFileAtomsHistogram(QMainWindow):
         l2.addWidget(self.widgetPlotToolbar)
         l2.addLayout(l1)
         # l2.addWidget(self.widgetPlot)
-        l2.setMargin(0)
+        hpd.set_margin(l2, 0)
         a = self.centralWidget = QWidget()
         a.setLayout(l2)
         a.setFont(MONO_FONT)
@@ -108,5 +109,3 @@ class XFileAtomsHistogram(QMainWindow):
         plt.tight_layout()
         format_BLB()
         self.canvas.draw()
-
-

@@ -1,26 +1,50 @@
-def init_agg():
-    # Problems with Tk:
-    # - plot windows pop as modal
-    # - configuration options not as rich as Qt4Agg
-    import matplotlib
-    matplotlib.use('Qt4Agg')
+# # Temporary imports
+#   =================
+# These modules should be be del'eted at the end
+import hypydrive as hpd
 
-init_agg()
 
-from .constants import *
+# # Setup
+#   =====
+SESSION_PREFIX_SINGULAR = 'session-'
+SESSION_PREFIX_PLURAL = 'session-'
+MULTISESSION_PREFIX = 'multi-session-'
+
+# ## Colors definition
+# Color for labels indicating a star parameter
+COLOR_STAR = "#2A8000"
+# Color for labels indicating a software configuration parameter
+COLOR_CONFIG = "#BD6909"
+
+
+# # Imports
+#   =======
 from .errors import *
-from .misc import *
+from .gear import *
 from .datatypes import *
 from .conf import *
 from .runnables import *
 from .rm import *
-from .plotting import *
+from .vis import *
 from .util import *
 from .from_vald import *
 from .multirunnable import *
-from .blocks import *
-import datatypes
-import misc
-import plotting
-import blocks
-# note that gui is not imported automatically
+from .gui import *
+from .paths import *
+from . import datatypes
+from . import gear
+from . import gui
+from . import vis
+from . import convmol
+
+
+# # Function to access package-specific config file
+#   ===============================================
+def get_config():
+    """Returns PyfantConfigObj object that corresponds to file ~/.pyfant.conf"""
+    return hpd.get_config_obj(".pyfant.conf")
+
+
+# # Finally, gets rid of unwanted symbols in the workspace
+#   ======================================================
+del hpd

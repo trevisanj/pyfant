@@ -1,15 +1,16 @@
-__all__ = ["FileModBin", "ModRecord", "FileModTxt", "FileOpa", "FileMoo",
-           "MooRecord"]
-from .datafile import *
-from ..misc import *
 import struct
 import numpy as np
 import os
+import hypydrive as hpd
 
 
-class ModRecord(AttrsPart):
+__all__ = ["FileModBin", "ModRecord", "FileModTxt", "FileOpa", "FileMoo",
+           "MooRecord"]
+
+
+class ModRecord(hpd.AttrsPart):
     """
-    Single record from an atmospheric model file
+    Single record from hpd atmospheric model file
 
     Note: while a infile:modeles may have several 1200-byte records stored in it,
     this class only stores one of these records, specified by "inum"  argument
@@ -25,7 +26,7 @@ class ModRecord(AttrsPart):
     less_attrs = ["teff", "glog", "asalog"]
 
     def __init__(self):
-        AttrsPart.__init__(self)
+        hpd.AttrsPart.__init__(self)
         self.ntot = None
         self.teff = None
         self.glog = None
@@ -47,7 +48,7 @@ class ModRecord(AttrsPart):
 MOD_REC_SIZE = 1200
 
 
-class FileModBin(DataFile):
+class FileModBin(hpd.DataFile):
   """
   PFANT Atmospheric Model (binary file)
 
@@ -60,11 +61,11 @@ class FileModBin(DataFile):
   Attributes match reader_modeles.f90:modeles_* (minus the "modeles_" prefix)
   """
   default_filename = "modeles.mod"
-
   attrs = ["records"]
+  flag_txt = False
 
   def __init__(self):
-    DataFile.__init__(self)
+    hpd.DataFile.__init__(self)
     self.records = None
 
   def __len__(self):
@@ -74,7 +75,7 @@ class FileModBin(DataFile):
 
   def _do_load(self, filename):
 
-    if is_text_file(filename):
+    if hpd.is_text_file(filename):
         raise RuntimeError("File must be binary")
 
     b = os.path.getsize(filename)
@@ -82,7 +83,7 @@ class FileModBin(DataFile):
     if b < MOD_REC_SIZE:
         raise RuntimeError("File too small")
 
-    num_rec = b/MOD_REC_SIZE-1
+    num_rec = int(b/MOD_REC_SIZE)-1
     self.records = []
     with open(filename, "rb") as h:
 
@@ -97,17 +98,17 @@ class FileModBin(DataFile):
   def _do_save_as(self, filename):
       """Saves to file."""
 
-      with open(filename, "wab") as h:
+      with open(filename, "wb") as h:
           for i, rec in enumerate(self.records):
               _encode_mod_record(rec, h)
           h.write(struct.pack("<i", 9999))
-          h.write("\x00"*1196)
+          h.write(b"\x00"*1196)
 
   def init_default(self):
     raise RuntimeError("Not applicable")
 
 
-class FileModTxt(DataFile):
+class FileModTxt(hpd.DataFile):
     """
     MARCS Atmospheric Model (text file)
 
@@ -124,18 +125,19 @@ class FileModTxt(DataFile):
     attrs = ["record"]
 
     def __init__(self):
-        DataFile.__init__(self)
+        hpd.DataFile.__init__(self)
         self.record = None
 
     def __len__(self):
         return 1
 
     def _do_load(self, filename):
-        if not is_text_file(filename):
+        if not hpd.is_text_file(filename):
             raise RuntimeError("File must be a text file")
         r = ModRecord()
         with open(filename, "r") as h:
-            _skip = lambda: h.readline()
+            def _skip():
+                h.readline()
             r.tit = h.readline().strip()
             r.tiabs = ""
             r.teff = float(struct.unpack("7s", h.readline()[:7])[0])
@@ -143,7 +145,7 @@ class FileModTxt(DataFile):
             r.glog = np.log10(float(struct.unpack("12s", h.readline()[:12])[0]))
             _skip()  # microturbulence parameter
             _skip()  # mass
-            r.asalog, r.asalalf = map(float, struct.unpack("6s 6s", h.readline()[:12]))
+            r.asalog, r.asalalf = list(map(float, struct.unpack("6s 6s", h.readline()[:12])))
             _skip()  # "1 cm radius for plane-parallel models"
             _skip()  # "Luminosity"
             _skip()  # "convection parameters"
@@ -167,8 +169,8 @@ class FileModTxt(DataFile):
             # reads log(tau(Rosseland)), T, Pe, Pg
             for i in range(n):
                 qwe = h.readline()
-                r.log_tau_ross[i], t, r.pe[i], r.pg[i] = map(float,
-                 struct.unpack("3x 6s 19x 8s 12s 12s", qwe[:60]))
+                r.log_tau_ross[i], t, r.pe[i], r.pg[i] = list(map(float,
+                 struct.unpack("3x 6s 19x 8s 12s 12s", qwe[:60])))
                 r.teta[i] = 5040./t
 
             # reads rhox to use in nh calculation
@@ -184,7 +186,7 @@ class FileModTxt(DataFile):
         self.record = r
 
 
-class FileOpa(DataFile):
+class FileOpa(hpd.DataFile):
     """MARCS ".opa" (opacity model) file format.
 
     Reference: http://marcs.astro.uu.se
@@ -194,7 +196,7 @@ class FileOpa(DataFile):
     attrs = ["ndp", "swave", "nwav"]
 
     def __init__(self):
-        DataFile.__init__(self)
+        hpd.DataFile.__init__(self)
 
         # # Global properties of the opacity model file
         # the 4-byte standard model code 'MRXF'
@@ -256,17 +258,17 @@ class FileOpa(DataFile):
         """
 
         with open(filename, "r") as h:
-            self.mcode, self.ndp, self.swave = struct.unpack("1x 4s 5s 10s", readline_strip(h))
+            self.mcode, self.ndp, self.swave = struct.unpack("1x 4s 5s 10s", hpd.readline_strip(h))
             if self.mcode != "MRXF":
                 # Does not satisfy magic string
-                raise RuntimeError("Model code '%s' is not 'MRXF'" % self.mcode)
+                raise RuntimeError("Model code '{0!s}' is not 'MRXF'".format(self.mcode))
             self.ndp = int(self.ndp)
             self.swave = float(self.swave)
 
             self.nwav = int(h.readline())
 
-            v, n_rows = multirow_str_vector(h, self.nwav)
-            self.wav = np.array(map(float, v))
+            v, n_rows = hpd.multirow_str_vector(h, self.nwav)
+            self.wav = np.array(list(map(float, v)))
 
             self.rad, self.tau, self.t, self.pe, self.pg, self.rho, self.xi, \
             self.ops = np.zeros(self.ndp), np.zeros(self.ndp), np.zeros(self.ndp), \
@@ -276,19 +278,19 @@ class FileOpa(DataFile):
             self.sca = np.zeros((self.nwav, self.ndp))
             for k in range(self.ndp):
                 self.rad[k], self.tau[k], self.t[k], self.pe[k], self.pg[k], \
-                self.rho[k], self.xi[k], self.ops[k] = float_vector(h)
-                v, n_rows = multirow_str_vector(h, 2*self.nwav)
-                abs_sca = np.array(map(float, v))
+                self.rho[k], self.xi[k], self.ops[k] = hpd.float_vector(h)
+                v, n_rows = hpd.multirow_str_vector(h, 2*self.nwav)
+                abs_sca = np.array(list(map(float, v)))
                 # This multiplication is performed as in original readopa.f
                 self.abs[:, k] = abs_sca[0::2]*self.ops[k]
                 self.sca[:, k] = abs_sca[1::2]*self.ops[k]
 
-            v, n_rows = multirow_str_vector(h, 92)
-            self.abund = np.array(map(float, v))
+            v, n_rows = hpd.multirow_str_vector(h, 92)
+            self.abund = np.array(list(map(float, v)))
 
 
 
-class MooRecord(AttrsPart):
+class MooRecord(hpd.AttrsPart):
     """
     Single record from a ".moo" file
 
@@ -303,7 +305,7 @@ class MooRecord(AttrsPart):
     less_attrs = ["teff", "glog", "asalog"]
 
     def __init__(self):
-        AttrsPart.__init__(self)
+        hpd.AttrsPart.__init__(self)
         self.ntot = None
         self.teff = None
         self.glog = None
@@ -363,18 +365,18 @@ MOG_REC_SIZE = MOD_REC_SIZE+OPA_REC_SIZE
 NTOT = 56    # must be 56
 NWAV = 1071  # must be 1071
 
-class FileMoo(DataFile):
+class FileMoo(hpd.DataFile):
     """
     Atmospheric model or grid of models (with opacities included)
 
     This file contains all the fields in modeles.mod, plus the opacity information
     """
     default_filename = "grid.moo"
-
     attrs = ["records"]
+    flag_txt = False
 
     def __init__(self):
-        DataFile.__init__(self)
+        hpd.DataFile.__init__(self)
         self.records = None
 
     def __len__(self):
@@ -384,14 +386,14 @@ class FileMoo(DataFile):
 
     def _do_load(self, filename):
 
-        if is_text_file(filename):
+        if hpd.is_text_file(filename):
             raise RuntimeError("File must be binary")
 
         b = os.path.getsize(filename)
 
         if b % MOG_REC_SIZE != 0:
-            raise RuntimeError("Incorrect file size! Must be a multiple of %d" %
-                               MOG_REC_SIZE)
+            raise RuntimeError("Incorrect file size! Must be a multiple of {0:d}".format(
+                               MOG_REC_SIZE))
 
         num_rec = b/MOG_REC_SIZE
         self.records = []
@@ -404,8 +406,7 @@ class FileMoo(DataFile):
                 _decode_mod_record(x, rec, inum)
 
                 if rec.ntot != NTOT:
-                    raise RuntimeError("Number of layers be %d, not %d" %
-                                       (NTOT, rec.ntot))
+                    raise RuntimeError("Number of layers be {0:d}, not {1:d}".format(NTOT, rec.ntot))
 
                 h.seek(pos+MOD_REC_SIZE)
                 x = h.read(MOG_REC_SIZE)
@@ -415,8 +416,7 @@ class FileMoo(DataFile):
                  rec.nwav] = ostr.unpack(x[:8])
 
                 if rec.nwav != NWAV:
-                    raise RuntimeError("Number of wavelengths must be %d, not %d" %
-                                       (NWAV, rec.nwav))
+                    raise RuntimeError("Number of wavelengths must be {0:d}, not {1:d}".format(NWAV, rec.nwav))
 
                 rec.ops = np.frombuffer(x, dtype='<f4', count=rec.ntot,
                                         offset=8)
@@ -433,12 +433,12 @@ class FileMoo(DataFile):
     def _do_save_as(self, filename):
         """Saves to file."""
 
-        with open(filename, "wab") as h:
+        with open(filename, "wb") as h:
             for i, rec in enumerate(self.records):
                 assert rec.ntot == NTOT, \
-                    "Number of layers be %d, not %d" % (NTOT, rec.ntot)
+                    "Number of layers be {0:d}, not {1:d}".format(NTOT, rec.ntot)
                 assert rec.nwav == NWAV, \
-                    "Number of wavelengths must be %d, not %d" % (NWAV, rec.nwav)
+                    "Number of wavelengths must be {0:d}, not {1:d}".format(NWAV, rec.nwav)
 
                 _encode_mod_record(rec, h)
 
@@ -475,9 +475,9 @@ def _decode_mod_record(x, rec, inum):
 
     # This routine will read almost any binary, so we perform some range checks
     if not (1 < rec.ntot <= 1000):
-        raise RuntimeError("record #%d: ntot invalid: %d" % (inum, rec.ntot))
+        raise RuntimeError("record #{0:d}: ntot invalid: {1:d}".format(inum, rec.ntot))
     if not (100 < rec.teff < 100000):
-        raise RuntimeError("record #%d: teff invalid %g" % (inum, rec.teff))
+        raise RuntimeError("record #{0:d}: teff invalid {1:g}".format(inum, rec.teff))
 
     v = np.frombuffer(x, dtype='<f4', count=rec.ntot*5, offset=64)
     w = np.reshape(v, (rec.ntot, 5))
@@ -493,5 +493,5 @@ def _encode_mod_record(rec, h):
     y = np.reshape(np.vstack([rec.nh, rec.teta, rec.pe, rec.pg, rec.log_tau_ross]).T,
                    ny)
     h.write(struct.pack("<" + "f" * ny, *y))
-    h.write("\x00" * (MOD_REC_SIZE-ny*4-64))  # fills record with \x0 to have 1200 bytes
+    h.write(b"\x00" * (MOD_REC_SIZE-ny*4-64))  # fills record with \x0 to have 1200 bytes
 

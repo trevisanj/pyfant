@@ -1,10 +1,11 @@
 __all__ = ["XAtomLinesEditor"]
 
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
-from pyfant import *
-import numpy as np
-from .guiaux import *
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
+from hypydrive import MONO_FONT, snap_right, show_error, reset_table_widget
+from ._shared import *
+import pyfant as pf
 
 class XAtomLinesEditor(QMainWindow):
 
@@ -60,7 +61,7 @@ class XAtomLinesEditor(QMainWindow):
     def set_atom(self, atom, title):
         """Sets set of lines."""
 
-        assert isinstance(atom, Atom)
+        assert isinstance(atom, pf.Atom)
 
         self.flag_populating = True
         try:
@@ -68,13 +69,13 @@ class XAtomLinesEditor(QMainWindow):
 
             t = self.tableWidget
             n = len(atom)
-            ResetTableWidget(t, n, len(ATOM_HEADERS))
+            reset_table_widget(t, n, len(ATOM_HEADERS))
             t.setHorizontalHeaderLabels(ATOM_HEADERS)
 
             # list with the vectors themselves
             attrs = [atom.__getattribute__(x) for x in ATOM_ATTR_NAMES]
 
-            for i in xrange(len(atom)):
+            for i in range(len(atom)):
                 for j, attr in enumerate(attrs):
                     item = QTableWidgetItem(str(attr[i]))
                     t.setItem(i, j, item)

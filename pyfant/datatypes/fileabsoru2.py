@@ -1,6 +1,6 @@
 __all__ = ["FileAbsoru2"]
 
-from .datafile import *
+from hypydrive import DataFile
 
 
 class FileAbsoru2(DataFile):

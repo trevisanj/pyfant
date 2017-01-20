@@ -1,14 +1,13 @@
 __all__ = ["FileToH"]
 
-from .datafile import *
 from ..errors import *
-from ..misc import *
-import struct
 import math
 import numpy as np
 import fortranformat as ff
+import hypydrive as hpd
 
-class FileToH(DataFile):
+
+class FileToH(hpd.DataFile):
     """
     PFANT Hydrogen Line Profile
 
@@ -23,7 +22,7 @@ class FileToH(DataFile):
     attrs = ["titre", "ntot", "zut1", "zut2", "zut3", "th", "lambdh", "jmax"]
 
     def __init__(self):
-        DataFile.__init__(self)
+        hpd.DataFile.__init__(self)
         self.titre = None
 
         # second row
@@ -57,11 +56,11 @@ class FileToH(DataFile):
             #-- rows of 5 columns or less
             # function to calculate number of 5-column rows needed to store a sequence
             num_rows = lambda x: int(math.ceil(float(x)/5))
-            C = 14  # size of stored float value in characters
+            FLOAT_SIZE = 14  # size of stored float value in characters
             nr = num_rows(self.jmax)
             v = []
             for i in range(nr):
-                v.extend([float(x) for x in chunk_string(readline_strip(h), C)])
+                v.extend([float(x) for x in hpd.chunk_string(hpd.readline_strip(h), FLOAT_SIZE)])
             self.lambdh = np.array(v)
 
             if not (len(self.lambdh) == self.jmax):
@@ -69,10 +68,10 @@ class FileToH(DataFile):
 
             #-- (lambda) x (atmospheric layer) matrix
             v = []  # Will accumulate values for future reshape
-            C = 12  # size of stored float value in characters
+            FLOAT_SIZE = 12  # size of stored float value in characters
             for s in h.readlines():
                 s = s.strip('\n')
-                v.extend([float(x) for x in chunk_string(s, C)])
+                v.extend([float(x) for x in hpd.chunk_string(s, FLOAT_SIZE)])
             if len(v)/self.jmax != self.ntot:
                 raise FileConsistencyError("Should have found %d values for th matrix (found %d)" %
                                            (self.jmax*self.ntot, len(v)))

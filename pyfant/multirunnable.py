@@ -5,15 +5,16 @@ Rule: no pyfant module can import util!!!
 
 """
 __all__ = ["MultiRunnable"]
-from pyfant import *
+
+import pyfant as pf
 import copy
 import os
-from .constants import *
 import logging
+from hypydrive import get_python_logger, froze_it
 
 
-_multi_id_maker = IdMaker()
-_multi_id_maker.session_prefix_singular = MULTISESSION_PREFIX
+_multi_id_maker = pf.IdMaker()
+_multi_id_maker.session_prefix_singular = pf.MULTISESSION_PREFIX
 
 
 @froze_it
@@ -40,18 +41,19 @@ class MultiRunnableStatus(object):
         return "?"
 
 
-class MultiRunnable(Runnable):
+@froze_it
+class MultiRunnable(pf.Runnable):
     """
     Differential abundances X FWHM's runnable.
     """
 
     def __init__(self, file_main, file_abonds, options, file_abxfwhm,
                  custom_id=None):
-        Runnable.__init__(self)
-        assert isinstance(file_main, FileMain)
-        assert isinstance(file_abonds, FileAbonds)
-        assert isinstance(options, FileOptions)
-        assert isinstance(file_abxfwhm, FileAbXFwhm)
+        pf.Runnable.__init__(self)
+        assert isinstance(file_main, pf.FileMain)
+        assert isinstance(file_abonds, pf.FileAbonds)
+        assert isinstance(options, pf.FileOptions)
+        assert isinstance(file_abxfwhm, pf.FileAbXFwhm)
         self.__file_main = file_main
         self.__file_abonds = file_abonds
         self.__options = options
@@ -64,7 +66,7 @@ class MultiRunnable(Runnable):
 
         # # Private variables
         self.__logger = get_python_logger()
-        self.__sid = SID(_multi_id_maker)
+        self.__sid = pf.SID(_multi_id_maker)
         self.__runnable_manager = None
 
     def kill(self):
@@ -113,13 +115,13 @@ class MultiRunnable(Runnable):
         # This id maker will create directories inside the
         # multi-session directory.
         # It will replace the Pfant's default id maker
-        custom_id_maker = IdMaker()
+        custom_id_maker = pf.IdMaker()
         custom_id_maker.session_prefix_singular = \
          os.path.join(self.__sid.dir, "session-")
 
 
         # # Runs innewmarcs and hydro2
-        ih = Combo([FOR_INNEWMARCS, FOR_HYDRO2])
+        ih = pf.Combo([pf.FOR_INNEWMARCS, pf.FOR_HYDRO2])
         ih.conf.flag_output_to_dir = True
         ih.conf.logger = self.__logger
         ih.conf.opt = copy.copy(self.__options)
@@ -134,8 +136,8 @@ class MultiRunnable(Runnable):
         self.__status.stage = "pfant stage"
         self.__logger.info("+++ pfant stage...")
         pfant_list = []
-        symbols = self.__file_abxfwhm.ab.keys()
-        abdiffss = self.__file_abxfwhm.ab.values()
+        symbols = list(self.__file_abxfwhm.ab.keys())
+        abdiffss = list(self.__file_abxfwhm.ab.values())
         n_abdif = len(abdiffss[0])
         fwhms = self.__file_abxfwhm.get_fwhms()
         for fwhm in fwhms:
@@ -161,9 +163,9 @@ class MultiRunnable(Runnable):
                 else "%02d" % j
             flprefix = "%s_%s" % (self.__file_main.titrav, pfant_name)
 
-            pfant = Pfant()
+            pfant = pf.Pfant()
             pfant.conf.opt = copy.copy(self.__options)
-            pfant.conf.rename_outputs([FOR_INNEWMARCS, FOR_HYDRO2], sid=self.sid)
+            pfant.conf.rename_outputs([pf.FOR_INNEWMARCS, pf.FOR_HYDRO2], sid=self.sid)
             pfant.conf.sid.id_maker = custom_id_maker
             pfant.conf.sid.id = flprefix
             pfant.conf.opt.flprefix = self.__sid.join_with_session_dir(flprefix)
@@ -174,8 +176,8 @@ class MultiRunnable(Runnable):
             self.__logger.debug(pfant.conf.opt.flprefix)
 
             pfant_list.append(pfant)
-        rm = self.__rm = RunnableManager()
-        run_parallel(pfant_list, flag_console=False, runnable_manager=rm)
+        rm = self.__rm = pf.RunnableManager()
+        pf.run_parallel(pfant_list, flag_console=False, runnable_manager=rm)
         if self._flag_killed:
             return
 
@@ -195,7 +197,7 @@ class MultiRunnable(Runnable):
             prefix = pfant.conf.opt.flprefix
 
             for fwhm in fwhms:
-                nulbad = Nulbad()
+                nulbad = pf.Nulbad()
                 nulbad.conf.sid.id_maker = custom_id_maker
                 nulbad.conf.opt = copy.copy(self.__options)
                 nulbad.conf.opt.fn_flux = pfant.conf.opt.flprefix+".norm"
@@ -209,7 +211,7 @@ class MultiRunnable(Runnable):
 
         # ## Saves files for lineplot.py (lists of spectra)
         # Each item of each list is a full path to a spectrum file
-        for fwhm, sp_filenames in sp_filenames_by_fwhm.iteritems():
+        for fwhm, sp_filenames in list(sp_filenames_by_fwhm.items()):
             spl_filename = os.path.join(self.__sid.dir, "cv_%s.spl" % fmt_fwhm(fwhm))
             with open(spl_filename, "w") as h:
                 for sp_filename in sp_filenames:
@@ -218,8 +220,8 @@ class MultiRunnable(Runnable):
         # ## Runs nulbads
         self.__status.stage = "nulbad stage"
         self.__logger.info("+++ nulbad stage...")
-        rm = self.__rm = RunnableManager()
-        run_parallel(nulbad_list, flag_console=False, runnable_manager=rm)
+        rm = self.__rm = pf.RunnableManager()
+        pf.run_parallel(nulbad_list, flag_console=False, runnable_manager=rm)
         if self._flag_killed:
             return
         if not rm.flag_success:

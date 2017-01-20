@@ -1,12 +1,11 @@
 __all__ = ["FileHmap", "HmapRow"]
 
-from .datafile import *
-from ..misc import *
-import logging
 
-_logger = logging.getLogger(__name__)
-_logger.addHandler(logging.NullHandler())
+from hypydrive import froze_it, AttrsPart, DataFile, write_lf
+import tabulate
 
+
+@froze_it
 class HmapRow(AttrsPart):
     """Same structure as pfantlib.f90::hmap_row type."""
 
@@ -22,6 +21,7 @@ class HmapRow(AttrsPart):
         self.c1 = None
 
 
+@froze_it
 class FileHmap(DataFile):
     """
     PFANT Hygrogen Lines Map
@@ -40,6 +40,12 @@ class FileHmap(DataFile):
         # List of HmapRow objects
         self.rows = []
 
+    def __str__(self):
+        headers = HmapRow.attrs
+        data = [[getattr(row, name) for name in headers] for row in self.rows]
+        return tabulate.tabulate(data, headers)
+
+
     def __len__(self):
         return len(self.rows)
 
@@ -55,12 +61,12 @@ class FileHmap(DataFile):
 
                     r = HmapRow()
                     [r.fn, r.na, r.nb, r.clam, r.kiex, r.c1] = line.split()
-                    [r.na, r.nb] = map(int, (r.na, r.nb))
-                    [r.clam, r.kiex, r.c1] = map(float, [r.clam, r.kiex, r.c1])
+                    [r.na, r.nb] = list(map(int, (r.na, r.nb)))
+                    [r.clam, r.kiex, r.c1] = list(map(float, [r.clam, r.kiex, r.c1]))
 
                     self.rows.append(r)
                 except:
-                    # _logger.error("Error reading row #%d, file \"%s\"" % (i+1, filename))
+                    # hpd.get_python_logger().error("Error reading row #%d, file \"%s\"" % (i+1, filename))
                     raise
 
 

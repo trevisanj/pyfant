@@ -1,5 +1,3 @@
-
-
 __all__ = ["Runnable", "RunnableStatus", "ExecutableStatus", "Executable",
            "Innewmarcs", "Hydro2", "Pfant", "Nulbad", "Combo"]
 
@@ -7,12 +5,13 @@ __all__ = ["Runnable", "RunnableStatus", "ExecutableStatus", "Executable",
 import subprocess
 from .conf import *
 import os
-from .misc import *
+from .gear import *
 from .errors import *
-from pyfant import FileSpectrumPfant, FileSpectrumNulbad, FileModBin
 from threading import Lock
+import hypydrive as hpd
+import pyfant as pf
 
-@froze_it
+@hpd.froze_it
 class RunnableStatus(object):
 
     def __init__(self, runnable):
@@ -35,7 +34,7 @@ class RunnableStatus(object):
             return " ".join(l)
         return "?"
 
-@froze_it
+@hpd.froze_it
 class ExecutableStatus(object):
     """Stores status related to Executable for reporting purposes."""
     
@@ -103,8 +102,12 @@ class Runnable(object):
     def sid(self):
         return self._get_sid()
 
+    @property
+    def result(self):
+        return self._result
+
     def __init__(self):
-        self.name = random_name()
+        self.name = hpd.random_name()
         # Is running?
         self._flag_running = False
         # Is finished?
@@ -115,6 +118,8 @@ class Runnable(object):
         self._flag_error = False
         # Will contain error message if finished with error
         self._error_message = ""
+        # Will contain results DataFile objects (keys vary depending on the Runnable subclas
+        self._result = {}
 
     def get_status(self):
         raise NotImplementedError()
@@ -127,7 +132,10 @@ class Runnable(object):
 
     def load_result(self):
         """Abstract. Override this method to open the result file(s) particular to the
-        executable."""
+        executable.
+
+        Methods in subclasses should populate self._result
+        """
 
     def reset(self):
         """Prepares to run again."""
@@ -138,6 +146,10 @@ class Runnable(object):
         self._error_message = ""
         if self.sid.id:
             self.sid.clean(False)
+
+    def clean(self, *args):
+        """Wraps self.sid.clean(). See pyfant.SID"""
+        self.sid.clean(*args)
 
     def _get_sid(self):
         raise NotImplementedError()
@@ -170,6 +182,16 @@ class Executable(Runnable):
     @conf.setter
     def conf(self, x):
         self.__conf = x
+
+    @property
+    def opt(self):
+        """Wraps self.__conf.opt"""
+        return self.__conf.opt
+
+    @opt.setter
+    def opt(self, x):
+        """Wraps self.__conf.opt"""
+        self.__conf.opt = x
 
     def __init__(self):
         Runnable.__init__(self)
@@ -244,7 +266,8 @@ class Executable(Runnable):
             try:
                 if self.conf.popen_text_dest is not None:
                     for line in self.__popen.stdout:
-                        self.conf.popen_text_dest.write(line)
+                        # In Python 3, line is bytes, write() cannot deal with that
+                        self.conf.popen_text_dest.write(line.decode("ascii"))
             finally:
                 self.__popen.stdout.close()
 
@@ -302,7 +325,7 @@ class Executable(Runnable):
             self.conf.logger.debug(str(self._status))
 
 
-@froze_it
+@hpd.froze_it
 class Innewmarcs(Executable):
     """Class representing the innewmarcs executable."""
 
@@ -316,13 +339,14 @@ class Innewmarcs(Executable):
         self.modeles = None
 
     def load_result(self):
-        file_mod = FileModBin()
+        file_mod = pf.FileModBin()
         filepath = self.conf.get_fn_modeles()
         file_mod.load(filepath)
-        self.modeles = file_mod
+        # Assigns .modeles for backward compatibility
+        self.modeles = self._result["modeles"] = file_mod
 
 
-@froze_it
+@hpd.froze_it
 class Hydro2(Executable):
     """Class representing the hydro2 executable."""
 
@@ -333,10 +357,13 @@ class Hydro2(Executable):
         self._exe_path = "hydro2"
 
     def load_result(self):
-        raise NotImplementedError("Opening hydro2 result will need hydro2 to save a side file containing a list of the files that it has created!!!")
+        # Loading hydro2 result is not implemented at the moment, but it could by reconstructing the
+        # whole case (wavelength range, hmap.dat) and inferring which files hydro2 generated.
+        # This is analogous to figuring out the nulbad output filename
+        hpd.get_python_logger().info("hydro2 load_result() not implemented")
 
 
-@froze_it
+@hpd.froze_it
 class Pfant(Executable):
     """Class representing the pfant executable."""
 
@@ -371,7 +398,7 @@ class Pfant(Executable):
         if (not self.ikey or self.ikey < self.ikeytot) and os.path.isfile(p):
             with open(p) as h:
                 try:
-                    t = map(int, h.readline().split("/"))
+                    t = list(map(int, h.readline().split("/")))
                     ret.ikey = t[0]
                     ret.ikeytot = t[1]
                 except ValueError:
@@ -383,12 +410,13 @@ class Pfant(Executable):
 
         for type_ in ("norm", "cont", "spec"):
             filepath = self.conf.get_pfant_output_filepath(type_)
-            file_sp = FileSpectrumPfant()
+            file_sp = hpd.FileSpectrumPfant()
             file_sp.load(filepath)
             self.__setattr__(type_, file_sp.spectrum)
+            self._result[type_] = file_sp.spectrum
 
 
-@froze_it
+@hpd.froze_it
 class Nulbad(Executable):
     """Class representing the nulbad executable."""
 
@@ -402,12 +430,15 @@ class Nulbad(Executable):
         self.convolved = None
 
     def load_result(self):
-        file_sp = FileSpectrumNulbad()
+        file_sp = hpd.FileSpectrumNulbad()
         filepath = self.conf.get_nulbad_output_filepath()
         file_sp.load(filepath)
         self.convolved = file_sp.spectrum
+        self._result["convolved"] = file_sp.spectrum
 
-@froze_it
+
+@hpd.froze_it
+
 class Combo(Runnable):
     """
     Runs sequence of executables: innermarcs, hydro2, pfant, nulbad.
@@ -498,7 +529,7 @@ class Combo(Runnable):
         map = [(FOR_INNEWMARCS, self.__innewmarcs), (FOR_HYDRO2, self.__hydro2), (FOR_PFANT, self.__pfant),
                (FOR_NULBAD, self.__nulbad)]
         res = []
-        ii, ee = zip(*map)
+        ii, ee = list(zip(*map))
         self.__sequence.sort()
         for i_exe in self.__sequence:
             if i_exe in ii:
@@ -525,6 +556,20 @@ class Combo(Runnable):
             self._flag_running = False
             self._flag_finished = True
 
+    def load_result(self):
+        """Calls load_result() for all contained executables, then collects all into self._result"""
+        for exe in self.get_exes():
+            print ("EEEEEEEEEEEEEEEEe", exe)
+            exe.load_result()
+
+            # Bug checking: Executables must not repeat the names of their results,
+            # so that they can be all collected in Combo._result
+            for key in exe._result:
+                if key in self._result:
+                    raise AssertionError("Key '{}' is in {} but was seen previously by Combo".
+                                         format(key, exe.__class__))
+            self._result.update(exe._result)
+
     def kill(self):
         self._flag_killed = True
         if self._flag_running:
@@ -537,11 +582,6 @@ class Combo(Runnable):
             return self.__running_exe.get_status()
         else:
             return self.__status
-
-    def load_result(self):
-        ee = self.get_exes()
-        for e in ee:
-            e.load_result()
 
     def reset(self):
         Runnable.reset(self)

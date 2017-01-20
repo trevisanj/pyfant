@@ -2,14 +2,17 @@
 
 __all__ = ["WFileAbonds"]
 
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
-from .guiaux import *
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
 from pyfant import FileAbonds, adjust_atomic_symbol, FileDissoc
-import copy
+import hypydrive as hpd
+import pyfant as pf
+
 
 ABONDS_HEADERS = ["Element", "Abundance", "Notes"]
 NOTES_COLUMN_WIDTH = 200
+
 
 def _format_error(row_index, message):
     return "<b>Row %d</b>: %s" % (row_index+1, message)
@@ -41,7 +44,7 @@ class WFileAbonds(QWidget):
         d.init_default()
 
         la = self.formLayout = QVBoxLayout()
-        la.setMargin(0)
+        hpd.set_margin(la, 0)
         la.setSpacing(4)
 
         self.setLayout(la)
@@ -51,7 +54,7 @@ class WFileAbonds(QWidget):
 
         l = self.c29378 = QHBoxLayout()
         la.addLayout(l)
-        l.setMargin(0)
+        hpd.set_margin(l, 0)
         l.setSpacing(4)
         b = self.button_sort_a = QPushButton("Sort &alphabetically")
         l.addWidget(b)
@@ -64,7 +67,7 @@ class WFileAbonds(QWidget):
 
         l = self.c34985 = QHBoxLayout()
         la.addLayout(l)
-        l.setMargin(0)
+        hpd.set_margin(l, 0)
         l.setSpacing(4)
         b = self.button_insert = QPushButton("&Insert")
         l.addWidget(b)
@@ -88,10 +91,10 @@ class WFileAbonds(QWidget):
         a = self.tableWidget = QTableWidget()
         sp.addWidget(a)
         a.setSelectionMode(QAbstractItemView.SingleSelection)
-        #a.currentCellChanged.connect(self.on_tableWidget_currentCellChanged)
+        # a.currentCellChanged.connect(self.on_tableWidget_currentCellChanged)
         a.cellChanged.connect(self.on_tableWidget_cellChanged)
         a.setEditTriggers(QAbstractItemView.DoubleClicked | QAbstractItemView.EditKeyPressed)
-        a.setFont(MONO_FONT)
+        a.setFont(hpd.MONO_FONT)
         a.installEventFilter(self)
 
         # ## The errors area
@@ -99,7 +102,7 @@ class WFileAbonds(QWidget):
         w = self.csslff = QWidget()
         sp.addWidget(w)
         l = self.c49378 = QVBoxLayout(w)
-        l.setMargin(0)
+        hpd.set_margin(l, 0)
         l.setSpacing(1)
 
         x = self.c88888 = QLabel("<b>Errors</b>")
@@ -108,15 +111,14 @@ class WFileAbonds(QWidget):
         x = self.textEditError = QTextEdit(self)
         l.addWidget(x)
         x.setReadOnly(True)
-        x.setStyleSheet("QTextEdit {color: %s}" % COLOR_ERROR)
-        x.setFont(MONO_FONT)
+        x.setStyleSheet("QTextEdit {color: %s}" % hpd.COLOR_ERROR)
+        x.setFont(hpd.MONO_FONT)
 
         # ## Splitter stretch factors
         # These need to be set a posteriori otherwise they do
         # not work properly.
         sp.setStretchFactor(0, 1)
         sp.setStretchFactor(1, 0)
-
 
         # finally...
         self.setEnabled(False)  # Disabled until load() is called
@@ -174,7 +176,7 @@ class WFileAbonds(QWidget):
                         item.setText(self._validate_element(row, item.text()))
                         flag_done = True
                     except Exception as E:
-                        show_error(str(E))
+                        hpd.show_error(str(E))
 
                 if flag_done:
                     self._update_file_abonds()
@@ -202,9 +204,9 @@ class WFileAbonds(QWidget):
         self._update_file_abonds()
         self.edited.emit()
         if len(not_found) > 0:
-            show_message("Symbols not found in the periodic table:\n\n"+
-                        str([x.strip() for x in not_found])+"\n\n"+
-                        "These symbols will appear first and will be ordered alphabetically.")
+            hpd.show_message("Symbols not found in the periodic table:\n\n"+
+                            str([x.strip() for x in not_found])+"\n\n"+
+                            "These symbols will appear first and will be ordered alphabetically.")
 
     def on_insert(self):
         self._insertRow(self.tableWidget.currentRow())
@@ -254,14 +256,14 @@ class WFileAbonds(QWidget):
         try:
             o, t = self.f, self.tableWidget
             n = len(o)
-            ResetTableWidget(t, n, len(ABONDS_HEADERS))
+            hpd.reset_table_widget(t, n, len(ABONDS_HEADERS))
             t.setHorizontalHeaderLabels(ABONDS_HEADERS)
 
             # list with the vectors themselves
 
             attrs = [o.__getattribute__(x) for x in ["ele", "abol", "notes"]]
 
-            for i in xrange(len(o)):
+            for i in range(len(o)):
                 for j, attr in enumerate(attrs):
                     item = QTableWidgetItem(str(attr[i]).strip())
                     t.setItem(i, j, item)
@@ -330,7 +332,7 @@ class WFileAbonds(QWidget):
             if elem not in ele and elem != " H":
                 warnings.append("<b>Warning</b>: element \"%s\", required for "
                  "dissociative equilibrium calculation, is missing. "
-                "Abundance adopted for \"%s\" will be %g" %
+                 "Abundance adopted for \"%s\" will be %g" %
                  (elem.strip(), elem.strip(), cclog+12))
 
         o.ele = ele

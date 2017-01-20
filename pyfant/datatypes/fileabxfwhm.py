@@ -1,13 +1,13 @@
-"""
-FileMAbFwhm class (differential ABundances and FWHMs)
-"""
+"""FileMAbFwhm class (differential ABundances and FWHMs)"""
+
+
 __all__ = ["FileAbXFwhm"]
 
 
-from .datafile import *
 from pyfant import adjust_atomic_symbol
 import imp
 import numpy as np
+from hypydrive import FilePy
 
 
 _COMMENT0 = """# Specification of differential abundances for each chemical.
@@ -20,7 +20,7 @@ _COMMENT2 = """# Convolutions specification for fwhm parameter:
 # [first value, last value, step]"""
 
 
-class FileAbXFwhm(DataFile):
+class FileAbXFwhm(FilePy):
     __doc__ = """`x.py` Differential Abundances and FWHMs (Python source)
 
 This file is actually Python source. Here is a sample:
@@ -95,7 +95,7 @@ conv = [0.08, 0.6,  0.04]
         self.__parse(x)
 
     def __init__(self):
-        DataFile.__init__(self)
+        FilePy.__init__(self)
 
         self.__flag_parsed = False
         self.__flag_rebuild = False
@@ -111,7 +111,7 @@ conv = [0.08, 0.6,  0.04]
     def validate(self, file_abonds=None):
         # validates abundances specification
         flag_first = True
-        for symbol, mab in self.__ab.iteritems():
+        for symbol, mab in list(self.__ab.items()):
             assert isinstance(mab, (list, tuple)), \
                 'Symbol "%s": differential abundances must be list or tuple' % symbol
             if flag_first:
@@ -127,7 +127,7 @@ conv = [0.08, 0.6,  0.04]
             if not isinstance(self.__pfant_names, (list, tuple)):
                 raise RuntimeError('"pfant_names" must be a list or tuple.')
             if len(self.__ab) > 0:
-                for v in self.__ab.itervalues():
+                for v in list(self.__ab.values()):
                     if len(v) != len(self.__pfant_names):
                         raise RuntimeError('"pfant_names" must be empty or have size %d.' % len(v))
                     break
@@ -136,7 +136,7 @@ conv = [0.08, 0.6,  0.04]
         # validates if can use FWHM spect to make a vector
         try:
             fwhms = self.get_fwhms()
-        except Exception, e:
+        except Exception as e:
             raise Exception('Error in "conv" specification: '+str(e))
 
         # this validation is necessary just because fwhm will be used as part of
@@ -155,7 +155,7 @@ conv = [0.08, 0.6,  0.04]
     def __parse(self, x):
         """Populates __ab, __conf, and __source."""
         cfg = imp.new_module('cfg')
-        exec x in cfg.__dict__
+        exec(x, cfg.__dict__)
         self.__ab = cfg.ab
         self.__adjust_atomic_symbols()
         self.__conv = cfg.conv
@@ -165,7 +165,7 @@ conv = [0.08, 0.6,  0.04]
         self.__source = x
 
     def __rebuild_source(self):
-        self.__source = "%s\n%s\n\n%s\n%s\n" % (_COMMENT0,
+        self.__source = self._get_magic()+"\n%s\n%s\n\n%s\n%s\n" % (_COMMENT0,
          "ab = "+repr(self.__ab).replace("], ", "],\n      "),
          _COMMENT1, "conv = "+repr(self.__conv))
 

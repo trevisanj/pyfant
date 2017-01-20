@@ -2,12 +2,14 @@
 
 __all__ = ["XFileAbonds"]
 
-from PyQt4.QtGui import *
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
 from . import a_WFileAbonds
-from pyfant import FileAbonds, FileDissoc
-from .guiaux import *
 import os
-from .a_XText import *
+from ._shared import *
+from pyfant import FileAbonds, FileDissoc
+from hypydrive import are_you_sure, show_error, place_left_top, XText, MONO_FONT
+
 
 ################################################################################
 class XFileAbonds(QMainWindow):
@@ -119,7 +121,7 @@ class XFileAbonds(QMainWindow):
                     show_error(PARAMS_INVALID)
                 else:
                     new_filename = QFileDialog.getSaveFileName(self, "Save file",
-                     os.path.join(".", FileDissoc.default_filename), "*.dat")
+                     os.path.join(".", FileDissoc.default_filename), "*.dat")[0]
                     if new_filename:
                         f = self.editor.f.get_file_dissoc()
                         f.title = "Created using abed.py"
@@ -166,4 +168,3 @@ class XFileAbonds(QMainWindow):
         self.setWindowTitle("abed -- %s%s%s" % (self.editor.f.filename,
           "" if not self.flag_changed else " (changed)",
           "" if self.editor.flag_valid else " (*invalid*)"))
-

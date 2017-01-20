@@ -2,13 +2,15 @@
 
 __all__ = ["XMulti"]
 
-from PyQt4.QtGui import *
-from .guiaux import *
-from pyfant import *
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
 import os.path
 from .a_XPFANT import *
 from .a_WFileAbXFwhm import *
 import shutil
+from ._shared import *
+import hypydrive as hpd
+import pyfant as pf
 
 WINDOW_WIDTH = 700
 WINDOW_HEIGHT = 768
@@ -80,7 +82,7 @@ class XMulti(XPFANT):
         self.flags_changed.append(False)
         self.save_as_texts.append("Save abundances X FWHM's configuration as")
         self.open_texts.append("Load abundandex X FWHM's file")
-        self.clss.append(FileAbXFwhm)
+        self.clss.append(pf.FileAbXFwhm)
         self.editors.append(self.multi_editor)
         self.labels_fn.append(self.label_fn_abxfwhm)
         self.wilds.append("*.py")
@@ -88,8 +90,8 @@ class XMulti(XPFANT):
         self.__update_lineEdit_multi_custom_id()
         # tt.setCurrentIndex(3)
         # ## Loads abxfwhm file
-        if os.path.isfile(FileAbXFwhm.default_filename):
-            f = FileAbXFwhm()
+        if os.path.isfile(pf.FileAbXFwhm.default_filename):
+            f = pf.FileAbXFwhm()
             f.load()
             self.multi_editor.load(f)
         # ## calls slot to perform cross-check between FileAbonds and FileAbXFwhm
@@ -97,7 +99,7 @@ class XMulti(XPFANT):
             self.on_file_abonds_loaded()
         self._update_labels_fn()
 
-        snap_left(self, 720)
+        hpd.snap_left(self, 720)
 
     # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * #
     # Slots for Qt library signals
@@ -118,7 +120,7 @@ class XMulti(XPFANT):
             if len(s) == 0:
                 errors.append("Please inform custom session id.")
             elif len(errors) == 0: # will only offer to remove directory if everything is ok so far
-                dirname = MULTISESSION_PREFIX+s
+                dirname = pf.MULTISESSION_PREFIX+s
                 if os.path.isdir(dirname):
                     r = QMessageBox.question(self, "Directory exists",
                      "Directory '%s' already exists.\n\nWould you like to remove it?" % dirname,
@@ -138,12 +140,12 @@ class XMulti(XPFANT):
                 self._manager_form.show()
             except Exception as e:
                 errors.append(str(e))
-                get_python_logger().exception("Cannot submit multi-job")
+                hpd.get_python_logger().exception("Cannot submit multi-job")
             finally:
                 self.setEnabled(True)
 
         if len(errors) > 0:
-            show_error("Cannot submit multi-job:\n  - "+("\n  - ".join(errors)))
+            hpd.show_error("Cannot submit multi-job:\n  - "+("\n  - ".join(errors)))
 
     def on_checkbox_multi_custom_id_state_changed(self):
         self.__update_lineEdit_multi_custom_id()
@@ -177,7 +179,7 @@ class XMulti(XPFANT):
         return str(self.lineEdit_multi_custom_id.text()).strip()
 
     def __submit_multi(self):
-        r = MultiRunnable(self.me.f, self.ae.f, self.oe.f, self.multi_editor.f)
+        r = pf.MultiRunnable(self.me.f, self.ae.f, self.oe.f, self.multi_editor.f)
         if self.checkbox_multi_custom_id.isChecked():
             r.sid.id = self.__get_multi_custom_session_id()
         self._rm.add_runnables([r])

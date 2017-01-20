@@ -1,9 +1,10 @@
 __all__ = ["FilePartit"]
 
-from .datafile import *
+
+import hypydrive as hpd
 
 
-class FilePartit(DataFile):
+class FilePartit(hpd.DataFile):
     """
     PFANT Partition Function
 
@@ -13,7 +14,7 @@ class FilePartit(DataFile):
     default_filename = "partit.dat"
 
     def __init__(self):
-        DataFile.__init__(self)
+        hpd.DataFile.__init__(self)
 
     def _do_load(self, filename):
         raise NotImplementedError("This class is a stub ATM")

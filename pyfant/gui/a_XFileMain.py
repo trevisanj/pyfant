@@ -2,11 +2,13 @@
 
 __all__ = ["XFileMain"]
 
-from PyQt4.QtGui import *
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
 from . import a_WFileMain
-from pyfant import FileMain
-from .guiaux import *
 import os.path
+from pyfant import FileMain
+from hypydrive import MONO_FONT, place_left_top, show_error, are_you_sure
+from ._shared import *
 
 ################################################################################
 class XFileMain(QMainWindow):
@@ -81,7 +83,7 @@ class XFileMain(QMainWindow):
                     show_error(PARAMS_INVALID)
                 else:
                     new_filename = QFileDialog.getSaveFileName(self, "Save file",
-                                      self.save_dir, "*.dat")
+                                      self.save_dir, "*.dat")[0]
                     if new_filename:
                         self.save_dir, _ = os.path.split(str(new_filename))
                         self.save_as(new_filename)
@@ -122,4 +124,3 @@ class XFileMain(QMainWindow):
         self.setWindowTitle("mained -- %s%s%s" % (self.editor.f.filename,
           "" if not self.flag_changed else " (changed)",
           "" if self.editor.flag_valid else " (*invalid*)"))
-

@@ -1,16 +1,16 @@
 __all__ = ["FileAtoms", "Atom", "AtomicLine"]
 
-from .datafile import *
-from ..misc import *
+from ..gear import *
 from ..errors import *
 import struct
 import logging
 import sys
 import numpy as np
+from hypydrive import froze_it, AttrsPart, DataFile, write_lf, str_vector, ordinal_suffix, float_vector
+import tabulate
 
-_logger = logging.getLogger(__name__)
-_logger.addHandler(logging.NullHandler())
 
+@froze_it
 class Atom(AttrsPart):
     """
     Element with its atomic lines
@@ -55,18 +55,22 @@ class Atom(AttrsPart):
         return len(self.lines)
 
     def __str__(self):
-        return "%s%s" % (self.elem, self.ioni)
+        return "'{} {}' ({} lines)".format(self.elem, self.ioni, len(self))
+
+    def one_liner_str(self):
+        return self.__str__()
 
     def __repr__(self):
         return "'%s%s'" % (self.elem, self.ioni)
 
     def _cut(self, llzero, llfin):
         """Keeps only the lines with their llzero <= lambda_ <= llfin."""
-        for i in reversed(xrange(len(self))):
+        for i in reversed(list(range(len(self)))):
             if not (llzero <= self.lines[i].lambda_ <= llfin):
                 del self.lines[i]
 
 
+@froze_it
 class AtomicLine(AttrsPart):
     attrs = ["lambda_", "kiex", "algf", "ch", "gr", "ge", "zinf", "abondr"]
 
@@ -144,9 +148,14 @@ class FileAtoms(DataFile):
         # list of Atom objects
         self.atoms = []
 
+    def __str__(self):
+        data = [["{} {}".format(atom.elem, atom.ioni), len(atom)] for atom in self]
+        headers = ["Species", "Number of lines"]
+        return tabulate.tabulate(data, headers)
+
     def cut(self, llzero, llfin):
         """Keeps only the lines with their llzero <= lambda_ <= llfin."""
-        for i in reversed(xrange(len(self))):
+        for i in reversed(list(range(len(self)))):
             atom = self.atoms[i]
             atom._cut(llzero, llfin)
             if len(atom) == 0:
@@ -160,9 +169,9 @@ class FileAtoms(DataFile):
           function -- receives an AtomicLine object as argument.
            Example: lambda line: line.algf >= -7
         """
-        for i in reversed(xrange(len(self))):
+        for i in reversed(list(range(len(self)))):
             atom = self.atoms[i]
-            atom.lines = filter(function, atom.lines)
+            atom.lines = list(filter(function, atom.lines))
             if len(atom) == 0:
                 del self.atoms[i]
 
@@ -176,16 +185,19 @@ class FileAtoms(DataFile):
           function -- receives an Atomic object as argument.
            Example: lambda atom: atom.ioni <= 2
         """
-        self.atoms = filter(function, self.atoms)
+        self.atoms = list(filter(function, self.atoms))
 
     def remove_element(self, elem):
         """Removes given element (any ionization level)."""
         elem = adjust_atomic_symbol(elem)
-        for i in reversed(xrange(len(self))):
+        for i in reversed(list(range(len(self)))):
             atom = self.atoms[i]
             if atom.elem == elem:
                 del self.atoms[i]
 
+
+    def __iter__(self):
+        return iter(self.atoms)
 
     def _do_load(self, filename):
         """Clears internal lists and loads from file."""
@@ -203,8 +215,8 @@ class FileAtoms(DataFile):
                     elem, s_ioni = temp[0][:-1], temp[0][-1]
                     line.lambda_ = float(temp[1])
                     elem = adjust_atomic_symbol(elem)
-                    key = elem+s_ioni  # will group elements by this key
-                    if edict.has_key(key):
+                    key = elem+s_ioni  # will gb.py elements by this key
+                    if key in edict:
                         a = edict[key]
                     else:
                         a = edict[key] = Atom()
@@ -222,7 +234,7 @@ class FileAtoms(DataFile):
                         break
             except Exception as e:
                 raise type(e)(("Error around %d%s row of file '%s'" %
-                               (r+1, ordinal_suffix(r+1), filename))+": "+str(e)), None, sys.exc_info()[2]
+                               (r+1, ordinal_suffix(r+1), filename))+": "+str(e)).with_traceback(sys.exc_info()[2])
 
     def _do_save_as(self, filename):
         with open(filename, "w") as h:

@@ -1,25 +1,20 @@
 """ThreadManager2 class."""
 __all__ = ["RunnableManager"]
 
-from .runnables import *
-from .misc import random_name, seconds2str, get_python_logger, MyLock
+from hypydrive import random_name, seconds2str, get_python_logger, MyLock, froze_it
 import threading
-import traceback
-import time
-from PyQt4.QtCore import QObject, pyqtSignal
+from PyQt5.QtCore import QObject, pyqtSignal
 import multiprocessing
 import copy
 import time
 from threading import Lock
-import logging
 import sys
-from .misc import froze_it
 import collections
 
 
 def _tm_print(s):
     """print for the thread manager2 (debugging)."""
-    print "^^ %s ^^" % s
+    print(("^^ %s ^^" % s))
 
 
 class RunnableManagerError(Exception):
@@ -359,7 +354,7 @@ class RunnableManager(QObject, threading.Thread):
     def __unlocked_add_runnables(self, runnables):
         n = len(self.__runnables)
         self.__runnables.extend(runnables)
-        self.__idxs_to_run.extend(range(n, n + len(runnables)))
+        self.__idxs_to_run.extend(list(range(n, n + len(runnables))))
 
 
     def __unlocked_kill_runnable(self, runnable):
