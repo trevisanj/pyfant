@@ -2,17 +2,20 @@
 
 __all__ = ["XFileMain"]
 
-from PyQt4.QtGui import *
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
 from . import a_WFileMain
-from pyfant import FileMain
-from .guiaux import *
 import os.path
+from ._shared import *
+import a99
+import f311.filetypes as ft
+
 
 ################################################################################
 class XFileMain(QMainWindow):
     """
-    Arguments:
-      parent=None -- nevermind
+    Args:
+      parent=None: nevermind
       file_main (optional)-- FileMain instance
     """
 
@@ -21,8 +24,8 @@ class XFileMain(QMainWindow):
         self.flag_changed = False
         self.save_dir = "."
         me = self.editor = a_WFileMain.WFileMain()
-        me.setFont(MONO_FONT)
-        me.edited.connect(self.on_edited)
+        me.setFont(a99.MONO_FONT)
+        me.changed.connect(self.on_edited)
         me.setFocus()
         # self.setWindowTitle(title)
         self.setCentralWidget(me)
@@ -40,13 +43,13 @@ class XFileMain(QMainWindow):
         ac.setShortcut("Ctrl+Q")
         ac.triggered.connect(self.close)
 
-        place_left_top(self, 500, 768)
+        a99.place_left_top(self, 500, 768)
 
         if file_main is not None:
             self.load(file_main)
 
     def load(self, x):
-        assert isinstance(x, FileMain)
+        assert isinstance(x, ft.FileMain)
         self.editor.load(x)
         self.update_window_title()
 
@@ -55,7 +58,7 @@ class XFileMain(QMainWindow):
     # Override
 
     def closeEvent(self, evt):
-        are_you_sure(self.flag_changed, evt, self)
+        a99.are_you_sure(self.flag_changed, evt, self)
 
     # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * #
     # Slots
@@ -64,11 +67,11 @@ class XFileMain(QMainWindow):
         self.disable_save_actions()
         try:
             if not self.editor.flag_valid:
-                show_error(PARAMS_INVALID)
+                a99.show_error(PARAMS_INVALID)
             else:
                 self.save()
         except Exception as e:
-            show_error(str(e))
+            a99.show_error(str(e))
             raise
         finally:
             self.enable_save_actions()
@@ -78,15 +81,15 @@ class XFileMain(QMainWindow):
         try:
             if self.editor.f:
                 if not self.editor.flag_valid:
-                    show_error(PARAMS_INVALID)
+                    a99.show_error(PARAMS_INVALID)
                 else:
                     new_filename = QFileDialog.getSaveFileName(self, "Save file",
-                                      self.save_dir, "*.dat")
+                                      self.save_dir, "*.dat")[0]
                     if new_filename:
                         self.save_dir, _ = os.path.split(str(new_filename))
                         self.save_as(new_filename)
         except Exception as e:
-            show_error(str(e))
+            a99.show_error(str(e))
             raise
         finally:
             self.enable_save_actions()
@@ -119,7 +122,6 @@ class XFileMain(QMainWindow):
             self.update_window_title()
 
     def update_window_title(self):
-        self.setWindowTitle("mained -- %s%s%s" % (self.editor.f.filename,
+        self.setWindowTitle("mained: %s%s%s" % (self.editor.f.filename,
           "" if not self.flag_changed else " (changed)",
           "" if self.editor.flag_valid else " (*invalid*)"))
-

@@ -2,30 +2,28 @@
 
 __all__ = ["XPFANT"]
 
-from PyQt4.QtGui import *
-from pyfant import *
-from .guiaux import *
-from . import XRunnableManager
-from pyfant import *
-from .a_XMainAbonds import *
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
 import os.path
-import matplotlib.pyplot as plt
-import traceback
 import copy
-import syntax
 import shutil
+import a99
+import f311.explorer as ex
+import f311.filetypes as ft
+
+
 
 ################################################################################
-class XPFANT(XMainAbonds):
+class XPFANT(ex.XMainAbonds):
     """
-    Arguments:
-      parent=None -- nevermind
+    Args:
+      parent=None: nevermind
       file_main (optional)-- FileMain instance
     """
 
     def __init__(self, *args, **kwargs):
         ## State variables
-        XMainAbonds.__init__(self, *args, **kwargs)
+        ex.XMainAbonds.__init__(self, *args, **kwargs)
 
         # # Central layout
 
@@ -35,7 +33,7 @@ class XPFANT(XMainAbonds):
         w = self.buttonSubmit = QPushButton("&Submit job")
         w.clicked.connect(self.on_submit)
         l.addWidget(w)
-        w = self.checkbox_custom_id = QCheckBox("Custom session id")
+        w = self.checkbox_custom_id = QCheckBox("Custom session directory")
         w.stateChanged.connect(self.on_checkbox_custom_id_state_changed)
         l.addWidget(w)
         w = self.lineEdit_custom_id = QLineEdit()
@@ -48,10 +46,21 @@ class XPFANT(XMainAbonds):
         self.setWindowTitle("PFANT launcher")
         self.__update_lineEdit_custom_id()
 
+
+    # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * #
+    # "Duck-typing"
+
+    def set_manager_form(self, x):
+        from f311 import pyfant as pf
+        assert isinstance(x, pf.XRunnableManager)
+        self._manager_form = x
+        self._rm = x.rm
+
     # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * #
     # Slots for Qt library signals
 
     def on_submit(self):
+        from f311 import pyfant as pf
         flag_ok = True
         errors = self._check_single_setup()
         if len(errors) == 0:
@@ -61,7 +70,7 @@ class XPFANT(XMainAbonds):
                 if len(s) == 0:
                     errors.append("Please inform custom session id.")
                 elif len(errors) == 0: # will only offer to remove directory if everything is ok so far
-                    dirname = SESSION_PREFIX_SINGULAR+s
+                    dirname = _get_custom_dirname(s)
                     if os.path.isdir(dirname):
                         r = QMessageBox.question(self, "Directory exists",
                          "Directory '%s' already exists.\n\n"
@@ -83,15 +92,15 @@ class XPFANT(XMainAbonds):
                 self.__submit_job()
             except Exception as e:
                 errors.append(str(e))
-                get_python_logger().exception("Cannot submit job")
+                a99.get_python_logger().exception("Cannot submit job")
         if len(errors) > 0:
-            show_error("Cannot submit job:\n  - "+("\n  - ".join(errors)))
+            a99.show_error("Cannot submit job:\n  - "+("\n  - ".join(errors)))
 
     def on_checkbox_custom_id_state_changed(self):
         self.__update_lineEdit_custom_id()
 
     # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * #
-    # Slots for signals emited by pyfant widgets
+    # Slots for signals emited by ftpyfant widgets
 
 
     # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * #
@@ -101,9 +110,15 @@ class XPFANT(XMainAbonds):
         return str(self.lineEdit_custom_id.text()).strip()
 
     def __submit_job(self):
-        r = Combo()
+        from f311 import pyfant as pf
+        r = pf.Combo()
         if self.checkbox_custom_id.isChecked():
-            r.conf.sid.id = self.__get_custom_session_id()
+            custom_id = self.__get_custom_session_id()
+            r.conf.sid.id = custom_id
+            if _get_custom_dirname(custom_id) == custom_id:
+                # Understands that session dirname prefix must be cleared
+                r.sid.id_maker.session_prefix_singular = ""
+
         r.conf.opt = copy.copy(self.oe.f)
         r.conf.file_main = self.me.f
         r.conf.file_abonds = self.ae.f
@@ -113,3 +128,11 @@ class XPFANT(XMainAbonds):
 
     def __update_lineEdit_custom_id(self):
         self.lineEdit_custom_id.setEnabled(self.checkbox_custom_id.isChecked())
+
+
+# This sector defines how custom directory name is made up
+
+def _get_custom_dirname(session_id):
+    from f311 import pyfant as pf
+    # return pf.SESSION_PREFIX_SINGULAR+session_id
+    return session_id

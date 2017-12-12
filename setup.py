@@ -1,20 +1,47 @@
-#!/usr/bin/python
+import sys
+import os
+
+if sys.version_info[0] < 3:
+    print("Python version detected:\n*****\n{0!s}\n*****\nCannot run, must be using Python 3".format(sys.version))
+    sys.exit()
 
 from setuptools import setup, find_packages
 from glob import glob
 
+
+def find_scripts(pkgnames):
+    ret = []
+    for pkgname in pkgnames:
+        for item in os.walk(pkgname):
+            _, last = os.path.split(item[0])
+            if last == "scripts":
+                ret.extend(glob(os.path.join(item[0], '*.py')))
+    return ret
+
+
+PACKAGE_NAME = "pyfant"
+
+pkgs = find_packages()
+scripts = find_scripts([PACKAGE_NAME])
+
 setup(
-    name = 'pyfant',
-    packages = find_packages(),
-    version = '0.16.10.13',
-    license = 'GNU GPLv3',
-    platforms = 'any',
-    description = 'Tools for Astronomy: Spectral Synthesis; Spectrograph Simulation Support; FITS files editors; and more.\n(1) Python interface for the PFANT spectral synthesis software (github.com/trevisanj/PFANT);\n (2) Support tools for Websim-Compass MOSAIC-E-ELT web-based simulator',
-    author = 'Julio Trevisan',
-    author_email = 'juliotrevisan@gmail.com',
-    url = 'https://github.com/trevisanj/pyfant', # use the URL to the github repo
-    keywords= ['astronomy', 'spectral synthesis', 'e-elt', 'mosaic', 'stars', 'websim-compass', 'simulator', 'learning astronomy'],
-    install_requires = ['numpy', 'scipy', 'astropy', 'matplotlib', 'fortranformat'],  # matplotlib never gets installed correctly by pip, but anyway...
-    scripts = glob('scripts/*.py')  # Considers system scripts all .py files in 'scripts' directory
+    name=PACKAGE_NAME,
+    packages=find_packages(),
+    include_package_data=True,
+    version='0.17.12.12.0',
+    license='GNU GPLv3',
+    platforms='any',
+    description='Python interface to the PFANT Spectral Synthesis software + many extra tools',
+    author='Julio Trevisan',
+    author_email='juliotrevisan@gmail.com',
+    url='https://github.com/trevisanj/pyfant',
+    keywords= ['astronomy', "stellar", "spectroscopy", "spectral", "synthesis",
+               "honl-london", "nist", "hitran", "multiplicity", "line strength", "kovacs", "franck-condon"],
+    install_requires=["numpy", "scipy", "matplotlib", "astropy", "configobj", "bs4", "lxml",
+                      "robobrowser", "requests", "fortranformat", "tabulate", "rows", "pyqt5",
+                      "f311", "a99>=0.17.12.08.4", "airvacuumvald"],
+    scripts=scripts
 )
 
+
+# TODO later install_requires=['numpy', 'matplotlib', 'pyqt5'],  # matplotlib never gets installed correctly by pip, but anyway...

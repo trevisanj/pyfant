@@ -1,18 +1,17 @@
-
-
-__all__ = ["Runnable", "RunnableStatus", "ExecutableStatus", "Executable",
-           "Innewmarcs", "Hydro2", "Pfant", "Nulbad", "Combo"]
-
-
 import subprocess
 from .conf import *
 import os
-from .misc import *
 from .errors import *
-from pyfant import FileSpectrumPfant, FileSpectrumNulbad, FileModBin
 from threading import Lock
+import a99
+from .. import filetypes as ft
+from collections import OrderedDict
 
-@froze_it
+__all__ = ["Runnable", "RunnableStatus", "ExecutableStatus", "PFANTExecutable",
+           "Innewmarcs", "Hydro2", "Pfant", "Nulbad", "Combo"]
+
+
+@a99.froze_it
 class RunnableStatus(object):
 
     def __init__(self, runnable):
@@ -35,12 +34,12 @@ class RunnableStatus(object):
             return " ".join(l)
         return "?"
 
-@froze_it
+@a99.froze_it
 class ExecutableStatus(object):
-    """Stores status related to Executable for reporting purposes."""
+    """Stores status related to PFANTExecutable for reporting purposes."""
     
     def __init__(self, executable):
-        assert isinstance(executable, Executable)
+        assert isinstance(executable, PFANTExecutable)
         self.exe_filename = executable.__class__.__name__.lower()
         self.executable = executable
         # used by pfant only
@@ -77,7 +76,7 @@ class Runnable(object):
 
     The run() method is blocking, i.e., it only returns when running is done.
 
-    This is a base class for Executable and Combo.
+    This is a base class for PFANTExecutable and Combo.
     """
 
     @property
@@ -103,8 +102,12 @@ class Runnable(object):
     def sid(self):
         return self._get_sid()
 
+    @property
+    def result(self):
+        return self._result
+
     def __init__(self):
-        self.name = random_name()
+        self.name = a99.random_name()
         # Is running?
         self._flag_running = False
         # Is finished?
@@ -115,6 +118,8 @@ class Runnable(object):
         self._flag_error = False
         # Will contain error message if finished with error
         self._error_message = ""
+        # Will contain results DataFile objects (keys vary depending on the Runnable subclass
+        self._result = {}
 
     def get_status(self):
         raise NotImplementedError()
@@ -127,7 +132,10 @@ class Runnable(object):
 
     def load_result(self):
         """Abstract. Override this method to open the result file(s) particular to the
-        executable."""
+        executable.
+
+        Methods in subclasses should populate self._result
+        """
 
     def reset(self):
         """Prepares to run again."""
@@ -139,16 +147,20 @@ class Runnable(object):
         if self.sid.id:
             self.sid.clean(False)
 
+    def clean(self, *args):
+        """Wraps self.sid.clean(). See ftpyfant.SID"""
+        self.sid.clean(*args)
+
     def _get_sid(self):
         raise NotImplementedError()
 
 
-class Executable(Runnable):
+class PFANTExecutable(Runnable):
     """
-    PFANT executables common ancestor class.
+    PFANT executables common ancestor class, or any other program
     """
 
-    # Set at descendant class with a pyfant.conf.FOR_* value
+    # Set at descendant class with a ftpyfant.conf.FOR_* value
     sequence_index = -1
 
     @property
@@ -170,6 +182,16 @@ class Executable(Runnable):
     @conf.setter
     def conf(self, x):
         self.__conf = x
+
+    @property
+    def opt(self):
+        """Wraps self.__conf.opt"""
+        return self.__conf.opt
+
+    @opt.setter
+    def opt(self, x):
+        """Wraps self.__conf.opt"""
+        self.__conf.opt = x
 
     def __init__(self):
         Runnable.__init__(self)
@@ -224,6 +246,9 @@ class Executable(Runnable):
 
     def __run(self):
         """Called both from run() and run_from_combo()."""
+
+        self.conf.logger.debug("FLPREFIX NOW "+str(self.conf.opt.flprefix))
+
         args = self.conf.get_args()
         cmd_words = [self._exe_path] + args
 
@@ -236,37 +261,14 @@ class Executable(Runnable):
         try:
             self.__popen = subprocess.Popen(cmd_words, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 
-            # if self.__stdout:
-            #     self.__popen = subprocess.Popen(cmd_words, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-            # else:
-            #     self.__popen = subprocess.Popen(cmd_words)
             self._flag_running = True
             try:
                 if self.conf.popen_text_dest is not None:
                     for line in self.__popen.stdout:
-                        self.conf.popen_text_dest.write(line)
+                        # In Python 3, line is bytes, write() cannot deal with that
+                        self.conf.popen_text_dest.write(line.decode("ascii"))
             finally:
                 self.__popen.stdout.close()
-
-
-#todo cleanup
-#                 self._flag_running = True
-#
-#                 if self.__stdout:  # TODO disabled PIPE stdout for popen
-#                     try:
-#                         for line in self.__popen.stdout:
-#                             self.__stdout.write(line)
-#                     finally:
-#                         # todo cleanup
-#                         # printOpenFiles()
-#
-#                         self.__popen.stdout.close()
-#                         self.__stdout.close()
-#
-# #todo cleanup
-#                         # print "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
-#                         # printOpenFiles()
-#                         # sys.exit()
 
             # blocks execution until finished
             self.__popen.wait()
@@ -302,48 +304,69 @@ class Executable(Runnable):
             self.conf.logger.debug(str(self._status))
 
 
-@froze_it
-class Innewmarcs(Executable):
+@a99.froze_it
+class Innewmarcs(PFANTExecutable):
     """Class representing the innewmarcs executable."""
 
     sequence_index = FOR_INNEWMARCS
 
     def __init__(self):
-        Executable.__init__(self)
+        PFANTExecutable.__init__(self)
         self._exe_path = "innewmarcs"
 
         # FileModBin object
         self.modeles = None
 
     def load_result(self):
-        file_mod = FileModBin()
+        file_mod = ft.FileModBin()
         filepath = self.conf.get_fn_modeles()
         file_mod.load(filepath)
-        self.modeles = file_mod
+        # Assigns .modeles for backward compatibility
+        self.modeles = self._result["modeles"] = file_mod
 
 
-@froze_it
-class Hydro2(Executable):
+@a99.froze_it
+class Hydro2(PFANTExecutable):
     """Class representing the hydro2 executable."""
 
     sequence_index = FOR_HYDRO2
 
     def __init__(self):
-        Executable.__init__(self)
+        PFANTExecutable.__init__(self)
         self._exe_path = "hydro2"
 
     def load_result(self):
-        raise NotImplementedError("Opening hydro2 result will need hydro2 to save a side file containing a list of the files that it has created!!!")
+        """
+        Makes self._result["profiles"] = {filename0: FileToH0, filename1: FileToH1, ...}
+
+        Tolerant to non-existing files, but will crash if existing files pointed to at the
+        FileHmap fail to load.
+        """
+
+        fhmap = self.conf.get_file_hmap()
+        if fhmap is None:
+            raise RuntimeError("Cannot find my hmap file")
+
+        profiles = self._result["profiles"] = OrderedDict()
+        for row in fhmap.rows:
+            value = None
+            if os.path.exists(row.fn):
+                fh = ft.FileToH()
+                fh.load(row.fn)
+                value = fh
+
+            profiles[row.fn] = value
 
 
-@froze_it
-class Pfant(Executable):
+
+@a99.froze_it
+class Pfant(PFANTExecutable):
     """Class representing the pfant executable."""
 
     sequence_index = FOR_PFANT
 
     def __init__(self):
-        Executable.__init__(self)
+        PFANTExecutable.__init__(self)
         self._exe_path = "pfant"  # Path to PFANT executable (including executable name)
 
         # ** Variables assigned by poll_progress()
@@ -371,7 +394,7 @@ class Pfant(Executable):
         if (not self.ikey or self.ikey < self.ikeytot) and os.path.isfile(p):
             with open(p) as h:
                 try:
-                    t = map(int, h.readline().split("/"))
+                    t = list(map(int, h.readline().split("/")))
                     ret.ikey = t[0]
                     ret.ikeytot = t[1]
                 except ValueError:
@@ -383,37 +406,41 @@ class Pfant(Executable):
 
         for type_ in ("norm", "cont", "spec"):
             filepath = self.conf.get_pfant_output_filepath(type_)
-            file_sp = FileSpectrumPfant()
+            file_sp = ft.FileSpectrumPfant()
             file_sp.load(filepath)
             self.__setattr__(type_, file_sp.spectrum)
+            self._result[type_] = file_sp.spectrum
 
 
-@froze_it
-class Nulbad(Executable):
+@a99.froze_it
+class Nulbad(PFANTExecutable):
     """Class representing the nulbad executable."""
 
     sequence_index = FOR_NULBAD
 
     def __init__(self):
-        Executable.__init__(self)
+        PFANTExecutable.__init__(self)
         self._exe_path = "nulbad"
 
         # nulbad output
         self.convolved = None
 
     def load_result(self):
-        file_sp = FileSpectrumNulbad()
+        file_sp = ft.FileSpectrumNulbad()
         filepath = self.conf.get_nulbad_output_filepath()
         file_sp.load(filepath)
         self.convolved = file_sp.spectrum
+        self._result["convolved"] = file_sp.spectrum
 
-@froze_it
+
+@a99.froze_it
+
 class Combo(Runnable):
     """
     Runs sequence of executables: innermarcs, hydro2, pfant, nulbad.
 
-    Arguments:
-      sequence (optional) -- sequence of executables to run. Defaults to
+    Args:
+      sequence (optional): sequence of executables to run. Defaults to
         [e_innewmarcs, e_hydro2, e_pfant, e_nulbad]. If you want to run only
         pfant and nulbad, for example, you can pass [e_pfant, e_nulbad]
 
@@ -477,16 +504,16 @@ class Combo(Runnable):
         # Executables to run
         # order is irrelevant (will be sorted anyway).
         self.__sequence = [FOR_INNEWMARCS, FOR_HYDRO2, FOR_PFANT, FOR_NULBAD] \
-            if sequence is None else sequence
+            if sequence is None else translate_sequence(sequence)
 
-        # ** Executable instances
+        # ** PFANTExecutable instances
         self.__innewmarcs = Innewmarcs()
         self.__hydro2 = Hydro2()
         self.__pfant = Pfant()
         self.__nulbad = Nulbad()
 
         # ** Internal variables
-        self.__running_exe = None  # Executable object currently running
+        self.__running_exe = None  # PFANTExecutable object currently running
         # ComboStatus instance
         self.__status = RunnableStatus(self)
         # Conf instance
@@ -498,7 +525,7 @@ class Combo(Runnable):
         map = [(FOR_INNEWMARCS, self.__innewmarcs), (FOR_HYDRO2, self.__hydro2), (FOR_PFANT, self.__pfant),
                (FOR_NULBAD, self.__nulbad)]
         res = []
-        ii, ee = zip(*map)
+        ii, ee = list(zip(*map))
         self.__sequence.sort()
         for i_exe in self.__sequence:
             if i_exe in ii:
@@ -525,6 +552,19 @@ class Combo(Runnable):
             self._flag_running = False
             self._flag_finished = True
 
+    def load_result(self):
+        """Calls load_result() for all contained executables, then collects all into self._result"""
+        for exe in self.get_exes():
+            exe.load_result()
+
+            # Bug checking: Executables must not repeat the names of their results,
+            # so that they can be all collected in Combo._result
+            for key in exe._result:
+                if key in self._result:
+                    raise AssertionError("Key '{}' is in {} but was seen previously by Combo".
+                                         format(key, exe.__class__))
+            self._result.update(exe._result)
+
     def kill(self):
         self._flag_killed = True
         if self._flag_running:
@@ -537,11 +577,6 @@ class Combo(Runnable):
             return self.__running_exe.get_status()
         else:
             return self.__status
-
-    def load_result(self):
-        ee = self.get_exes()
-        for e in ee:
-            e.load_result()
 
     def reset(self):
         Runnable.reset(self)

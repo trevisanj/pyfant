@@ -2,18 +2,20 @@
 
 __all__ = ["XFileAbonds"]
 
-from PyQt4.QtGui import *
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
 from . import a_WFileAbonds
-from pyfant import FileAbonds, FileDissoc
-from .guiaux import *
 import os
-from .a_XText import *
+from ._shared import *
+import a99
+import f311.filetypes as ft
+
 
 ################################################################################
 class XFileAbonds(QMainWindow):
     """
-    Arguments:
-      parent=None -- nevermind
+    Args:
+      parent=None: nevermind
       file_abonds (optional)-- FileAbonds instance
     """
 
@@ -23,8 +25,8 @@ class XFileAbonds(QMainWindow):
         self.flag_changed = False
         self.save_dir = "."
         me = self.editor = a_WFileAbonds.WFileAbonds()
-        me.setFont(MONO_FONT)
-        me.edited.connect(self.on_edited)
+        me.setFont(a99.MONO_FONT)
+        me.changed.connect(self.on_edited)
         me.setFocus()
         # self.setWindowTitle(title)
         self.setCentralWidget(me)
@@ -60,13 +62,13 @@ class XFileAbonds(QMainWindow):
 
         rect = QApplication.desktop().screenGeometry()
         self.setGeometry(0, 0, 400, rect.height())
-        place_left_top(self)
+        a99.place_left_top(self)
 
         if file_abonds is not None:
             self.load(file_abonds)
 
     def load(self, x):
-        assert isinstance(x, FileAbonds)
+        assert isinstance(x, ft.FileAbonds)
         self.editor.load(x)
         self.update_window_title()
 
@@ -75,7 +77,7 @@ class XFileAbonds(QMainWindow):
     # Override
 
     def closeEvent(self, evt):
-        are_you_sure(self.flag_changed, evt, self)
+        a99.are_you_sure(self.flag_changed, evt, self)
 
     # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * #
     # Slots
@@ -84,11 +86,11 @@ class XFileAbonds(QMainWindow):
         self.disable_save_actions()
         try:
             if not self.editor.flag_valid:
-                show_error(PARAMS_INVALID)
+                a99.show_error(PARAMS_INVALID)
             else:
                 self.save()
         except Exception as e:
-            show_error(str(e))
+            a99.show_error(str(e))
             raise
         finally:
             self.enable_save_actions()
@@ -98,7 +100,7 @@ class XFileAbonds(QMainWindow):
         try:
             if self.editor.f:
                 if not self.editor.flag_valid:
-                    show_error(PARAMS_INVALID)
+                    a99.show_error(PARAMS_INVALID)
                 else:
                     new_filename = QFileDialog.getSaveFileName(self, "Save file",
                      self.save_dir, "*.dat")
@@ -106,7 +108,7 @@ class XFileAbonds(QMainWindow):
                         self.save_dir, _ = os.path.split(str(new_filename))
                         self.save_as(new_filename)
         except Exception as e:
-            show_error(str(e))
+            a99.show_error(str(e))
             raise
         finally:
             self.enable_save_actions()
@@ -116,23 +118,24 @@ class XFileAbonds(QMainWindow):
         try:
             if self.editor.f:
                 if not self.editor.flag_valid:
-                    show_error(PARAMS_INVALID)
+                    a99.show_error(PARAMS_INVALID)
                 else:
                     new_filename = QFileDialog.getSaveFileName(self, "Save file",
-                     os.path.join(".", FileDissoc.default_filename), "*.dat")
+                     os.path.join(".", ft.FileDissoc.default_filename), "*.dat")[0]
                     if new_filename:
                         f = self.editor.f.get_file_dissoc()
                         f.title = "Created using abed.py"
                         f.save_as(new_filename)
         except Exception as e:
-            show_error(str(e))
+            a99.show_error(str(e))
             raise
         finally:
             self.enable_save_actions()
 
 
     def on_export_turbospectrum(self, _):
-        w = XText(self, self.editor.f.get_turbospectrum_str(), "Atomic number & abundance")
+        from f311 import explorer as ex
+        w = ex.XText(self, self.editor.f.get_turbospectrum_str(), "Atomic number & abundance")
         w.show()
 
     def on_edited(self):
@@ -166,4 +169,3 @@ class XFileAbonds(QMainWindow):
         self.setWindowTitle("abed -- %s%s%s" % (self.editor.f.filename,
           "" if not self.flag_changed else " (changed)",
           "" if self.editor.flag_valid else " (*invalid*)"))
-

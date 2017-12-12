@@ -1,26 +1,29 @@
 """Widget to edit a MargAbondsFwhm object."""
 
-__all__ = ["WFileAbXFwhm"]
 
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
-from .guiaux import *
-from pyfant import *
-from .syntax import *
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
 import sys
 import types
 import traceback
+import a99
+import f311.filetypes as ft
+
+
+__all__ = ["WFileAbXFwhm"]
+
 
 class WFileAbXFwhm(QWidget):
     """
     Editor for editor widget.
 
-    Arguments:
+    Args:
       parent=None
     """
 
     # Emitted whenever any value changes
-    edited = pyqtSignal()
+    changed = pyqtSignal()
 
     def __init__(self, parent=None):
         QWidget.__init__(self, parent)
@@ -29,8 +32,8 @@ class WFileAbXFwhm(QWidget):
 
         # Whether all the values in the fields are valid or not
         self.flag_valid = False  # initialized to False because not loaded yet
-        self.f = None # FileOptions object
-        self.logger = get_python_logger()
+        self.f = None  # FileOptions object
+        self.logger = a99.get_python_logger()
         # FileAbonds instance to check for existence of atomic symbols
         self.file_abonds = None
 
@@ -44,8 +47,8 @@ class WFileAbXFwhm(QWidget):
 
         # # Central layout
 
-        la = self.centralLayout = QVBoxLayout()
-        la.setMargin(0)
+        la = self.layout_main = QVBoxLayout()
+        a99.set_margin(la, 0)
         self.setLayout(la)
 
         # ## Splitter with scroll area and descripton+error area
@@ -57,21 +60,21 @@ class WFileAbXFwhm(QWidget):
         # ### Editor for multi setup
         editor = self.editor = QPlainTextEdit()
         # editor.setStyleSheet("QPlainTextEdit {background-color: #000000}")
-        #editor.textChanged.connect(self.on_edited)
+        # editor.textChanged.connect(self.on_edited)
         editor.modificationChanged.connect(self.on_edited)
         sp.addWidget(editor)
-        self.highlight = PythonHighlighter(editor.document())
+        self.highlight = a99.PythonHighlighter(editor.document())
 
 
         # ### Second widget of splitter
         # layout containing description area and a error label
         wlu = QWidget()
         lu = QVBoxLayout(wlu)
-        lu.setMargin(0)
+        a99.set_margin(lu, 0)
         lu.setSpacing(4)
         x = self.textEditInfo = QTextEdit(self)
         x.setReadOnly(True)
-        x.setStyleSheet("QTextEdit {color: %s}" % COLOR_DESCR)
+        x.setStyleSheet("QTextEdit {color: %s}" % a99.COLOR_DESCR)
         lu.addWidget(x)
         sp.addWidget(wlu)
 
@@ -80,14 +83,14 @@ class WFileAbXFwhm(QWidget):
         sp.setStretchFactor(1, 2)
 
         self.setEnabled(False)  # disabled until load() is called
-        style_checkboxes(self)
+        a99.style_checkboxes(self)
         self.flag_process_changes = True
 
     # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * #
     # # Interface
 
     def load(self, x):
-        assert isinstance(x, FileAbXFwhm)
+        assert isinstance(x, ft.FileAbXFwhm)
         self.f = x
         self.__update_from_data()
         # this is called to perform file validation upon loading
@@ -121,13 +124,13 @@ class WFileAbXFwhm(QWidget):
             return
         self.editor.document().setModified(False)
         self.__update_data()
-        self.edited.emit()
+        self.changed.emit()
 
     # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * #
     # # Internal gear
 
     def __validate(self):
-        f = FileAbXFwhm()
+        f = ft.FileAbXFwhm()
         # first validation: code parses OK and has "ab" and "conv" variables
         f.source = str(self.editor.toPlainText())
         f.validate(self.file_abonds)
@@ -145,14 +148,14 @@ class WFileAbXFwhm(QWidget):
             self.__validate()
             self.f.source = str(self.editor.toPlainText())
 
-        except Exception as E:
+        except:
             flag_error = True
             etype, value, _ = sys.exc_info()
             emsg = "<b>Error</b><br><pre>"+\
-             ("".join(_format_exception_only(etype, value)))+"</pre>"
+                   ("".join(_format_exception_only(etype, value)))+"</pre>"
             # ShowError(str(E))
         self.flag_valid = not flag_error
-        self.__set_descr_text('<span style="color: %s">%s</div>' % (COLOR_ERROR, emsg))
+        self.__set_descr_text('<span style="color: %s">%s</div>' % (a99.COLOR_ERROR, emsg))
 
     def __set_descr_text(self, x):
         """Sets text of labelDescr."""
@@ -185,7 +188,7 @@ def _format_exception_only(etype, value):
     # Clear these out first because issubtype(string1, SyntaxError)
     # would raise another exception and mask the original problem.
     if (isinstance(etype, BaseException) or
-        isinstance(etype, types.InstanceType) or
+        isinstance(etype, object) or
         etype is None or type(etype) is str):
         return [traceback._format_final_exc_line(etype, value)]
 

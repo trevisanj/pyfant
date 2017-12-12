@@ -1,32 +1,33 @@
 """Window to edit both main and abundances"""
 
-__all__ = ["XMainAbonds"]
 
-from PyQt4.QtGui import *
-from PyQt4.QtCore import *
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
+from PyQt5.QtCore import *
 from .a_WFileMain import *
 from .a_WFileAbonds import *
 from .a_WOptionsEditor import *
-from pyfant import *
-from .guiaux import *
-from . import XRunnableManager
-from pyfant import *
+# from .a_XRunnableManager import XRunnableManager
 import os
-import os.path
-import re
 import matplotlib.pyplot as plt
+import a99
+import f311.filetypes as ft
+
+
+__all__ = ["XMainAbonds"]
+
 
 ################################################################################
-class XMainAbonds(QMainWindow):
+class XMainAbonds(a99.XLogMainWindow):
     """
-    Arguments:
-      parent=None -- nevermind
+    Args:
+      parent=None: nevermind
       file_main (optional)-- FileMain instance
     """
 
     def __init__(self, parent=None, file_main=None, file_abonds=None):
-        ## State variables
-        QMainWindow.__init__(self, parent)
+        # State variables
+        a99.XLogMainWindow.__init__(self, parent)
         # XRunnableManager instance
         self._manager_form = None
         # RunnableManager instance
@@ -36,17 +37,17 @@ class XMainAbonds(QMainWindow):
 
         # # Synchronized sequences
         # Used in generic operations where only certain parameters change
-        self.tab_texts =  ["Main configuration (Alt+&1)",
-                            "Abundances (Alt+&2)",
-                            "Command-line options (Alt+&3)"]
+        self.tab_texts = ["Main configuration (Alt+&1)",
+                          "Abundances (Alt+&2)",
+                          "Command-line options (Alt+&3)"]
         self.flags_changed = [False, False, False]
         self.save_as_texts = ["Save main configuration as...",
-                               "Save abundances as...",
-                               "Save command-line options as..."]
+                              "Save abundances as...",
+                              "Save command-line options as..."]
         self.open_texts = ["Load main configuration file",
-                            "Load abundances file",
-                            "Load command-line options file"]
-        self.clss = [FileMain, FileAbonds, FileOptions]
+                           "Load abundances file",
+                           "Load command-line options file"]
+        self.clss = [ft.FileMain, ft.FileAbonds, ft.FileOptions]
         self.wilds = ["*.dat", "*.dat", "*.py"]
 
         # # Menu bar
@@ -100,7 +101,7 @@ class XMainAbonds(QMainWindow):
 
         cw = self.centralWidget = QWidget()
         self.setCentralWidget(cw)
-        la = self.centralLayout = QVBoxLayout(cw)
+        la = self.layout_main = QVBoxLayout(cw)
 
         # ## Main control bar
         # A layout is created and left blank for descendants to add
@@ -114,7 +115,7 @@ class XMainAbonds(QMainWindow):
         # tab "File"
         tt = self.tabWidget = QTabWidget(self)
         la.addWidget(tt)
-        tt.setFont(MONO_FONT)
+        tt.setFont(a99.MONO_FONT)
 
         # ### Main configuration tab
         w0 = self.c27272 = QWidget()
@@ -133,7 +134,7 @@ class XMainAbonds(QMainWindow):
         # #### Main file editor widget
         me = self.me = WFileMain()
         l0.addWidget(me)
-        me.edited.connect(self.on_main_edited)
+        me.changed.connect(self.on_main_edited)
 
         # ### Abundances tab
         w0 = self.c10101 = QWidget()
@@ -153,63 +154,55 @@ class XMainAbonds(QMainWindow):
         ae = self.ae = WFileAbonds()
         l0.addWidget(ae)
 
-        ae.edited.connect(self.on_abonds_edited)
+        ae.changed.connect(self.on_abonds_edited)
 
         # ### Command-line options tab
         w0 = QWidget()
         tt.addTab(w0, self.tab_texts[2])
         l0 = QVBoxLayout(w0)
 
-        # #### File label
-        l1 = self.c293wd = QHBoxLayout()
-        l0.addLayout(l1)
-        w = QLabel("<b>File:<b>")
-        l1.addWidget(w)
-        w = self.label_fn_options = QLabel()
-        l1.addWidget(w)
-        l1.addSpacerItem(QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum))
+        # # #### File label
+        # l1 = self.c293wd = QHBoxLayout()
+        # l0.addLayout(l1)
+        # w = QLabel("<b>File:<b>")
+        # l1.addWidget(w)
+        # w = self.label_fn_options = QLabel()
+        # l1.addWidget(w)
+        # l1.addSpacerItem(QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum))
 
-        oe = self.oe = WOptionsEditor()
-        oe.edited.connect(self.on_options_edited)
+        oe = self.oe = WOptionsEditor(self)
+        oe.changed.connect(self.on_options_edited)
         l0.addWidget(oe)
-#        tt.tabBar()
+        #        tt.tabBar()
 
         # ### Final tabs setup
         tt.setCurrentIndex(0)
 
         # ### These sequences couldn't be set above because the widgets didn't exist yet
         self.editors = [self.me, self.ae, self.oe]
-        self.labels_fn = [self.label_fn_main, self.label_fn_abonds, self.label_fn_options]
+        self.labels_fn = [self.label_fn_main, self.label_fn_abonds, self.oe.label_fn]
         assert len(self.tab_texts) == len(self.flags_changed) == \
-         len(self.save_as_texts) == len(self.open_texts) == len(self.clss) == \
-         len(self.editors) == len(self.labels_fn)
+               len(self.save_as_texts) == len(self.open_texts) == len(self.clss) == \
+               len(self.editors) == len(self.labels_fn)
 
         # # Loads default files
-        if os.path.isfile(FileMain.default_filename):
-            f = FileMain()
+        if os.path.isfile(ft.FileMain.default_filename):
+            f = ft.FileMain()
             f.load()
             self.me.load(f)
-        if os.path.isfile(FileAbonds.default_filename):
-            f = FileAbonds()
+        if os.path.isfile(ft.FileAbonds.default_filename):
+            f = ft.FileAbonds()
             f.load()
             self.ae.load(f)
-        if os.path.isfile(FileOptions.default_filename):
-            f = FileOptions()
+        if os.path.isfile(ft.FileOptions.default_filename):
+            f = ft.FileOptions()
             f.load()
             self.oe.load(f)
         else:
-            self.oe.load(FileOptions())
+            self.oe.load(ft.FileOptions())
         self._update_labels_fn()
 
 
-
-    # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * #
-    # Interface
-
-    def set_manager_form(self, x):
-        assert isinstance(x, XRunnableManager)
-        self._manager_form = x
-        self._rm = x.rm
 
     # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * #
     # Qt override
@@ -222,7 +215,7 @@ class XMainAbonds(QMainWindow):
 
         if len(ff) > 0:
             s = "Unsaved changes\n  -"+("\n  -".join(ff))+"\n\nAre you sure you want to exit?"
-            flag_exit = are_you_sure(True, event, self, "Unsaved changes", s)
+            flag_exit = a99.are_you_sure(True, event, self, "Unsaved changes", s)
         if flag_exit:
             plt.close("all")
 
@@ -279,7 +272,7 @@ class XMainAbonds(QMainWindow):
                 descr = self.__get_tab_description()
                 r = QMessageBox.question(self, "Load default", "Current setup "
                  "for %s will be overwritten with a 'default' setup.\n\n"
-                 "Confirm?" % descr,QMessageBox.Yes|QMessageBox.No, QMessageBox.Yes)
+                 "Confirm?" % descr, QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
                 flag_ok = r == QMessageBox.Yes
             if flag_ok:
                 self.__generic_reset()
@@ -291,25 +284,21 @@ class XMainAbonds(QMainWindow):
             self._manager_form.activateWindow()
 
     # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * #
-    # Slots for signals emited by pyfant widgets
+    # Slots for signals emited by ftpyfant widgets
 
     def on_main_edited(self):
-        print "def on_main_edited(self):"
-        self._on_edited()
+        self._on_changed()
 
     def on_abonds_edited(self):
-        print "def on_abonds_edited(self):"
-        self._on_edited()
+        self._on_changed()
 
     def on_options_edited(self):
-        print "def on_options_edited(self):"
-        self._on_edited()
+        self._on_changed()
 
     # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * #
     # Protected methods to be overriden or used by descendant classes
 
-    def _on_edited(self):
-        print "def _on_edited(self):"
+    def _on_changed(self):
         index = self.__get_index()
         self.flags_changed[index] = True
         self.__update_tab_texts()
@@ -336,7 +325,6 @@ class XMainAbonds(QMainWindow):
         return errors
 
     def _update_labels_fn(self):
-        cwd = os.getcwd()
         for editor, label in zip(self.editors, self.labels_fn):
             if not label:
                 continue
@@ -366,8 +354,7 @@ class XMainAbonds(QMainWindow):
 
     def __generic_reset(self):
         index = self.__get_index()
-        editor, text, cls = self.editors[index], self.open_texts[index], \
-                                   self.clss[index]
+        editor, text, cls = self.editors[index], self.open_texts[index], self.clss[index]
         f = cls()
         f.init_default()
         editor.load(f)
@@ -383,7 +370,7 @@ class XMainAbonds(QMainWindow):
         if not f:
             return True
         if not editor.flag_valid:
-            show_error("Cannot save, %s has error(s)!" % f.description)
+            a99.show_error("Cannot save, %s has error(s)!" % f.description)
         if f.filename:
             try:
                 f.save_as()
@@ -391,7 +378,7 @@ class XMainAbonds(QMainWindow):
                 self.__update_tab_texts()
                 return True
             except Exception as e:
-                show_error(str(e))
+                a99.show_error(str(e))
                 raise
         else:
             return self.__generic_save_as()
@@ -399,17 +386,16 @@ class XMainAbonds(QMainWindow):
     def __generic_save_as(self):
         """Returns False if user has cancelled operation, otherwise True."""
         index = self.__get_index()
-        editor, text, wild = self.editors[index], self.save_as_texts[index], \
-         self.wilds[index]
+        editor, text, wild = self.editors[index], self.save_as_texts[index], self.wilds[index]
         if not editor.f:
             return True
         if editor.f.filename:
             d = editor.f.filename
         else:
-            d = os.path.join(self.save_dir if self.save_dir is not None \
-                             else self.load_dir if self.load_dir is not None \
+            d = os.path.join(self.save_dir if self.save_dir is not None
+                             else self.load_dir if self.load_dir is not None
                              else ".", editor.f.default_filename)
-        new_filename = QFileDialog.getSaveFileName(self, text, d, wild)
+        new_filename = QFileDialog.getSaveFileName(self, text, d, wild)[0]
         if new_filename:
             self.save_dir, _ = os.path.split(str(new_filename))
             try:
@@ -419,20 +405,30 @@ class XMainAbonds(QMainWindow):
                 self.__update_tab_texts()
                 return True
             except Exception as e:
-                show_error(str(e))
+                a99.show_error(str(e))
                 raise
         return False
 
     def __generic_open(self):
         index = self.__get_index()
-        editor, text, cls, label, wild = self.editors[index], \
-         self.open_texts[index], self.clss[index], self.labels_fn[index], \
-         self.wilds[index]
+        editor = self.editors[index]
+        text = self.open_texts[index]
+        cls = self.clss[index]
+        label = self.labels_fn[index]
+
+        # makes wildcard options a list and adds "*" if not present
+        SEP = ";;"
+        __wild = self.wilds[index]
+        _wild = [x.strip() for x in __wild.split(SEP)]
+        if "*" not in _wild or "*.*" not in _wild:
+            _wild.append("*")
+        wild = SEP.join(_wild)
+
         try:
             d = self.load_dir if self.load_dir is not None \
                 else self.save_dir if self.save_dir is not None \
                 else "."
-            new_filename = QFileDialog.getOpenFileName(self, text, d, wild)
+            new_filename = QFileDialog.getOpenFileName(self, text, d, wild)[0]
             if new_filename:
                 self.load_dir, _ = os.path.split(str(new_filename))
                 f = cls()
@@ -441,7 +437,7 @@ class XMainAbonds(QMainWindow):
                 self._update_labels_fn()
                 self.__update_tab_texts()
         except Exception as e:
-            show_error(str(e))
+            a99.show_error(str(e))
             raise
 
     def __tab_has_file_operations(self):

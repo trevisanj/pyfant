@@ -2,13 +2,15 @@
 
 __all__ = ["XMulti"]
 
-from PyQt4.QtGui import *
-from .guiaux import *
-from pyfant import *
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
 import os.path
-from .a_XPFANT import *
-from .a_WFileAbXFwhm import *
 import shutil
+from ._shared import *
+from .a_XPFANT import *
+import a99
+import f311.explorer as ex
+import f311.filetypes as ft
 
 WINDOW_WIDTH = 700
 WINDOW_HEIGHT = 768
@@ -17,8 +19,8 @@ WINDOW_HEIGHT = 768
 ################################################################################
 class XMulti(XPFANT):
     """
-    Arguments:
-      parent=None -- nevermind
+    Args:
+      parent=None: nevermind
       file_main (optional)-- FileMain instance
     """
 
@@ -60,7 +62,7 @@ class XMulti(XPFANT):
         w = self.buttonSubmit = QPushButton("&Submit multi-job")
         w.clicked.connect(self.on_run_multi)
         l1.addWidget(w)
-        w = self.checkbox_multi_custom_id = QCheckBox("Custom multi-session id")
+        w = self.checkbox_multi_custom_id = QCheckBox("Custom multi-session directory")
         w.stateChanged.connect(self.on_checkbox_multi_custom_id_state_changed)
         l1.addWidget(w)
         w = self.lineEdit_multi_custom_id = QLineEdit()
@@ -71,8 +73,8 @@ class XMulti(XPFANT):
 
         # ### Editor for multi setup
 
-        editor = self.multi_editor = WFileAbXFwhm()
-        editor.edited.connect(self.on_multi_edited)
+        editor = self.multi_editor = ex.WFileAbXFwhm()
+        editor.changed.connect(self.on_multi_changed)
         l.addWidget(editor)
 
         # ## Registers data in a_XMainAbonds lists to automatically perform Load/Save/Save as
@@ -80,7 +82,7 @@ class XMulti(XPFANT):
         self.flags_changed.append(False)
         self.save_as_texts.append("Save abundances X FWHM's configuration as")
         self.open_texts.append("Load abundandex X FWHM's file")
-        self.clss.append(FileAbXFwhm)
+        self.clss.append(ft.FileAbXFwhm)
         self.editors.append(self.multi_editor)
         self.labels_fn.append(self.label_fn_abxfwhm)
         self.wilds.append("*.py")
@@ -88,8 +90,8 @@ class XMulti(XPFANT):
         self.__update_lineEdit_multi_custom_id()
         # tt.setCurrentIndex(3)
         # ## Loads abxfwhm file
-        if os.path.isfile(FileAbXFwhm.default_filename):
-            f = FileAbXFwhm()
+        if os.path.isfile(ft.FileAbXFwhm.default_filename):
+            f = ft.FileAbXFwhm()
             f.load()
             self.multi_editor.load(f)
         # ## calls slot to perform cross-check between FileAbonds and FileAbXFwhm
@@ -97,12 +99,13 @@ class XMulti(XPFANT):
             self.on_file_abonds_loaded()
         self._update_labels_fn()
 
-        snap_left(self, 720)
+        a99.snap_left(self, 720)
 
     # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * #
     # Slots for Qt library signals
 
     def on_run_multi(self):
+        from f311 import pyfant as pf
         errors = self._check_single_setup()
 
         if not self.multi_editor.f:
@@ -118,7 +121,7 @@ class XMulti(XPFANT):
             if len(s) == 0:
                 errors.append("Please inform custom session id.")
             elif len(errors) == 0: # will only offer to remove directory if everything is ok so far
-                dirname = MULTISESSION_PREFIX+s
+                dirname = pf.get_custom_multisession_dirname(s)
                 if os.path.isdir(dirname):
                     r = QMessageBox.question(self, "Directory exists",
                      "Directory '%s' already exists.\n\nWould you like to remove it?" % dirname,
@@ -138,12 +141,12 @@ class XMulti(XPFANT):
                 self._manager_form.show()
             except Exception as e:
                 errors.append(str(e))
-                get_python_logger().exception("Cannot submit multi-job")
+                a99.get_python_logger().exception("Cannot submit multi-job")
             finally:
                 self.setEnabled(True)
 
         if len(errors) > 0:
-            show_error("Cannot submit multi-job:\n  - "+("\n  - ".join(errors)))
+            a99.show_error("Cannot submit multi-job:\n  - "+("\n  - ".join(errors)))
 
     def on_checkbox_multi_custom_id_state_changed(self):
         self.__update_lineEdit_multi_custom_id()
@@ -158,11 +161,11 @@ class XMulti(XPFANT):
         XPFANT.on_abonds_edited(self)
         self.multi_editor.file_abonds = self.ae.f
 
-    def on_multi_edited(self):
-        self._on_edited()
+    def on_multi_changed(self):
+        self._on_changed()
 
     # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * #
-    # Slots for signals emited by pyfant widgets
+    # Slots for signals emited by ftpyfant widgets
 
     def on_file_abonds_loaded(self):
         self.multi_editor.file_abonds = self.ae.f
@@ -177,9 +180,14 @@ class XMulti(XPFANT):
         return str(self.lineEdit_multi_custom_id.text()).strip()
 
     def __submit_multi(self):
-        r = MultiRunnable(self.me.f, self.ae.f, self.oe.f, self.multi_editor.f)
+        from f311 import pyfant as pf
+        r = pf.MultiRunnable(self.me.f, self.ae.f, self.oe.f, self.multi_editor.f)
         if self.checkbox_multi_custom_id.isChecked():
-            r.sid.id = self.__get_multi_custom_session_id()
+            custom_id = self.__get_multi_custom_session_id()
+            if pf.get_custom_multisession_dirname(custom_id) == custom_id:
+                # Understands that session dirname prefix must be cleared
+                r.sid.id_maker.session_prefix_singular = ""
+            r.sid.id = custom_id
         self._rm.add_runnables([r])
 
     def __update_lineEdit_multi_custom_id(self):

@@ -1,23 +1,28 @@
 # todo plot "X" instead of line
-# find line in editor by clicking
 # rename molecule
 
-__all__ = ["XFileMolecules"]
 
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
-from pyfant import *
-from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
-from matplotlib.backends.backend_qt4agg import NavigationToolbar2QT # as NavigationToolbar2QT
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT # as NavigationToolbar2QT
 import matplotlib.pyplot as plt
 import numpy as np
 from .a_XMolLinesEditor import *
-from .guiaux import *
 import os.path
 import webbrowser
 import sys
+from ._shared import *
+import a99
+import f311.filetypes as ft
 
-NUM_PLOTS = len(SOL_HEADERS)-1  # -1 because whe "lambda" does not have its plot
+
+__all__ = ["XFileMolecules"]
+
+
+NUM_PLOTS = len(SOL_HEADERS_PLOT)-1  # -1 because whe "lambda" does not have its plot
+
 
 class XFileMolecules(QMainWindow):
 
@@ -36,13 +41,13 @@ class XFileMolecules(QMainWindow):
 
         # Information about the plots
         self.marker_row = None  # points into current set-of-lines, self.sol
-        self.plot_info = [PlotInfo() for i in range(NUM_PLOTS)]
+        self.plot_info = [PlotInfo() for _ in range(NUM_PLOTS)]
         self.set_flag_plot(SOL_ATTR_NAMES.index("sj")-1, True)
         self.set_flag_plot(SOL_ATTR_NAMES.index("jj")-1, True)
 
         # ** tab "General file info"
         a = self.plainTextEditFileInfo = QPlainTextEdit()
-        a.setFont(MONO_FONT)
+        a.setFont(a99.MONO_FONT)
 
 
         # ** "Molecules browser"
@@ -59,7 +64,7 @@ class XFileMolecules(QMainWindow):
         a.installEventFilter(self)
 
         l = self.layoutMol = QVBoxLayout()
-        l.setMargin(0)
+        a99.set_margin(l, 0)
         l.setSpacing(1)
         l.addWidget(self.labelMol)
         l.addWidget(self.listWidgetMol)
@@ -72,18 +77,18 @@ class XFileMolecules(QMainWindow):
 
         # ** ** ** tab "Molecule info"
         a = self.plainTextEditMolInfo = QPlainTextEdit()
-        a.setFont(MONO_FONT)
+        a.setFont(a99.MONO_FONT)
 
         # ** ** ** tab "Molecular lines"
 
         # ** ** ** ** left
 
-        #P = QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Expanding)
+        # P = QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Expanding)
         self.labelSol = QLabel('Sets of lines (Ctrl+2)')
 
         a = self.listWidgetSol = QListWidget()
-        a.setFont(MONO_FONT)
-        #a.setFixedWidth(100)
+        a.setFont(a99.MONO_FONT)
+        # a.setFixedWidth(100)
         a.currentRowChanged.connect(self.on_listWidgetSol_currentRowChanged)
         a.setContextMenuPolicy(Qt.CustomContextMenu)
         a.customContextMenuRequested.connect(self.on_listWidgetSol_customContextMenuRequested)
@@ -91,7 +96,7 @@ class XFileMolecules(QMainWindow):
         a.installEventFilter(self)
 
         l = self.layoutSol = QVBoxLayout()
-        l.setMargin(0)
+        a99.set_margin(l, 0)
         l.setSpacing(1)
         l.addWidget(self.labelSol)
         l.addWidget(self.listWidgetSol)
@@ -133,7 +138,7 @@ class XFileMolecules(QMainWindow):
         l0.addWidget(a11)
         l0.addWidget(a2)
         l0.addItem(a3)
-        l0.setMargin(1)
+        a99.set_margin(l0, 1)
         a = self.widgetSolToolbar = QWidget()
         a.setLayout(l0)
         a.setFixedHeight(40)
@@ -142,7 +147,7 @@ class XFileMolecules(QMainWindow):
 
         # ** ** ** ** ** ** tab "Set-of-lines info"
         a = self.plainTextEditSolInfo = QPlainTextEdit()
-        a.setFont(MONO_FONT)
+        a.setFont(a99.MONO_FONT)
 
         # ** ** ** ** ** ** Plot tab
 
@@ -154,7 +159,7 @@ class XFileMolecules(QMainWindow):
         layout = QVBoxLayout()
         layout.addWidget(self.toolbar)
         layout.addWidget(self.canvas)
-        layout.setMargin(0)
+        a99.set_margin(layout, 0)
 
         a = self.widgetSolPlot = QWidget()
         a.setLayout(layout)
@@ -162,7 +167,7 @@ class XFileMolecules(QMainWindow):
         l1 = self.layoutSolPlot = QVBoxLayout()
         l1.addWidget(self.widgetSolToolbar)
         l1.addWidget(self.widgetSolPlot)
-        l1.setMargin(0)
+        a99.set_margin(l1, 0)
 
         a = self.widgetSolPlot = QWidget()
         a.setLayout(l1)
@@ -173,7 +178,7 @@ class XFileMolecules(QMainWindow):
         a.addTab(self.plainTextEditSolInfo, "Set-of-lines Info (Alt+&N)")
         a.addTab(self.widgetSolPlot, "Set-of-lines plots (Alt+&P)")
         a.setCurrentIndex(1)
-        a.setFont(MONO_FONT)
+        a.setFont(a99.MONO_FONT)
 
         # ** ** ** ** ** splitter: (list of set-of-lines) | (plot)
         a = self.splitterSol = QSplitter(Qt.Horizontal)
@@ -186,7 +191,7 @@ class XFileMolecules(QMainWindow):
         a.addTab(self.plainTextEditMolInfo, "Molecule info (Alt+&M)")
         a.addTab(self.splitterSol, "Sets of lines (Alt+&L)")
         a.setCurrentIndex(1)
-        a.setFont(MONO_FONT)
+        a.setFont(a99.MONO_FONT)
 
         # ** splitter: (list of molecules) | (molecules tab widget)
         a = self.splitterMol = QSplitter(Qt.Horizontal)
@@ -200,7 +205,7 @@ class XFileMolecules(QMainWindow):
         a.addTab(self.plainTextEditFileInfo, "General File Info (Alt+&I)")
         a.addTab(self.splitterMol, "Molecules Browser (Alt+&B)")
         a.setCurrentIndex(1)
-        a.setFont(MONO_FONT)
+        a.setFont(a99.MONO_FONT)
 
 
         # * # * # * # * # * # * # *
@@ -208,7 +213,7 @@ class XFileMolecules(QMainWindow):
 
         # self.menubar = QMenuBar(self)
         # self.menubar.setGeometry(QRect(0, 0, 772, 18))
-        #self.menubar.setObjectName(_fromUtf8("menubar"))
+        # self.menubar.setObjectName(_fromUtf8("menubar"))
         b = self.menuBar()
         m = self.menu_file = b.addMenu("&File")
         self.act_save = ac = m.addAction("&Save")
@@ -226,7 +231,7 @@ class XFileMolecules(QMainWindow):
         # Final adjustments
 
         self.setCentralWidget(self.tabWidgetFile)
-        place_left_top(self)
+        a99.place_left_top(self)
 
     # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * #
 
@@ -261,7 +266,7 @@ class XFileMolecules(QMainWindow):
             r = QMessageBox.question(self,
                         "About to exit",
                         "File \"%s\" has unsaved changes. Save now?" % self.f.filename,
-                        QMessageBox.Yes|QMessageBox.No|
+                        QMessageBox.Yes | QMessageBox.No|
                         QMessageBox.Cancel)
             if r == QMessageBox.Cancel:
                 event.ignore()
@@ -274,7 +279,6 @@ class XFileMolecules(QMainWindow):
                     except:
                         # In case of error saving file, will not exit the program
                         event.ignore()
-                        raise()
         if event.isAccepted():
             self.close_editor()
 
@@ -285,18 +289,16 @@ class XFileMolecules(QMainWindow):
         try:
             base_dir = os.path.dirname(sys.argv[0])
             webbrowser.open_new(os.path.join(base_dir, "mled.html"))
-            show_message("Help file mled.html was opened in web browser.")
+            a99.show_message("Help file mled.html was opened in web browser.")
         except Exception as e:
-            show_error(str(e))
-            raise
+            a99.show_error(str(e))
 
     def on_save(self, _):
         self.disable_save_actions()
         try:
             self.save()
         except Exception as e:
-            show_error(str(e))
-            raise
+            a99.show_error(str(e))
         finally:
             self.enable_save_actions()
 
@@ -305,13 +307,12 @@ class XFileMolecules(QMainWindow):
         try:
             if self.f:
                 new_filename = QFileDialog.getSaveFileName(self, "Save file",
-                 self.save_dir, "*.dat")
+                 self.save_dir, "*.dat")[0]
                 if new_filename:
                     self.save_dir, _ = os.path.split(str(new_filename))
                     self.save_as(new_filename)
         except Exception as e:
-            show_error(str(e))
-            raise
+            a99.show_error(str(e))
         finally:
             self.enable_save_actions()
 
@@ -361,14 +362,14 @@ class XFileMolecules(QMainWindow):
 
     def load(self, f):
         """Loads file into GUI."""
-        assert isinstance(f, FileMolecules)
+        assert isinstance(f, ft.FileMolecules)
 
         self.f = f
 
         self.plainTextEditFileInfo.setPlainText(str(f))
 
         for m in f.molecules:
-            assert isinstance(m, Molecule)
+            assert isinstance(m, ft.Molecule)
             item = QListWidgetItem(self.get_mol_string(m))
             # not going to allow editing yet item.setFlags(item.flags() | Qt.ItemIsEditable)
             self.listWidgetMol.addItem(item)
@@ -393,21 +394,23 @@ class XFileMolecules(QMainWindow):
 
     def set_molecule(self, i):
         self.mol_index = i
-        m = self.mol = self.f.molecules[i]
+        m = self.mol = self.f.molecules[i] if len(self.f.molecules) > i else None
 
         self.update_mol_info()
 
         w = self.listWidgetSol
         w.clear()
 
-        for i, sol in enumerate(m.sol):
-            item = QListWidgetItem(self.get_sol_string(i, sol))
-            w.addItem(item)
+        if m is not None:
+            for i, sol in enumerate(m.sol):
+                item = QListWidgetItem(self.get_sol_string(i, sol))
+                w.addItem(item)
 
-        if len(m) > 0:
-            w.setCurrentRow(0)
+            if len(m) > 0:
+                w.setCurrentRow(0)
 
     def set_sol(self, j):
+        self.marker_row = None  # no longer valid, whatever it was
         self.sol_index = j
         self.sol = self.f.molecules[self.mol_index].sol[j]
         self.update_sol_info()
@@ -415,104 +418,89 @@ class XFileMolecules(QMainWindow):
         self.set_editor_sol()
 
     def plot_lines(self):
-        self.clear_markers()
-        o = self.sol
-        if o is not None:
-            self.figure.clear()
+        try:
+            self.clear_markers()
+            o = self.sol
+            if o is not None:
+                self.figure.clear()
 
-            n = sum([info.flag for info in self.plot_info])  # number of subplots (0, 1 or 2)
-            # map to reuse plotting routine, contains what differs between each plot
-            map_ = [(SOL_HEADERS[i], o.__getattribute__(SOL_ATTR_NAMES[i])) \
-                    for i in range(1, len(SOL_HEADERS))]
+                n = sum([info.flag for info in self.plot_info])  # number of subplots (0, 1 or 2)
+                # map to reuse plotting routine, contains what differs between each plot
 
-            i_subplot = 1
-            for i in range(len(map_)):
-                y_label = map_[i][0]
-                pi = self.plot_info[i]
-                pi.y_vector = _y = map_[i][1]
+                map_ = [(SOL_HEADERS_PLOT[i], o.__getattribute__(SOL_ATTR_NAMES[i]))
+                        for i in range(1, len(SOL_HEADERS_PLOT))]
 
-                if pi.flag:
-                    if not self.flag_sort:
-                        x = o.lmbdam
-                        y = _y
-                    else:
-                        _x = np.array(o.lmbdam)
-                        _y = np.array(_y)
-                        ii = np.argsort(_x)
-                        x = _x[ii]
-                        y = _y[ii]
+                i_subplot = 1
+                for i in range(len(map_)):
+                    y_label = map_[i][0]
+                    pi = self.plot_info[i]
+                    pi.y_vector = _y = map_[i][1]
 
-                    format_BLB()
+                    if pi.flag:
+                        if not self.flag_sort:
+                            x = o.lmbdam
+                            y = _y
+                        else:
+                            _x = np.array(o.lmbdam)
+                            _y = np.array(_y)
+                            ii = np.argsort(_x)
+                            x = _x[ii]
+                            y = _y[ii]
 
-                    print "subplot", n, 1, i+1
-                    self.figure.add_subplot(n, 1, i_subplot)
-                    pi.axis = ax = self.figure.gca()
-                    ax.clear()
-                    ax.plot(x, y, 'k'+('' if len(x) > 1 else 'x'))
-                    ax.set_xlabel('Wavelength ($\AA$)')
-                    ax.set_ylabel(y_label)
+                        a99.format_BLB()
 
-                    # x-limits
-                    xmin, xmax = min(x), max(x)
-                    K = .02*(xmax-xmin)
-                    ax.set_xlim([xmin-K, xmax+K])
+                        self.figure.add_subplot(n, 1, i_subplot)
+                        pi.axis = ax = self.figure.gca()
+                        ax.clear()
+                        ax.plot(x, y, 'k'+('' if len(x) > 1 else 'x'))
+                        ax.set_xlabel('Wavelength ($\AA$)')
+                        ax.set_ylabel(y_label)
 
-                    # y-limits
-                    ymin, ymax = min(y), max(y)
-                    K = .02*(ymax-ymin)
-                    ax.set_ylim([ymin-K, ymax+K])
+                        # x-limits
+                        xmin, xmax = min(x), max(x)
+                        k = .02*(xmax-xmin)
+                        ax.set_xlim([xmin-k, xmax+k])
 
-                    i_subplot += 1
+                        # y-limits
+                        ymin, ymax = min(y), max(y)
+                        k = .02*(ymax-ymin)
+                        ax.set_ylim([ymin-k, ymax+k])
 
-            if i_subplot > 1: plt.tight_layout()
+                        i_subplot += 1
 
-            self.canvas.draw()
-            self.draw_markers()
+                if i_subplot > 1:
+                    plt.tight_layout()
+
+                self.canvas.draw()
+                self.draw_markers()
+        except Exception as e:
+            a99.show_error("Error drawing plots: {}".format(str(e)))
+
 
     # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * #
 
-    # def edit_molecule_name(self):
-    #     """Edits current item from listWidgetMol."""
-    #
-    #     a = self.listWidgetMol
-    #     item = a.currentItem()
-    #     item.setFlags(item.flags() | Qt.ItemIsEditable)
-    #     a.editItem(item)
-
-
-    # def edit_file(self):
-    # #     paramSpecs = [
-    # #     ("titm", {"value": 5}),
-    # #     ("number", {"value": 8, "description": "Size for advisor's TopBottomDetector4"}),
-    # # ("SM_distance", {"value": 150}),
-    # # ("SM_gainRiskRatio", {"value": 2}),
-    # # ("SM_AF0", {"value": 0.02, "description": "Initial acceleration factor (AF)"}),
-    # # ("SM_AFIncrement", {"value": 0.02, "description": "AF increment"})
-    # # ]
-    #     print "quer editar o file eh"
-
     def edit_mol(self):
         obj = self.mol
-        if obj is None: return
+        if obj is None:
+            return
         item = self.listWidgetMol.currentItem()
-        r, form = show_edit_form(obj,
-            ["titulo", "fe", "do", "mm", "am", "bm", "ua", "ub", "te", "cro", "s"],
+        r, form = a99.show_edit_form(obj,
+            ["description", "symbols", "fe", "do", "mm", "am", "bm", "ua", "ub", "te", "cro", "s"],
             item.text())
         flag_changed = False
         if r == QDialog.Accepted:
             kwargs = form.get_kwargs()
-            for name, value in kwargs.iteritems():
+            for name, value in kwargs.items():
                 orig = obj.__getattribute__(name)
                 if orig != value:
                     obj.__setattr__(name, value)
                     flag_changed = True
-                    print "setting %s = %s" % (name, value)
         if flag_changed:
             self.flag_changed = True
             item.setText(self.get_mol_string(obj))
-            #item.setStyleSheet("selected:active{background: yellow}")
+            # item.setStyleSheet("selected:active{background: yellow}")
             # item.setTextColor(QColor(255, 0, 0))
-            #item.setBackgroundColor(QColor(255, 0, 0))
+            # item.setBackgroundColor(QColor(255, 0, 0))
             self.update_mol_info()
             self.update_window_title()
 
@@ -531,28 +519,25 @@ class XFileMolecules(QMainWindow):
 
     def edit_sol(self):
         obj = self.sol
-        if obj is None: return
-        item = self.listWidgetMol.currentItem()
-        r, form = show_edit_form(self.sol, ["qqv", "ggv", "bbv", "ddv", "fact"],
-                                  item.text())
+        if obj is None:
+            return
+        item = self.listWidgetSol.currentItem()
+        r, form = a99.show_edit_form(self.sol, ["vl", "v2l", "qqv", "ggv", "bbv", "ddv", "fact"],
+                                    item.text())
         flag_changed = False
         if r == QDialog.Accepted:
             kwargs = form.get_kwargs()
-            for name, value in kwargs.iteritems():
+            for name, value in kwargs.items():
                 orig = obj.__getattribute__(name)
                 if orig != value:
                     obj.__setattr__(name, value)
                     flag_changed = True
-                    print "setting %s = %s" % (name, value)
         if flag_changed:
             self.flag_changed = True
-            item.setText(self.get_mol_string(obj))
+            item.setText(self.get_sol_string(self.listWidgetSol.currentRow(), obj))
             # item.setTextColor(QColor(255, 0, 0))
-            self.update_mol_info()
+            self.update_sol_info()
             self.update_window_title()
-
-    def edit_points(self):
-        print "quer editar os pontos eh"
 
     # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * #
 
@@ -578,7 +563,8 @@ class XFileMolecules(QMainWindow):
         self.labelNumLines.setText('Number of lines: %d' % (n,))
 
     def update_window_title(self):
-        self.setWindowTitle("mled - %s" % (self.f.filename+("" if not self.flag_changed else " (changed)"),))
+        self.setWindowTitle("mled - %s" % (self.f.filename+("" if not self.flag_changed
+                                                            else " (changed)"),))
 
     def enable_save_actions(self):
         self.act_save.setEnabled(True)
@@ -611,18 +597,23 @@ class XFileMolecules(QMainWindow):
 
     def MolLinesEditor_cell_changed(self, row, column, value):
         """Called by the molecular lines editor to notify that a value has changed."""
-        attr_name = SOL_ATTR_NAMES[column]
-        v = self.sol.__getattribute__(attr_name)
-        if v[row] != value:
-            v[row] = value
-            self.flag_changed = True
-            self.plot_lines()
-            self.update_window_title()
+
+        try:
+            attr_name = SOL_ATTR_NAMES[column]
+            v = self.sol.__getattribute__(attr_name)
+            if v[row] != value:
+                v[row] = value
+                self.flag_changed = True
+                self.plot_lines()
+                self.update_window_title()
+        except Exception as e:
+            a99.get_python_logger().exception("XFileMolecules.MolLinesEditor_cell_changed() raised")
 
     def set_editor_sol(self):
         """Sets the set-of-lines of the editor."""
         if self.sol is not None and self.form_lines is not None:
-            self.form_lines.set_sol(self.sol, "Set-of-lines: "+self.listWidgetSol.currentItem().text())
+            self.form_lines.set_sol(self.sol, "Set-of-lines: "+
+                                    self.listWidgetSol.currentItem().text())
 
     def close_editor(self):
         if self.form_lines is not None:
@@ -638,7 +629,7 @@ class XFileMolecules(QMainWindow):
     def clear_markers(self):
         for o in self.plot_info:
             if o.mpl_obj:
-                remove_line(o.mpl_obj)
+                a99.remove_line(o.mpl_obj)
                 o.mpl_obj = None
 
     def draw_markers(self):
@@ -650,7 +641,6 @@ class XFileMolecules(QMainWindow):
                 if o.flag:
                     # http://stackoverflow.com/questions/22172565/matplotlib-make-plus-sign-thicker
                     o.mpl_obj = o.axis.plot([lambda_], [o.y_vector[i]], 'xr', mew=2, ms=10)
-                    #print "drawing", [lambda_], [o.y_vector[i]]
             self.canvas.draw()
 
     def flag_plot(self, idx):
@@ -662,21 +652,16 @@ class XFileMolecules(QMainWindow):
     def on_plot_click(self, event):
         lambda_ = event.xdata
         if lambda_ is not None and self.form_lines is not None:
-            idx = index_nearest(self.sol.lmbdam, lambda_)
+            idx = a99.index_nearest(self.sol.lmbdam, lambda_)
             self.form_lines.set_row(idx)
             # self.set_marker_row(idx)
-
-            # print 'button=%d, x=%d, y=%d, xdata=%f, ydata=%f'%(
-            #     event.button, event.x, event.y, event.xdata, event.ydata)
 
     # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * #
 
     @staticmethod
     def get_mol_string(m):
-        return m.titulo
+        return m.description
 
     @staticmethod
     def get_sol_string(index, sol):
         return "%3d %7s" % (index+1, '(%d)' % len(sol))
-
-

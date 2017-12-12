@@ -4,16 +4,16 @@ executables.
 """
 
 __all__ = ["Conf", "FOR_INNEWMARCS", "FOR_HYDRO2", "FOR_PFANT",
-           "FOR_NULBAD", "IdMaker", "SID"]
+           "FOR_NULBAD", "IdMaker", "SID", "translate_sequence"]
 
-from pyfant.datatypes import DataFile, FileHmap, FileModBin, FileMain, FileOpa, FileOptions
+
 import shutil
 import os
-from .misc import *
 import logging
 import subprocess
 from threading import Lock
-from .constants import *
+import a99
+from .. import filetypes as ft
 
 
 # Indexes to use in Conf.sequence property
@@ -22,8 +22,14 @@ FOR_HYDRO2 = 1
 FOR_PFANT = 2
 FOR_NULBAD = 3
 
+_sequence_dict = {"innewmarcs": FOR_INNEWMARCS, "hydro2": FOR_HYDRO2, "pfant": FOR_PFANT, "nulbad": FOR_NULBAD}
 
-@froze_it
+def translate_sequence(sequence):
+    """Convenience/tolerance function to convert strings with executable names to FOR_*"""
+    ret = []
+    return [_sequence_dict[x] if isinstance(x, str) else x for x in sequence]
+
+@a99.froze_it
 class SID(object):
     """
     SID -- Session Id and Directory
@@ -67,6 +73,7 @@ class SID(object):
 
     @property
     def id_maker(self):
+        """IdMaker instance"""
         return self.__id_maker
     @id_maker.setter
     def id_maker(self, x):
@@ -99,10 +106,10 @@ class SID(object):
             self.__id_maker.make_id(self.__flag_split_dirs)
 
     def clean(self, flag_remove_dir=True):
-        """Deletes directory with all files inside.
+        """Deletes session directory with all files inside.
 
-        Arguments:
-          flag_remove_dif=True -- if not set, will only delete the contents,
+        Args:
+          flag_remove_dir=True: if not set, will only delete the contents,
             keeping the directory
         """
 
@@ -132,9 +139,10 @@ class IdMaker(object):
     """
 
     def __init__(self):
+        from f311 import pyfant as pf
         self.dirs_per_dir = 1000  # only if flag_split_dirs
-        self.session_prefix_singular = SESSION_PREFIX_SINGULAR
-        self.session_prefix_plural = SESSION_PREFIX_PLURAL
+        self.session_prefix_singular = pf.SESSION_PREFIX_SINGULAR
+        self.session_prefix_plural = pf.SESSION_PREFIX_PLURAL
         # Lock is necessary to make unique session ids
         self.__lock_session_id = Lock()
         self.__i_id = 0
@@ -158,12 +166,11 @@ class IdMaker(object):
         """Returns string which is the name of a filesystem directory."""
         if not flag_split_dirs:
             return self.session_prefix_singular+str(self.__i_id)
-        d0 = self.session_prefix_plural+\
-             str(int(self.__i_id//self.dirs_per_dir)*self.dirs_per_dir)
+        d0 = self.session_prefix_plural+str(int(self.__i_id//self.dirs_per_dir)*self.dirs_per_dir)
         d1 = self.session_prefix_singular+str(self.__i_id)
         return os.path.join(d0, d1)
 
-@froze_it
+@a99.froze_it
 class Conf(object):
     """
     Class holds the configuration of an executable.
@@ -207,7 +214,7 @@ class Conf(object):
     @property
     def logger(self):
         if not self.__logger:
-            self.__logger = get_python_logger()
+            self.__logger = a99.get_python_logger()
         return self.__logger
 
     @logger.setter
@@ -216,6 +223,7 @@ class Conf(object):
 
     @property
     def sid(self):
+        """SID object"""
         return self.__sid
 
     @sid.setter
@@ -224,7 +232,9 @@ class Conf(object):
 
     @property
     def opt(self):
+        """FileOptions object"""
         return self.__opt
+
     @opt.setter
     def opt(self, x):
         self.__opt = x
@@ -250,14 +260,16 @@ class Conf(object):
         self.file_hmap = None
         # ## FileAtoms instance
         self.file_atoms = None
+        # ## FileMolecules instance
+        self.file_molecules = None
 
         # # Command-line options
-        self.__opt = FileOptions()
+        self.__opt = ft.FileOptions()
 
         # # Read-only properties
         self.__popen_text_dest = None
         self.__logger = None
-        self.__sid = SID(_conf_id_maker)
+        self.__sid = SID(_conf_id_maker())
 
 
         # # Internals
@@ -270,7 +282,7 @@ class Conf(object):
         if it has been called before and skip most operations if so.
         """
         if not self.__flag_configured_before:
-            self.__logger = get_python_logger()
+            self.__logger = a99.get_python_logger()
             self.__sid.make_id()
             if self.__flag_output_to_dir:
                 self.__rename_outputs(sequence)
@@ -281,7 +293,7 @@ class Conf(object):
         if self.__flag_log_file:
             log_path = self.__sid.join_with_session_dir("fortran.log")
             if self.__flag_log_console:
-                stdout_ = LogTwo(log_path)
+                stdout_ = a99.LogTwo(log_path)
             else:
                 stdout_ = open(log_path, "w")
         else:
@@ -303,18 +315,46 @@ class Conf(object):
             self.__popen_text_dest.close()
 
     def get_file_main(self, opt=None):
-        """Returns either self.file_main, or if None, tries to open file and
-        return a new FileMain object.
+        """Tries to figure out a FileMain from current context (i.e., directory contents and command-line options)
+
+        Precedence: self.file_main > (file specified by opt.fn_main) > (f311's default data file)
+
+        Args:
+            opt: FileOptions or None
+
+        Returns:
+            FileMain or None
+        """
+        return self.get_file_generic("main", opt)
+
+    def get_file_abonds(self, opt=None):
+        """Analogous to get_file_main()"""
+        return self.get_file_generic("abonds", opt)
+
+    def get_file_hmap(self, opt=None):
+        """Analogous to get_file_main()"""
+        return self.get_file_generic("hmap", opt)
+
+    def get_file_generic(self, name, opt=None):
+        """
+        Returns new File<sth> object, depending on name
+
+        Args:
+            name: string
+            opt: FileOptions object
         """
         if opt is None:
             opt = self.__opt
-        if self.file_main is not None:
-            return self.file_main
-        file_ = FileMain()
-        if opt.fn_main is None:
+        selfattr = self.__getattribute__("file_"+name)
+        if selfattr is not None:
+            return selfattr
+
+        optattr = opt.__getattribute__("fn_"+name)
+        file_ = getattr(ft, "File"+name.capitalize())()
+        if optattr is None:
             file_.load()  # will try to load default file
         else:
-            file_.load(opt.fn_main)
+            file_.load(optattr)
         return file_
 
     def get_flprefix(self, _flag_skip_opt=False, opt=None):
@@ -337,11 +377,23 @@ class Conf(object):
         file_ = self.get_file_main()
         return file_.flprefix
 
+    def get_fwhm(self, opt=None):
+        """Returns FWHM from command-line option if present, otherwise from main file"""
+
+        if opt is None:
+            opt = self.__opt
+        if opt.fwhm is not None:
+            return opt.fwhm
+        if self.file_main is not None:
+            return self.file_main.fwhm
+        file_ = self.get_file_main()
+        return file_.fwhm
+
     def get_pfant_output_filepath(self, type_="norm"):
         """Returns path to a pfant output filename.
 
-        Arguments:
-          type -- "spec", "norm", or "cont"
+        Args:
+          type: "spec", "norm", or "cont"
 
         Looks for this information in several places; see get_flprefix()
         for more information.
@@ -356,21 +408,27 @@ class Conf(object):
         Reproduces nulbad logic in determining its output filename, i.e.,
           1) uses --fn_cv if present; if not,
           2) gets flprefix from main configuration file and adds
-             ".norm" or ".spec"
+             (".norm" or ".spec") + ".nulbad." + <fwhm in 5.3 format>
         """
         if self.__opt.fn_cv is not None:
             filename = self.__opt.fn_cv
         else:
             flprefix = self.get_flprefix()
             # True or None evaluates to "norm"
-            ext = "spec" if self.__opt.norm == False else "norm"
+            ext = ("spec" if self.__opt.norm == False else "norm") + \
+                  (".nulbad.{:5.3f}".format(self.get_fwhm()))
             filename = flprefix+"."+ext
         return filename
 
     def get_fn_modeles(self):
         """Returns name of atmospheric model file."""
-        return FileModBin.default_filename if self.__opt.fn_modeles is None \
+        return ft.FileModBin.default_filename if self.__opt.fn_modeles is None \
          else self.__opt.fn_modeles
+
+    def get_fn_molecules(self):
+        """Returns name of molecular lines file"""
+        return ft.FileMolecules.default_filename if self.__opt.fn_molecules is None \
+         else self.__opt.fn_molecules
 
     def get_args(self):
         """
@@ -383,7 +441,7 @@ class Conf(object):
         Adds session dir to names of files that will be created by any of the
         executables. To be called *before* create_data_files
 
-        Arguments:
+        Args:
           sequence: list containing one or more i_* values such as innewmarcs etc
 
         Note: in order to link pfant->nulbad correctly,
@@ -403,7 +461,7 @@ class Conf(object):
                 obj = self.__getattribute__(attr_name)
 
                 if obj is not None:
-                    assert isinstance(obj, DataFile)
+                    assert isinstance(obj, ft.DataFile)
                     fn_attr_name = "fn_"+attr_name[5:]
                     curr_fn = self.__opt.__getattribute__(fn_attr_name)
                     # Tries to preserve custom file name given to file
@@ -425,10 +483,10 @@ class Conf(object):
             # # innewmarcs -> (hydro2, pfant)
             opt.fn_modeles = sid.join_with_session_dir(
              os.path.basename(opt.fn_modeles) if opt.fn_modeles is not None
-             else FileModBin.default_filename)
+             else ft.FileModBin.default_filename)
             opt.fn_opa = sid.join_with_session_dir(
              os.path.basename(opt.fn_opa) if opt.fn_opa is not None
-             else FileOpa.default_filename)
+             else ft.FileOpa.default_filename)
 
         if FOR_HYDRO2 in sequence:
             # # hydro2 -> pfant
@@ -437,9 +495,9 @@ class Conf(object):
 
             if not self.file_hmap:
                 # if self doesn't have a Hmap object, will load from file
-                o = self.file_hmap = FileHmap()
+                o = self.file_hmap = ft.FileHmap()
                 fn = opt.fn_hmap if opt.fn_hmap is not None else \
-                 FileHmap.default_filename
+                 ft.FileHmap.default_filename
                 o.load(fn)
             else:
                 o = self.file_hmap
@@ -463,4 +521,13 @@ class Conf(object):
                 # run only once.
                 opt.fn_cv = sid.join_with_session_dir(opt.fn_cv)
 
-_conf_id_maker = IdMaker()
+
+__conf_id_maker = None
+
+def _conf_id_maker():
+    """Returns internal ID maker"""
+    global __conf_id_maker
+    if __conf_id_maker is None:
+        __conf_id_maker = IdMaker()
+    return __conf_id_maker
+

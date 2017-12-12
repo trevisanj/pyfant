@@ -1,10 +1,12 @@
 __all__ = ["XAtomLinesEditor"]
 
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
-from pyfant import *
-import numpy as np
-from .guiaux import *
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
+from ._shared import *
+import a99
+import f311.filetypes as ft
+
 
 class XAtomLinesEditor(QMainWindow):
 
@@ -21,12 +23,12 @@ class XAtomLinesEditor(QMainWindow):
         a.currentCellChanged.connect(self.on_tableWidget_currentCellChanged)
         a.cellChanged.connect(self.on_tableWidget_cellChanged)
         a.setEditTriggers(QAbstractItemView.DoubleClicked | QAbstractItemView.EditKeyPressed)
-        a.setFont(MONO_FONT)
+        a.setFont(a99.MONO_FONT)
         a.installEventFilter(self)
 
 
         self.setCentralWidget(a)
-        snap_right(self, 360)
+        a99.snap_right(self, 360)
 
     def on_tableWidget_currentCellChanged(self, currentRow, currentColumn, previousRow,
                                           previousColumn):
@@ -39,7 +41,7 @@ class XAtomLinesEditor(QMainWindow):
                 value = float(item.text())
             except ValueError:
                 # restores original value
-                show_error("Invalid floating point value: %s" % item.text())
+                a99.show_error("Invalid floating point value: %s" % item.text())
                 item.setText(str(self.parent.atom.__getattribute__(ATOM_ATTR_NAMES[column])[row]))
             else:
                 self.parent.AtomLinesEditor_cell_changed(row, column, value)
@@ -60,7 +62,7 @@ class XAtomLinesEditor(QMainWindow):
     def set_atom(self, atom, title):
         """Sets set of lines."""
 
-        assert isinstance(atom, Atom)
+        assert isinstance(atom, ft.Atom)
 
         self.flag_populating = True
         try:
@@ -68,13 +70,13 @@ class XAtomLinesEditor(QMainWindow):
 
             t = self.tableWidget
             n = len(atom)
-            ResetTableWidget(t, n, len(ATOM_HEADERS))
+            a99.reset_table_widget(t, n, len(ATOM_HEADERS))
             t.setHorizontalHeaderLabels(ATOM_HEADERS)
 
             # list with the vectors themselves
             attrs = [atom.__getattribute__(x) for x in ATOM_ATTR_NAMES]
 
-            for i in xrange(len(atom)):
+            for i in range(len(atom)):
                 for j, attr in enumerate(attrs):
                     item = QTableWidgetItem(str(attr[i]))
                     t.setItem(i, j, item)

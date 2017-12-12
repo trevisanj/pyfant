@@ -1,22 +1,16 @@
 __all__ = ["XRunnableManager"]
-__all__ = ["XRunnableManager"]
 
 
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
-from pyfant import *
-import numpy as np
-from .guiaux import *
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
 from ..rm import RunnableManager
-from ..misc import *
 from threading import Lock
 import time
-from .a_XExplorer import *
-from .a_XText import *
 import matplotlib.pyplot as plt
+import a99
+import f311.explorer as ex
 
-#todo clenaup
-import sys
 
 COLORS = [QColor(255, 0, 0),
           QColor(192, 0, 0),
@@ -29,7 +23,6 @@ WINDOW_HEIGHT = 700
 FLAG_SHOW_STATUS = True
 FLAG_SHOW_RUNNABLES = True
 
-_logger = get_python_logger()
 
 class XRunnableManager(QMainWindow):
     """
@@ -78,7 +71,7 @@ class XRunnableManager(QMainWindow):
         b4.clicked.connect(self.on_exit)
         b5 = self.pushButtonRetryFailed = QPushButton("Retry &failed")
         b5.clicked.connect(self.on_retry_failed)
-        b6 = self.pushButtonCollectErrors = QPushButton("&Collect Fortran errors")
+        b6 = self.pushButtonCollectErrors = QPushButton("&Collect errors")
         b6.setToolTip("Searches for errors in log files and reports these errors in a new window.")
         b6.clicked.connect(self.on_collect_errors)
         # todo + note: assuming that there is no interest in adding new tasks later
@@ -162,10 +155,10 @@ class XRunnableManager(QMainWindow):
         for w in ww:
             l2.addWidget(w)
         # l2.addWidget(self.widgetPlot)
-        l2.setMargin(0)
+        a99.set_margin(l2, 0)
         a = self.centralWidget = QWidget()
         a.setLayout(l2)
-        a.setFont(MONO_FONT)
+        a.setFont(a99.MONO_FONT)
         self.setCentralWidget(self.centralWidget)
 
 
@@ -180,7 +173,7 @@ class XRunnableManager(QMainWindow):
 
         # # Final adjustments
         self.setGeometry(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT)
-        place_center(self)
+        a99.place_center(self)
         self.setWindowTitle("Runnables Manager")
 
         # # Non-visual stuff
@@ -189,7 +182,7 @@ class XRunnableManager(QMainWindow):
         t = self.timerUpdate = QTimer()
         t.setInterval(1000)  # miliseconds
         signals = [t.timeout, self.rm.runnable_changed, self.rm.finished]
-        self.changed_proxy = SignalProxy(signals,
+        self.changed_proxy = a99.SignalProxy(signals,
         delay=0, rateLimit=1, slot=self.__update, flag_connect=False)
         self.rm.runnable_added.connect(self.__populate, Qt.QueuedConnection)
 
@@ -224,7 +217,7 @@ class XRunnableManager(QMainWindow):
 
     def eventFilter(self, obj, event):
         if obj == self.tableWidget:
-            return check_return_space(event, self.on_tableWidget_cellDoubleClicked)
+            return a99.check_return_space(event, self.on_tableWidget_cellDoubleClicked)
         return False
 
     # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * #
@@ -260,19 +253,20 @@ class XRunnableManager(QMainWindow):
             self.rm.retry_failed()
         except Exception as e:
             MSG = "Could not retry failed"
-            _logger.exception(MSG)
-            show_error("%s: %s" % (MSG, str(e)))
+            a99.get_python_logger().exception(MSG)
+            a99.show_error("%s: %s" % (MSG, str(e)))
 
     def on_collect_errors(self):
+        # TODO **duplicate code** export a_XExplorer's one and use because the latter is more complete
         try:
-            k = ErrorCollector()
+            k = a99.ErrorCollector()
             k.collect_errors(".")
-            w = XHTML(self, k.get_html(), "Errors in '.' and subdirectories")
+            w = ex.XHTML(self, k.get_html(), "Errors in '.' and subdirectories")
             w.show()
         except Exception as e:
             MSG = "Could not collect errors"
-            _logger.exception(MSG)
-            show_error("%s: %s" % (MSG, str(e)))
+            a99.get_python_logger().exception(MSG)
+            a99.show_error("%s: %s" % (MSG, str(e)))
 
     # def on_timer_timeout(self):
     #     print "on_timer_timeout"
@@ -289,8 +283,8 @@ class XRunnableManager(QMainWindow):
             self.__explore_directory()
         except Exception as e:
             MSG = "Could explore directory"
-            _logger.exception(MSG)
-            show_error("%s: %s" % (MSG, str(e)))
+            a99.get_python_logger().exception(MSG)
+            a99.show_error("%s: %s" % (MSG, str(e)))
 
 
     # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * #
@@ -322,11 +316,11 @@ class XRunnableManager(QMainWindow):
 
     def __update(self):
         """Updates second column of table widget."""
-        # _logger.info("UPDATE UPDATE UPDATE UPDATE UPDATE ")
+        # a99.get_python_logger().info("UPDATE UPDATE UPDATE UPDATE UPDATE ")
         t = time.time()
         self.__update_status()
         self.__update_table()
-        # _logger.info("&&&&&&&&&&&&&&& time to update: %g" % (time.time()-t,))
+        # a99.get_python_logger().info("&&&&&&&&&&&&&&& time to update: %g" % (time.time()-t,))
 
     def __update_table(self):
         with self.__lock_table:
@@ -335,7 +329,7 @@ class XRunnableManager(QMainWindow):
             nf = self.rm.num_finished  # grabs this before last table update,
                                        # so that it never skips a row update
             mt = self.rm.max_simultaneous
-            for i in xrange(max(0, self.__num_finished_shown-mt+1),
+            for i in range(max(0, self.__num_finished_shown-mt+1),
                             min(len(runnables), self.rm.num_finished+mt)):
                 runnable = runnables[i]
 
@@ -368,10 +362,10 @@ class XRunnableManager(QMainWindow):
              (self.rm.num_finished, self.rm.num_runnables))
             self.labelStatusFailed.setText(str(self.rm.num_failed))
             ella, tot, rema = self.rm.get_times()
-            self.labelStatusElla.setText(seconds2str(ella))
-            self.labelStatusTPR.setText(seconds2str(self.rm.time_per_runnable))
-            self.labelStatusTotal.setText(seconds2str(tot))
-            self.labelStatusRema.setText(seconds2str(rema))
+            self.labelStatusElla.setText(a99.seconds2str(ella))
+            self.labelStatusTPR.setText(a99.seconds2str(self.rm.time_per_runnable))
+            self.labelStatusTotal.setText(a99.seconds2str(tot))
+            self.labelStatusRema.setText(a99.seconds2str(rema))
 
             self.checkBox_paused.setChecked(self.rm.flag_paused)
             self.checkBox_cancelled.setChecked(self.rm.flag_cancelled)
@@ -386,10 +380,11 @@ class XRunnableManager(QMainWindow):
         runnable = self.runnables[self.tableWidget.currentRow()]
         dir_ = runnable.sid.dir
         if not self.__explorer_form:
-            f = self.__explorer_form = XExplorer(self, dir_)
+            f = self.__explorer_form = ex.XExplorer(self, dir_)
             f.flag_close_mpl_plots_on_close = False
         else:
             self.__explorer_form.set_dir(dir_)
         self.__explorer_form.show()
         self.__explorer_form.raise_()
         self.__explorer_form.activateWindow()
+

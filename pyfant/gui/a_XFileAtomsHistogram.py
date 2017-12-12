@@ -4,13 +4,14 @@
 
 __all__ = ["XFileAtomsHistogram"]
 
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
-from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
-from matplotlib.backends.backend_qt4agg import NavigationToolbar2QT # as NavigationToolbar2QT
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT # as NavigationToolbar2QT
 import matplotlib.pyplot as plt
-from pyfant import *
-from .guiaux import *
+from ._shared import *
+import a99
 
 
 MAX_NUM_BINS = 500
@@ -21,8 +22,8 @@ class XFileAtomsHistogram(QMainWindow):
     Interactive window that plots a histogram of selected field of a FileAtoms
     object.
 
-    Arguments:
-      file_atoms -- FileAtoms object.
+    Args:
+      file_atoms: FileAtoms object.
     """
 
     def __init__(self, file_atoms):
@@ -66,7 +67,7 @@ class XFileAtomsHistogram(QMainWindow):
         l1 = self.layoutPlot = QVBoxLayout()
         l1.addWidget(self.toolbar)
         l1.addWidget(self.canvas)
-        l1.setMargin(0)
+        a99.set_margin(l1, 0)
         # a = self.widgetPlot = QWidget()
         # a.setLayout(l1)
 
@@ -75,15 +76,15 @@ class XFileAtomsHistogram(QMainWindow):
         l2.addWidget(self.widgetPlotToolbar)
         l2.addLayout(l1)
         # l2.addWidget(self.widgetPlot)
-        l2.setMargin(0)
+        a99.set_margin(l2, 0)
         a = self.centralWidget = QWidget()
         a.setLayout(l2)
-        a.setFont(MONO_FONT)
+        a.setFont(a99.MONO_FONT)
         self.setCentralWidget(self.centralWidget)
 
         # # Final adjustments
         self.setWindowTitle("Histogram")
-        place_center(self)
+        a99.place_center(self)
 
 
     # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * #
@@ -106,7 +107,5 @@ class XFileAtomsHistogram(QMainWindow):
         ax.set_xlabel(attr_name)
         ax.set_ylabel("counts")
         plt.tight_layout()
-        format_BLB()
+        a99.format_BLB()
         self.canvas.draw()
-
-

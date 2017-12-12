@@ -1,39 +1,37 @@
-"""ThreadManager2 class."""
-__all__ = ["RunnableManager"]
+"""RunnableManager classs"""
 
-from .runnables import *
-from .misc import random_name, seconds2str, get_python_logger, MyLock
+import a99
 import threading
-import traceback
-import time
-from PyQt4.QtCore import QObject, pyqtSignal
+from PyQt5.QtCore import QObject, pyqtSignal
 import multiprocessing
 import copy
 import time
 from threading import Lock
-import logging
 import sys
-from .misc import froze_it
 import collections
+from .errors import *
+
+__all__ = ["RunnableManager"]
+
 
 
 def _tm_print(s):
     """print for the thread manager2 (debugging)."""
-    print "^^ %s ^^" % s
+    print(("^^ %s ^^" % s))
 
 
 class RunnableManagerError(Exception):
     pass
 
 
-@froze_it
+@a99.froze_it
 class RunnableManager(QObject, threading.Thread):
     """
     Thread takes care of other threads.
 
     Keyword arguments:
       max_simultaneous=multiprocessing.cpu_count()
-      flag_auto_clean=False -- if set, will load result and remove the session
+      flag_auto_clean=False: if set, will load result and remove the session
        directory as soon as a runnable has finished
     """
 
@@ -122,13 +120,35 @@ class RunnableManager(QObject, threading.Thread):
         with self.__lock:
             return self.__time_per_runnable
 
-    def __init__(self, *args, **kwargs):
-        self.__max_simultaneous = kwargs.pop("max_simultaneous", None)
-        self.__flag_auto_clean = kwargs.pop("flag_auto_clean", False)
+    @property
+    def max_simultaneous(self):
+        """Maximum runnables running simultaneously. Default is multiprocessing.cpu_count()"""
+        return self.__max_simultaneous
+
+    @max_simultaneous.setter
+    def max_simultaneous(self, x):
+        self.__max_simultaneous = x
+
+    @property
+    def flag_verbose(self):
+        """Whether to log progress-related messages"""
+        return self.__max_simultaneous
+
+    @flag_verbose.setter
+    def flag_verbose(self, x):
+        self.__flag_verbose = x
+
+
+    def __init__(self, *args, max_simultaneous=None, flag_auto_clean=False, flag_verbose=False,
+                 flag_exit_if_fail=False, **kwargs):
+        self.__max_simultaneous = max_simultaneous
+        self.__flag_auto_clean = flag_auto_clean
+        self.__flag_verbose = flag_verbose
+        self.__flag_exit_if_fail = flag_exit_if_fail
         if self.__max_simultaneous is None: self.__max_simultaneous = multiprocessing.cpu_count()
         QObject.__init__(self)
         threading.Thread.__init__(self, *args, **kwargs)
-        self.__logger = get_python_logger()
+        self.__logger = a99.get_python_logger()
         # counts finished
         self.__num_finished = 0
         # counts failed
@@ -225,12 +245,12 @@ class RunnableManager(QObject, threading.Thread):
                 l.append("***failed: %d" % (self.__num_failed))
             if self.__time_started:
                 ella, tot, rema = self.__unlocked_get_times()
-                l.append("***time ellapsed: %s" % seconds2str(ella))
+                l.append("***time ellapsed: %s" % a99.seconds2str(ella))
                 if self.__num_finished > 0:
                     tpr = self.__time_per_runnable
-                    l.append("***time per runnable: %s" % seconds2str(tpr))
-                    l.append("***time total estimate: %s" % seconds2str(tot))
-                    l.append("***time remaining estimate: %s" % seconds2str(rema))
+                    l.append("***time per runnable: %s" % a99.seconds2str(tpr))
+                    l.append("***time total estimate: %s" % a99.seconds2str(tot))
+                    l.append("***time remaining estimate: %s" % a99.seconds2str(rema))
         return l
 
     def __str__(self):
@@ -262,9 +282,9 @@ class RunnableManager(QObject, threading.Thread):
             if self.flag_finished:
                 self.exit()
                 break
-            self.__logger.info("\n".join(self.get_summary_report()))
+            if self.__flag_verbose:
+                self.__logger.info("\n".join(self.get_summary_report()))
             time.sleep(1)
-
 
     def retry_failed(self):
         """Retries all failed runnables."""
@@ -287,24 +307,33 @@ class RunnableManager(QObject, threading.Thread):
         This is for monitoring purpose only and has no effect in the workings
         of the thread manager.
         """
+
+        flag_exit = False
+
         with self.__lock:
             if not runner.runnable.flag_success:
                 self.__num_failed += 1
+                if self.__flag_exit_if_fail:
+                    flag_exit = True
 
             self.__num_finished += 1
             t = time.time()
             self.__time_per_runnable = (t-self.__time_started)/self.__num_finished
             if self.__num_finished == len(self.__runnables):
                 self.__time_finished = t
+
         self.runnable_changed.emit()
+
         if self.flag_finished:
             self.finished.emit()
+
+        if flag_exit:
+            self.exit()
 
     def run(self):
         flag_sleep = False
         it = 0  # thread index
         self.__logger.debug("Will run %d runnables" % len(self.__runnables))
-
         while True:
             if self.__flag_exit:
                 for runner in self.__runners:
@@ -348,7 +377,6 @@ class RunnableManager(QObject, threading.Thread):
                                 break
                             j += 1
 
-
             if flag_sleep:
                 T = 0.1
                 time.sleep(T)  # Chilling out for a while
@@ -358,9 +386,9 @@ class RunnableManager(QObject, threading.Thread):
 
     def __unlocked_add_runnables(self, runnables):
         n = len(self.__runnables)
-        self.__runnables.extend(runnables)
-        self.__idxs_to_run.extend(range(n, n + len(runnables)))
 
+        self.__runnables.extend(runnables)
+        self.__idxs_to_run.extend(list(range(n, n + len(runnables))))
 
     def __unlocked_kill_runnable(self, runnable):
         flag_found = False
@@ -399,7 +427,7 @@ class RunnableManager(QObject, threading.Thread):
         return ella, tot, rema
 
 
-@froze_it
+@a99.froze_it
 class _Runner(threading.Thread):
     """
     Thread that runs object of class Runnable.
@@ -410,7 +438,7 @@ class _Runner(threading.Thread):
         assert isinstance(manager, RunnableManager)
         self.runnable = None
         self.manager = manager
-        self.name = self.__class__.__name__+random_name()
+        self.name = self.__class__.__name__+a99.random_name()
         self.flag_exit = False
         self.flag_idle = True
         self.lock = Lock()
@@ -434,7 +462,7 @@ class _Runner(threading.Thread):
             self.runnable.kill()
 
     def run(self):
-        self.__logger = get_python_logger()
+        self.__logger = a99.get_python_logger()
         # this was leaving file open after finished add_file_handler(self.__logger, "python.log")
         self.__logger.debug("\\o/ %s is alive \\o/" % (self.name))
         misses = 0
@@ -451,8 +479,19 @@ class _Runner(threading.Thread):
                             self.runnable.load_result()
                             self.runnable.sid.clean()
 
-                    except Exception as E:
-                        # # todo cleanup
+                    except FailedError as E:
+                        # If runnable fails, the current behaviour is use ErrorCollector and
+                        # critical-log the error if found something; otherwise
+
+                        dir_ = self.runnable.conf.sid.dir
+                        k = a99.ErrorCollector(flag_warnings=False)
+                        k.collect_errors(dir_)
+                        template = "Caught in rm.py::_Runner.run() --- {} failed! See below:\n" \
+                                   "{}"
+                        msg_fortran = "\n".join(["! {}".format(x) for x in k.get_plain_text()])
+                        msg = template.format(self.runnable.__class__.__name__, msg_fortran)
+                        self.__logger.critical(msg)
+
                         #
                         # if isinstance(E, IOError):
                         #   printOpenFiles()
@@ -462,7 +501,7 @@ class _Runner(threading.Thread):
                         # self.manager.exit()
                         # raise
 
-                        self.__logger.exception("%s failed" % self.runnable.__class__.__name__)
+
                     self.manager._finish(self)
                     self.runnable = None
                     self.flag_idle = True

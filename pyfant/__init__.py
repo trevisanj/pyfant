@@ -1,26 +1,48 @@
-def init_agg():
-    # Problems with Tk:
-    # - plot windows pop as modal
-    # - configuration options not as rich as Qt4Agg
-    import matplotlib
-    matplotlib.use('Qt4Agg')
+"""Python interface to the PFANT spectral synthesis software (Fortran)"""
 
-init_agg()
+# # Temporary imports
+#   =================
+# These modules should be be del'eted at the end
+import a99
 
-from .constants import *
+
+# # Setup
+#   =====
+SESSION_PREFIX_SINGULAR = 'session-'
+SESSION_PREFIX_PLURAL = 'session-'
+MULTISESSION_PREFIX = 'multi-session-'
+
+def get_custom_multisession_dirname(session_id):
+    """This defines how custom directory name is made up"""
+    # return pf.MULTISESSION_PREFIX+session_id
+    return session_id
+
+
+# # Imports
+#   =======
 from .errors import *
-from .misc import *
-from .datatypes import *
+from .basic import *
+from .filetypes import *
+from .convmol import *
+from .downloaders import *
 from .conf import *
 from .runnables import *
 from .rm import *
-from .plotting import *
 from .util import *
-from .from_vald import *
 from .multirunnable import *
-from .blocks import *
-import datatypes
-import misc
-import plotting
-import blocks
-# note that gui is not imported automatically
+from .gui import *
+from .paths import *
+from .traprbclass import *
+from . import gui
+
+
+# # Function to access package-specific config file
+#   ===============================================
+def get_config():
+    """Returns PyfantConfigObj object that corresponds to file ~/.ftpyfant.conf"""
+    return a99.get_config_obj(".pyfant.conf")
+
+
+# # Finally, gets rid of unwanted symbols in the workspace
+#   ======================================================
+del a99
