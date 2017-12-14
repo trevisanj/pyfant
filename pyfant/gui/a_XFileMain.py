@@ -8,7 +8,7 @@ from . import a_WFileMain
 import os.path
 from ._shared import *
 import a99
-import f311.filetypes as ft
+import pyfant
 
 
 ################################################################################
@@ -49,7 +49,7 @@ class XFileMain(QMainWindow):
             self.load(file_main)
 
     def load(self, x):
-        assert isinstance(x, ft.FileMain)
+        assert isinstance(x, pyfant.FileMain)
         self.editor.load(x)
         self.update_window_title()
 

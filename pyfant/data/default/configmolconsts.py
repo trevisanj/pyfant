@@ -3,7 +3,7 @@
 # @ Now @ 2017-09-30 13:11:02.716101
 #
 
-from f311.filetypes import MolConsts
+from pyfant import MolConsts
 
 molconsts = MolConsts({
  'fe': 0.0005,

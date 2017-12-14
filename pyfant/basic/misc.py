@@ -13,7 +13,7 @@
 # def SYMBOLS_ADJUSTED():
 #     global __SYMBOLS_ADJUSTED
 #     if __SYMBOLS_ADJUSTED is None:
-#         __SYMBOLS_ADJUSTED = [pf.adjust_atomic_symbol(x) for x in a99.symbols]
+#         __SYMBOLS_ADJUSTED = [pyfant.adjust_atomic_symbol(x) for x in a99.symbols]
 #     return __SYMBOLS_ADJUSTED
 #
 # def is_element(symbol):
@@ -24,5 +24,5 @@
 #     >>> is_element("       fe   ")
 #     True
 #     """
-#     return pf.adjust_atomic_symbol(symbol) in SYMBOLS_ADJUSTED()
+#     return pyfant.adjust_atomic_symbol(symbol) in SYMBOLS_ADJUSTED()
 #

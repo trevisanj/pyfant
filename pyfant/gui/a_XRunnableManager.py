@@ -4,12 +4,12 @@ __all__ = ["XRunnableManager"]
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
-from ..rm import RunnableManager
 from threading import Lock
 import time
 import matplotlib.pyplot as plt
 import a99
-import f311.explorer as ex
+import pyfant
+import f311
 
 
 COLORS = [QColor(255, 0, 0),
@@ -33,7 +33,7 @@ class XRunnableManager(QMainWindow):
 
     def __init__(self, parent=None, rm=None):
         QMainWindow.__init__(self, parent)
-        assert isinstance(rm, RunnableManager)
+        assert isinstance(rm, pyfant.RunnableManager)
         self.rm = rm
         # Whether to close matplotlib plots when window is closed
         self.flag_close_mpl_plots_on_close = True
@@ -261,7 +261,7 @@ class XRunnableManager(QMainWindow):
         try:
             k = a99.ErrorCollector()
             k.collect_errors(".")
-            w = ex.XHTML(self, k.get_html(), "Errors in '.' and subdirectories")
+            w = f311.XHTML(self, k.get_html(), "Errors in '.' and subdirectories")
             w.show()
         except Exception as e:
             MSG = "Could not collect errors"
@@ -380,7 +380,7 @@ class XRunnableManager(QMainWindow):
         runnable = self.runnables[self.tableWidget.currentRow()]
         dir_ = runnable.sid.dir
         if not self.__explorer_form:
-            f = self.__explorer_form = ex.XExplorer(self, dir_)
+            f = self.__explorer_form = f311.XExplorer(self, dir_)
             f.flag_close_mpl_plots_on_close = False
         else:
             self.__explorer_form.set_dir(dir_)

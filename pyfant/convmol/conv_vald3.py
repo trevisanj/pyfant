@@ -3,7 +3,6 @@ VALD3-specific conversion
 """
 
 
-import f311.filetypes as ft
 import f311.physics as ph
 import a99
 from .calc_qgbd import calc_qgbd_tio_like
@@ -41,7 +40,7 @@ def vald3_to_sols(molconsts, file_vald3, qgbd_calculator):
     # C     HL: Honl-London factor
     # C     FR: oscillator strength
 
-    if not isinstance(file_vald3, ft.FileVald3):
+    if not isinstance(file_vald3, pyfant.FileVald3):
         raise TypeError("Invalid type for argument 'file_vald3': {}".format(type(file_vald3)))
     if len(file_vald3) > 1:
         raise ValueError("Argument 'file_vald3' must have only one species, but it has {}".format(len(file_vald3)))
@@ -56,7 +55,7 @@ def vald3_to_sols(molconsts, file_vald3, qgbd_calculator):
     log = MolConversionLog(n)
 
     for i, line in enumerate(lines):
-        assert isinstance(line, ft.Vald3Line)
+        assert isinstance(line, pyfant.Vald3Line)
         try:
             wl = line.lambda_
             # Br, J2l = f_group(data["local_lower_quanta"][i])
@@ -85,7 +84,7 @@ def vald3_to_sols(molconsts, file_vald3, qgbd_calculator):
             ggv = qgbd["gv"]
             bbv = qgbd["bv"]
             ddv = qgbd["dv"]
-            sols[sol_key] = ft.SetOfLines(line.vl, line.v2l, qqv, ggv, bbv, ddv, 1.)
+            sols[sol_key] = pyfant.SetOfLines(line.vl, line.v2l, qqv, ggv, bbv, ddv, 1.)
 
         sol = sols[sol_key]
         # TODO assuming singlet!!!

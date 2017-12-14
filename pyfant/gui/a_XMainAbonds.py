@@ -11,7 +11,7 @@ from .a_WOptionsEditor import *
 import os
 import matplotlib.pyplot as plt
 import a99
-import f311.filetypes as ft
+import pyfant
 
 
 __all__ = ["XMainAbonds"]
@@ -47,7 +47,7 @@ class XMainAbonds(a99.XLogMainWindow):
         self.open_texts = ["Load main configuration file",
                            "Load abundances file",
                            "Load command-line options file"]
-        self.clss = [ft.FileMain, ft.FileAbonds, ft.FileOptions]
+        self.clss = [pyfant.FileMain, pyfant.FileAbonds, pyfant.FileOptions]
         self.wilds = ["*.dat", "*.dat", "*.py"]
 
         # # Menu bar
@@ -186,20 +186,20 @@ class XMainAbonds(a99.XLogMainWindow):
                len(self.editors) == len(self.labels_fn)
 
         # # Loads default files
-        if os.path.isfile(ft.FileMain.default_filename):
-            f = ft.FileMain()
+        if os.path.isfile(pyfant.FileMain.default_filename):
+            f = pyfant.FileMain()
             f.load()
             self.me.load(f)
-        if os.path.isfile(ft.FileAbonds.default_filename):
-            f = ft.FileAbonds()
+        if os.path.isfile(pyfant.FileAbonds.default_filename):
+            f = pyfant.FileAbonds()
             f.load()
             self.ae.load(f)
-        if os.path.isfile(ft.FileOptions.default_filename):
-            f = ft.FileOptions()
+        if os.path.isfile(pyfant.FileOptions.default_filename):
+            f = pyfant.FileOptions()
             f.load()
             self.oe.load(f)
         else:
-            self.oe.load(ft.FileOptions())
+            self.oe.load(pyfant.FileOptions())
         self._update_labels_fn()
 
 

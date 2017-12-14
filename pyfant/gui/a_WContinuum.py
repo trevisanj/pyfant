@@ -5,6 +5,8 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 import a99
 import matplotlib.pyplot as plt
+import f311
+
 
 __all__ = ["WContinuum"]
 
@@ -88,8 +90,6 @@ class WContinuum(a99.WBase):
         self._draw()
 
     def _draw(self):
-        import f311.explorer as ex
-
         fig = self.figure
         fig.clear()
         plt.figure(fig.number)
@@ -100,12 +100,12 @@ class WContinuum(a99.WBase):
             # Spectrum
             sp = self._spectrum
             if sp is not None:
-                setup = ex.PlotSpectrumSetup()
+                setup = f311.PlotSpectrumSetup()
                 plt.plot(sp.x, sp.y, label=str(sp.title), color=_COLOR_SPECTRUM,
                          linestyle=_LINESTYLE_SPECTRUM, linewidth=_LINEWIDTH)
                 plt.xlabel(setup.fmt_xlabel.format(sp))
 
-                xmin, xmax, ymin, ymax, xspan, yspan = ex.calc_max_min([sp])
+                xmin, xmax, ymin, ymax, xspan, yspan = f311.calc_max_min([sp])
                 ymin, ymax = min(0., ymin), max(1., ymax)
 
                 _T = 0.02  # fraction of extra space on left, right, top, bottom of graphics

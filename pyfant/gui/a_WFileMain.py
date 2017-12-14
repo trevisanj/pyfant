@@ -7,7 +7,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from ._shared import *
 import a99
-import f311.filetypes as ft
+import pyfant
 
 
 class WFileMain(QWidget):
@@ -259,7 +259,7 @@ class WFileMain(QWidget):
     # # Interface
 
     def load(self, x):
-        assert isinstance(x, ft.FileMain)
+        assert isinstance(x, pyfant.FileMain)
         self.f = x
         self.__update_guiile_main()
         # this is called to perform file validation upon loading

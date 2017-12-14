@@ -10,11 +10,9 @@ import a99
 import glob
 import os
 import argparse
-import f311.pyfant as pf
-import f311.filetypes as ft
-import f311.explorer as ex
+import pyfant
 import logging
-
+import f311
 
 a99.logging_level = logging.INFO
 a99.flag_log_file = True
@@ -29,7 +27,7 @@ if __name__ == "__main__":
 
     pa = parser.add_argument
     pa('-o', "--dn_output", help='Output directory name', default=TEXT_DEFAULT_OUTPUT_DIRECTORY, type=str)
-    pa('-p', "--prefix", help='Session prefix', default=pf.SESSION_PREFIX_SINGULAR, type=str)
+    pa('-p', "--prefix", help='Session prefix', default=pyfant.SESSION_PREFIX_SINGULAR, type=str)
     pa('-c', help='Copies continuum files (*.cont)', action="store_true")
     pa('-s', help='Copies spectrum files (*.spec)', action="store_true")
     pa('-n', help='Copies normalized spectrum files (*.norm)', action="store_true")
@@ -54,12 +52,12 @@ if __name__ == "__main__":
 
         for filename in norm_filenames:
             a99.get_python_logger().info("    File '{}'".format(filename))
-            f = ft.FileSpectrumPfant()
+            f = pyfant.FileSpectrumPfant()
 
             # Note: takes first .norm file that finds
             f.load(filename)
 
-            ex.draw_spectra([f.spectrum])  #v.title = "%s" % name
+            f311.draw_spectra_stacked([f.spectrum])  #v.title = "%s" % name
 
             fig = plt.gcf()
             if args.samey:

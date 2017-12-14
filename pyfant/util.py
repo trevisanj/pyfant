@@ -7,17 +7,14 @@ Rule: only 'gui/' modules can import util!!!
 import os
 import glob
 import shutil
+import pyfant
 import a99
-# from .. import pyfant as pf
-from .. import filetypes as ft
-from . import paths
-import a99
+import f311
 
 __all__ = [
     "run_parallel", "setup_inputs", "copy_star", "link_to_data", "create_or_replace_or_skip_links",
     "copy_or_skip_files",
 ]
-
 
 
 # ##################################################################################################
@@ -31,21 +28,22 @@ def run_parallel(rr, max_simultaneous=None, flag_console=False, runnable_manager
         rr: list of Runnable instances
         max_simultaneous: (defaults to RunnableManager.max_simultaneous)
             maximum number of simultaneous processes. **Note** ineffective if runnable_manager is passed
+        flag_console: if True, will display menu with options, otherwise will exit when all runnables finish
         runnable_manager: if passed, will use passed; if not, will create new.
         flag_verbose: whether of not to log any messages (besides console) **Note** if runnable_manager is passed, it will keep its own
         flag_exit_if_fail: exit as soon as possible if any runnable fails? **Note** ineffective if runnable_manager is passed
 
     Returns: the RunnableManager object
     """
-    from f311 import pyfant as pf
+    import pyfant
 
     # Adds to pool
     logger = a99.get_python_logger()
     if runnable_manager:
-        assert isinstance(runnable_manager, pf.RunnableManager)
+        assert isinstance(runnable_manager, pyfant.RunnableManager)
         rm = runnable_manager
     else:
-        rm = pf.RunnableManager(max_simultaneous=max_simultaneous, flag_verbose=flag_verbose,
+        rm = pyfant.RunnableManager(max_simultaneous=max_simultaneous, flag_verbose=flag_verbose,
                                 flag_exit_if_fail=flag_exit_if_fail)
     flag_had_to_start = False
     if not rm.flag_start_called:
@@ -105,10 +103,10 @@ def setup_inputs(dest_dir='.', star='sun-asplund-2009', common='common', h=True,
       molecules=True: whether to look for molecules.dat
       opa=True: whether to look for grid.moo
     """
-    from f311 import pyfant as pf
+    import pyfant as pf
 
     logger = a99.get_python_logger()
-    dd = pf.get_pfant_path("data")
+    dd = pyfant.get_pfant_path("data")
 
     # Functions that return full path, given a filename, to ...
     fd = lambda filename: os.path.join(dest_dir, filename)  # ... Destination directory
@@ -123,8 +121,8 @@ def setup_inputs(dest_dir='.', star='sun-asplund-2009', common='common', h=True,
         for z in zz_mnbp:
             if os.path.isfile(fd(z)):
                 raise RuntimeError("Found file '%s' in local directory."
-                                   "If 'main.dat' is not present, files %s must also not exist." % zz_mnbp[
-                                                                                                   1:])
+                                   "If 'main.dat' is not present, files %s must also not exist." %
+                                   (z, zz_mnbp[1:]))
 
     # ## Stellar data...
     zz = ["main.dat", "abonds.dat"]
@@ -149,10 +147,10 @@ def copy_star(src_dir=None, starname=None):
         starname: if passed, will ignore src_dir and make it from starname instead, considering
                   starname as a subdirectory of PFANT/data/
     """
-    star_classes = [ft.FileMain, ft.FileDissoc, ft.FileAbonds]
+    star_classes = [pyfant.FileMain, pyfant.FileDissoc, pyfant.FileAbonds]
 
     if starname is not None:
-        src_dir = os.path.join(paths.get_pfant_data_path(), starname)
+        src_dir = os.path.join(pyfant.get_pfant_data_path(), starname)
 
     if src_dir is None and starname is None:
         raise ValueError("Supply either src_dir or starname")
@@ -180,7 +178,7 @@ def link_to_data(src_dir=None):
     """
 
     if src_dir is None:
-        src_dir = paths.get_pfant_path('data', 'common')
+        src_dir = pyfant.get_pfant_path('data', 'common')
 
     a99.get_python_logger().debug("Will look inside directory %s" % src_dir)
 
@@ -197,8 +195,8 @@ def create_or_replace_or_skip_links(ff, dest_dir="."):
     """Creates a series of links given a list of target filepaths.
 
     Args:
-      ff: list of full path to files
-      dest_dir=".": destination directory
+        ff: list of full path to files
+        dest_dir: destination directory
 
     It skips files of types FileMain, FileAbonds, FileDissoc, FileToH
     """
@@ -212,12 +210,12 @@ def create_or_replace_or_skip_links(ff, dest_dir="."):
             _print_skipped("file exists in local directory")
             flag_skip = True
         else:
-            obj = ft.load_with_classes(f, [ft.FileMain, ft.FileAbonds, ft.FileDissoc, ft.FileToH])
+            obj = f311.load_with_classes(f, [pyfant.FileMain, pyfant.FileAbonds, pyfant.FileDissoc, pyfant.FileToH])
             if obj is not None:
                 _print_skipped("detected type %s" % obj.__class__.__name__)
                 flag_skip = True
             else:
-                obj = ft.load_with_classes(f, [ft.FileModBin])
+                obj = f311.load_with_classes(f, [pyfant.FileModBin])
                 if obj is not None:
                     if len(obj) == 1:
                         _print_skipped("%s of only one record" % obj.__class__.__name__)
@@ -241,7 +239,7 @@ def copy_or_skip_files(ff, dest_dir="."):
 
     Args:
       ff: list of full paths to files to be copied
-      dest_dir=".": destination directory
+      dest_dir: destination directory
     """
 
     for f in ff:
@@ -253,7 +251,7 @@ def copy_or_skip_files(ff, dest_dir="."):
             _print_skipped("file exists in local directory")
             flag_skip = True
         else:
-            obj = ft.load_with_classes(f, [ft.FileMain, ft.FileAbonds, ft.FileDissoc])
+            obj = f311.load_with_classes(f, [pyfant.FileMain, pyfant.FileAbonds, pyfant.FileDissoc])
             if obj is not None:
                 pass
             else:

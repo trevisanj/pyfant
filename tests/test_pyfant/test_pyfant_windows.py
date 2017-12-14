@@ -1,19 +1,19 @@
-import f311.pyfant as pf
+import pyfant
 import a99
 
 
 def test_XMulti():
     app = a99.get_QApplication()
-    w = pf.XMulti()
+    w = pyfant.XMulti()
 
 
 def test_XPFANT():
     app = a99.get_QApplication()
-    w = pf.XPFANT()
+    w = pyfant.XPFANT()
 
 
 def test_XRunnableManager():
     app = a99.get_QApplication()
-    rm = pf.RunnableManager()
-    w = pf.XRunnableManager(None, rm)
+    rm = pyfant.RunnableManager()
+    w = pyfant.XRunnableManager(None, rm)
 

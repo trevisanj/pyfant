@@ -2,7 +2,7 @@ __all__ = ["FilePartit"]
 
 
 import a99
-from .. import DataFile
+from f311 import DataFile
 
 
 class FilePartit(DataFile):

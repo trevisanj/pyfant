@@ -5,9 +5,9 @@ VALD3-to-PFANT conversions
 __all__ = ["vald3_to_atoms"]
 
 import csv
-import f311.filetypes as ft
 import a99
 import sys
+import pyfant
 
 
 # Here is a sample of a VALD3 file:
@@ -56,7 +56,7 @@ def vald3_to_atoms(file_obj):
         _logger.info(str(row))
 
     reader = csv.reader(file_obj)
-    ret = ft.FileAtoms()
+    ret = pyfant.FileAtoms()
     edict = {}  # links atomic symbols with Atom objects created (key is atomic symbol)
     r = 0
     num_skip_ioni, num_skip_mol = 0, 0
@@ -94,7 +94,7 @@ def vald3_to_atoms(file_obj):
                 # Therefore, we fall back.
                 _waals = 0
 
-            line = ft.AtomicLine()
+            line = pyfant.AtomicLine()
             line.lambda_ = float(row[1])
             line.algf = float(row[2])
             line.kiex = float(row[3])
@@ -123,12 +123,12 @@ def vald3_to_atoms(file_obj):
             line.abondr = 1
 
             # # Stores line in object
-            elem = ft.adjust_atomic_symbol(elem)
+            elem = pyfant.adjust_atomic_symbol(elem)
             key = elem+s_ioni  # will group elements by this key
             if key in edict:
                 a = edict[key]
             else:
-                a = edict[key] = ft.Atom()
+                a = edict[key] = pyfant.Atom()
                 a.elem = elem
                 a.ioni = int(s_ioni)
                 ret.atoms.append(a)

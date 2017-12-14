@@ -6,7 +6,7 @@ Check session directory "session-<number>" for log files.
 """
 
 import argparse
-import f311.pyfant as pf
+import pyfant
 import a99
 import logging
 
@@ -21,7 +21,7 @@ if __name__ == "__main__":
     formatter_class=a99.SmartFormatter
     )
 
-    names = pf.Conf().opt.get_names() # option names
+    names = pyfant.Conf().opt.get_names() # option names
 
     for name in names:
         # name = name.replace('_', '-')
@@ -33,7 +33,7 @@ if __name__ == "__main__":
     # Configuration for Python logging messages.
     logger = a99.get_python_logger()
 
-    c = pf.Combo()
+    c = pyfant.Combo()
     c.conf.flag_log_file = True  # Configuration for Fortran messages
     c.conf.flag_log_console = True  # "
     c.conf.flag_output_to_dir = False  # Will generate outputs in current directory

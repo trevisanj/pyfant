@@ -1,11 +1,10 @@
-import f311.physics as ph
-import f311.filetypes as ft
+import pyfant
 from .calc_qgbd import *
 from .convlog import *
 import datetime
 from collections import OrderedDict
 import math
-
+import pyfant
 
 __all__ = ["Conv", "ConvSols"]
 
@@ -27,7 +26,7 @@ class ConvSols(OrderedDict):
 
         if sol_key not in self:
             qgbd = self.qgbd_calculator(self.molconsts, line.v2l)
-            self[sol_key] = ft.SetOfLines(line.vl, line.v2l,
+            self[sol_key] = pyfant.SetOfLines(line.vl, line.v2l,
                                           qgbd["qv"], qgbd["gv"], qgbd["bv"], qgbd["dv"], 1.)
 
         self[sol_key].append_line(line.lambda_, gf_pfant, line.J2l, branch)
@@ -65,7 +64,6 @@ class Conv(object):
         Returns:
             f, log: FileMolecules, MolConversionLog instances
         """
-        from f311 import filetypes as ft
 
         # Runs specific conversor to SetOfLines
         sols, log = self._make_sols(lines)
@@ -76,17 +74,17 @@ class Conv(object):
         sols_list = list(sols.values())
         sols_list.sort(key= lambda sol: sol.vl*1000+sol.v2l)
 
-        mol = ft.molconsts_to_molecule(self.molconsts)
+        mol = pyfant.molconsts_to_molecule(self.molconsts)
         mol.sol = sols_list
-        f = ft.FileMolecules()
+        f = pyfant.FileMolecules()
         now = datetime.datetime.now()
         f.titm = "PFANT molecular lines file. Created by f311.convmol.Conv.make_file_molecules() @ {}".format(now.isoformat())
         f.molecules = [mol]
         return f, log
 
-    def multiplicity_toolbox(self):
-        """Wraps f311.physics.multiplicity.multiplicity_toolbox()"""
-        return ph.linestrength_toolbox(self.molconsts, flag_normalize=self.flag_normhlf)
+    def kovacs_toolbox(self):
+        """Wraps f311.physics.multiplicity.kovacs_toolbox()"""
+        return pyfant.kovacs_toolbox(self.molconsts, flag_normalize=self.flag_normhlf)
 
     # Must reimplement thig
     def _make_sols(self, lines):

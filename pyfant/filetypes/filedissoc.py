@@ -3,8 +3,8 @@ __all__ = ["FileDissoc"]
 
 import fortranformat as ff
 import a99
-from .. import DataFile, adjust_atomic_symbol
-
+from f311 import DataFile
+from ..basic import adjust_atomic_symbol
 
 @a99.froze_it
 class FileDissoc(DataFile):

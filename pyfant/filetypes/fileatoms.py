@@ -1,15 +1,12 @@
 __all__ = ["FileAtoms", "Atom", "AtomicLine"]
 
-# from ..gear import *
-# from ..errors import *
-import struct
-import logging
 import sys
 import numpy as np
 import tabulate
 import a99
-from .. import DataFile, adjust_atomic_symbol
-import re
+from f311 import DataFile
+import pyfant
+
 
 @a99.froze_it
 class Atom(a99.AttrsPart):
@@ -177,8 +174,7 @@ class FileAtoms(DataFile):
 
     def find_atom(self, search):
         """Returns Atom object given search string such as "Fe1"; may raise ValueError or IndexError"""
-        import f311.filetypes as ft
-        elem, ioni = ft.str_to_elem_ioni(search)
+        elem, ioni = pyfant.str_to_elem_ioni(search)
 
         for atom in self.atoms:
             if atom.elem == elem and atom.ioni == ioni:
@@ -227,7 +223,7 @@ class FileAtoms(DataFile):
 
     def remove_element(self, elem):
         """Removes given element (any ionization level)."""
-        elem = adjust_atomic_symbol(elem)
+        elem = pyfant.adjust_atomic_symbol(elem)
         for i in reversed(list(range(len(self)))):
             atom = self.atoms[i]
             if atom.elem == elem:
@@ -252,7 +248,7 @@ class FileAtoms(DataFile):
                     temp = a99.str_vector(h)
                     elem, s_ioni = temp[0][:-1], temp[0][-1]
                     line.lambda_ = float(temp[1])
-                    elem = adjust_atomic_symbol(elem)
+                    elem = pyfant.adjust_atomic_symbol(elem)
                     key = elem+s_ioni  # will gb.py elements by this key
                     if key in edict:
                         a = edict[key]

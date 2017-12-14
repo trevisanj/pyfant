@@ -8,13 +8,12 @@ import os.path
 import copy
 import shutil
 import a99
-import f311.explorer as ex
-import f311.filetypes as ft
-
+import pyfant
+from .a_XMainAbonds import *
 
 
 ################################################################################
-class XPFANT(ex.XMainAbonds):
+class XPFANT(XMainAbonds):
     """
     Args:
       parent=None: nevermind
@@ -23,7 +22,10 @@ class XPFANT(ex.XMainAbonds):
 
     def __init__(self, *args, **kwargs):
         ## State variables
-        ex.XMainAbonds.__init__(self, *args, **kwargs)
+        XMainAbonds.__init__(self, *args, **kwargs)
+
+        self._manager_form = None
+        self._rm = None
 
         # # Central layout
 
@@ -51,8 +53,8 @@ class XPFANT(ex.XMainAbonds):
     # "Duck-typing"
 
     def set_manager_form(self, x):
-        from f311 import pyfant as pf
-        assert isinstance(x, pf.XRunnableManager)
+        import pyfant as pf
+        assert isinstance(x, pyfant.XRunnableManager)
         self._manager_form = x
         self._rm = x.rm
 
@@ -60,7 +62,6 @@ class XPFANT(ex.XMainAbonds):
     # Slots for Qt library signals
 
     def on_submit(self):
-        from f311 import pyfant as pf
         flag_ok = True
         errors = self._check_single_setup()
         if len(errors) == 0:
@@ -110,8 +111,8 @@ class XPFANT(ex.XMainAbonds):
         return str(self.lineEdit_custom_id.text()).strip()
 
     def __submit_job(self):
-        from f311 import pyfant as pf
-        r = pf.Combo()
+        import pyfant as pf
+        r = pyfant.Combo()
         if self.checkbox_custom_id.isChecked():
             custom_id = self.__get_custom_session_id()
             r.conf.sid.id = custom_id
@@ -133,6 +134,5 @@ class XPFANT(ex.XMainAbonds):
 # This sector defines how custom directory name is made up
 
 def _get_custom_dirname(session_id):
-    from f311 import pyfant as pf
-    # return pf.SESSION_PREFIX_SINGULAR+session_id
+    # return pyfant.SESSION_PREFIX_SINGULAR+session_id
     return session_id

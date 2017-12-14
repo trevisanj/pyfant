@@ -2,28 +2,12 @@ __all__ = ["FileAbonds"]
 
 import struct
 import a99
-from .. import DataFile, adjust_atomic_symbol
+from f311 import DataFile
+from ..basic import adjust_atomic_symbol
 import re
 from .filedissoc import FileDissoc
 import tabulate
-
-
-#: List of all atomic symbols
-symbols = [
-'H', 'He', 'Li', 'Be', 'B', 'C', 'N', 'O', 'F', 'Ne', 'Na', 'Mg', 'Al', 'Si',
- 'P', 'S', 'Cl', 'Ar', 'K', 'Ca', 'Sc', 'Ti', 'V', 'Cr', 'Mn', 'Fe', 'Co',
- 'Ni', 'Cu', 'Zn', 'Ga', 'Ge', 'As', 'Se', 'Br', 'Kr', 'Rb', 'Sr', 'Y', 'Zr',
- 'Nb', 'Mo', 'Tc', 'Ru', 'Rh', 'Pd', 'Ag', 'Cd', 'In', 'Sn', 'Sb', 'Te', 'I',
- 'Xe', 'Cs', 'Ba', 'La', 'Ce', 'Pr', 'Nd', 'Pm', 'Sm', 'Eu', 'Gd', 'Tb', 'Dy',
- 'Ho', 'Er', 'Tm', 'Yb', 'Lu', 'Hf', 'Ta', 'W', 'Re', 'Os', 'Ir', 'Pt', 'Au',
- 'Hg', 'Tl', 'Pb', 'Bi', 'Po', 'At', 'Rn', 'Fr', 'Ra', 'Ac', 'Th', 'Pa', 'U',
- 'Np', 'Pu', 'Am', 'Cm', 'Bk', 'Cf', 'Es', 'Fm', 'Md', 'No', 'Lr', 'Rf', 'Db',
- 'Sg', 'Bh', 'Hs', 'Mt'
-]
-
-#: List of all atomic symbols in UPPERCASE
-SYMBOLS = [x.upper() for x in symbols]
-
+import pyfant
 
 class FileAbonds(DataFile):
     """PFANT Stellar Chemical Abundances"""
@@ -132,7 +116,7 @@ class FileAbonds(DataFile):
         for symbol, abundance in zip(self.ele, self.abol):
             s = symbol.strip()
             try:
-                atomic_numbers.append("%3d" % (SYMBOLS.index(s)+1))
+                atomic_numbers.append("%3d" % (pyfant.SYMBOLS.index(s)+1))
                 abunda.append(abundance)
             except ValueError:
                 pass  # skips elements whose symbol is not in the periodic table
@@ -170,7 +154,7 @@ class FileAbonds(DataFile):
         for symbol in self.ele:
             s = symbol.strip()
             try:
-                atomic_numbers.append("%3d" % (SYMBOLS.index(s)+1))
+                atomic_numbers.append("%3d" % (pyfant.SYMBOLS.index(s)+1))
             except ValueError:
                 atomic_numbers.append("    "+s)
                 not_found.append(symbol)

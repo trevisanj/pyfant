@@ -10,7 +10,7 @@ The interval is [llzero, llfin]
 import argparse
 import logging
 import a99
-import f311.filetypes as ft
+import pyfant
 
 
 a99.logging_level = logging.INFO
@@ -31,7 +31,7 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    file_molecules = ft.FileMolecules()
+    file_molecules = pyfant.FileMolecules()
     file_molecules.load(args.fn_input[0])
 
     lmbdam = file_molecules.lmbdam

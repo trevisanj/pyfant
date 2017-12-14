@@ -14,26 +14,24 @@ MULTISESSION_PREFIX = 'multi-session-'
 
 def get_custom_multisession_dirname(session_id):
     """This defines how custom directory name is made up"""
-    # return pf.MULTISESSION_PREFIX+session_id
+    # return pyfant.MULTISESSION_PREFIX+session_id
     return session_id
 
 
 # # Imports
 #   =======
-from .errors import *
 from .basic import *
 from .filetypes import *
-from .convmol import *
 from .downloaders import *
-from .conf import *
-from .runnables import *
-from .rm import *
+from .run import *
 from .util import *
-from .multirunnable import *
+from .convmol import *
+from .from_vald import *
+from .molconsts import *
+from .kovacs import *
 from .gui import *
-from .paths import *
-from .traprbclass import *
 from . import gui
+from .vis import *
 
 
 # # Function to access package-specific config file

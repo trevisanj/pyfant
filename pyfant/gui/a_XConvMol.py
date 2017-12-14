@@ -2,18 +2,13 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 import a99
-# from a_WState import WState
-# import moldb as db
-from ...explorer.gui.gui_convmol.a_WMolecularConstants import *
-from ... import hapi
+from f311 import hapi
 import os
 import datetime
 from collections import OrderedDict
-import f311.filetypes as ft
-import f311.pyfant as pf
-import f311.explorer as ex
-from f311.explorer.gui.gui_convmol.a_WFileMolConsts import *
-from f311.explorer.gui.gui_convmol.a_WFileMolDB import *
+import f311
+import pyfant
+
 
 __all__ = ["XConvMol"]
 
@@ -334,14 +329,14 @@ class _WVald3Panel(a99.WBase):
         if idx < 0:
             return None
 
-        f = ft.FileVald3()
+        f = pyfant.FileVald3()
         f.speciess = [self._f.speciess[idx]]
         return f
 
     @property
     def is_molecule(self):
         data = self.data
-        return data is not None and data.speciess[0].formula not in a99.symbols
+        return data is not None and data.speciess[0].formula not in pyfant.symbols
 
     def __init__(self, parent):
         a99.WBase.__init__(self, parent.parent_form)
@@ -395,7 +390,7 @@ class _WVald3Panel(a99.WBase):
     def _populate(self):
         self._flag_populating = True
         try:
-            f = self._f = ft.FileVald3()
+            f = self._f = pyfant.FileVald3()
             f.load(self.w_file.value)
 
             nr, nc = len(f), 3
@@ -408,7 +403,7 @@ class _WVald3Panel(a99.WBase):
                 t.setItem(i, 0, item)
                 item = QTableWidgetItem(str(len(species)))
                 t.setItem(i, 1, item)
-                item = QTableWidgetItem("Atom" if species.formula in a99.symbols else "Molecule")
+                item = QTableWidgetItem("Atom" if species.formula in pyfant.symbols else "Molecule")
                 t.setItem(i, 2, item)
 
             t.resizeColumnsToContents()
@@ -521,7 +516,7 @@ class _WKuruczPanel(a99.WBase):
 
     def _load_lines(self):
         filename = self.w_file.value
-        f = self._flines = ft.load_kurucz_mol(filename) if os.path.isfile(filename) else None
+        f = self._flines = pyfant.load_kurucz_mol(filename) if os.path.isfile(filename) else None
         self.w_file.flag_valid = f is not None
         self._update_gui_iso()
         return f
@@ -534,7 +529,7 @@ class _WKuruczPanel(a99.WBase):
         try:
             cb.clear()
             if f is not None:
-                if f.__class__  not in (ft.FileKuruczMolecule, ft.FileKuruczMolecule1):
+                if f.__class__  not in (pyfant.FileKuruczMolecule, pyfant.FileKuruczMolecule1):
                     cb.addItem("(all (file is old-format))")
                 else:
                     self._isotopes = list(set([line.iso for line in f]))
@@ -883,14 +878,12 @@ class _WConv(a99.WConfigEditor):
             self.add_log_error("Conversion was not possible")
 
     def _get_conv(self, errors):
-        import f311.convmol as cm
-
         name = self.w_source.source.name
 
         # (Data source name, Conv class)
         map = dict([("HITRAN", None),
                ("VALD3", None),
-               ("Kurucz", cm.ConvKurucz)])
+               ("Kurucz", pyfant.ConvKurucz)])
 
         cls = None
         conv = None
@@ -917,11 +910,7 @@ class _WConv(a99.WConfigEditor):
 
     def _get_lines(self):
         """Creates a Conv object and """
-
-        import f311.convmol as cm
-
         widget_panel = self.w_source.source.widget
-
         return widget_panel.data
 
     def _validate(self, ):
@@ -965,9 +954,9 @@ class _WConv(a99.WConfigEditor):
     def _open_mol_clicked(self):
         filename = self.w_out.value
         if len(filename) > 0:
-            f = ft.FileMolecules()
+            f = pyfant.FileMolecules()
             f.load(filename)
-            vis = ex.VisMolecules()
+            vis = pyfant.VisMolecules()
             vis.use(f)
 
     def _set_checkbox_value(self, w, value):
@@ -978,27 +967,27 @@ class _WConv(a99.WConfigEditor):
             w.blockSignals(save)
 
 
-class XConvMol(ex.XFileMainWindow):
+class XConvMol(f311.XFileMainWindow):
     def _add_stuff(self):
         # Qt stuff tab #0: FileMolDB editor
-        e0 = self.w_moldb = WFileMolDB(self)
+        e0 = self.w_moldb = pyfant.WFileMolDB(self)
         e0.changed.connect(self._on_w_moldb_changed)
         e0.loaded.connect(self._on_w_moldb_loaded)
 
         # Qt stuff tab #1: FileMolConsts editor
-        e1 = self.w_molconsts = WFileMolConsts(self)
+        e1 = self.w_molconsts = pyfant.WFileMolConsts(self)
 
         # Qt stuff tab #2: FileConv editor TODO FileConv does not exist yet self.conv a Conv
         e2 = self.w_conv = _WConv(self)
 
-        self.pages.append(ex.MyPage(text_tab="Molecular constants database",
-                                    cls_save=ft.FileMolDB, clss_load=(ft.FileMolDB,), wild="*.sqlite", editor=e0, flag_autosave=True))
+        self.pages.append(f311.MyPage(text_tab="Molecular constants database",
+                                    cls_save=pyfant.FileMolDB, clss_load=(pyfant.FileMolDB,), wild="*.sqlite", editor=e0, flag_autosave=True))
 
-        self.pages.append(ex.MyPage(text_tab="Molecular constants",
-                                    cls_save=ft.FileMolConsts, clss_load=(ft.FileMolConsts,), wild="*.py", editor=e1))
+        self.pages.append(f311.MyPage(text_tab="Molecular constants",
+                                    cls_save=pyfant.FileMolConsts, clss_load=(pyfant.FileMolConsts,), wild="*.py", editor=e1))
 
-        self.pages.append(ex.MyPage(text_tab="Conversion",
-                                    cls_save=ft.FileConfigConvMol, clss_load=(ft.FileConfigConvMol,), wild="*.py", editor=e2))
+        self.pages.append(f311.MyPage(text_tab="Conversion",
+                                    cls_save=pyfant.FileConfigConvMol, clss_load=(pyfant.FileConfigConvMol,), wild="*.py", editor=e2))
 
         self.setWindowTitle("(to) PFANT Molecular Lines Converter")
         self.installEventFilter(self)
@@ -1025,8 +1014,8 @@ class XConvMol(ex.XFileMainWindow):
         self.w_molconsts.set_moldb(self.w_moldb.f)
 
     def _on_w_molconsts_changed(self):
-        print("MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM")
+        pass
 
     def _on_w_conv_changed(self):
-        print("QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ")
+        pass
 

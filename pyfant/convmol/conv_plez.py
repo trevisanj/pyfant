@@ -1,10 +1,6 @@
+import pyfant
 import f311.physics as ph
-import f311.filetypes as ft
-#from .. import convmol as cm
-import a99
 from .convlog import *
-from collections import OrderedDict
-import sys
 import numpy as np
 from .conv import *
 
@@ -42,7 +38,7 @@ class ConvPlez(Conv):
         # C     HL: Honl-London factor
         # C     FR: oscillator strength
 
-        if not isinstance(self.lines, ft.FilePlezTiO):
+        if not isinstance(self.lines, pyfant.FilePlezTiO):
             raise TypeError("Invalid type for argument 'lines': {}".format(type(lines).__name__))
 
         transition_dict = filemoldb.get_transition_dict()
@@ -100,7 +96,7 @@ class ConvPlez(Conv):
             ggv = qgbd["gv"]
             bbv = qgbd["bv"]
             ddv = qgbd["dv"]
-            sol = ft.SetOfLines(tr["vup"], tr["vlow"], qqv, ggv, bbv, ddv, 1., state_from, state_to)
+            sol = pyfant.SetOfLines(tr["vup"], tr["vlow"], qqv, ggv, bbv, ddv, 1., state_from, state_to)
             sols.append(sol)
 
             mask = trcols == tr  # Boolean mask for linedata
@@ -128,7 +124,7 @@ class ConvPlez(Conv):
                     if flag_fcf:
                         raise RuntimeError("Franck-Condon factors not implemented for Plez molecular lines file conversion")
 
-                        # fcf = cm.get_fcf_oh(line.vl, line.v2l)
+                        # fcf = pyfant.get_fcf_oh(line.vl, line.v2l)
                         # gf_pfant *= fcf
 
                     sol.append_line(wl, gf_pfant, J2l, branch)

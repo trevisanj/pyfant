@@ -2,7 +2,7 @@ import re
 import sys
 import imp
 import a99
-from .. import FilePy
+from f311 import FilePy
 
 __all__ = ["FileOptions"]
 

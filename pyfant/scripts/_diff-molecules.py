@@ -8,7 +8,7 @@ import a99
 import tabulate
 import logging
 import argparse
-import f311.filetypes as ft
+import pyfant
 
 
 a99.logging_level = logging.INFO
@@ -28,10 +28,10 @@ if __name__ == "__main__":
     fn1 = args.fn1[0]
     fn2 = args.fn2[0]
 
-    fa = ft.FileMolecules()
+    fa = pyfant.FileMolecules()
     fa.load(fn1)
 
-    fb = ft.FileMolecules()
+    fb = pyfant.FileMolecules()
     fb.load(fn2)
 
     data = []

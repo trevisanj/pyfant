@@ -11,9 +11,7 @@ The interval is [llzero, llfin]
 import argparse
 import logging
 import a99
-import f311.filetypes as ft
-import f311.explorer as ex
-import f311.filetypes as ft
+import pyfant
 
 
 a99.logging_level = logging.INFO
@@ -34,7 +32,7 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    file_atoms = ft.FileAtoms()
+    file_atoms = pyfant.FileAtoms()
     file_atoms.load(args.fn_input[0])
 
     m = min([min(a.lambda_) for a in file_atoms.atoms])

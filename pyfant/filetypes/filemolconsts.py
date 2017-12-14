@@ -1,4 +1,4 @@
-from .. import FilePy
+from f311 import FilePy
 import a99
 from ..molconsts import MolConsts
 
@@ -24,7 +24,7 @@ class FileMolConsts(FilePy):
     def _do_save_as(self, filename):
         with open(filename, "w") as h:
             h.write("{}\n"
-                    "from f311.filetypes import MolConsts\n"
+                    "from pyfant import MolConsts\n"
                     "\n"
                     "molconsts = {}\n".format(self._get_header(), self.molconsts))
 

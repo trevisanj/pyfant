@@ -6,7 +6,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from ._shared import *
 import a99
-import f311.filetypes as ft
+import pyfant
 
 
 class XMolLinesEditor(QMainWindow):
@@ -63,7 +63,7 @@ class XMolLinesEditor(QMainWindow):
     def set_sol(self, sol, title):
         """Sets set of lines."""
 
-        assert isinstance(sol, ft.SetOfLines)
+        assert isinstance(sol, pyfant.SetOfLines)
 
         self.flag_populating = True
         try:

@@ -6,6 +6,8 @@ from PyQt5.QtGui import *
 import a99
 import matplotlib.pyplot as plt
 import copy
+import f311
+
 
 __all__ = ["WContinua"]
 
@@ -308,7 +310,6 @@ class WContinua(a99.WConfigEditor):
         self._plot_sp = None
 
     def _draw(self):
-        import f311.explorer as ex
 
         def _ensure_new_fig():
             fig = self.figure
@@ -335,13 +336,13 @@ class WContinua(a99.WConfigEditor):
                 if self._plot_sp is None:
                     self._plot_sp, = plt.plot(sp.x, sp.y, label=str(sp.title), color=_COLOR_SPECTRUM,
                              linestyle=_LINESTYLE_SPECTRUM, linewidth=_LINEWIDTH)
-                    setup = ex.PlotSpectrumSetup()
+                    setup = f311.PlotSpectrumSetup()
                     plt.xlabel(setup.fmt_xlabel.format(sp))
                 else:
                     print("SSSSSSSSSSSSSSSSSSSSSSS", self._plot_sp)
                     self._update_plot_data(self._plot_sp, zip(sp.x, sp.y))
 
-                xmin, xmax, ymin, ymax, xspan, yspan = ex.calc_max_min([sp])
+                xmin, xmax, ymin, ymax, xspan, yspan = f311.calc_max_min([sp])
                 ymin, ymax = min(0., ymin), max(1., ymax)
 
                 _T = 0.02  # fraction of extra space on left, right, top, bottom of graphics

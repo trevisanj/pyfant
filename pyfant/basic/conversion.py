@@ -11,15 +11,13 @@ import sys
 import a99
 
 
-__all__ = ["adjust_atomic_symbol", "description_to_symbols", "symbols_to_formula",
-           "iz_to_branch", "branch_to_iz",
-           "get_default_data_path", "iz_to_branch_alt", "branch_to_iz_alt",
-           "molconsts_to_system_str", "greek_to_spdf", "spdf_to_greek",
-           "SS_PLAIN", "SS_ALL_SPECIAL", "SS_RAW", "SS_SUPERSCRIPT",
-           "str_to_elem_ioni", "parse_system_str", "split_molecules_description",
-           "state_to_str"
+__all__ = ["SS_PLAIN", "SS_SUPERSCRIPT", "SS_ALL_SPECIAL", "SS_RAW",
+           "greek_to_spdf", "spdf_to_greek", "state_to_str", "molconsts_to_system_str",
+           "adjust_atomic_symbol", "str_to_elem_ioni", "parse_system_str",
+           "split_molecules_description", "description_to_symbols", "symbols_to_formula",
+           "iz_to_branch", "branch_to_iz", "iz_to_branch_alt", "branch_to_iz_alt",
+           "branch_to_iz_alt2",
            ]
-
 
 # **        ****                ******        ****                ******        ****
 #   **    **    ******    ******      **    **    ******    ******      **    **    ******    ******
@@ -203,6 +201,7 @@ def parse_system_str(string):
         "\[\s*([a-zA-Z])\s*(\d+)\s*([a-zA-Z0-9]+)[+-]{0,1}\s*-+\s*\s*([a-zA-Z])\s*(\d+)\s*([a-zA-Z0-9]+)[+-]{0,1}\s*\]")
     groups = expr.search(string)
     if groups is not None:
+        # TODO this may be giving error
         _pieces = [groups[i] for i in range(1, 7)]
     else:
         # Initial and final state are the same. Example "12C16O INFRARED [X 1 SIGMA+]"
@@ -251,8 +250,8 @@ def description_to_symbols(descr):
 
     Example:
 
-    >>> import f311.filetypes as ft
-    >>> ft.description_to_symbols("12C16O INFRARED  X 1 SIGMA+,   version 15/oct/98")
+    >>> import pyfant
+    >>> pyfant.description_to_symbols("12C16O INFRARED  X 1 SIGMA+,   version 15/oct/98")
     [' C', ' O']
     """
 
@@ -327,7 +326,7 @@ def branch_to_iz(br):
     """Converts branch P/Q/R/P1, etc. into BLB's 'iz' code
 
     Args:
-        branch: str, [P/Q/R][/1/2/3], for example "P", "P1"
+        br: str, [P/Q/R][/1/2/3], for example "P", "P1"
 
     Returns:
         str: from "1" to "12"
@@ -349,7 +348,7 @@ def branch_to_iz_alt(br):
     Alternative mapping used by Bruno Castilho's CH
 
     Args:
-        branch: str, [P/Q/R][1/12/21/2], for example "P1", "Q21"
+        br: str, [P/Q/R][1/12/21/2], for example "P1", "Q21"
 
     Returns:
         str: from "1" to "12"
@@ -364,7 +363,7 @@ def branch_to_iz_alt2(br):
     Still another alternative mapping (for triplets)
 
     Args:
-        branch: str: P1/P2/P3/Q1/Q2/Q3/R1/R2/R3
+        br: str: P1/P2/P3/Q1/Q2/Q3/R1/R2/R3
 
     Returns:
         str: from "1" to "9"

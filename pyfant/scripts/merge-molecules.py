@@ -4,8 +4,7 @@
 Merges several PFANT molecular lines file into a single one
 """
 
-import f311.pyfant as pf
-import f311.filetypes as ft
+import pyfant
 import argparse
 import os
 import glob
@@ -25,7 +24,7 @@ _PREFIX = "molecules-merged-"
 def main(fns_input, fn_output):
     ffmol = []
     for fn in fns_input:
-        fmol = ft.FileMolecules()
+        fmol = pyfant.FileMolecules()
         try:
             fmol.load(fn)
             print("File '{}': {} molecule{}".format(
@@ -39,7 +38,7 @@ def main(fns_input, fn_output):
 
     n = len(ffmol)
 
-    fout = ft.FileMolecules()
+    fout = pyfant.FileMolecules()
     fout.titm = "Merge of {} file{}: {}".format(
         n,
         "s" if n != 1 else "",

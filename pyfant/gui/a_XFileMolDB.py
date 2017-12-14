@@ -2,27 +2,22 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 import a99
-# from a_WState import WState
-# import moldb as db
-from .a_WFileMolDB import *
-import os
-from ..a_XFileMainWindow import *
+import f311
+import pyfant
 
 __all__ = ["XFileMolDB"]
 
 
-class XFileMolDB(XFileMainWindow):
+class XFileMolDB(f311.XFileMainWindow):
     def _add_stuff(self):
-        import f311.filetypes as ft
-        import f311.explorer as ex
 
-        me = self.w_moldb = WFileMolDB(self)
+        me = self.w_moldb = pyfant.WFileMolDB(self)
         me.changed.connect(self._on_changed)
 
         # # Synchronized sequences
-        self.pages.append(ex.MyPage(
-         text_tab=ft.FileMolDB.description,
-         cls_save=ft.FileMolDB, clss_load=(ft.FileMolDB,), wild="*.sqlite",
+        self.pages.append(f311.MyPage(
+         text_tab=pyfant.FileMolDB.description,
+         cls_save=pyfant.FileMolDB, clss_load=(pyfant.FileMolDB,), wild="*.sqlite",
          editor=me, flag_autosave=True
         ))
 

@@ -1,6 +1,5 @@
 import pyfant
 import os
-import f311.filetypes as ft
 
 
 def test_adds_to_one0(tmpdir):
@@ -13,7 +12,7 @@ def test_adds_to_one0(tmpdir):
     consts.None_to_zero()
 
 
-    mtools = ph.linestrength_toolbox(consts)
+    mtools = pyfant.kovacs_toolbox(consts)
 
     for J2l in range(30):
         try:

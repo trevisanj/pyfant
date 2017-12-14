@@ -7,13 +7,15 @@ References:
   [2] extraehitran.f (First version: Jorge Melendez-Moreno, January 1999)
 """
 
+# TODO not working
+
 
 import f311.physics as ph
-import f311.filetypes as ft
-import a99
-from .calc_qgbd import calc_qgbd_tio_like
 from .convlog import *
 from collections import OrderedDict
+import airvacuumvald as avv
+import pyfant
+
 
 __all__ = ["hitran_to_sols"]
 
@@ -164,7 +166,7 @@ def hitran_to_sols(molconsts, lines, qgbd_calculator):
 
         try:
             nu = data["nu"][i]
-            wl = ph.vacuum_to_air(1e8/nu)
+            wl = avv.vacuum_to_air(1e8/nu)
             Br, J2l = f_group(data["local_lower_quanta"][i])
             # TODO assuming singlet!!!
             Jl = ph.singlet.quanta_to_branch(Br, J2l)
@@ -192,7 +194,7 @@ def hitran_to_sols(molconsts, lines, qgbd_calculator):
             bbv = qgbd["bv"]
             ddv = qgbd["dv"]
 
-            sols[sol_key] = ft.SetOfLines(V, V_, qqv, ggv, bbv, ddv, 1.)
+            sols[sol_key] = pyfant.SetOfLines(V, V_, qqv, ggv, bbv, ddv, 1.)
         sol = sols[sol_key]
         sol.append_line(wl, gf, J2l_pfant, Br)
 

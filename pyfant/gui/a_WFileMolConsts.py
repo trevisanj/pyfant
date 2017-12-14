@@ -6,8 +6,8 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 import a99
-import f311.filetypes as ft
 from .a_WMolecularConstants import *
+import pyfant
 
 
 class WFileMolConsts(a99.WEditor):
@@ -55,7 +55,7 @@ class WFileMolConsts(a99.WEditor):
         self.w_molconsts.set_moldb(fobj)
 
     def _do_load(self, fobj):
-        assert isinstance(fobj, ft.FileMolConsts)
+        assert isinstance(fobj, pyfant.FileMolConsts)
         self._f = fobj
         self.w_molconsts.molconsts = fobj.molconsts
         self._flag_valid = True

@@ -9,10 +9,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 from mpl_toolkits.mplot3d import Axes3D  # yes, required (see below)
-import a99
-import f311.filetypes as ft
-from ..basic import Vis
-
+import pyfant
+from f311 import Vis
 
 
 __all__ = [
@@ -24,7 +22,7 @@ class VisModRecord(Vis):
     the same x-axis.
     """
 
-    input_classes = (ft.FileModBin,)
+    input_classes = (pyfant.FileModBin,)
     action = "Visualize single record"
 
     def __init__(self):
@@ -33,7 +31,7 @@ class VisModRecord(Vis):
         self.inum = None
 
     def _do_use(self, obj):
-        assert isinstance(obj, ft.FileModBin)
+        assert isinstance(obj, pyfant.FileModBin)
         n = len(obj.records)
 
         if n == 1 and self.inum is None:
@@ -54,7 +52,7 @@ class VisMarcs(Vis):
     Similar to VisModRecord but accepts FileModTxt
     """
 
-    input_classes = (ft.FileModTxt,)
+    input_classes = (pyfant.FileModTxt,)
     action = "Visualize model"
 
     def __init__(self):
@@ -69,7 +67,7 @@ class VisMarcsSaveAsMod(Vis):
     Asks user for file name and saves as a binary .mod file
     """
 
-    input_classes = (ft.FileModTxt,)
+    input_classes = (pyfant.FileModTxt,)
     action = 'Save as a binary ".mod" file'
 
     def __init__(self):
@@ -80,7 +78,7 @@ class VisMarcsSaveAsMod(Vis):
         new_filename = QFileDialog.getSaveFileName(None,
          self.action.capitalize(), d, "*.mod")[0]
         if new_filename:
-            f = ft.FileModBin()
+            f = pyfant.FileModBin()
             f.records = [obj.record]
             f.save_as(str(new_filename))
         return False
@@ -116,7 +114,7 @@ class VisModCurves(Vis):
     (nh, teta, pe, pg, log_tau_ross) (layer #)x(record #)x(value) 3D plots
     """
 
-    input_classes = (ft.FileMoo, ft.FileModBin)
+    input_classes = (pyfant.FileMoo, pyfant.FileModBin)
     action = "(nh, teta, pe, pg, log_tau_ross) per layer curves in 3D"
 
     def _do_use(self, m):
@@ -150,7 +148,7 @@ class VisModCurves(Vis):
 class VisGrid(Vis):
     __doc__ = """(glog, teff, [Fe/H]) 3D scatterplot"""
 
-    input_classes = (ft.FileMoo, ft.FileModBin)
+    input_classes = (pyfant.FileMoo, pyfant.FileModBin)
     action = __doc__
 
     def _do_use(self, m):
@@ -175,7 +173,7 @@ class VisGrid(Vis):
 class VisVector(Vis):
     __doc__ = """(glog, teff, [Fe/H]) same-x-axis stacked subplots"""
 
-    input_classes = (ft.FileMoo, ft.FileModBin)
+    input_classes = (pyfant.FileMoo, pyfant.FileModBin)
     action = __doc__
 
     def _do_use(self, m):
@@ -209,11 +207,11 @@ class VisOpa(Vis):
     Plots vectors ???
     """
 
-    input_classes = (ft.FileOpa,)
+    input_classes = (pyfant.FileOpa,)
     action = "Visualize opacities file"
 
     def _do_use(self, obj):
-        assert isinstance(obj, ft.FileOpa)
+        assert isinstance(obj, pyfant.FileOpa)
 
         # 8 subplots sharing same x-axis
         ll = ["rad", "tau", "t", "pe", "pg", "rho", "xi", "ops"]

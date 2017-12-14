@@ -6,7 +6,7 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 import a99
-import f311.filetypes as ft
+import pyfant
 
 
 ABONDS_HEADERS = ["Element", "Abundance", "Notes"]
@@ -39,7 +39,7 @@ class WFileAbonds(QWidget):
         self.f = None # FileAbonds object
 
         # Internals
-        d = self.__default_dissoc = ft.FileDissoc()
+        d = self.__default_dissoc = pyfant.FileDissoc()
         d.init_default()
 
         la = self.formLayout = QVBoxLayout()
@@ -147,7 +147,7 @@ class WFileAbonds(QWidget):
     # # Interface
 
     def load(self, x):
-        assert isinstance(x, ft.FileAbonds)
+        assert isinstance(x, pyfant.FileAbonds)
         self.f = x
         self._update_from_file_abonds()
         # this is called to perform file validation upon loading
@@ -330,7 +330,7 @@ class WFileAbonds(QWidget):
                 x = self._validate_element(i, x)
             except Exception as E:
                 errors.append(_format_error(i, str(E)))
-            ele.append(ft.adjust_atomic_symbol(x))
+            ele.append(pyfant.adjust_atomic_symbol(x))
             item.setText(x)
 
             # # Abundance

@@ -1,10 +1,10 @@
+import pyfant
 import os
-import pyfant as pf
 
 
 
 def test_SetOfLines():
-    sol = pf.SetOfLines()
+    sol = pyfant.SetOfLines()
     sol.append_line(2000., .25, 10.5, "P")
     sol.append_line(1000., .25, 10.5, "Q1")
 
@@ -32,9 +32,9 @@ def test_SetOfLines():
 
 
 def test_Molecule():
-    m = pf.Molecule()
+    m = pyfant.Molecule()
 
-    sol = pf.SetOfLines()
+    sol = pyfant.SetOfLines()
     sol.append_line(2000., .25, 10.5, "P")
     sol.append_line(1000., .25, 10.5, "Q1")
 
@@ -46,7 +46,7 @@ def test_Molecule():
     assert m.num_lines == 2
 
 
-    sol = pf.SetOfLines()
+    sol = pyfant.SetOfLines()
     sol.append_line(3000., .125, 13.5, "R21")
 
     m.sol.append(sol)
@@ -73,17 +73,17 @@ def test_Molecule():
 
 def test_FileMolecules(tmpdir):
     os.chdir(str(tmpdir))
-    m = pf.Molecule()
-    sol = pf.SetOfLines()
+    m = pyfant.Molecule()
+    sol = pyfant.SetOfLines()
     sol.append_line(2000., .25, 10.5, "P")
     sol.append_line(1000., .25, 10.5, "Q1")
     m.sol = [sol]
-    sol = pf.SetOfLines()
+    sol = pyfant.SetOfLines()
     sol.append_line(3000., .125, 13.5, "R21")
     m.sol.append(sol)
 
 
-    f = pf.FileMolecules()
+    f = pyfant.FileMolecules()
     f.molecules = [m]
 
     assert f.llzero == 1000.
@@ -122,9 +122,9 @@ def test_FileMolecules(tmpdir):
 
 def test_molconsts_to_molecule(tmpdir):
     os.chdir(str(tmpdir))
-    db = pf.FileMolDB()
+    db = pyfant.FileMolDB()
     db.init_default()
 
-    mc = pf.some_molconsts(db)
+    mc = pyfant.some_molconsts(db)
 
-    mm = pf.molconsts_to_molecule(mc)
+    mm = pyfant.molconsts_to_molecule(mc)

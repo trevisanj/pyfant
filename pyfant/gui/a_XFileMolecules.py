@@ -15,7 +15,7 @@ import webbrowser
 import sys
 from ._shared import *
 import a99
-import f311.filetypes as ft
+import pyfant
 
 
 __all__ = ["XFileMolecules"]
@@ -362,14 +362,14 @@ class XFileMolecules(QMainWindow):
 
     def load(self, f):
         """Loads file into GUI."""
-        assert isinstance(f, ft.FileMolecules)
+        assert isinstance(f, pyfant.FileMolecules)
 
         self.f = f
 
         self.plainTextEditFileInfo.setPlainText(str(f))
 
         for m in f.molecules:
-            assert isinstance(m, ft.Molecule)
+            assert isinstance(m, pyfant.Molecule)
             item = QListWidgetItem(self.get_mol_string(m))
             # not going to allow editing yet item.setFlags(item.flags() | Qt.ItemIsEditable)
             self.listWidgetMol.addItem(item)

@@ -4,12 +4,9 @@
 __all__ = ["KuruczMolLine", "KuruczMolLineOld", "KuruczMolLineOld1", "FileKuruczMolecule", "FileKuruczMoleculeOld",
            "FileKuruczMoleculeBase", "load_kurucz_mol", "FileKuruczMoleculeOld1", "FileKuruczMolecule1"]
 
-# from ..gear import *
-import sys
 import a99
-from .. import DataFile
+from f311 import DataFile
 import io
-import fortranformat as ff
 import os
 from collections import namedtuple
 
@@ -40,8 +37,8 @@ def load_kurucz_mol(filename):
     Returns:
         FileKuruczMoleculeBase: either FileKuruczMolecule or FileKuruczMoleculeOld
     """
-    from f311 import filetypes as ft
-    return ft.load_with_classes(filename, [FileKuruczMolecule, FileKuruczMolecule1,
+    import f311
+    return f311.load_with_classes(filename, [FileKuruczMolecule, FileKuruczMolecule1,
                                            FileKuruczMoleculeOld, FileKuruczMoleculeOld1,])
 
 

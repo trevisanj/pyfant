@@ -9,8 +9,8 @@ import shutil
 from ._shared import *
 from .a_XPFANT import *
 import a99
-import f311.explorer as ex
-import f311.filetypes as ft
+import f311
+import pyfant
 
 WINDOW_WIDTH = 700
 WINDOW_HEIGHT = 768
@@ -73,7 +73,7 @@ class XMulti(XPFANT):
 
         # ### Editor for multi setup
 
-        editor = self.multi_editor = ex.WFileAbXFwhm()
+        editor = self.multi_editor = pyfant.WFileAbXFwhm()
         editor.changed.connect(self.on_multi_changed)
         l.addWidget(editor)
 
@@ -82,7 +82,7 @@ class XMulti(XPFANT):
         self.flags_changed.append(False)
         self.save_as_texts.append("Save abundances X FWHM's configuration as")
         self.open_texts.append("Load abundandex X FWHM's file")
-        self.clss.append(ft.FileAbXFwhm)
+        self.clss.append(pyfant.FileAbXFwhm)
         self.editors.append(self.multi_editor)
         self.labels_fn.append(self.label_fn_abxfwhm)
         self.wilds.append("*.py")
@@ -90,8 +90,8 @@ class XMulti(XPFANT):
         self.__update_lineEdit_multi_custom_id()
         # tt.setCurrentIndex(3)
         # ## Loads abxfwhm file
-        if os.path.isfile(ft.FileAbXFwhm.default_filename):
-            f = ft.FileAbXFwhm()
+        if os.path.isfile(pyfant.FileAbXFwhm.default_filename):
+            f = pyfant.FileAbXFwhm()
             f.load()
             self.multi_editor.load(f)
         # ## calls slot to perform cross-check between FileAbonds and FileAbXFwhm
@@ -105,7 +105,7 @@ class XMulti(XPFANT):
     # Slots for Qt library signals
 
     def on_run_multi(self):
-        from f311 import pyfant as pf
+        import pyfant as pf
         errors = self._check_single_setup()
 
         if not self.multi_editor.f:
@@ -121,7 +121,7 @@ class XMulti(XPFANT):
             if len(s) == 0:
                 errors.append("Please inform custom session id.")
             elif len(errors) == 0: # will only offer to remove directory if everything is ok so far
-                dirname = pf.get_custom_multisession_dirname(s)
+                dirname = pyfant.get_custom_multisession_dirname(s)
                 if os.path.isdir(dirname):
                     r = QMessageBox.question(self, "Directory exists",
                      "Directory '%s' already exists.\n\nWould you like to remove it?" % dirname,
@@ -180,11 +180,11 @@ class XMulti(XPFANT):
         return str(self.lineEdit_multi_custom_id.text()).strip()
 
     def __submit_multi(self):
-        from f311 import pyfant as pf
-        r = pf.MultiRunnable(self.me.f, self.ae.f, self.oe.f, self.multi_editor.f)
+        import pyfant as pf
+        r = pyfant.MultiRunnable(self.me.f, self.ae.f, self.oe.f, self.multi_editor.f)
         if self.checkbox_multi_custom_id.isChecked():
             custom_id = self.__get_multi_custom_session_id()
-            if pf.get_custom_multisession_dirname(custom_id) == custom_id:
+            if pyfant.get_custom_multisession_dirname(custom_id) == custom_id:
                 # Understands that session dirname prefix must be cleared
                 r.sid.id_maker.session_prefix_singular = ""
             r.sid.id = custom_id

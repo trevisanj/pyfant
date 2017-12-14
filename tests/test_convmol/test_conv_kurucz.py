@@ -1,8 +1,6 @@
+import pyfant
 import os
 import io
-import f311.filetypes as ft
-import f311.convmol as cm
-import f311.physics as ph
 
 
 def _fake_file():
@@ -22,7 +20,7 @@ def _fake_file():
 
 def test_filemolkurucz():
     h = _fake_file()
-    f = ft.FileKuruczMolecule()
+    f = pyfant.FileKuruczMolecule()
     f._do_load_h(h, "_fake_file")
     assert repr(f.lines[0]) == "KuruczMolLine(lambda_=2045.126, loggf=-7.917, J2l=2.5, E2l=83.925, Jl=2.5, El=48964.99, atomn0=1, atomn1=8, state2l='X', v2l=0, lambda_doubling2l='f', spin2l=1, statel='A', vl=7, lambda_doublingl='e', spinl=1, iso=16)"
 
@@ -31,20 +29,20 @@ def test_conv_kurucz(tmpdir):
     pass
     os.chdir(str(tmpdir))
 
-    db = ft.FileMolDB()
+    db = pyfant.FileMolDB()
     db.init_default()
     # conn = db.get_conn()
 
 
-    molconsts = ft.MolConsts()
+    molconsts = pyfant.MolConsts()
     molconsts.populate_all_using_str(db, "OH [A 2 Sigma - X 2 Pi]")
     molconsts.None_to_zero()
 
     h = _fake_file()
-    fileobj = ft.FileKuruczMolecule()
+    fileobj = pyfant.FileKuruczMolecule()
     fileobj._do_load_h(h, "_fake_file")
 
-    conv = cm.ConvKurucz(molconsts=molconsts,
+    conv = pyfant.ConvKurucz(molconsts=molconsts,
                          flag_hlf=True, flag_normhlf=True, flag_fcf=False, flag_quiet=False,
                          fcfs=None, iso=None)
 

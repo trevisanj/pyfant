@@ -30,9 +30,7 @@ import copy
 import numpy as np
 import os.path
 import a99
-import f311.filetypes as ft
-import f311.explorer as ex
-import f311.pyfant as pf
+import pyfant
 
 
 a99.logging_level = logging.INFO
@@ -105,21 +103,21 @@ if __name__ == "__main__":
     logger.info("Using inflate = %g" % args.inflate)
     logger.info("Using ge_current = %s" % args.ge_current)
 
-    file_atoms = ft.FileAtoms()
+    file_atoms = pyfant.FileAtoms()
     file_atoms.load(args.fn_input[0])
 
     logger.info("Number of lines in file '%s': %d" % \
      (args.fn_input[0], file_atoms.num_lines))
 
     # # Tries to get input files together
-    pf.setup_inputs(h=False, atoms=False, molecules=False, opa=False)
+    pyfant.setup_inputs(h=False, atoms=False, molecules=False, opa=False)
 
 
     # ## Runs innewmarcs if modeles.mod not present
     
     if not os.path.isfile('modeles.mod'):
         logger.info("'modeles.mod' does not exist, running innewmarcs...")
-        inn = pf.Innewmarcs()
+        inn = pyfant.Innewmarcs()
         inn.conf.opt.opa = False
         inn.run()
 
@@ -130,7 +128,7 @@ if __name__ == "__main__":
     EXCEPTIONS = ["FE", "HE"]
     logger.info("Preparing abundances (Adding %g to all abundances, " % K_ADD)
     logger.info("except those of %s)..." % str(EXCEPTIONS))
-    fa = ft.FileAbonds()
+    fa = pyfant.FileAbonds()
     fa.load("abonds.dat")
     cnt = 0
     for i in range(len(fa)):
@@ -164,9 +162,9 @@ if __name__ == "__main__":
         for line in atom.lines:
             a = copy.copy(atom)  # shallow copy
             a.lines = [line]
-            f = ft.FileAtoms()
+            f = pyfant.FileAtoms()
             f.atoms = [a]
-            combo = pf.Combo([pf.FOR_PFANT])
+            combo = pyfant.Combo([pyfant.FOR_PFANT])
             # Fortran messages will not be displayed in terminal
             combo.conf.flag_log_console = False
             combo.conf.sid.flag_split_dirs = True
@@ -209,10 +207,10 @@ if __name__ == "__main__":
 
 
 
-    rm = pf.RunnableManager()
+    rm = pyfant.RunnableManager()
     rm.add_runnables(combos)
     app = a99.get_QApplication([])
-    form = pf.XRunnableManager(None, rm)
+    form = pyfant.XRunnableManager(None, rm)
     form.show()
     # it is good to start the manager as late as possible, otherwise
     # the program will hang if, for example, the form fails to be created.

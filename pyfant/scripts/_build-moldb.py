@@ -7,16 +7,13 @@ Script to put together the file moldb.sqlite
 needed for molecular lines conversion (``convmol.py``)
 """
 
-from f311 import filetypes as ft
-import f311.convmol as cm
+import pyfant
 import a99
 from collections import OrderedDict
 import sqlite3
 import os
 import sys
-from f311 import convmol as cm
-from f311 import pyfant as pf
-from f311.convmol import NIST_URL
+
 
 # FileMolecules
 filemol = None
@@ -55,7 +52,7 @@ def insert_systems():
     # Information is stored as MolConsts objects in which only the formula and system information are set
     rows = []
     for molecule in filemol:
-        row = ft.MolConsts()
+        row = pyfant.MolConsts()
         row.populate_parse_str(molecule.description)
 
         print("FORMULA {}".format(row["formula"]))
@@ -87,7 +84,7 @@ def insert_nist_data():
         id_molecule, formula = row["id"], row["formula"]
         a99.get_python_logger().info("Molecule '{}'...".format(formula))
         try:
-            data, _, _ = cm.get_nist_webbook_constants(formula)
+            data, _, _ = pyfant.get_nist_webbook_constants(formula)
 
             for state in data:
                 # **Note** assumes that the columns in data match the
@@ -124,12 +121,6 @@ def load_list_file(filename):
     return fcfs
 
 
-
-
-
-
-
-
 # Electronic systems
 #
 # # TODO calculate FCFs for Tio, FeH, CO
@@ -156,7 +147,7 @@ def insert_franck_condon_factors():
                                    (formula,)).fetchone()["id"]
 
 
-        molconsts = ft.MolConsts()
+        molconsts = pyfant.MolConsts()
         molconsts.update(id_molecule = id_molecule, from_label = from_label,
          from_mult = from_mult, from_spdf = from_spdf, to_label = to_label,
          to_mult = to_mult, to_spdf = to_spdf)
@@ -167,7 +158,7 @@ def insert_franck_condon_factors():
         if filename is not None:
             # Can handle two different file formats
             try:
-                a = ft.FileTRAPRBOutput()
+                a = pyfant.FileTRAPRBOutput()
                 a.load(filename)
                 fcf_dict = a.fcfs
             except:
@@ -180,7 +171,7 @@ def insert_franck_condon_factors():
 
 if __name__ == "__main__":
 
-    filename = ft.FileMolDB.default_filename
+    filename = pyfant.FileMolDB.default_filename
 
     if os.path.isfile(filename):
         if a99.yesno("File '{}' already exists, get rid of it and continue".format(filename), True):
@@ -194,15 +185,15 @@ if __name__ == "__main__":
         sys.exit()
 
 
-    moldb = ft.FileMolDB()
+    moldb = pyfant.FileMolDB()
     moldb.filename = filename
     my_info("Creating schema...")
     moldb.create_schema()
 
 
 
-    filemol = ft.FileMolecules()
-    filemol.load(pf.get_pfant_data_path("common", "molecules.dat"))
+    filemol = pyfant.FileMolecules()
+    filemol.load(pyfant.get_pfant_data_path("common", "molecules.dat"))
 
 
     conn = moldb.get_conn()
@@ -217,5 +208,5 @@ if __name__ == "__main__":
     my_info("Inserting Franck-Condon Factors from Bruno Castilho's work...")
     insert_franck_condon_factors()
 
-    my_info("Inserting data from NIST Chemistry Web Book ({})...".format(NIST_URL))
+    my_info("Inserting data from NIST Chemistry Web Book ({})...".format(pyfant.NIST_URL))
     insert_nist_data()

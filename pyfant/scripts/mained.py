@@ -3,13 +3,10 @@
 """Main configuration file editor."""
 
 import sys
-from PyQt5.QtGui import *
-from PyQt5.QtWidgets import *
 import argparse
 import logging
-import f311.explorer as ex
 import a99
-import f311.filetypes as ft
+import pyfant
 
 
 a99.logging_level = logging.INFO
@@ -24,10 +21,10 @@ if __name__ == "__main__":
     parser.add_argument('fn', type=str, help='main configuration file name', default='main.dat', nargs='?')
     args = parser.parse_args()
 
-    m = ft.FileMain()
+    m = pyfant.FileMain()
     m.load(args.fn)
     app = a99.get_QApplication([])
-    form = ex.XFileMain()
+    form = pyfant.XFileMain()
     form.load(m)
     form.show()
     sys.exit(app.exec_())

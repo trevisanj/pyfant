@@ -16,7 +16,6 @@ References:
 """
 
 from robobrowser import RoboBrowser
-import bs4
 import re
 
 

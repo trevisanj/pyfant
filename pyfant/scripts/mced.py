@@ -11,8 +11,7 @@ import argparse
 import a99
 import logging
 import os
-import f311.filetypes as ft
-import f311.explorer as ex
+import pyfant
 
 
 a99.logging_level = logging.INFO
@@ -21,7 +20,7 @@ a99.flag_log_file = True
 
 if __name__ == "__main__":
 
-    deffn = ft.FileMolConsts.default_filename
+    deffn = pyfant.FileMolConsts.default_filename
 
     parser = argparse.ArgumentParser(
     description=__doc__,
@@ -36,15 +35,15 @@ if __name__ == "__main__":
 
 
     # Currently making copy of FileMolDB database and deleting afterwards
-    moldb = ft.FileMolDB()
+    moldb = pyfant.FileMolDB()
     moldb.init_default()
     try:
         fobj = None
         if args.fn is not None:
-            fobj = ft.FileMolConsts()
+            fobj = pyfant.FileMolConsts()
             fobj.load(args.fn)
         app = a99.get_QApplication([])
-        form = ex.XFileMolConsts(None)
+        form = pyfant.XFileMolConsts(None)
         form.set_moldb(moldb)
         form.load(fobj)
         form.show()

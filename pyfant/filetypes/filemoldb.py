@@ -3,21 +3,12 @@ Represents SQLite database of molecular constants
 """
 
 import a99
-from .. import FileSQLiteDB
-from .. import basic
-# import sqlite3
+from f311 import FileSQLiteDB
 import tabulate
 import re
-import os
-import inspect
+
 
 __all__ = ["FileMolDB"]
-
-#
-# __fileobj = None
-# def get_conn():
-#     return a99.get_conn(__ALIAS)
-
 
 
 class FileMolDB(FileSQLiteDB):

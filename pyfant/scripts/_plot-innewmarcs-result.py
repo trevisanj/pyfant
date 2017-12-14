@@ -19,6 +19,7 @@ from itertools import cycle
 from mpl_toolkits.mplot3d import Axes3D  # yes, required
 import a99
 import logging
+import pyfant
 
 
 a99.logging_level = logging.INFO
@@ -60,13 +61,13 @@ if __name__ == "__main__":
     fn_output = tokens['innewmarcs output file']
     indexes = np.array(np.matrix(tokens['innewmarcs indexes'])).flatten()
     records = []  # ModRecord, name
-    m = ft.FileModBin()
+    m = pyfant.FileModBin()
     m.load(fn_grid)
     for i in indexes:
         record_name = '%s#%d' % (fn_grid, i)
         records.append((m.records[i-1], record_name))
 
-    mod = ft.FileModBin()
+    mod = pyfant.FileModBin()
     mod.load(fn_output)
     rm = mod.records[0]
 

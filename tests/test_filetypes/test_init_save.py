@@ -1,59 +1,59 @@
 import os
-import f311.filetypes as ft
+import pyfant
 
 
 def test_FileAbXFwhm(tmpdir):
     os.chdir(str(tmpdir))
-    obj = ft.FileAbXFwhm()
+    obj = pyfant.FileAbXFwhm()
     obj.init_default()
     obj.save_as()
 
 
 def test_FileAbonds(tmpdir):
     os.chdir(str(tmpdir))
-    obj = ft.FileAbonds()
+    obj = pyfant.FileAbonds()
     obj.init_default()
     obj.save_as()
 
 
 def test_FileDissoc(tmpdir):
     os.chdir(str(tmpdir))
-    obj = ft.FileDissoc()
+    obj = pyfant.FileDissoc()
     obj.init_default()
     obj.save_as()
 
 
 def test_FileHitranDB(tmpdir):
     os.chdir(str(tmpdir))
-    obj = ft.FileHitranDB()
+    obj = pyfant.FileHitranDB()
     obj.init_default()
     obj.save_as("another")
 
 
 def test_FileHmap(tmpdir):
     os.chdir(str(tmpdir))
-    obj = ft.FileHmap()
+    obj = pyfant.FileHmap()
     obj.init_default()
     obj.save_as()
 
 
 def test_FileMain(tmpdir):
     os.chdir(str(tmpdir))
-    obj = ft.FileMain()
+    obj = pyfant.FileMain()
     obj.init_default()
     obj.save_as()
 
 
 def test_FileMolDB(tmpdir):
     os.chdir(str(tmpdir))
-    obj = ft.FileMolDB()
+    obj = pyfant.FileMolDB()
     obj.init_default()
     obj.save_as("another")
 
 
 def test_FileOptions(tmpdir):
     os.chdir(str(tmpdir))
-    obj = ft.FileOptions()
+    obj = pyfant.FileOptions()
     obj.init_default()
     obj.save_as()
 

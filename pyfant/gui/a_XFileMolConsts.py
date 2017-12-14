@@ -2,18 +2,15 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 import a99
-# from a_WState import WState
-# import moldb as db
-from .a_WFileMolConsts import *
-import os
-from ..a_XFileMainWindow import *
+import pyfant
+import f311
 
 __all__ = ["XFileMolConsts"]
 
 
-class XFileMolConsts(XFileMainWindowBase):
+class XFileMolConsts(f311.XFileMainWindowBase):
     def __init__(self, *args, moldb=None, **kwargs):
-        XFileMainWindowBase.__init__(self, *args, **kwargs)
+        f311.XFileMainWindowBase.__init__(self, *args, **kwargs)
         if moldb is not None:
             self.me.set_moldb(moldb)
 
@@ -21,21 +18,15 @@ class XFileMolConsts(XFileMainWindowBase):
         self.me.set_moldb(moldb)
 
     def _add_stuff(self):
-
-        import f311.filetypes as ft
-        import f311.explorer as ex
-
-
-        me = self.me = WFileMolConsts(self)
+        me = self.me = pyfant.WFileMolConsts(self)
         self.tabWidget.addTab(me, "")
 
-        # # Synchronized sequences
-        _VVV = ft.FileMolConsts.description
-        self.pages.append(ex.MyPage(
+        _VVV = pyfant.FileMolConsts.description
+        self.pages.append(f311.MyPage(
          text_tab="{}".format(_VVV),
          text_saveas="Save %s as..." % _VVV,
          text_load="Load %s" % _VVV,
-         cls_save=ft.FileMolConsts, clss_load=(ft.FileMolConsts,), wild="*.py",
+         cls_save=pyfant.FileMolConsts, clss_load=(pyfant.FileMolConsts,), wild="*.py",
          editor=me
         ))
 

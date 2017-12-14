@@ -1,7 +1,7 @@
 __all__ = ["FileMain"]
 
 import a99
-from .. import DataFile
+from f311 import DataFile
 
 
 NINE_HUNDRED = 900

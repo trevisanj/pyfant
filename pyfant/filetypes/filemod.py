@@ -2,7 +2,7 @@ import struct
 import numpy as np
 import os
 import a99
-from .. import DataFile
+from f311 import DataFile
 
 
 __all__ = ["FileModBin", "ModRecord", "FileModTxt", "FileOpa", "FileMoo",

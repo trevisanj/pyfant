@@ -29,15 +29,13 @@ References:
 .
 """
 
-
 import argparse
 import logging
 import glob
 import os
 import sys
 import a99
-import f311.filetypes as ft
-import f311.explorer as ex
+import pyfant
 
 
 a99.logging_level = logging.INFO
@@ -51,7 +49,7 @@ if __name__ == "__main__":
      )
     parser.add_argument('--pattern', type=str, help='file name pattern (with wildcards)',
      nargs="?", default="*.mod")
-    parser.add_argument('--mode', type=str, nargs="?", default="opa",
+    parser.add_argument('-m', '--mode', type=str, nargs="?", default="opa",
      choices=["opa", "modtxt", "modbin"],
      help='working mode (see description above)')
     VDOM = "\"grid.moo\" or \"grid.mod\", depending on mode"
@@ -76,11 +74,11 @@ if __name__ == "__main__":
             name = os.path.splitext(os.path.basename(filename))[0]
             print("Considering files '{0!s}'+('.mod', '.opa') ...".format(name))
             try:
-                f = ft.FileModTxt()
+                f = pyfant.FileModTxt()
                 f.load(filename)
-                g = ft.FileOpa()
+                g = pyfant.FileOpa()
                 g.load(name+".opa")
-                r = a99.MooRecord()
+                r = pyfant.MooRecord()
                 r.from_marcs_files(f, g)
                 records.append(r)
             except:
@@ -90,11 +88,11 @@ if __name__ == "__main__":
             print("Considering file '{0!s}'+('.mod', '.opa') ...".format(nameext))
             try:
                 if args.mode == "modtxt":
-                    f = ft.FileModTxt()
+                    f = pyfant.FileModTxt()
                     f.load(filename)
                     records.append(f.record)
                 else:
-                    f = ft.FileModBin()
+                    f = pyfant.FileModBin()
                     f.load(filename)
                     records.extend(f.records)
             except:
@@ -108,9 +106,9 @@ if __name__ == "__main__":
     records.sort(key=lambda r: r.asalog*1e10+r.teff*100+r.glog)
 
     if args.mode == "opa":
-        g = ft.FileMoo()
+        g = pyfant.FileMoo()
     else:
-        g = ft.FileModBin()
+        g = pyfant.FileModBin()
     g.records = records
     g.save_as(args.fn_output)
 

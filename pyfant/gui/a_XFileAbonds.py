@@ -8,8 +8,8 @@ from . import a_WFileAbonds
 import os
 from ._shared import *
 import a99
-import f311.filetypes as ft
-
+import pyfant
+import f311
 
 ################################################################################
 class XFileAbonds(QMainWindow):
@@ -68,7 +68,7 @@ class XFileAbonds(QMainWindow):
             self.load(file_abonds)
 
     def load(self, x):
-        assert isinstance(x, ft.FileAbonds)
+        assert isinstance(x, pyfant.FileAbonds)
         self.editor.load(x)
         self.update_window_title()
 
@@ -121,7 +121,7 @@ class XFileAbonds(QMainWindow):
                     a99.show_error(PARAMS_INVALID)
                 else:
                     new_filename = QFileDialog.getSaveFileName(self, "Save file",
-                     os.path.join(".", ft.FileDissoc.default_filename), "*.dat")[0]
+                     os.path.join(".", pyfant.FileDissoc.default_filename), "*.dat")[0]
                     if new_filename:
                         f = self.editor.f.get_file_dissoc()
                         f.title = "Created using abed.py"
@@ -134,8 +134,7 @@ class XFileAbonds(QMainWindow):
 
 
     def on_export_turbospectrum(self, _):
-        from f311 import explorer as ex
-        w = ex.XText(self, self.editor.f.get_turbospectrum_str(), "Atomic number & abundance")
+        w = f311.XText(self, self.editor.f.get_turbospectrum_str(), "Atomic number & abundance")
         w.show()
 
     def on_edited(self):

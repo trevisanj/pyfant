@@ -4,6 +4,7 @@ import a99
 import os
 import sys
 
+# TODO not working
 
 if __name__ == "__main__":
     path_ = a99.get_path_to_db("hitrandb")

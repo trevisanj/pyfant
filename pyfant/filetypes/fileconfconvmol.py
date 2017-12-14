@@ -1,6 +1,6 @@
-from .. import FilePyConfig, ConfigDict
+from f311 import FilePyConfig
 import a99
-from collections import defaultdict
+
 
 __all__ = ["FileConfigConvMol"]
 

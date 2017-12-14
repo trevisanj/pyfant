@@ -18,3 +18,4 @@ from .filepleztio import *
 from .filemolconsts import *
 from .fileconfconvmol import *
 from .filetraprb import *
+from .morespectra import *

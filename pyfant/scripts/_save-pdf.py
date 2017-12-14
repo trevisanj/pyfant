@@ -13,10 +13,9 @@ import a99
 import glob
 import os
 import argparse
-import f311.pyfant as pf
-import f311.filetypes as ft
-import f311.explorer as ex
+import pyfant
 import logging
+import f311
 
 
 a99.logging_level = logging.INFO
@@ -36,7 +35,7 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    dd = glob.glob(pf.SESSION_PREFIX_SINGULAR+"*")
+    dd = glob.glob(pyfant.SESSION_PREFIX_SINGULAR+"*")
     dd.sort()
 
     pdf = matplotlib.backends.backend_pdf.PdfPages(args.fn_output)
@@ -54,12 +53,12 @@ if __name__ == "__main__":
 
         for filename in norm_filenames:
             a99.get_python_logger().info("    File '{}'".format(filename))
-            f = ft.FileSpectrumPfant()
+            f = pyfant.FileSpectrumPfant()
 
             # Note: takes first .norm file that finds
             f.load(filename)
 
-            ex.draw_spectra([f.spectrum])  #v.title = "%s" % name
+            f311.draw_spectra_stacked([f.spectrum])  #v.title = "%s" % name
 
             fig = plt.gcf()
             if args.samey:

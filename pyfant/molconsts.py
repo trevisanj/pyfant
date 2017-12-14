@@ -1,8 +1,8 @@
 from . import basic
-import re
 import os
 import inspect
 import a99
+import pyfant
 
 __all__ = ["MolConsts", "some_molconsts", "MolConstPopulateError",
 ]
@@ -118,8 +118,7 @@ class MolConsts(dict):
 
 
     def populate_all_using_str(self, db, string):
-        import f311.filetypes as ft
-        assert isinstance(db, ft.FileMolDB)
+        assert isinstance(db, pyfant.FileMolDB)
 
         self.populate_parse_str(string)
         self.populate_ids(db)
@@ -142,8 +141,7 @@ class MolConsts(dict):
 
 
         """
-        import f311.filetypes as ft
-        assert isinstance(db, ft.FileMolDB)
+        assert isinstance(db, pyfant.FileMolDB)
 
         if id_molecule is None: id_molecule = self["id_molecule"]
         if id_system is None: id_system = self["id_system"]
@@ -184,8 +182,7 @@ class MolConsts(dict):
     def populate_ids(self, db):
         """Populates (id_*) with values found using (molecule name) and (from_*) and (to_*)."""
 
-        import f311.filetypes as ft
-        assert isinstance(db, ft.FileMolDB)
+        assert isinstance(db, pyfant.FileMolDB)
 
         ff = ("id_molecule", "id_system", "id_pfantmol", "id_statel", "id_state2l")
         methods = (self._populate_id_molecule, self._populate_id_system,
@@ -278,12 +275,10 @@ def some_molconsts(db=None, s="OH [A 2 SIGMA - X 2 PI]"):
         s: parseable formula-and-system (refer to
     """
 
-    import f311.filetypes as ft
-
     flag_newdb = False
     if db is None:
         flag_newdb = True
-        db = ft.FileMolDB()
+        db = pyfant.FileMolDB()
         db.init_default()
 
     ret = MolConsts()

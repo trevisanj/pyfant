@@ -1,6 +1,6 @@
 __all__ = ["FileAbsoru2"]
 
-from .. import DataFile
+from f311 import DataFile
 
 
 class FileAbsoru2(DataFile):

@@ -1,12 +1,12 @@
 """Visualization classes for pyfant file types"""
 
+import pyfant
+from f311 import Vis
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 from mpl_toolkits.mplot3d import Axes3D  # yes, required (see below)
 import a99
-import f311.filetypes as ft
-from ..basic import Vis
 
 
 __all__ = ["VisFileToH", "draw_toh", "VisAtoms", "VisMolecules", "VisMain", "VisAbonds",]
@@ -18,7 +18,7 @@ class VisFileToH(Vis):
     Spectrum in a 3D plot.
     """
 
-    input_classes = (ft.FileToH,)
+    input_classes = (pyfant.FileToH,)
     action = "Visualize hydrogen lines profiles"
 
     def _do_use(self, r):
@@ -49,47 +49,43 @@ def draw_toh(r, ax):
 
 class VisAtoms(Vis):
     """Opens the ated window."""
-    input_classes = (ft.FileAtoms,)
+    input_classes = (pyfant.FileAtoms,)
     action = "Edit using atomic lines editor"
 
     def _do_use(self, r):
-        from f311 import explorer as ex
-        form = a99.keep_ref(ex.XFileAtoms(self.parent_form))
+        form = a99.keep_ref(pyfant.XFileAtoms(self.parent_form))
         form.load(r)
         form.show()
 
 
 class VisMolecules(Vis):
     """Opens the mled window."""
-    input_classes = (ft.FileMolecules,)
+    input_classes = (pyfant.FileMolecules,)
     action = "Edit using molecular lines editor"
 
     def _do_use(self, r):
-        from f311 import explorer as ex
-        form = a99.keep_ref(ex.XFileMolecules(self.parent_form))
+        form = a99.keep_ref(pyfant.XFileMolecules(self.parent_form))
         form.load(r)
         form.show()
 
 
 class VisMain(Vis):
     """Opens the mained window."""
-    input_classes = (ft.FileMain,)
+    input_classes = (pyfant.FileMain,)
     action = "Edit using main configuration file editor"
 
     def _do_use(self, r):
-        from f311 import explorer as ex
-        form = a99.keep_ref(ex.XFileMain(self.parent_form, r))
+        form = a99.keep_ref(pyfant.XFileMain(self.parent_form, r))
         form.show()
 
 
 class VisAbonds(Vis):
     """Opens the abed window."""
-    input_classes = (ft.FileAbonds,)
+    input_classes = (pyfant.FileAbonds,)
     action = "Edit using abundances file editor"
 
     def _do_use(self, r):
-        from f311 import explorer as ex
-        form = a99.keep_ref(ex.XFileAbonds(self.parent_form, r))
+        form = a99.keep_ref(pyfant.XFileAbonds(self.parent_form, r))
         form.show()
 
 
@@ -108,10 +104,9 @@ class VisWhatever(Vis):
 
 class VisOptions(VisWhatever):
     """Allows for editing a FileOptions object"""
-    input_classes = (ft.FileOptions,)
+    input_classes = (pyfant.FileOptions,)
     action = "Edit using command-line options file editor"
 
     def _get_cls_form(self):
-        import f311.explorer as ex
-        return ex.XFileOptions
+        return pyfant.XFileOptions
 

@@ -3,14 +3,14 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from a99 import WDBRegistry
 import a99
-import f311.filetypes as ft
+import pyfant
 
 
 __all__ = ["WDBSystem"]
 
 
 # style for table widget column "system"
-SYSTEMSTYLE = ft.SS_ALL_SPECIAL  #ft.SS_SUPERSCRIPT
+SYSTEMSTYLE = pyfant.SS_ALL_SPECIAL  #pyfant.SS_SUPERSCRIPT
 
 # Field names to leave out of table widget
 _FIELDNAMES_OUT = ("id_molecule",)
@@ -43,7 +43,7 @@ class WDBSystem(WDBRegistry):
             return
 
 
-        ff = [lambda row: ft.molconsts_to_system_str(row, SYSTEMSTYLE),
+        ff = [lambda row: pyfant.molconsts_to_system_str(row, SYSTEMSTYLE),
               lambda row: row["notes"]]
         hh = ["system", "notes"]
 

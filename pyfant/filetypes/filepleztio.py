@@ -5,9 +5,8 @@ __all__ = ["FilePlezTiO", "PlezTiOLine"]
 # from ..gear import *
 import sys
 import a99
-from .. import DataFile
-import io
-from collections import namedtuple, defaultdict
+from f311 import DataFile
+from collections import namedtuple
 import struct
 import os
 import numpy as np
@@ -62,8 +61,8 @@ class FilePlezTiO(DataFile):
 
     Example:
 
-        >>> from f311 import filetypes as ft
-        >>> f = ft.FilePlezTiO(min_gf=10**-4, max_J2l=120, max_vl=9, max_v2l=9)
+        >>> import pyfant
+        >>> f = pyfant.FilePlezTiO(min_gf=10**-4, max_J2l=120, max_vl=9, max_v2l=9)
         >>> f.load("linelist_reduced46_all_deltacorr.dat")
         >>> print("Number of lines loaded: {}".format(len(f))
     """

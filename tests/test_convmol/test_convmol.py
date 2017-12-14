@@ -1,12 +1,10 @@
-import f311.convmol as cm
-import f311.explorer as ex
+import pyfant
 import a99
-
 
 
 def test_MolConversionLog():
     app = a99.get_QApplication()
-    w = cm.MolConversionLog()
+    w = pyfant.MolConversionLog()
 
 
 def test_WDBRegistry():
@@ -16,15 +14,15 @@ def test_WDBRegistry():
 
 def test_WMolecularConstants():
     app = a99.get_QApplication()
-    w = ex.WMolecularConstants(a99.XLogMainWindow())
+    w = pyfant.WMolecularConstants(a99.XLogMainWindow())
 
 
 # def test_XConvMol():
 #     app = a99.get_QApplication()
-#     w = cm.XConvMol()
+#     w = pyfant.XConvMol()
 
 
 def test_XFileMolDB():
     app = a99.get_QApplication()
-    w = ex.XFileMolDB()
+    w = pyfant.XFileMolDB()
 

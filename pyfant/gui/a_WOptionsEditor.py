@@ -4,8 +4,10 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 import a99
-import f311.filetypes as ft
 from ._shared import *
+import pyfant
+import f311
+
 
 __all__ = ["WOptionsEditor"]
 
@@ -72,10 +74,10 @@ class _Option(a99.AttrsPart):
 
         Args:
           options: FileOptions instance
-          flag_reset=False: resets controls to default value if their value in the
+          flag_reset: resets controls to default value if their value in the
                               FileOptions object is None
         """
-        assert isinstance(options, ft.FileOptions)
+        assert isinstance(options, pyfant.FileOptions)
         attr = options.__getattribute__(self.name)
         flag_check = attr is not None
         self.checkbox.setChecked(flag_check)
@@ -110,9 +112,9 @@ class _Option(a99.AttrsPart):
                                        (str(value), '"' + (
                                        '"/"'.join([str(x) for x in self.possible_values])) + '"'))
             if self.min is not None and value < self.min:
-                raise RuntimeError("value too small (minimum allowed: %g)" % self.min)
+                raise RuntimeError("value too small (minimum allowed: {})".format(self.min))
             if self.max is not None and value > self.max:
-                raise RuntimeError("value too big (maximum allowed: %g)" % self.max)
+                raise RuntimeError("value too big (maximum allowed: {})".format(self.max))
 
         return value
 
@@ -312,7 +314,7 @@ class WOptionsEditor(a99.WEditor):
         'default: <executable name>_dump.log, <i>e.g.</i>, <b>pfant_dump.log</b>')
         o.type = str
         o.flag_devel = True
-        self.__add_option(self.w_fn_main, 'ihpn', 'fn_main', ft.FileMain.default_filename,
+        self.__add_option(self.w_fn_main, 'ihpn', 'fn_main', pyfant.FileMain.default_filename,
                           'input file name: main configuration',
                           'Contains star parameters and additional software configuration.<br><br>'
                           '<b>Attention</b>: the following command-line options, if used, will '
@@ -325,7 +327,7 @@ class WOptionsEditor(a99.WEditor):
         #
         # innewmarcs, hydro2, pfant
         #
-        self.__add_option(self.w_fn_modeles, 'ihp', 'fn_modeles', ft.FileModBin.default_filename,
+        self.__add_option(self.w_fn_modeles, 'ihp', 'fn_modeles', pyfant.FileModBin.default_filename,
                           'atmospheric model file name',
                           'This is a binary file containing information about atmospheric model. '
                           'This file is created by innewmarcs.')
@@ -343,7 +345,7 @@ class WOptionsEditor(a99.WEditor):
         'Whether or not to include coefficients calculated by subroutine absoru() '
         'in the continuum.')
         o.flag_devel = False  # True
-        self.__add_option(self.w_fn_opa, 'ip', 'fn_opa', ft.FileOpa.default_filename,
+        self.__add_option(self.w_fn_opa, 'ip', 'fn_opa', pyfant.FileOpa.default_filename,
         'Opacities filename',
         'This is a text file in the MARCS ".opa" format. This file can be generated through '
         'interpolation using <em>innewmarcs</em>.'
@@ -362,7 +364,7 @@ class WOptionsEditor(a99.WEditor):
         'This is a binary file containing a grid of atmospheric models for interpolation.'
         '<p>Whether this file or the one specified by <em>--fn_moo</em> will be used '
         'will depend on the <em>--opa</em>option.')
-        self.__add_option(self.w_fn_moo, 'i', 'fn_moo', ft.FileMoo.default_filename,
+        self.__add_option(self.w_fn_moo, 'i', 'fn_moo', pyfant.FileMoo.default_filename,
         'atmospheric model grid (<b>with opacities</b>)',
         'This is a binary file containing a grid of atmospheric models for interpolation, '
         'opacities included.'
@@ -407,10 +409,10 @@ class WOptionsEditor(a99.WEditor):
         o.flag_main = True
         o.color = COLOR_CONFIG
         o.type = float
-        self.__add_option(self.w_fn_absoru2, 'hp', 'fn_absoru2', ft.FileAbsoru2.default_filename,
+        self.__add_option(self.w_fn_absoru2, 'hp', 'fn_absoru2', pyfant.FileAbsoru2.default_filename,
                           'input file name - absoru2',
                           'This file contains physical data for pfant and hydro2 "absoru" module')
-        self.__add_option(self.w_fn_hmap, 'hp', 'fn_hmap', ft.FileHmap.default_filename,
+        self.__add_option(self.w_fn_hmap, 'hp', 'fn_hmap', pyfant.FileHmap.default_filename,
                           'input file name - hydrogen lines data',
                           'Contains a table with<pre>' +
                           'filename, niv inf, niv sup, central lambda, kiex, c1</pre>'
@@ -437,16 +439,16 @@ class WOptionsEditor(a99.WEditor):
                               '<li>2: parabolic</ul>')
         o.possible_values = [1, 2]
         # > @todo Find names for each file and update options help
-        self.__add_option(self.w_fn_dissoc, 'p', 'fn_dissoc', ft.FileDissoc.default_filename,
+        self.__add_option(self.w_fn_dissoc, 'p', 'fn_dissoc', pyfant.FileDissoc.default_filename,
                           'input file name - dissociative equilibrium', '')
-        self.__add_option(self.w_fn_partit, 'p', 'fn_partit', ft.FilePartit.default_filename,
+        self.__add_option(self.w_fn_partit, 'p', 'fn_partit', pyfant.FilePartit.default_filename,
                           'input file name - partition functions', '')
-        self.__add_option(self.w_fn_abonds, 'p', 'fn_abonds', ft.FileAbonds.default_filename,
+        self.__add_option(self.w_fn_abonds, 'p', 'fn_abonds', pyfant.FileAbonds.default_filename,
                           'input file name - atomic abundances', '')
-        self.__add_option(self.w_fn_atoms, 'p', 'fn_atoms', ft.FileAtoms.default_filename,
+        self.__add_option(self.w_fn_atoms, 'p', 'fn_atoms', pyfant.FileAtoms.default_filename,
                           'input file name - atomic lines', '')
         self.__add_option(self.w_fn_molecules, 'p', 'fn_molecules',
-                          ft.FileMolecules.default_filename,
+                          pyfant.FileMolecules.default_filename,
                           'input file name - molecular lines', '')
         self.__add_option(self.w_no_molecules, 'p', 'no_molecules', False,
                           'Skip molecules?',
@@ -564,7 +566,7 @@ class WOptionsEditor(a99.WEditor):
             except:
                 a99.get_python_logger().exception("Processing option '%s'" % option.name)
                 raise
-        self.__update_from_data(ft.FileOptions(), True)
+        self.__update_from_data(pyfant.FileOptions(), True)
 
         # ### Second widget of splitter
         # layout containing description area and a error label
@@ -598,7 +600,7 @@ class WOptionsEditor(a99.WEditor):
     # # Interface
 
     def _do_load(self, x):
-        assert isinstance(x, ft.FileOptions)
+        assert isinstance(x, pyfant.FileOptions)
         self._f = x
         self.__update_from_data(flag_reset=True)
         # this is called to perform file validation upon loading
@@ -658,11 +660,10 @@ class WOptionsEditor(a99.WEditor):
         self.__update_gui_visible_options()
 
     def on_preview(self):
-        from f311 import explorer as ex
         args = self.f.get_args()
         print(args)
         line = "fortran-binary-xxxx " + (" ".join(args))
-        w = ex.XText(self, line, "Command line")
+        w = f311.XText(self, line, "Command line")
         w.show()
 
     def on_filter(self):

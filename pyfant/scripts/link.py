@@ -36,10 +36,8 @@ Note: in Windows, this script must be run as administrator.
 """
 import argparse
 import logging
-import os.path
 import sys
-import glob
-import f311.pyfant as pf
+import pyfant
 import a99
 
 
@@ -53,7 +51,7 @@ if __name__ == "__main__":
         formatter_class=a99.SmartFormatter
     )
     parser.add_argument('-l', '--list', action='store_true',
-      help='lists subdirectories of '+pf.get_pfant_data_path())
+      help='lists subdirectories of '+pyfant.get_pfant_data_path())
     parser.add_argument('-p', '--path', action='store_true',
       help='system path mode')
     parser.add_argument('-y', '--yes', action="store_true",
@@ -74,15 +72,15 @@ if __name__ == "__main__":
 
     # "-l" mode
     if args.list:
-        print("\n".join(a99.format_h1("Subdirectories of '%s'" % pf.get_pfant_data_path())))
-        for dirname in pf.get_pfant_data_subdirs():
+        print("\n".join(a99.format_h1("Subdirectories of '%s'" % pyfant.get_pfant_data_path())))
+        for dirname in pyfant.get_pfant_data_subdirs():
             print(dirname)
         sys.exit()
 
     if args.path:
         dir_ = args.directory
     else:
-        dir_ = pf.get_pfant_path('data', args.directory)
+        dir_ = pyfant.get_pfant_path('data', args.directory)
 
     flag_ask = not args.path and not args.yes
 
@@ -95,5 +93,5 @@ if __name__ == "__main__":
             if ans in ("Y", "YES", ""):
                 break
 
-    pf.link_to_data(dir_)
+    pyfant.link_to_data(dir_)
 

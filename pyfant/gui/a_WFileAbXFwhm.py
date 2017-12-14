@@ -8,7 +8,7 @@ import sys
 import types
 import traceback
 import a99
-import f311.filetypes as ft
+import pyfant
 
 
 __all__ = ["WFileAbXFwhm"]
@@ -90,7 +90,7 @@ class WFileAbXFwhm(QWidget):
     # # Interface
 
     def load(self, x):
-        assert isinstance(x, ft.FileAbXFwhm)
+        assert isinstance(x, pyfant.FileAbXFwhm)
         self.f = x
         self.__update_from_data()
         # this is called to perform file validation upon loading
@@ -130,7 +130,7 @@ class WFileAbXFwhm(QWidget):
     # # Internal gear
 
     def __validate(self):
-        f = ft.FileAbXFwhm()
+        f = pyfant.FileAbXFwhm()
         # first validation: code parses OK and has "ab" and "conv" variables
         f.source = str(self.editor.toPlainText())
         f.validate(self.file_abonds)

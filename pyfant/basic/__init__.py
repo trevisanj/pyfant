@@ -7,5 +7,8 @@ Self-contained sub-library
   - no project-specific hard-coded data
 """
 
+from .errors import *
+from .constants import *
 from .conversion import *
 from .misc import *
+from .paths import *

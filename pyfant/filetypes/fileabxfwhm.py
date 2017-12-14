@@ -4,7 +4,8 @@
 __all__ = ["FileAbXFwhm"]
 
 
-from .. import FilePy, adjust_atomic_symbol
+from f311 import FilePy
+from ..basic import adjust_atomic_symbol
 import imp
 import numpy as np
 import a99

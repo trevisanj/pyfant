@@ -18,6 +18,7 @@ def get_nist_webbook_constants(formula, flag_unicode=True):
 
     Args:
         formula: example: "OH"
+        flag_unicode:
 
     Returns: tuple: table (list of lists), header (list of strings), name of molecule
 

@@ -1,9 +1,7 @@
 import f311.physics as ph
-import f311.filetypes as ft
-import a99
 from .convlog import *
-from collections import OrderedDict
 from .conv import *
+import pyfant
 
 __all__ = ["ConvKurucz"]
 
@@ -61,9 +59,9 @@ class ConvKurucz(Conv):
         def append_error(msg):
             log.errors.append("#{}{} line: {}".format(i + 1, a99.ordinal_suffix(i + 1), str(msg)))
 
-        if not isinstance(lines, ft.FileKuruczMoleculeBase):
+        if not isinstance(lines, pyfant.FileKuruczMoleculeBase):
             raise TypeError("Invalid type for argument 'fileobj': {}".format(type(lines).__name__))
-        assert self.flag_hlf or isinstance(lines, ft.FileKuruczMolecule), \
+        assert self.flag_hlf or isinstance(lines, pyfant.FileKuruczMolecule), \
                "Old-format file does not contain loggf, must activate Hönl-London factors"
 
         lines = lines.lines
@@ -72,7 +70,7 @@ class ConvKurucz(Conv):
         STATEL = self.molconsts["from_label"]
         STATE2L = self.molconsts["to_label"]
 
-        mtools = self.multiplicity_toolbox()
+        mtools = self.kovacs_toolbox()
 
         # Prepares result
         sols = ConvSols(self.qgbd_calculator, self.molconsts)
@@ -103,7 +101,7 @@ class ConvKurucz(Conv):
                 if self.flag_hlf:
                     try:
                         hlf = mtools.get_sj(line.vl, line.v2l, line.J2l, branch)
-                    except ph.NoLineStrength:
+                    except pyfant.NoLineStrength:
                         log.skip_reasons["Cannot calculate HLF"] += 1
                         continue
 
@@ -134,7 +132,7 @@ class ConvKurucz(Conv):
             # raise RuntimeError("Como que o calculate_qgbd esta fazendo, sendo que o dicionario molconsts agora tem prefixos to e from?")
             # if sol_key not in sols:
             #     qgbd = self._calculate_qgbd(line.v2l)
-            #     sols[sol_key] = ft.SetOfLines(line.vl, line.v2l,
+            #     sols[sol_key] = pyfant.SetOfLines(line.vl, line.v2l,
             #                                   qgbd["qv"], qgbd["gv"], qgbd["bv"], qgbd["dv"], 1.)
             #
             # sol = sols[sol_key]

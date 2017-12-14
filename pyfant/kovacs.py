@@ -13,13 +13,13 @@ References:
 
 
 import math
-from f311 import filetypes as ft
-import a99
-
-__all__ = ["linestrength_toolbox", "NoLineStrength", "NO_LINE_STRENGTH"]
+import pyfant
 
 
-def linestrength_toolbox(molconsts, flag_normalize=None):
+__all__ = ["kovacs_toolbox", "NoLineStrength", "NO_LINE_STRENGTH"]
+
+
+def kovacs_toolbox(molconsts, flag_normalize=None):
     """Factory function that returns a MultiplicityToolbox descendant appropriate to molconsts"""
 
     C = [_LSTSinglet, _LSTDoublet0, _LSTDoublet1, _LSTTriplet0, _LSTTriplet1]
@@ -142,7 +142,7 @@ class _LineStrengthToolbox(object):
         return self._dict_sj
 
     def __init__(self, molconsts, flag_normalize=True):
-        if not isinstance(molconsts, ft.MolConsts):
+        if not isinstance(molconsts, pyfant.MolConsts):
             raise TypeError("molconsts must be a MolConsts")
         self._molconsts = molconsts
 

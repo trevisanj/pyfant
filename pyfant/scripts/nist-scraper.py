@@ -27,13 +27,11 @@ References:
 [NISTRef] http://webbook.nist.gov/chemistry/
 """
 
-
+import pyfant
 import tabulate
-import sys
 import a99
 import logging
 import argparse
-import f311.convmol as cm
 
 
 a99.logging_level = logging.INFO
@@ -47,7 +45,7 @@ if __name__ == "__main__":
     parser.add_argument('formula', type=str, help='NIST formula', nargs=1)
     args = parser.parse_args()
 
-    data, header, title = cm.get_nist_webbook_constants(args.formula, args.unicode)
+    data, header, title = pyfant.get_nist_webbook_constants(args.formula, args.unicode)
     out = "\n*** {} ***\n\n{}".format(title, tabulate.tabulate(data, header))
 
     if not args.unicode:

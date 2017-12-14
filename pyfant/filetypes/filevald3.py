@@ -6,7 +6,7 @@ __all__ = ["FileVald3", "Vald3MolecularLine", "Vald3SolKey"]
 # from ..gear import *
 import sys
 import a99
-from .. import DataFile
+from f311 import DataFile
 import io
 from collections import namedtuple, defaultdict
 
@@ -28,11 +28,6 @@ _symbols = [
 class Vald3Species(a99.AttrsPart):
     """
     Represents species of VALD3 **extended format** atomic/molecular lines file
-
-    Args:
-        formula: e.g., "OH", "Fe"
-        ioni: ionization level, >= 1
-
 
     Examples: "OH 1", "Fe 2"
 

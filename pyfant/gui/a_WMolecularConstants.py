@@ -1,11 +1,10 @@
-import copy
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 import a99
 import copy
-import f311.filetypes as ft
-import io
+import pyfant
+import tabulate
 
 __all__ = ["WMolecularConstants"]
 
@@ -40,8 +39,11 @@ class _XHLF(a99.XLogMainWindow):
     """
     Window to show Hönl-London factors for given MolConsts object
     Args:
-      parent=None: nevermind
-      text: string
+        parent: nevermind
+        moldb:
+        molconsts:
+        fcfs
+
     """
 
     def __init__(self, parent, moldb, molconsts, fcfs):
@@ -101,10 +103,6 @@ class _XHLF(a99.XLogMainWindow):
                 self.add_log_error("FCFs not available", True)
 
         try:
-            import f311.explorer as ex
-            import f311.physics as ph
-            import f311.convmol as cm
-            import tabulate
 
             l_text = []
 
@@ -125,7 +123,7 @@ class _XHLF(a99.XLogMainWindow):
 
                     rows, header = [], None
                     for J in range(40):
-                        mtools = ph.linestrength_toolbox(molconsts, flag_normalize=True)
+                        mtools = pyfant.kovacs_toolbox(molconsts, flag_normalize=True)
                         mtools.populate(vl, v2l, J)
 
                         if header is None:
@@ -133,8 +131,8 @@ class _XHLF(a99.XLogMainWindow):
                             header = ["J"]+branches+["Sum"]
 
                         vv = mtools.dict_sj.values()
-                        total = sum([x*factor for x in vv if x != ph.NO_LINE_STRENGTH])
-                        rows.append([J+.5]+["{:.5e}".format(x*factor) if x != ph.NO_LINE_STRENGTH else "-" for x in vv]+["{:.9g}".format(total)])
+                        total = sum([x*factor for x in vv if x != pyfant.NO_LINE_STRENGTH])
+                        rows.append([J+.5]+["{:.5e}".format(x*factor) if x != pyfant.NO_LINE_STRENGTH else "-" for x in vv]+["{:.9g}".format(total)])
 
                     l_text.append(tabulate.tabulate(rows, header))
                     l_text.append("")
@@ -161,8 +159,8 @@ class _XTRAPRBInput(a99.XLogMainWindow):
     """
     Window to show Hönl-London factors for given MolConsts object
     Args:
-      parent=None: nevermind
-      text: string
+      parent: nevermind
+      molconsts:
     """
 
     def __init__(self, parent, molconsts):
@@ -213,13 +211,13 @@ class _XTRAPRBInput(a99.XLogMainWindow):
         cw.setReadOnly(True)  # allows copy but not editing
         cw.setFont(a99.MONO_FONT)
 
-        self.setWindowTitle(a99.get_obj_doc0(ft.FileTRAPRBInput))
+        self.setWindowTitle(a99.get_obj_doc0(pyfant.FileTRAPRBInput))
         self.setGeometry(0, 0, 800, 600)
         a99.place_center(self)
         a99.nerdify(self)
 
     def _calculate(self):
-        f = ft.FileTRAPRBInput()
+        f = pyfant.FileTRAPRBInput()
         try:
             f.from_molconsts(self.molconsts, maxv=self.spinBox_vmax.value())
         except Exception as e:
@@ -268,7 +266,7 @@ class WMolecularConstants(a99.WBase):
     def __init__(self, *args):
         a99.WBase.__init__(self, *args)
 
-        self._molconsts = ft.MolConsts()
+        self._molconsts = pyfant.MolConsts()
         self._flag_valid = True
 
         # activated when populating table
@@ -535,8 +533,7 @@ class WMolecularConstants(a99.WBase):
 
 
     def set_moldb(self, fobj):
-        import f311.filetypes as ft
-        assert isinstance(fobj, ft.FileMolDB), "I dont want a {}".format(fobj)
+        assert isinstance(fobj, pyfant.FileMolDB), "I dont want a {}".format(fobj)
 
         self._moldb = fobj
 
@@ -797,7 +794,7 @@ class WMolecularConstants(a99.WBase):
             data = self.moldb.query_system(id_molecule=self._get_id_molecule()).fetchall()
             cb.addItem("(please select)" if len(data) > 0 else "(no data)")
             for row in data:
-                cb.addItem(ft.molconsts_to_system_str(row, style=ft.SS_ALL_SPECIAL))
+                cb.addItem(pyfant.molconsts_to_system_str(row, style=pyfant.SS_ALL_SPECIAL))
                 self._ids_system.append(row["id"])
 
             self._fill_edits_system()

@@ -17,8 +17,7 @@ import webbrowser
 import sys
 from ._shared import *
 import a99
-import f311.filetypes as ft
-# from .... import explorer as ex
+import pyfant
 
 
 NUM_PLOTS = len(ATOM_HEADERS)-1  # -1 because whe "lambda" does not have its plot
@@ -256,9 +255,8 @@ class XFileAtoms(QMainWindow):
         self.plot_lines()
 
     def on_histogram(self, _):
-        from f311 import explorer as ex
         if self.form_histogram is None:
-            self.form_histogram = ex.XFileAtomsHistogram(self.f)
+            self.form_histogram = pyfant.XFileAtomsHistogram(self.f)
         self.form_histogram.show()
 
 
@@ -266,12 +264,12 @@ class XFileAtoms(QMainWindow):
 
     def load(self, f):
         """Loads file into GUI."""
-        assert isinstance(f, ft.FileAtoms)
+        assert isinstance(f, pyfant.FileAtoms)
 
         self.f = f
 
         for m in f.atoms:
-            assert isinstance(m, ft.Atom)
+            assert isinstance(m, pyfant.Atom)
             item = QListWidgetItem(self.get_atom_string(m))
             # not going to allow editing yet item.setFlags(item.flags() | Qt.ItemIsEditable)
             self.listWidgetAtoms.addItem(item)
@@ -298,6 +296,7 @@ class XFileAtoms(QMainWindow):
         self.atom_index = i
         m = self.atom = self.f.atoms[i]
         self.update_atom_info()
+        self.marker_row = None
         self.plot_lines()
         self.set_editor_atom()
 
@@ -462,5 +461,5 @@ class XFileAtoms(QMainWindow):
 
     @staticmethod
     def get_atom_string(a):
-        assert isinstance(a, ft.Atom)
+        assert isinstance(a, pyfant.Atom)
         return "%-3s (%4d)" % (str(a).strip(), len(a))

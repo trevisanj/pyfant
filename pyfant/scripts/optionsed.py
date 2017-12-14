@@ -6,16 +6,14 @@ import sys
 import argparse
 import logging
 import a99
-import f311.pyfant as pf
-import f311.filetypes as ft
-import f311.explorer as ex
+import pyfant
 import os
 
 a99.logging_level = logging.INFO
 a99.flag_log_file = True
 
-CLS_FILE = ft.FileOptions
-CLS_FORM = ex.XFileOptions
+CLS_FILE = pyfant.FileOptions
+CLS_FORM = pyfant.XFileOptions
 
 if __name__ == "__main__":
 

@@ -4,7 +4,7 @@ import math
 import numpy as np
 import fortranformat as ff
 import a99
-from .. import DataFile
+from f311 import DataFile
 
 
 class FileToH(DataFile):

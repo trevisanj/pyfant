@@ -22,7 +22,7 @@ import os.path
 import sys
 import glob
 import shutil
-import f311.pyfant as pf
+import pyfant
 import a99
 
 
@@ -38,7 +38,7 @@ if __name__ == "__main__":
         formatter_class=a99.SmartFormatter
     )
     parser.add_argument('-l', '--list', action='store_true',
-      help='lists subdirectories of '+pf.get_pfant_data_path())
+      help='lists subdirectories of '+pyfant.get_pfant_data_path())
     parser.add_argument('-p', '--path', action='store_true',
       help='system path mode')
     parser.add_argument('directory', type=str, nargs="?",
@@ -50,31 +50,31 @@ if __name__ == "__main__":
 
     # "-l" mode
     if args.list:
-        print("\n".join(a99.format_h1("Subdirectories of '{}'".format(pf.get_pfant_data_path()))))
-        for dirname in pf.get_pfant_data_subdirs():
+        print("\n".join(a99.format_h1("Subdirectories of '{}'".format(pyfant.get_pfant_data_path()))))
+        for dirname in pyfant.get_pfant_data_subdirs():
             print(dirname)
         sys.exit()
         
     # figures out the path to directory (dir_)
     if flag_menu:
-        print("\nLooking into directory '{}'...".format(pf.get_pfant_data_path()))
-        dirnames = pf.get_pfant_star_subdirs()
+        print("\nLooking into directory '{}'...".format(pyfant.get_pfant_data_path()))
+        dirnames = pyfant.get_pfant_star_subdirs()
         dirnames.sort()
         choice = a99.menu("Choose a star", [x.capitalize() for x in dirnames],
                       cancel_label="quit", flag_allow_empty=True, flag_cancel=False)
         if choice is None or choice <= 0:
             sys.exit()
-        dir_ = os.path.join(pf.get_pfant_data_path(), dirnames[choice-1])
+        dir_ = os.path.join(pyfant.get_pfant_data_path(), dirnames[choice-1])
     else:
         if args.path:
             dir_ = args.directory
         else:
-            dir_ = os.path.join(pf.get_pfant_data_path(), args.directory)
+            dir_ = os.path.join(pyfant.get_pfant_data_path(), args.directory)
             
     if not os.path.isdir(dir_):
         print("'%s' is not a directory" % dir_)
         sys.exit(-1)
-    pf.copy_star(dir_)
+    pyfant.copy_star(dir_)
 
     # print("\n")
     # print("\n".join(a99.format_box("Attention")))

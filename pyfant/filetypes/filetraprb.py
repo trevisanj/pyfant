@@ -1,8 +1,6 @@
-from .. import DataFile
-import a99
 from ..molconsts import *
 from ..basic import state_to_str, SS_PLAIN
-from .. import DataFile
+from f311 import DataFile
 from collections import OrderedDict
 import re
 import a99
@@ -137,9 +135,9 @@ class FileTRAPRBInput(DataFile):
             igraph:
             ienerg:
             istate:
-            zmu:
             rmin:
             rmax:
+            delr:
 
         **Note**:  default to
                   TRAPRBInputState defaults

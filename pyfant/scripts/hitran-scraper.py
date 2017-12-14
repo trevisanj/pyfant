@@ -31,8 +31,8 @@ import tabulate
 import sys
 import os
 from f311 import hapi
-import f311.filetypes as ft
 import airvacuumvald as avv
+import pyfant
 
 
 _DEF_T = '(molecular formula)'
@@ -71,7 +71,7 @@ if __name__ == "__main__":
     # default='()', nargs='?')
     args = parser.parse_args()
 
-    db = ft.FileHitranDB()
+    db = pyfant.FileHitranDB()
     db.init_default()
     if args.M == _DEF_M:
         print()
@@ -166,4 +166,4 @@ if __name__ == "__main__":
     # if not args.ID == "(all)":
     #     kwargs["molecule.ID"] = args.ID
     #
-    # pf.hitrandb.print_isotopologues(**kwargs)
+    # pyfant.hitrandb.print_isotopologues(**kwargs)

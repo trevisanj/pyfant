@@ -5,7 +5,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from ._shared import *
 import a99
-import f311.filetypes as ft
+import pyfant
 
 
 class XAtomLinesEditor(QMainWindow):
@@ -62,7 +62,7 @@ class XAtomLinesEditor(QMainWindow):
     def set_atom(self, atom, title):
         """Sets set of lines."""
 
-        assert isinstance(atom, ft.Atom)
+        assert isinstance(atom, pyfant.Atom)
 
         self.flag_populating = True
         try:

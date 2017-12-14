@@ -5,7 +5,7 @@ __all__ = ["FileMolecules", "Molecule", "SetOfLines", "molconsts_to_molecule"]
 import sys
 import numpy as np
 import a99
-from .. import DataFile, adjust_atomic_symbol, branch_to_iz, iz_to_branch, description_to_symbols
+from f311 import DataFile
 from .. import basic
 import re
 
@@ -388,11 +388,11 @@ class FileMolecules(DataFile):
                     m.description = parts[0]
                     if len(parts) > 1:
                         # Found 'structure' in m.titulo
-                        m.symbols = [adjust_atomic_symbol(s) for s in
+                        m.symbols = [basic.adjust_atomic_symbol(s) for s in
                                      [s.strip() for s in parts[1].split(" ") if len(s.strip()) > 0]]
                     else:
                         # Will try to guess molecule by m.titulo's contents
-                        temp = description_to_symbols(parts[0])
+                        temp = basic.description_to_symbols(parts[0])
                         m.symbols = temp or []
                     transitions = []
                     if len(parts) > 2:
@@ -538,7 +538,7 @@ def molconsts_to_molecule(molconsts):
 
     mol = Molecule()
     mol.description = "{formula} [{system_str}]".format(**molconsts)
-    mol.symbols = description_to_symbols(molconsts["formula"])
+    mol.symbols = basic.description_to_symbols(molconsts["formula"])
     mol.fe = molconsts["fe"]
     mol.do = molconsts["do"]
     mol.mm = molconsts["am"] + molconsts["bm"]
