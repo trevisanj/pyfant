@@ -8,221 +8,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a3da8a85-d5e9-44f1-a623-f9930b66acf1" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/art/Screenshot-Extract Scalar.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/art/Screenshot-Plot Two Spectrum Collection Fields as a X-Y Chart.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/art/Screenshot-Spectrum List Editor-1.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/art/Screenshot-Spectrum List Editor.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/art/Screenshot-Transform.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/art/Untitled 2.odg" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/art/Untitled 3.odg" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/art/explorer-small.xcf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/art/explorer.pdf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/art/explorer.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/art/explorer.xcf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/art/explorer2.pdf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/art/fcf-input-file-description.odt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/art/hr.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/art/hr1.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/art/key-black.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/art/key-white.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/art/splisted-tut-0.xcf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/art/splisted-tut-2.xcf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/art/splisted-tut-3.xcf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/art/splisted-tut-4.xcf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/art/u-ated.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/art/u-cube.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/art/u-explorer.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/art/u-explorer1.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/art/u-galfit.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/art/u-grid.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/art/u-hydrogen.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/art/u-mled.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/art/u-spectrum.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/explorer-0.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/source/figures/air-vac.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/source/figures/chart-z-0.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/source/figures/chart-z-35.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/source/figures/continuum.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/source/figures/explorer-0.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/source/figures/explorer.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/source/figures/gaussian-profiles.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/source/figures/hydrogen-profiles.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/source/figures/index-html.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/source/figures/many-convs.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/source/figures/norm-convolved.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/source/figures/splisted-tut-0.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/source/figures/splisted-tut-1.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/source/figures/splisted-tut-2.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/source/figures/splisted-tut-3.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/source/figures/splisted-tut-4.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/source/figures/synthesis-atoms.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/source/figures/synthesis-molecules-0.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/source/figures/synthesis-molecules-1.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/source/figures/synthesis-molecules-2.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/source/figures/synthesis-molecules-3.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/source/figures/synthesis-molecules-4.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/source/figures/synthesis-molecules-5.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/source/hr.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/source/hr1.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/Makefile" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/examples/.gitignore" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/examples/clean-directory.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/examples/f311/print-collaboration.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/examples/filetypes/convert-to-fits.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/examples/filetypes/import-kurucz.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/examples/more-pyfant/traprb.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/examples/plot-hydrogen-profiles/plot-hydrogen-profiles.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/examples/plot-hydrogen-profiles/purge-directory.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/examples/pyfant-run-parallel.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/examples/synthesis/gaussian-profiles.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/examples/synthesis/purge-directory.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/examples/synthesis/synthesis-atoms.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/examples/synthesis/synthesis-continuum.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/examples/synthesis/synthesis-many-convolutions.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/examples/synthesis/synthesis-molecules.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/examples/synthesis/synthesis-simple.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/gen-autodoc.sh" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/gen-scripts-pages.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/make.bat" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/make.sh" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/source/Makefile" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/source/_static/custom.css" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/source/_static/style.css" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/source/_templates/layout.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/source/autoscripts/script-hitran-scraper.rst" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/source/autoscripts/script-nist-scraper.rst" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/source/conf.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/source/convmol.rst" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/source/filetypes.rst" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/source/index.rst" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/source/install.rst" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/source/intro.rst" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/source/license.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/source/make.bat" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/source/make.sh" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/source/pyfant.rst" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/source/scripts.rst" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/source/theme.conf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/pyfant/run/__init__.py" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/pyfant/convmol/fcf_oh.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/pyfant/scripts/_print-isotopologues.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/pyfant/scripts/cut-spectrum.py" afterPath="" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/pyfant/conf.py" afterPath="$PROJECT_DIR$/pyfant/run/conf.py" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/pyfant/convmol/make_mol.py" afterPath="$PROJECT_DIR$/pyfant/basic/constants.py" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/pyfant/errors.py" afterPath="$PROJECT_DIR$/pyfant/basic/errors.py" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/pyfant/multirunnable.py" afterPath="$PROJECT_DIR$/pyfant/run/multirunnable.py" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/pyfant/paths.py" afterPath="$PROJECT_DIR$/pyfant/basic/paths.py" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/pyfant/rm.py" afterPath="$PROJECT_DIR$/pyfant/run/rm.py" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/pyfant/runnables.py" afterPath="$PROJECT_DIR$/pyfant/run/runnables.py" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/pyfant/traprbclass.py" afterPath="$PROJECT_DIR$/pyfant/run/traprbclass.py" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/docs/examples/f311/print-collaboration.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/docs/examples/filetypes/convert-to-fits.py" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyfant/__init__.py" afterPath="$PROJECT_DIR$/pyfant/__init__.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyfant/basic/__init__.py" afterPath="$PROJECT_DIR$/pyfant/basic/__init__.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyfant/basic/conversion.py" afterPath="$PROJECT_DIR$/pyfant/basic/conversion.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyfant/basic/misc.py" afterPath="$PROJECT_DIR$/pyfant/basic/misc.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyfant/convmol/__init__.py" afterPath="$PROJECT_DIR$/pyfant/convmol/__init__.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyfant/convmol/conv.py" afterPath="$PROJECT_DIR$/pyfant/convmol/conv.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyfant/convmol/conv_hitran.py" afterPath="$PROJECT_DIR$/pyfant/convmol/conv_hitran.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyfant/convmol/conv_kurucz.py" afterPath="$PROJECT_DIR$/pyfant/convmol/conv_kurucz.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyfant/convmol/conv_plez.py" afterPath="$PROJECT_DIR$/pyfant/convmol/conv_plez.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyfant/convmol/conv_vald3.py" afterPath="$PROJECT_DIR$/pyfant/convmol/conv_vald3.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyfant/data/default/configmolconsts.py" afterPath="$PROJECT_DIR$/pyfant/data/default/configmolconsts.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyfant/downloaders/downhitran.py" afterPath="$PROJECT_DIR$/pyfant/downloaders/downhitran.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyfant/downloaders/downnist.py" afterPath="$PROJECT_DIR$/pyfant/downloaders/downnist.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyfant/filetypes/__init__.py" afterPath="$PROJECT_DIR$/pyfant/filetypes/__init__.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyfant/filetypes/fileabonds.py" afterPath="$PROJECT_DIR$/pyfant/filetypes/fileabonds.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyfant/filetypes/fileabsoru2.py" afterPath="$PROJECT_DIR$/pyfant/filetypes/fileabsoru2.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyfant/filetypes/fileabxfwhm.py" afterPath="$PROJECT_DIR$/pyfant/filetypes/fileabxfwhm.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyfant/filetypes/fileatoms.py" afterPath="$PROJECT_DIR$/pyfant/filetypes/fileatoms.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyfant/filetypes/fileconfconvmol.py" afterPath="$PROJECT_DIR$/pyfant/filetypes/fileconfconvmol.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyfant/filetypes/filedissoc.py" afterPath="$PROJECT_DIR$/pyfant/filetypes/filedissoc.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyfant/filetypes/filehmap.py" afterPath="$PROJECT_DIR$/pyfant/filetypes/filehmap.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyfant/filetypes/filekuruczmol.py" afterPath="$PROJECT_DIR$/pyfant/filetypes/filekuruczmol.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyfant/filetypes/filemain.py" afterPath="$PROJECT_DIR$/pyfant/filetypes/filemain.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyfant/filetypes/filemod.py" afterPath="$PROJECT_DIR$/pyfant/filetypes/filemod.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyfant/filetypes/filemolconsts.py" afterPath="$PROJECT_DIR$/pyfant/filetypes/filemolconsts.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyfant/filetypes/filemoldb.py" afterPath="$PROJECT_DIR$/pyfant/filetypes/filemoldb.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyfant/filetypes/filemolecules.py" afterPath="$PROJECT_DIR$/pyfant/filetypes/filemolecules.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyfant/filetypes/fileoptions.py" afterPath="$PROJECT_DIR$/pyfant/filetypes/fileoptions.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyfant/filetypes/filepartit.py" afterPath="$PROJECT_DIR$/pyfant/filetypes/filepartit.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyfant/filetypes/filepleztio.py" afterPath="$PROJECT_DIR$/pyfant/filetypes/filepleztio.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyfant/filetypes/filetoh.py" afterPath="$PROJECT_DIR$/pyfant/filetypes/filetoh.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyfant/filetypes/filetraprb.py" afterPath="$PROJECT_DIR$/pyfant/filetypes/filetraprb.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyfant/filetypes/filevald3.py" afterPath="$PROJECT_DIR$/pyfant/filetypes/filevald3.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyfant/from_vald.py" afterPath="$PROJECT_DIR$/pyfant/from_vald.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyfant/gui/__init__.py" afterPath="$PROJECT_DIR$/pyfant/gui/__init__.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyfant/gui/a_WContinua.py" afterPath="$PROJECT_DIR$/pyfant/gui/a_WContinua.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyfant/gui/a_WContinuum.py" afterPath="$PROJECT_DIR$/pyfant/gui/a_WContinuum.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyfant/gui/a_WDBSystem.py" afterPath="$PROJECT_DIR$/pyfant/gui/a_WDBSystem.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyfant/gui/a_WFileAbXFwhm.py" afterPath="$PROJECT_DIR$/pyfant/gui/a_WFileAbXFwhm.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyfant/gui/a_WFileAbonds.py" afterPath="$PROJECT_DIR$/pyfant/gui/a_WFileAbonds.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyfant/gui/a_WFileMain.py" afterPath="$PROJECT_DIR$/pyfant/gui/a_WFileMain.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyfant/gui/a_WFileMolConsts.py" afterPath="$PROJECT_DIR$/pyfant/gui/a_WFileMolConsts.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyfant/gui/a_WMolecularConstants.py" afterPath="$PROJECT_DIR$/pyfant/gui/a_WMolecularConstants.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyfant/gui/a_WOptionsEditor.py" afterPath="$PROJECT_DIR$/pyfant/gui/a_WOptionsEditor.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyfant/gui/a_XAtomLinesEditor.py" afterPath="$PROJECT_DIR$/pyfant/gui/a_XAtomLinesEditor.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyfant/gui/a_XConvMol.py" afterPath="$PROJECT_DIR$/pyfant/gui/a_XConvMol.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyfant/gui/a_XFileAbonds.py" afterPath="$PROJECT_DIR$/pyfant/gui/a_XFileAbonds.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyfant/gui/a_XFileAtoms.py" afterPath="$PROJECT_DIR$/pyfant/gui/a_XFileAtoms.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyfant/gui/a_XFileMain.py" afterPath="$PROJECT_DIR$/pyfant/gui/a_XFileMain.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyfant/gui/a_XFileMolConsts.py" afterPath="$PROJECT_DIR$/pyfant/gui/a_XFileMolConsts.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyfant/gui/a_XFileMolDB.py" afterPath="$PROJECT_DIR$/pyfant/gui/a_XFileMolDB.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyfant/gui/a_XFileMolecules.py" afterPath="$PROJECT_DIR$/pyfant/gui/a_XFileMolecules.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyfant/gui/a_XFileOptions.py" afterPath="$PROJECT_DIR$/pyfant/gui/a_XFileOptions.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyfant/gui/a_XMainAbonds.py" afterPath="$PROJECT_DIR$/pyfant/gui/a_XMainAbonds.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyfant/gui/a_XMolLinesEditor.py" afterPath="$PROJECT_DIR$/pyfant/gui/a_XMolLinesEditor.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyfant/gui/a_XMulti.py" afterPath="$PROJECT_DIR$/pyfant/gui/a_XMulti.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyfant/gui/a_XPFANT.py" afterPath="$PROJECT_DIR$/pyfant/gui/a_XPFANT.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyfant/gui/a_XRunnableManager.py" afterPath="$PROJECT_DIR$/pyfant/gui/a_XRunnableManager.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyfant/kovacs.py" afterPath="$PROJECT_DIR$/pyfant/kovacs.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyfant/molconsts.py" afterPath="$PROJECT_DIR$/pyfant/molconsts.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyfant/scripts/_build-moldb.py" afterPath="$PROJECT_DIR$/pyfant/scripts/_build-moldb.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyfant/scripts/_copy-from-sessions.py" afterPath="$PROJECT_DIR$/pyfant/scripts/_copy-from-sessions.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyfant/scripts/_diff-molecules.py" afterPath="$PROJECT_DIR$/pyfant/scripts/_diff-molecules.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyfant/scripts/_plot-innewmarcs-result.py" afterPath="$PROJECT_DIR$/pyfant/scripts/_plot-innewmarcs-result.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyfant/scripts/_recreate-hitrandb.py" afterPath="$PROJECT_DIR$/pyfant/scripts/_recreate-hitrandb.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyfant/scripts/_save-pdf.py" afterPath="$PROJECT_DIR$/pyfant/scripts/_save-pdf.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyfant/scripts/abed.py" afterPath="$PROJECT_DIR$/pyfant/scripts/abed.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyfant/scripts/ated.py" afterPath="$PROJECT_DIR$/pyfant/scripts/ated.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyfant/scripts/convmol.py" afterPath="$PROJECT_DIR$/pyfant/scripts/convmol.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyfant/scripts/copy-star.py" afterPath="$PROJECT_DIR$/pyfant/scripts/copy-star.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyfant/scripts/create-grid.py" afterPath="$PROJECT_DIR$/pyfant/scripts/create-grid.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyfant/scripts/cut-atoms.py" afterPath="$PROJECT_DIR$/pyfant/scripts/cut-atoms.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyfant/scripts/cut-molecules.py" afterPath="$PROJECT_DIR$/pyfant/scripts/cut-molecules.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyfant/scripts/hitran-scraper.py" afterPath="$PROJECT_DIR$/pyfant/scripts/hitran-scraper.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyfant/scripts/link.py" afterPath="$PROJECT_DIR$/pyfant/scripts/link.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyfant/scripts/mained.py" afterPath="$PROJECT_DIR$/pyfant/scripts/mained.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyfant/scripts/mced.py" afterPath="$PROJECT_DIR$/pyfant/scripts/mced.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyfant/scripts/merge-molecules.py" afterPath="$PROJECT_DIR$/pyfant/scripts/merge-molecules.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyfant/scripts/mled.py" afterPath="$PROJECT_DIR$/pyfant/scripts/mled.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyfant/scripts/moldbed.py" afterPath="$PROJECT_DIR$/pyfant/scripts/moldbed.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyfant/scripts/nist-scraper.py" afterPath="$PROJECT_DIR$/pyfant/scripts/nist-scraper.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyfant/scripts/optionsed.py" afterPath="$PROJECT_DIR$/pyfant/scripts/optionsed.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyfant/scripts/run-multi.py" afterPath="$PROJECT_DIR$/pyfant/scripts/run-multi.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyfant/scripts/run4.py" afterPath="$PROJECT_DIR$/pyfant/scripts/run4.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyfant/scripts/tune-zinf.py" afterPath="$PROJECT_DIR$/pyfant/scripts/tune-zinf.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyfant/scripts/vald3-to-atoms.py" afterPath="$PROJECT_DIR$/pyfant/scripts/vald3-to-atoms.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyfant/scripts/x.py" afterPath="$PROJECT_DIR$/pyfant/scripts/x.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyfant/util.py" afterPath="$PROJECT_DIR$/pyfant/util.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyfant/vis/modgrid.py" afterPath="$PROJECT_DIR$/pyfant/vis/modgrid.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyfant/vis/vismany.py" afterPath="$PROJECT_DIR$/pyfant/vis/vismany.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyfant/vis/vismod.py" afterPath="$PROJECT_DIR$/pyfant/vis/vismod.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/setup.py" afterPath="$PROJECT_DIR$/setup.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tests/test_conversion.py" afterPath="$PROJECT_DIR$/tests/test_conversion.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tests/test_convmol/test_conv_kurucz.py" afterPath="$PROJECT_DIR$/tests/test_convmol/test_conv_kurucz.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tests/test_convmol/test_convmol.py" afterPath="$PROJECT_DIR$/tests/test_convmol/test_convmol.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tests/test_filetypes/test_filemoldb.py" afterPath="$PROJECT_DIR$/tests/test_filetypes/test_filemoldb.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tests/test_filetypes/test_filemolecules.py" afterPath="$PROJECT_DIR$/tests/test_filetypes/test_filemolecules.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tests/test_filetypes/test_import_filetypes.py" afterPath="$PROJECT_DIR$/tests/test_filetypes/test_import_filetypes.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tests/test_filetypes/test_init_save.py" afterPath="$PROJECT_DIR$/tests/test_filetypes/test_init_save.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tests/test_filetypes/test_instantialize_classes_filetypes.py" afterPath="$PROJECT_DIR$/tests/test_filetypes/test_instantialize_classes_filetypes.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tests/test_filetypes/test_molconsts.py" afterPath="$PROJECT_DIR$/tests/test_filetypes/test_molconsts.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tests/test_linestrength/test_triplet.py" afterPath="$PROJECT_DIR$/tests/test_linestrength/test_triplet.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tests/test_linestrength/triplet_list.py" afterPath="$PROJECT_DIR$/tests/test_linestrength/triplet_list.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tests/test_pyfant/test_filefcfinput.py" afterPath="$PROJECT_DIR$/tests/test_pyfant/test_filefcfinput.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tests/test_pyfant/test_pyfant.py" afterPath="$PROJECT_DIR$/tests/test_pyfant/test_pyfant.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tests/test_pyfant/test_pyfant_windows.py" afterPath="$PROJECT_DIR$/tests/test_pyfant/test_pyfant_windows.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tests/test_pyfant/test_util.py" afterPath="$PROJECT_DIR$/tests/test_pyfant/test_util.py" />
     </list>
     <ignored path="astrogear.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -241,51 +30,111 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="conf.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/docs/source/conf.py">
+      <file leaf-file-name="a_XPFANT.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/pyfant/gui/a_XPFANT.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="165">
-              <caret line="11" column="48" lean-forward="false" selection-start-line="11" selection-start-column="48" selection-end-line="11" selection-end-column="48" />
+            <state relative-caret-position="1420">
+              <caret line="137" column="21" lean-forward="true" selection-start-line="137" selection-start-column="21" selection-end-line="137" selection-end-column="21" />
+              <folding>
+                <element signature="e#59#84#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="a_WOptionsEditor.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/pyfant/gui/a_WOptionsEditor.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="826">
+              <caret line="510" column="18" lean-forward="false" selection-start-line="510" selection-start-column="18" selection-end-line="510" selection-end-column="18" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="convmol.rst" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/docs/source/convmol.rst">
+      <file leaf-file-name="test_init_save.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/tests/test_filetypes/test_init_save.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="855">
+              <caret line="57" column="17" lean-forward="true" selection-start-line="0" selection-start-column="0" selection-end-line="59" selection-end-column="0" />
+              <folding>
+                <element signature="e#0#9#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="test_load.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/tests/test_filetypes/test_load.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="180">
+              <caret line="12" column="0" lean-forward="true" selection-start-line="12" selection-start-column="0" selection-end-line="12" selection-end-column="0" />
+              <folding>
+                <element signature="e#0#9#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="a_XFileMolDB.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/pyfant/gui/a_XFileMolDB.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="120">
+              <caret line="13" column="45" lean-forward="true" selection-start-line="13" selection-start-column="45" selection-end-line="13" selection-end-column="45" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="a_WFileMolDB.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/pyfant/gui/a_WFileMolDB.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="705">
+              <caret line="47" column="28" lean-forward="false" selection-start-line="47" selection-start-column="28" selection-end-line="47" selection-end-column="28" />
+              <folding>
+                <element signature="e#0#26#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="a_WDBSystemPfantmolFCF.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/pyfant/gui/a_WDBSystemPfantmolFCF.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="738">
+              <caret line="51" column="31" lean-forward="true" selection-start-line="51" selection-start-column="31" selection-end-line="51" selection-end-column="31" />
+              <folding>
+                <element signature="e#0#26#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="a_WDBSystem.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/pyfant/gui/a_WDBSystem.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="555">
+              <caret line="42" column="18" lean-forward="true" selection-start-line="42" selection-start-column="18" selection-end-line="42" selection-end-column="18" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="a_WDBRegistry.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/../../../../a99/code/a99/gui/a_WDBRegistry.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="820">
-              <caret line="142" column="0" lean-forward="false" selection-start-line="142" selection-start-column="0" selection-end-line="142" selection-end-column="0" />
+              <caret line="164" column="0" lean-forward="true" selection-start-line="158" selection-start-column="0" selection-end-line="164" selection-end-column="0" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="filetypes.rst" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/docs/source/filetypes.rst">
+      <file leaf-file-name="filemod.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/pyfant/filetypes/filemod.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1335">
-              <caret line="89" column="53" lean-forward="false" selection-start-line="89" selection-start-column="53" selection-end-line="89" selection-end-column="53" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="create-grid.py" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/pyfant/scripts/create-grid.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="735">
-              <caret line="55" column="24" lean-forward="false" selection-start-line="55" selection-start-column="24" selection-end-line="55" selection-end-column="24" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="kovacs.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/pyfant/kovacs.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1095">
-              <caret line="98" column="0" lean-forward="false" selection-start-line="98" selection-start-column="0" selection-end-line="98" selection-end-column="0" />
+            <state relative-caret-position="240">
+              <caret line="145" column="66" lean-forward="false" selection-start-line="145" selection-start-column="66" selection-end-line="145" selection-end-column="66" />
               <folding />
             </state>
           </provider>
@@ -302,11 +151,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>from .. import DataFile, adjust_atomic_symbol</find>
-      <find>from .. import DataFile$</find>
-      <find>get_defa</find>
-      <find>from .. import FilePy$</find>
-      <find>multiplicity_toolbox</find>
       <find>linestrength_toolbox</find>
       <find>from f311 import pyfant as pf</find>
       <find>pyfant</find>
@@ -332,6 +176,11 @@
       <find>from f311.filetypes import MolConsts</find>
       <find>usage</find>
       <find>f311</find>
+      <find>popula</find>
+      <find>qdialog</find>
+      <find>filter</find>
+      <find>spacer</find>
+      <find>context</find>
     </findStrings>
     <replaceStrings>
       <replace>from f311 import DataFile\nfrom ..basic import adjust_atomic_symbol</replace>
@@ -353,8 +202,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/pyfant/scripts/_recreate-hitrandb.py" />
-        <option value="$PROJECT_DIR$/pyfant/scripts/nist-scraper.py" />
         <option value="$PROJECT_DIR$/pyfant/scripts/_build-moldb.py" />
         <option value="$PROJECT_DIR$/pyfant/downloaders/downhitran.py" />
         <option value="$PROJECT_DIR$/pyfant/from_vald.py" />
@@ -404,6 +251,8 @@
         <option value="$PROJECT_DIR$/pyfant/scripts/vald3-to-atoms.py" />
         <option value="$PROJECT_DIR$/docs/source/conf.py" />
         <option value="$PROJECT_DIR$/pyfant/scripts/create-grid.py" />
+        <option value="$PROJECT_DIR$/pyfant/filetypes/filemod.py" />
+        <option value="$PROJECT_DIR$/tests/test_filetypes/test_load.py" />
       </list>
     </option>
   </component>
@@ -444,14 +293,7 @@
               <item name="pyfant" type="b2602c69:ProjectViewProjectNode" />
               <item name="code" type="462c0819:PsiDirectoryNode" />
               <item name="pyfant" type="462c0819:PsiDirectoryNode" />
-              <item name="data" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="pyfant" type="b2602c69:ProjectViewProjectNode" />
-              <item name="code" type="462c0819:PsiDirectoryNode" />
-              <item name="pyfant" type="462c0819:PsiDirectoryNode" />
-              <item name="data" type="462c0819:PsiDirectoryNode" />
-              <item name="default" type="462c0819:PsiDirectoryNode" />
+              <item name="filetypes" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="pyfant" type="b2602c69:ProjectViewProjectNode" />
@@ -495,7 +337,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Python.test_load">
     <configuration default="true" type="PythonConfigurationType" factoryName="Python">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -630,6 +472,28 @@
       <option name="USE_KEYWORD" value="false" />
       <method />
     </configuration>
+    <configuration name="test_load" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/tests/test_filetypes" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="pyfant" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/tests/test_filetypes/test_load.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+    </configuration>
+    <recent_temporary>
+      <list size="1">
+        <item index="0" class="java.lang.String" itemvalue="Python.test_load" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="ShelveChangesManager" show_recycled="false">
     <option name="remove_strategy" value="false" />
@@ -653,7 +517,7 @@
     <layout>
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.04470939" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.13256326" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Unicode Browser" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -688,130 +552,12 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="XDebuggerManager">
-    <breakpoint-manager />
+    <breakpoint-manager>
+      <option name="time" value="1" />
+    </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/docs/source/autoscripts/leave-mled.rst">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/docs/source/autoscripts/leave-moldbed.rst">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/docs/source/autoscripts/leave-nist-scraper.rst">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/docs/source/autoscripts/leave-optionsed.rst">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/docs/source/autoscripts/leave-organize-directory.rst">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/docs/source/autoscripts/leave-plot-spectra.rst">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/docs/source/autoscripts/leave-run4.rst">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/docs/source/autoscripts/leave-run-multi.rst">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/docs/source/autoscripts/leave-splisted.rst">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/docs/source/autoscripts/leave-tune-zinf.rst">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/docs/source/autoscripts/leave-vald3-to-atoms.rst">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/docs/source/autoscripts/leave-x.rst">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/docs/source/autoscripts/script-abed.rst">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/docs/source/autoscripts/script-ated.rst">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/docs/source/autoscripts/script-build-flux-bank.rst">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/docs/source/autoscripts/script-cases-vs-sun.rst">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -1096,6 +842,136 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="735">
           <caret line="55" column="24" lean-forward="false" selection-start-line="55" selection-start-column="24" selection-end-line="55" selection-end-column="24" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tests/test_filetypes/sun.flx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tests/test_filetypes/sun.krz">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tests/test_filetypes/sun.mod">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tests/test_filetypes/sun.opa">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="870">
+          <caret line="58" column="44" lean-forward="false" selection-start-line="58" selection-start-column="44" selection-end-line="58" selection-end-column="44" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tests/test_filetypes/test_init_save.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="855">
+          <caret line="57" column="17" lean-forward="true" selection-start-line="0" selection-start-column="0" selection-end-line="59" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#9#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pyfant/filetypes/filemod.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="240">
+          <caret line="145" column="66" lean-forward="false" selection-start-line="145" selection-start-column="66" selection-end-line="145" selection-end-column="66" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/docs/examples/filetypes/convert-to-fits.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tests/test_filetypes/test_load.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="12" column="0" lean-forward="true" selection-start-line="12" selection-start-column="0" selection-end-line="12" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#9#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pyfant/gui/a_XFileMolDB.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="120">
+          <caret line="13" column="45" lean-forward="true" selection-start-line="13" selection-start-column="45" selection-end-line="13" selection-end-column="45" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pyfant/gui/a_WFileMolDB.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="705">
+          <caret line="47" column="28" lean-forward="false" selection-start-line="47" selection-start-column="28" selection-end-line="47" selection-end-column="28" />
+          <folding>
+            <element signature="e#0#26#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pyfant/gui/a_WDBSystemPfantmolFCF.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="738">
+          <caret line="51" column="31" lean-forward="true" selection-start-line="51" selection-start-column="31" selection-end-line="51" selection-end-column="31" />
+          <folding>
+            <element signature="e#0#26#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pyfant/gui/a_WDBSystem.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="555">
+          <caret line="42" column="18" lean-forward="true" selection-start-line="42" selection-start-column="18" selection-end-line="42" selection-end-column="18" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pyfant/gui/a_XPFANT.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1420">
+          <caret line="137" column="21" lean-forward="true" selection-start-line="137" selection-start-column="21" selection-end-line="137" selection-end-column="21" />
+          <folding>
+            <element signature="e#59#84#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pyfant/gui/a_WOptionsEditor.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="826">
+          <caret line="510" column="18" lean-forward="false" selection-start-line="510" selection-start-column="18" selection-end-line="510" selection-end-column="18" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../../../a99/code/a99/gui/a_WDBRegistry.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="820">
+          <caret line="164" column="0" lean-forward="true" selection-start-line="158" selection-start-column="0" selection-end-line="164" selection-end-column="0" />
           <folding />
         </state>
       </provider>

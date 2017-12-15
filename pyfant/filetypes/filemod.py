@@ -136,7 +136,7 @@ class FileModTxt(DataFile):
         if not a99.is_text_file(filename):
             raise RuntimeError("File must be a text file")
         r = ModRecord()
-        with open(filename, "r") as h:
+        with open(filename, "rb") as h:
             def _skip():
                 h.readline()
             r.tit = h.readline().strip()
