@@ -17,22 +17,6 @@ Conversion output:
 
 - PFANT molecular lines file (such as "molecules.dat")
 
-Most relevant applications in F311 package
-------------------------------------------
-
-Graphical applications
-^^^^^^^^^^^^^^^^^^^^^^
-
-* :doc:`convmol.py <autoscripts/script-convmol>`: Conversion of molecular lines data to PFANT format
-* :doc:`mced.py <autoscripts/script-mced>`: Editor for molecular constants file
-* :doc:`moldbed.py <autoscripts/script-moldbed>`: Editor for molecules SQLite database
-
-Command-line tools
-^^^^^^^^^^^^^^^^^^
-
-* :doc:`hitran-scraper.py <autoscripts/script-hitran-scraper>`: Retrieves molecular lines from the HITRAN database
-* :doc:`nist-scraper.py <autoscripts/script-nist-scraper>`: Retrieves and prints a table of molecular constants from the NIST Chemistry Web Book [NIST]_.
-
 
 How the conversion is made
 --------------------------

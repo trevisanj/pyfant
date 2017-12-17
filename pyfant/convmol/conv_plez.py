@@ -1,5 +1,4 @@
 import pyfant
-import f311.physics as ph
 from .convlog import *
 import numpy as np
 from .conv import *

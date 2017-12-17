@@ -31,7 +31,7 @@ setup(
     version='0.17.12.13.0',
     license='GNU GPLv3',
     platforms='any',
-    description='Python interface to the PFANT Spectral Synthesis software + many extra tools',
+    description='Python interface to the PFANT Spectral Synthesis Software + extra tools',
     author='Julio Trevisan',
     author_email='juliotrevisan@gmail.com',
     url='https://github.com/trevisanj/pyfant',

@@ -3,7 +3,6 @@ VALD3-specific conversion
 """
 
 
-import f311.physics as ph
 import a99
 from .calc_qgbd import calc_qgbd_tio_like
 from .convlog import *

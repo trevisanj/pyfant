@@ -2,10 +2,7 @@
 Calculates hydrogen lines profiles, then plots them in several 3D subplots
 """
 
-import f311.pyfant as pf
-import f311.explorer as ex
-import f311.filetypes as ft
-import f311.physics as ph
+import pyfant
 import a99
 import os
 import shutil
@@ -24,7 +21,7 @@ def main(flag_cleanup=True):
     mylog("Creating directory '{}'...".format(tmpdir))
     os.mkdir(tmpdir)
     try:
-        pf.link_to_data()
+        pyfant.link_to_data()
         _main()
     finally:
         # Restores current directory
@@ -38,16 +35,16 @@ def main(flag_cleanup=True):
 
 
 def _main():
-    fm = ft.FileMain()
+    fm = pyfant.FileMain()
     fm.init_default()
     fm.llzero, fm.llfin = 1000., 200000.  # spectral synthesis range in Angstrom
 
-    ei = pf.Innewmarcs()
+    ei = pyfant.Innewmarcs()
     ei.conf.file_main = fm
     ei.run()
     ei.clean()
 
-    eh = pf.Hydro2()
+    eh = pyfant.Hydro2()
     eh.conf.file_main = fm
     eh.run()
     eh.load_result()
@@ -65,7 +62,7 @@ def _plot_profiles(profiles):
             # ax = plt.subplot(2, 3, i+1)
             ax = fig.add_subplot(2, 3, i+1, projection='3d')
             ax.set_title(filename)
-            ex.draw_toh(ftoh, ax)
+            pyfant.draw_toh(ftoh, ax)
             i += 1
 
     plt.tight_layout()

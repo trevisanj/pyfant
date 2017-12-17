@@ -1,4 +1,3 @@
-import f311.physics as ph
 from .convlog import *
 from .conv import *
 import pyfant

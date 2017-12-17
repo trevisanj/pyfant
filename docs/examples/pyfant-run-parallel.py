@@ -5,18 +5,18 @@ Put options.py in local directory for custom ForTran binary command-line options
 """
 
 
-import f311.filetypes as ft
-import f311.pyfant as pf
+import f311
+import pyfant
 from collections import Counter
 import os
 
 FN_OBS = "obsmul-warped.fits"
 
 def get_combo():
-    c = pf.Combo(["pfant", "nulbad"])
+    c = pyfant.Combo(["pfant", "nulbad"])
 
-    if os.path.isfile(ft.FileOptions.default_filename):
-        opt = ft.FileOptions()
+    if os.path.isfile(pyfant.FileOptions.default_filename):
+        opt = pyfant.FileOptions()
         opt.load()
         c.conf.opt = opt
 
@@ -28,13 +28,13 @@ def get_combo():
 
 if __name__ == "__main__":
     print("loading '{}'...".format(FN_OBS))
-    sp = ft.load_spectrum(FN_OBS)
+    sp = f311.load_spectrum(FN_OBS)
     sp_lam_min = min(sp.wavelength)
     sp_lam_max = max(sp.wavelength)
 
     c = get_combo()
 
-    f = ft.FileMolecules()
+    f = pyfant.FileMolecules()
     f.load(c.conf.opt.fn_molecules)
     formulas = Counter()
 
@@ -47,7 +47,7 @@ if __name__ == "__main__":
             print("Molecule {} - {} skipped because of wavelength range being out of that of observed spectrum".
                   format(molecule.formula, molecule.description))
 
-        f1 = ft.FileMolecules()
+        f1 = pyfant.FileMolecules()
         f1.molecules.append(molecule)
 
         c = get_combo()
@@ -58,5 +58,5 @@ if __name__ == "__main__":
 
         jobs.append(c)
 
-    pf.run_parallel(jobs, flag_console=True)
+    pyfant.run_parallel(jobs, flag_console=True)
 

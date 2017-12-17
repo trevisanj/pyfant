@@ -1,21 +1,25 @@
-F311 -- Astronomy-related Python 3 API and scripts
-==================================================
+Pyfant - stellar spectral synthesis and tools
+=============================================
 
 Welcome!
+
+Introduction
+============
+
+Pyfant is a Python interface to `PFANT <http://trevisanj.github.io/PFANT>`_, a stellar
+spectral synthesis code for Astronomy originally written in Fortran.
+
+Pyfant provides additional tools to open, edit, visualize, and convert data files,
+and an API for creating your own spectral synthesis applications in Python.
 
 .. toctree::
    :maxdepth: 1
 
-   intro
    install
-   pyfant
    convmol
-   explorer
-   filetypes
-   physics
-   aosss
-   f3110
+   coding
    scripts
+
 
 .. only:: html
 

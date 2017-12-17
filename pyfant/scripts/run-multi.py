@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 """
-Runs pfant and nulbad in "multi mode" (equivalent to Tab 4 in ``x.py``) (several abundances X FWHM's)
+Runs pfant and nulbad in "multi mode" (equivalent to Tab 4 in "x.py")
+
+This script runs spectral synthesis and convolutions with Gaussian profile for
+several combinations of (atomic abundance, FWHM)
 """
 
 import argparse

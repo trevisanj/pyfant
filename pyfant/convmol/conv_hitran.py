@@ -10,7 +10,6 @@ References:
 # TODO not working
 
 
-import f311.physics as ph
 from .convlog import *
 from collections import OrderedDict
 import airvacuumvald as avv
