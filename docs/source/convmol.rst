@@ -1,15 +1,19 @@
 Conversion of molecular lines lists
 ===================================
 
+.. todo:: Move this to PFANT documentation, suits better there.
+
 Introduction
 ------------
 
-Conversion between different formats of files containing molecular spectral lines data.
+This section describes the algorithm for conversion of molecular lines lists.
 
-Conversion inputs:
+.. note:: This is work in progress and the conversion is still in experimental development stage.
 
-- Robert Kurucz molecular line lists [Kurucz]_
-- HITRAN Online database (partially implemented) [Gordon2016]_
+Source formats.
+
+- Robert Kurucz molecular line lists [Kurucz]_ (functional)
+- HITRAN Online database [Gordon2016]_ (partially implemented)
 - VALD3 [VALD3]_ (to do)
 - TurboSpectrum [Plez]_ (to do)
 
@@ -17,9 +21,32 @@ Conversion output:
 
 - PFANT molecular lines file (such as "molecules.dat")
 
+Related resources in Pyfant project
+-----------------------------------
+
+- The line strength formulas from [Kovacs1969]_ are in module `pyfant.kovacs`
+  (source code directly available for inspection at
+  `<https://github.com/trevisanj/pyfant/blob/master/pyfant/kovacs.py>`_)
+- The conversion routines are in subpackage `pyfant.convmol` (source code at
+  `<https://github.com/trevisanj/pyfant/tree/master/pyfant/convmol>`_)
+- Script ``convmol.py`` is the graphical interface to perform such conversions
+
+
+How to convert molecular lines
+------------------------------
+
+#. Create a "project" directory
+#. Download linelist file, e.g., from [Kurucz]_
+#. Run ``convmol.py``
+#. Go through the tabs. Press "Ctrl+D" to load default configurations for each tab
+#. "Run conversion" button is in tab 3.
+
+.. todo:: Improve tutorial
 
 How the conversion is made
 --------------------------
+
+This section describes the conversion algorithm itself.
 
 List of symbols
 ~~~~~~~~~~~~~~~
@@ -37,8 +64,8 @@ Input molecular constants obtained from NIST database (all given in unit: cm**-1
 * *A*: Coupling counstant
 * *M2l*: multiplicity of the initial state (1 for singlet, 2 for doublet, 3 for triplet and so on)
 * *M2l*: multiplicity of the final state
-* *LambdaL*: ?SPDF? of the initial state (0 for Sigma, 1 for Pi, 2 for Delta, 3 for Phi)
-* *Lambda2L*: ?SPDF? of the initial state
+* *LambdaL*: Sigma/Pi/Delta/Phi of the initial state (0 for Sigma, 1 for Pi, 2 for Delta, 3 for Phi)
+* *Lambda2L*: Sigma/Pi/Delta/Phi of the initial state
 
 .. hint::
 

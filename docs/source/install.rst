@@ -25,9 +25,11 @@ provides a troubleshooting section that applies.
 Installing Pyfant in developer mode
 -----------------------------------
 
-This option allows you to download and modify the source code.
+This is an alternative to the "pip" at the beginning of thie section.
 
-Clone the "pyfant" GitHub repository:
+Use this option if you would like to download and modify the Python source code.
+
+First clone the "pyfant" GitHub repository:
 
 .. code:: shell
 
@@ -56,4 +58,5 @@ Pacakge ``pyfant`` can be upgraded to a new version by typing::
 Contact
 ~~~~~~~
 For bugs reports or suggestions, please open an issue at the project
-site on `GitHub <http://github.com/trevisanj/pyfant>`_.
+site on GitHub: `<http://github.com/trevisanj/pyfant>`_.
+
