@@ -12,6 +12,8 @@ __all__ = ["WDBFCF"]
 # Field names to leave out of table widget
 _FIELDNAMES_OUT = ("id", "id_system",)
 
+# TRAPRB input parameters to be edited before TRAPRB is run
+_TRAPRB_ATTRS = ["rmin", "rmax", "delr", "maxv"]
 
 class WDBFCF(WDBRegistry):
     """Registry for table 'fcf'"""
@@ -22,7 +24,11 @@ class WDBFCF(WDBRegistry):
         self._id_system = None
 
         # Adds button to download NIST data
-        action = self.action_download = QAction(a99.get_icon("alien"), "Run &TRAPRB to get Franck-Condon Factors", self)
+        action = self.action_download = QAction(a99.get_icon("alien"),
+            "Run &TRAPRB to get Franck-Condon Factors...\n\n"
+            "For more information on TRAPRB input variables, visit URL:\n\n"
+            "https://github.com/trevisanj/pyfant/blob/master/docs/art/traprb-input.pdf", self)
+        # action.setToolTip("")
         action.triggered.connect(self._on_run_traprb)
         self.toolbar.addAction(action)
 
@@ -38,6 +44,7 @@ class WDBFCF(WDBRegistry):
 
         row = self._f.get_conn().execute("select * from system where id = ?",
                                          (self._id_system,)).fetchone()
+
         string = pyfant.molconsts_to_system_str(row, SYSTEMSTYLE)
 
 
@@ -55,22 +62,47 @@ class WDBFCF(WDBRegistry):
                                  QMessageBox.Yes if n == 0 else QMessageBox.No)
 
         if r == QMessageBox.Yes:
+            r, form = self._show_traprb_parameters_form(r)
 
+            if r == QDialog.Accepted:
+                kwargs = form.get_kwargs()
 
+                mc = pyfant.MolConsts()
+                mc.populate_all_using_system_row(self._f, row)
 
+                print("MMMMMMMMMMMMMMMMMMMMMMMMM", mc)
 
+                traprb = pyfant.run_traprb(mc, None, None, **kwargs)
 
-            try:
-                nist_data, _, _ = pyfant.get_nist_webbook_constants(formula)
-            except Exception as e:
-                self.add_log_error("Error getting NIST data (see log for more info)", True, e)
-            else:
-                pyfant.insert_states_from_nist(self._f, self._id_system, nist_data, flag_replace=True)
-                self._populate()
-                n = len(self._data)
-                self.add_log("{} state{} successfully downloaded from NIST".
-                             format(n, "" if n == 1 else "s"), True)
+                traprb.load_result()
+                output = traprb.result["output"]
+                print(output.fcfs)
 
+            # try:
+            #     nist_data, _, _ = pyfant.get_nist_webbook_constants(formula)
+            # except Exception as e:
+            #     self.add_log_error("Error getting NIST data (see log for more info)", True, e)
+            # else:
+            #     pyfant.insert_states_from_nist(self._f, self._id_system, nist_data, flag_replace=True)
+            #     self._populate()
+            #     n = len(self._data)
+            #     self.add_log("{} state{} successfully downloaded from NIST".
+            #                  format(n, "" if n == 1 else "s"), True)
+
+    def _show_traprb_parameters_form(self, r):
+        # **Note** creates TRAPRBInputState() instance to get default input parameter values
+
+        r, form = a99.show_edit_form(
+            pyfant.TRAPRBInputState(),
+            attrs=_TRAPRB_ATTRS,
+            title="Modify selected TRAPRB input parameters",
+            toolTips=[
+                "minimum radius for calculation of wavefunctions (0.75 in most cases; 0.6 for OH A-X)",
+                "maximum radius for calculation of wavefunctions",
+                "radial interval for calculation of wavefunctions",
+                "maximum quantum number for calculation of results"],
+        )
+        return r, form
 
     def _populate(self, restore_mode=None):
         """

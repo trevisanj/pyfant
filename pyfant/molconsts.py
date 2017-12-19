@@ -117,6 +117,15 @@ class MolConsts(dict):
         self["pfant_notes"] = notes
 
 
+    def populate_all_using_system_row(self, db, row):
+        print(row["id_molecule"])
+
+        formula = db.get_conn().execute("select formula from molecule where id = ?",
+                                        (row["id_molecule"],)).fetchone()["formula"]
+
+        self.populate_all_using_str(db,
+            "{} [{}]".format(formula, pyfant.molconsts_to_system_str(row, pyfant.SS_PLAIN)))
+
     def populate_all_using_str(self, db, string):
         assert isinstance(db, pyfant.FileMolDB)
 
@@ -212,7 +221,7 @@ class MolConsts(dict):
     def _populate_ids_state(self, db):
         """Populates id_statel and id_state2l using from_labdl and to_label"""
 
-        self._i_need(("id_molecule", "from_label", "to_label"))
+        self._i_need(("id_molecule", "from_label", "from_mult", "from _spdf", "to_label", "to_mult", "to_spdf"))
 
         # [(which label, corresponding key), ...]
         _map = [("from_label", "id_statel"), ("to_label", "id_state2l")]

@@ -11,6 +11,8 @@ import pyfant
 import a99
 import f311
 import sqlite3
+import unicodedata
+
 __all__ = [
     "run_parallel", "setup_inputs", "copy_star", "link_to_data", "create_or_replace_or_skip_links",
     "copy_or_skip_files", "insert_from_formula", "insert_states_from_nist", "insert_fcfs",
@@ -283,6 +285,9 @@ def insert_states_from_nist(moldb, id_molecule, nist_data, flag_replace=False):
         I may either raise (flag_replace==False) or replace these states
     :return: None
     """
+
+
+
     conn = moldb.get_conn()
     cursor = conn.cursor()
     assert isinstance(conn, sqlite3.Connection)
@@ -298,11 +303,20 @@ def insert_states_from_nist(moldb, id_molecule, nist_data, flag_replace=False):
                                      (id_molecule,)).fetchone()["formula"]
             raise RuntimeError("States exist for formula '{}'".format(formula))
 
+
+testar issso
     for state in nist_data:
+        state_ = list(state)
+        # Figures out "label", "mult", "spdf"
+        s = unicodedata.normalize('NFKD', state[0]).encode('ascii', 'replace').decode()
+        state_.extend([s[0], s[2], pyfant.greek_to_spdf(s[3:s.index("_")])])
+        print("OIOIOIOIOIOI", s)
+
+
         # **Note** assumes that the columns in data match the
         # (number of columns in the state table - 2) and their order
-        conn.execute("insert into state values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
-                     [None, id_molecule] + state + [""])
+        conn.execute("insert into state values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                     [None, id_molecule] + state_ + [""])
 
     conn.commit()
     conn.close()
@@ -382,17 +396,20 @@ def insert_from_formula(moldb, formula, flag_do_what_i_can=False, flag_fcf=True,
     conn.commit()
 
 
-def run_traprb(molconsts, maxv=12, fn_input=None, fn_output=None):
+def run_traprb(molconsts, fn_input=None, fn_output=None, maxv=None,
+               ni=None, ns=None, igraph=None, ienerg=None, istate=None,
+               rmin=None, rmax=None, delr=None):
     """
     Runs TRAPRB and returns a the TRAPRB object
 
     :param molconsts: MolConsts object
-    :param maxv: maximum vl, v2l
     :param fn_input: input filename (will be created with this name). If not passed, will make up a
                      filename as 'temp-in-*'
     :param fn_output: output filename (will be created with this name). If not passed, will make up
                      a filename as 'temp-out-*'
     :return: TRAPRB object
+
+    For meanings of parameters and their default values, see filetraprb.py::TRAPRBInputState class
 
     **This routine creates files 'temp-traprb*' and leaves then**
 
@@ -405,7 +422,7 @@ def run_traprb(molconsts, maxv=12, fn_input=None, fn_output=None):
         fn_output = a99.new_filename("temp-out-")
 
     fin = pyfant.FileTRAPRBInput()
-    fin.from_molconsts(molconsts, maxv)
+    fin.from_molconsts(molconsts, maxv, ni, ns, igraph, ienerg, istate, rmin, rmax, delr, )
     fin.save_as(fn_input)
 
     r = pyfant.TRAPRB()

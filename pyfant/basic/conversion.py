@@ -101,25 +101,9 @@ def molconsts_to_system_str(molconsts, style=SS_ALL_SPECIAL):
     Returns:
         str
     """
-
-    if style == SS_PLAIN:
-        fmult = lambda x: x
-        fspdf = lambda x:spdf_to_greek(x)
-    elif style == SS_ALL_SPECIAL:
-        fmult = lambda x: a99.int_to_superscript(x)
-        fspdf = lambda x: a99.greek_to_unicode(spdf_to_greek(x).capitalize())
-    elif style == SS_RAW:
-        fmult = lambda x: x
-        fspdf = lambda x: x
-    elif style == SS_SUPERSCRIPT:
-        fmult = lambda x: a99.int_to_superscript(x)
-        fspdf = lambda x:spdf_to_greek(x)
-    else:
-        raise ValueError("Invalid style: {}".format(style))
-
     return "{} - {}".format(
-        state_to_str(molconsts["from_label"], molconsts["from_mult"], molconsts["from_spdf"]),
-        state_to_str(molconsts["to_label"], molconsts["to_mult"], molconsts["to_spdf"]),
+        state_to_str(molconsts["from_label"], molconsts["from_mult"], molconsts["from_spdf"], style),
+        state_to_str(molconsts["to_label"], molconsts["to_mult"], molconsts["to_spdf"], style),
     )
 
 

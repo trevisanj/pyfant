@@ -283,7 +283,10 @@ class FileMolDB(FileSQLiteDB):
                                          Trans text,
                                          nu_00 real,
                                          A real,
-                                         notes text
+                                         notes text,
+                                         label text,
+                                         mult integer,
+                                         spdf integer
                                         )""")
                                          # s_label text,
                                          # s_multiplicity integer,
