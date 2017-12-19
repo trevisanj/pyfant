@@ -6,7 +6,7 @@ import a99
 import pyfant
 
 
-__all__ = ["WDBSystem"]
+__all__ = ["WDBSystem", "SYSTEMSTYLE"]
 
 
 # style for table widget column "system"

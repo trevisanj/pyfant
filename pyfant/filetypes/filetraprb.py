@@ -12,7 +12,7 @@ __all__ = ["FileTRAPRBOutput", "FileTRAPRBInput", "TRAPRBInputState"]
 class TRAPRBInputState(object):
     """Describes one of the two states in FileTRAPRBInput"""
 
-    def __init__(self, title="", ni=0, ns=1, igraph=0, ienerg=0, istate=2, zmu=0., rmin=0.75, rmax=3.5,
+    def __init__(self, title="", ni=0, ns=1, igraph=0, ienerg=0, istate=2, zmu=0., rmin=0.65, rmax=3.5,
                  delr=0.005, maxv=12, be=0., de=0., kdmaxv=12, neig=0, ev=None, bv=None):
 
         if ev is None:

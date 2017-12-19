@@ -358,7 +358,7 @@ class _WVald3Panel(a99.WBase):
         w = self.w_file = a99.WSelectFile(self.parent_form)
         a.setBuddy(w)
         w.changed.connect(self.file_changed)
-        lw.addWidget(w)
+        # TODO I bumped into this and removed it lw.addWidget(w)
         lg.addWidget(a, 0, 0)
         lg.addWidget(w, 0, 1)
 
@@ -969,10 +969,12 @@ class _WConv(a99.WConfigEditor):
 
 class XConvMol(f311.XFileMainWindow):
     def _add_stuff(self):
-        # Qt stuff tab #0: FileMolDB editor
-        e0 = self.w_moldb = pyfant.WFileMolDB(self)
-        e0.changed.connect(self._on_w_moldb_changed)
-        e0.loaded.connect(self._on_w_moldb_loaded)
+        # Removed molecular constants database to avoid confusion. Whoever wants it will have to use
+        # `moldbed.py` now
+        # # Qt stuff tab #0: FileMolDB editor
+        # e0 = self.w_moldb = pyfant.WFileMolDB(self)
+        # e0.changed.connect(self._on_w_moldb_changed)
+        # e0.loaded.connect(self._on_w_moldb_loaded)
 
         # Qt stuff tab #1: FileMolConsts editor
         e1 = self.w_molconsts = pyfant.WFileMolConsts(self)
@@ -980,8 +982,8 @@ class XConvMol(f311.XFileMainWindow):
         # Qt stuff tab #2: FileConv editor TODO FileConv does not exist yet self.conv a Conv
         e2 = self.w_conv = _WConv(self)
 
-        self.pages.append(f311.MyPage(text_tab="Molecular constants database",
-                                    cls_save=pyfant.FileMolDB, clss_load=(pyfant.FileMolDB,), wild="*.sqlite", editor=e0, flag_autosave=True))
+        # self.pages.append(f311.MyPage(text_tab="Molecular constants database",
+        #                             cls_save=pyfant.FileMolDB, clss_load=(pyfant.FileMolDB,), wild="*.sqlite", editor=e0, flag_autosave=True))
 
         self.pages.append(f311.MyPage(text_tab="Molecular constants",
                                     cls_save=pyfant.FileMolConsts, clss_load=(pyfant.FileMolConsts,), wild="*.py", editor=e1))
@@ -1007,8 +1009,8 @@ class XConvMol(f311.XFileMainWindow):
                 self.tabWidget.setCurrentIndex(1)
         return False
 
-    def _on_w_moldb_changed(self):
-        self.w_molconsts.set_moldb(self.w_moldb.f)
+    # TODO cleanup moldb part once I am sure it is no longer needed def _on_w_moldb_changed(self):
+    #     self.w_molconsts.set_moldb(self.w_moldb.f)
 
     def _on_w_moldb_loaded(self):
         self.w_molconsts.set_moldb(self.w_moldb.f)

@@ -10,10 +10,11 @@ import shutil
 import pyfant
 import a99
 import f311
-
+import sqlite3
 __all__ = [
     "run_parallel", "setup_inputs", "copy_star", "link_to_data", "create_or_replace_or_skip_links",
-    "copy_or_skip_files",
+    "copy_or_skip_files", "insert_from_formula", "insert_states_from_nist", "insert_fcfs",
+    "run_traprb"
 ]
 
 
@@ -269,3 +270,148 @@ def copy_or_skip_files(ff, dest_dir="."):
 def _print_skipped(reason):
     """Standardized printing for when a file was skipped."""
     a99.get_python_logger().info("   ... SKIPPED ({0!s}).".format(reason))
+
+
+
+def insert_states_from_nist(moldb, id_molecule, nist_data, flag_replace=False):
+    """
+    Inserts downloaded NIST data into table 'state'
+
+    :param moldb: FileMolDB
+    :param id_molecule: int, molecule ID in 'molecule' table
+    :param flag_replace: if states for molecule identified by 'id_molecule' already exists,
+        I may either raise (flag_replace==False) or replace these states
+    :return: None
+    """
+    conn = moldb.get_conn()
+    cursor = conn.cursor()
+    assert isinstance(conn, sqlite3.Connection)
+    assert isinstance(cursor, sqlite3.Cursor)
+
+    n = cursor.execute("select count(*) from state where id_molecule = ?",
+                       (id_molecule,)).fetchone()["count(*)"]
+    if n > 0:
+        if flag_replace:
+            cursor.execute("delete from state where id_molecule = ?", (id_molecule,))
+        else:
+            formula = cursor.execute("select formula from molecule where id = ?",
+                                     (id_molecule,)).fetchone()["formula"]
+            raise RuntimeError("States exist for formula '{}'".format(formula))
+
+    for state in nist_data:
+        # **Note** assumes that the columns in data match the
+        # (number of columns in the state table - 2) and their order
+        conn.execute("insert into state values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                     [None, id_molecule] + state + [""])
+
+    conn.commit()
+    conn.close()
+
+
+def insert_fcfs(moldb, id_system, fcfs, flag_replace=False):
+    """
+    Inserts Franck-Condon Factors for given system
+
+    :param moldb: FileMolDB
+    :param id_system: int, system ID in 'system' table
+    :param fcfs: {(vl, v2l): fcf, ...}, as stored in a FileTRAPRBOutput object
+    :param flag_replace: if FCFs for system identified by 'id_system' already exists,
+        I may either raise (flag_replace==False) or replace these FCFs
+    :return: None
+    """
+    conn = moldb.get_conn()
+    cursor = conn.cursor()
+    assert isinstance(conn, sqlite3.Connection)
+    assert isinstance(cursor, sqlite3.Cursor)
+
+    n = cursor.execute("select count(*) from fcf where id_system = ?",
+                       (id_system,)).fetchone()["count(*)"]
+    if n > 0:
+        if flag_replace:
+            cursor.execute("delete from fcf where id_system = ?", (id_system,))
+        else:
+            raise RuntimeError("FCFs exist for system #{}".format(id_system))
+
+    for (vl, v2l), fcf in fcfs.items():
+        conn.execute("insert into fcf (id_system, vl, v2l, value) values (?,?,?,?)",
+                     (id_system, vl, v2l, fcf))
+
+    conn.commit()
+
+
+def insert_from_formula(moldb, formula, flag_do_what_i_can=False, flag_fcf=True, maxv=12):
+    """
+    Inserts molecule into FileMolDB given its formula
+
+    :param moldb: FileMolDB object
+    :param formula: str, e.g., "OH"
+    :param flag_do_what_i_can: if set, will insert molecule even if cannot
+        download molecular constants from NIST
+    :param flag_fcf: if set, will try to run TRAPRB to calculate the Franck-Condon factors
+    :param maxv: maximum vl and v2l for TRAPRB
+    :return: None
+    """
+    conn = moldb.get_conn()
+    cursor = conn.cursor()
+    assert isinstance(conn, sqlite3.Connection)
+    assert isinstance(cursor, sqlite3.Cursor)
+
+    # Checks if formula already exists
+    n = conn.execute("select count(*) from molecule where formula = ?", (formula,)).fetchone()["count(*)"]
+    if n > 0:
+        raise RuntimeError("Formula '{}' already exists in 'molecule' table".format(formula))
+
+    name = "?name?"
+    has_nist = False
+    try:
+        data, header, name = pyfant.get_nist_webbook_constants(formula)
+        has_nist = True
+    except:
+        if flag_do_what_i_can:
+            a99.get_python_logger().exception("Could not get NIST constants for formula '{}'".format(formula))
+        else:
+            raise
+
+    cursor.execute("insert into molecule (formula, name) values (?, ?)", (formula, name))
+    id_molecule = cursor.lastrowid
+    conn.commit()
+
+    if has_nist:
+        insert_states_from_nist(moldb, id_molecule, data, False)
+
+    conn.commit()
+
+
+def run_traprb(molconsts, maxv=12, fn_input=None, fn_output=None):
+    """
+    Runs TRAPRB and returns a the TRAPRB object
+
+    :param molconsts: MolConsts object
+    :param maxv: maximum vl, v2l
+    :param fn_input: input filename (will be created with this name). If not passed, will make up a
+                     filename as 'temp-in-*'
+    :param fn_output: output filename (will be created with this name). If not passed, will make up
+                     a filename as 'temp-out-*'
+    :return: TRAPRB object
+
+    **This routine creates files 'temp-traprb*' and leaves then**
+
+    **Not multiprocessing-safe**, unless fn_input and fn_output are controlled externally.
+    """
+
+    if fn_input is None:
+        fn_input = a99.new_filename("temp-in-")
+    if fn_output is None:
+        fn_output = a99.new_filename("temp-out-")
+
+    fin = pyfant.FileTRAPRBInput()
+    fin.from_molconsts(molconsts, maxv)
+    fin.save_as(fn_input)
+
+    r = pyfant.TRAPRB()
+    r.fn_input = fn_input
+    r.fn_output = fn_output
+    r.run()
+
+    return r
+

@@ -232,10 +232,6 @@ class FileMolDB(FileSQLiteDB):
     def _create_schema(self):
         conn = self.get_conn()
         c = conn.cursor()
-        # TODO revisit each of these variables and see
-        # TODO where they are used in PFANT
-        # TODO what they are
-        # TODO if they repeat somewhere
         c.execute("""create table molecule (id integer primary key,
                                             formula text unique,
                                             name text
@@ -365,6 +361,4 @@ class FileMolDB(FileSQLiteDB):
             ret = None
 
         return ret
-
-
 

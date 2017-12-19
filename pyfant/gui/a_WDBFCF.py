@@ -3,7 +3,8 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from a99 import WDBRegistry
 import a99
-
+import pyfant
+from .a_WDBSystem import *
 
 __all__ = ["WDBFCF"]
 
@@ -20,11 +21,56 @@ class WDBFCF(WDBRegistry):
 
         self._id_system = None
 
+        # Adds button to download NIST data
+        action = self.action_download = QAction(a99.get_icon("alien"), "Run &TRAPRB to get Franck-Condon Factors", self)
+        action.triggered.connect(self._on_run_traprb)
+        self.toolbar.addAction(action)
+
     def set_id_system(self, id_):
         """Sets molecule id and re-populates table"""
         self._id_system = id_
         self._populate()
         self._move_to_first()
+
+    def _on_run_traprb(self):
+        if self._id_system is None:
+            return
+
+        row = self._f.get_conn().execute("select * from system where id = ?",
+                                         (self._id_system,)).fetchone()
+        string = pyfant.molconsts_to_system_str(row, SYSTEMSTYLE)
+
+
+
+        n = len(self._data)
+        beware = "" if n == 0 else \
+            "\n\n**Attention**: {} existing FCF{} for this system will be deleted!".\
+                format(n, "" if n == 1 else "s")
+
+        msg = "TRAPRB will be executed to calculate the Franck-Condon factors for system '{}'." \
+              "{}\n\nDo you wish to continue?".format(string, beware)
+
+        r = QMessageBox.question(self, "Calculate FCFs", msg,
+                                 QMessageBox.Yes | QMessageBox.No,
+                                 QMessageBox.Yes if n == 0 else QMessageBox.No)
+
+        if r == QMessageBox.Yes:
+
+
+
+
+
+            try:
+                nist_data, _, _ = pyfant.get_nist_webbook_constants(formula)
+            except Exception as e:
+                self.add_log_error("Error getting NIST data (see log for more info)", True, e)
+            else:
+                pyfant.insert_states_from_nist(self._f, self._id_system, nist_data, flag_replace=True)
+                self._populate()
+                n = len(self._data)
+                self.add_log("{} state{} successfully downloaded from NIST".
+                             format(n, "" if n == 1 else "s"), True)
+
 
     def _populate(self, restore_mode=None):
         """

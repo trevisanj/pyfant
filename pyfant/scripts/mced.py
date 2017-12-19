@@ -33,25 +33,14 @@ if __name__ == "__main__":
     if args.fn == deffn and not os.path.isfile(deffn):
         args.fn = None
 
-
-    # Currently making copy of FileMolDB database and deleting afterwards
-    moldb = pyfant.FileMolDB()
-    moldb.init_default()
-    try:
-        fobj = None
-        if args.fn is not None:
-            fobj = pyfant.FileMolConsts()
-            fobj.load(args.fn)
-        app = a99.get_QApplication([])
-        form = pyfant.XFileMolConsts(None)
-        form.set_moldb(moldb)
-        form.load(fobj)
-        form.show()
-    finally:
-        try:
-            os.unlink(moldb.filename)
-        except FileNotFoundError:
-            pass  # nevermind
+    fobj = None
+    if args.fn is not None:
+        fobj = pyfant.FileMolConsts()
+        fobj.load(args.fn)
+    app = a99.get_QApplication([])
+    form = pyfant.XFileMolConsts(None)
+    form.load(fobj)
+    form.show()
 
     sys.exit(app.exec_())
 

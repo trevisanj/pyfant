@@ -3,7 +3,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from a99 import WDBRegistry
 import a99
-
+import pyfant
 
 __all__ = ["WDBState"]
 
@@ -20,6 +20,12 @@ class WDBState(WDBRegistry):
 
         self._id_molecule = None
 
+        # Adds button to download NIST data
+        action = self.action_download = QAction(a99.get_icon("alien"), "&Download from NIST", self)
+        action.triggered.connect(self._on_download)
+        self.toolbar.addAction(action)
+
+
     def set_id_molecule(self, id_):
         """Sets molecule id and re-populates table"""
         self._id_molecule = id_
@@ -32,6 +38,37 @@ class WDBState(WDBRegistry):
             if row["formula"] == formula:
                 self.tableWidget.setCurrentCell(i, 0)
                 break
+
+    def _on_download(self):
+        if self._id_molecule is None:
+            return
+
+        formula = self._f.get_conn().execute("select formula from molecule where id = ?",
+                                             (self._id_molecule,)).fetchone()["formula"]
+
+        n = len(self._data)
+        beware = "" if n == 0 else \
+            "\n\n**Attention**: {} existing state{} for this molecule will be deleted!".\
+                format(n, "" if n == 1 else "s")
+
+        msg = "Molecular constants for '{}' will be downloaded " \
+              "from NIST chemistry web book{}\n\nDo you wish to continue?".format(formula, beware)
+
+        r = QMessageBox.question(self, "Download NIST data", msg,
+                                 QMessageBox.Yes | QMessageBox.No,
+                                 QMessageBox.Yes if n == 0 else QMessageBox.No)
+
+        if r == QMessageBox.Yes:
+            try:
+                nist_data, _, _ = pyfant.get_nist_webbook_constants(formula)
+            except Exception as e:
+                self.add_log_error("Error getting NIST data (see log for more info)", True, e)
+            else:
+                pyfant.insert_states_from_nist(self._f, self._id_molecule, nist_data, flag_replace=True)
+                self._populate()
+                n = len(self._data)
+                self.add_log("{} state{} successfully downloaded from NIST".
+                             format(n, "" if n == 1 else "s"), True)
 
     def _populate(self, restore_mode=None):
         """

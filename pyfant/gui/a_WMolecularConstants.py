@@ -233,6 +233,15 @@ class WMolecularConstants(a99.WBase):
     """
 
     @property
+    def fn_moldb(self):
+        return self._get_fn_moldb()
+
+    @fn_moldb.setter
+    def fn_moldb(self, x):
+        self._fn_moldb = x
+        self._update_gui()
+
+    @property
     def moldb(self):
         return self._moldb
 
@@ -533,15 +542,7 @@ class WMolecularConstants(a99.WBase):
 
 
     def set_moldb(self, fobj):
-        assert isinstance(fobj, pyfant.FileMolDB), "I dont want a {}".format(fobj)
-
-        self._moldb = fobj
-
-        if fobj is not None:
-            self._populate()
-            self._update_gui()
-            # self._auto_search()
-
+        self._set_moldb(fobj)
 
     def None_to_zero(self):
         """Fills missing values with zeros"""
@@ -702,8 +703,15 @@ class WMolecularConstants(a99.WBase):
             return None
         return self.moldb.get_fcf_dict(self._get_id_system())
 
+    def _set_moldb(self, fobj):
+        # assert isinstance(fobj, pyfant.FileMolDB), "I dont want a {}".format(fobj)
+        self._moldb = fobj
+        self._populate()
+        self._update_gui()
+        # self._auto_search()
+
     def _populate(self):
-        if not self._flag_built_edits:
+        if not self._flag_built_edits and self.moldb is not None:
             self._build_edits()
         self._populate_combobox_molecule()
         self._populate_sub_comboboxes()
@@ -722,8 +730,10 @@ class WMolecularConstants(a99.WBase):
             cb = self.combobox_molecule
             cb.clear()
             self._ids_molecule = []
-            data = self.moldb.query_molecule().fetchall()
+            data = self.moldb.query_molecule().fetchall() if self.moldb is not None else []
+
             cb.addItem("(please select)" if len(data) > 0 else "(no data)")
+
             for row in data:
                     cb.addItem("{:10} {}".format(row["formula"], row["name"]))
                     self._ids_molecule.append(row["id"])
@@ -744,12 +754,14 @@ class WMolecularConstants(a99.WBase):
 
             id_system = self._get_id_system()
 
-            if id_system is not None:
-                data = self.moldb.query_pfantmol(id_system=self._get_id_system()).fetchall()
-                cb.addItem("(please select)" if len(data) > 0 else "(no data)")
-                for row in data:
-                    cb.addItem("{}".format(row["description"]))
-                    self._ids_pfantmol.append(row["id"])
+            data = [] if id_system is None else \
+                self.moldb.query_pfantmol(id_system=self._get_id_system()).fetchall()
+
+            cb.addItem("(please select)" if len(data) > 0 else "(no data)")
+
+            for row in data:
+                cb.addItem("{}".format(row["description"]))
+                self._ids_pfantmol.append(row["id"])
 
             self._fill_edits_pfantmol()
             self._set_caption_pfantmol()
@@ -763,19 +775,22 @@ class WMolecularConstants(a99.WBase):
         self._flag_populating_states = True
         try:
             self._ids_state = []
-            data = self.moldb.query_state(id_molecule=self._get_id_molecule()).fetchall()
-            cb = self.combobox_statel
-            cb.clear()
-            cb.addItem("(please select)" if len(data) > 0 else "(no data)")
+            cb0 = self.combobox_statel
+            cb0.clear()
+            cb1 = self.combobox_state2l
+            cb1.clear()
+            data = [] if self.moldb is None else \
+                self.moldb.query_state(id_molecule=self._get_id_molecule()).fetchall()
+
+            cb0.addItem("(please select)" if len(data) > 0 else "(no data)")
+            cb1.addItem("(please select)" if len(data) > 0 else "(no data)")
+
             for row in data:
-                cb.addItem("{}".format(row["State"]))
+                cb0.addItem("{}".format(row["State"]))
                 self._ids_state.append(row["id"])
 
-            cb = self.combobox_state2l
-            cb.clear()
-            cb.addItem("(please select)" if len(data) > 0 else "(no data)")
             for row in data:
-                cb.addItem("{}".format(row["State"]))
+                cb1.addItem("{}".format(row["State"]))
 
             self._set_caption_state()
 
@@ -791,7 +806,8 @@ class WMolecularConstants(a99.WBase):
             cb = self.combobox_system
             cb.clear()
             self._ids_system = []
-            data = self.moldb.query_system(id_molecule=self._get_id_molecule()).fetchall()
+            data = [] if self.moldb is None else \
+                self.moldb.query_system(id_molecule=self._get_id_molecule()).fetchall()
             cb.addItem("(please select)" if len(data) > 0 else "(no data)")
             for row in data:
                 cb.addItem(pyfant.molconsts_to_system_str(row, style=pyfant.SS_ALL_SPECIAL))
