@@ -2,15 +2,7 @@
 
 ## Top priority
 
-- Find a way to obtain *any* Franck-Condon Factor needed
-
-- Equip moldbed.py with NIST and FCF capabilities
-
-- Remake _build-moldb.py
-
 - test well these GUIs
-
-- x.py, tab 3: raiing exception if edit field is empty
 
 ## Low priority
 
@@ -30,6 +22,9 @@
 
 - Rename TRAPRB exeutable to "traprb" instead of "fcf"
 
+- convmol: sort redundancy in pfantmol description. MolConsts only
+  populates properly if there is a pfantmol row with the "Formula [System]" in in its description
+
 ## Documentation
 
 - Release notes: roughly what has been done since the beginning
@@ -40,6 +35,4 @@
 
 # Future suggestions
 
-
 - Introduce "notes" field for main.dat: could be sth like "<star name> # <notes>"
-

@@ -614,8 +614,6 @@ class WOptionsEditor(a99.WEditor):
 
         # todo not working, dunno why but it is called but the first field does not acquire focus.
 
-        # print "SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
-        # print self.omap[0].edit
         self.omap[0].edit.setFocus()
 
     def eventFilter(self, obj_focused, event):

@@ -3,6 +3,7 @@ import os
 import inspect
 import a99
 import pyfant
+import re
 
 __all__ = ["MolConsts", "some_molconsts", "MolConstPopulateError",
 ]
@@ -107,6 +108,13 @@ class MolConsts(dict):
         symbols = basic.description_to_symbols(string)
         if symbols is not None:
             self["formula"] = basic.symbols_to_formula(symbols)
+        else:
+            match = re.search("[A-Za-z]+", string)
+            if match is not None:
+                self["formula"] = match.group()
+
+        if self["formula"] is None:
+            raise RuntimeError("Cannot determine formula from '{}'".format(string))
 
         # System
         self.update(zip(fieldnames, basic.parse_system_str(string)))
@@ -130,7 +138,14 @@ class MolConsts(dict):
         assert isinstance(db, pyfant.FileMolDB)
 
         self.populate_parse_str(string)
+
         self.populate_ids(db)
+
+        for key in self:
+            if key.startswith("id_"):
+                if self[key] is None:
+                    raise RuntimeError("Cannot determine '{}'".format(key))
+
         self.populate_all_using_ids(db)
 
     def populate_all_using_ids(self, db, id_molecule=None, id_system=None, id_pfantmol=None,
@@ -232,7 +247,6 @@ class MolConsts(dict):
                 "select id from state where id_molecule = ? and label = ? and mult = ? and spdf = ?",
                 fromto_).fetchone()
 
-            print("BIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIRIBICAMCA", fromto_, one)
             self[idfieldname] = one["id"] if one is not None else None
 
     def _populate_id_pfantmol(self, db):

@@ -339,7 +339,6 @@ class WContinua(a99.WConfigEditor):
                     setup = f311.PlotSpectrumSetup()
                     plt.xlabel(setup.fmt_xlabel.format(sp))
                 else:
-                    print("SSSSSSSSSSSSSSSSSSSSSSS", self._plot_sp)
                     self._update_plot_data(self._plot_sp, zip(sp.x, sp.y))
 
                 xmin, xmax, ymin, ymax, xspan, yspan = f311.calc_max_min([sp])

@@ -7,40 +7,20 @@
     <bookmark url="file://$PROJECT_DIR$/pyfant/gui/a_WMolecularConstants.py" line="793" mnemonic="5" />
     <bookmark url="file://$PROJECT_DIR$/pyfant/gui/a_WMolecularConstants.py" line="765" mnemonic="6" />
     <bookmark url="file://$PROJECT_DIR$/../../../../a99/code/a99/gui/xmisc.py" line="136" mnemonic="4" />
-    <bookmark url="file://$PROJECT_DIR$/pyfant/molconsts.py" line="125" mnemonic="2" />
+    <bookmark url="file://$PROJECT_DIR$/pyfant/molconsts.py" line="133" mnemonic="2" />
     <bookmark url="file://$PROJECT_DIR$/pyfant/util.py" line="283" mnemonic="3" />
-    <bookmark url="file://$PROJECT_DIR$/pyfant/gui/a_WDBFCF.py" line="77" mnemonic="1" />
+    <bookmark url="file://$PROJECT_DIR$/pyfant/molconsts.py" line="111" mnemonic="1" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a3da8a85-d5e9-44f1-a623-f9930b66acf1" name="Default" comment="">
-      <change type="MOVED" beforePath="$PROJECT_DIR$/pyfant/scripts/_build-moldb.py" afterPath="$PROJECT_DIR$/work/build-moldb/build-moldb.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyfant/data/default/moldb.sqlite" afterPath="$PROJECT_DIR$/pyfant/data/default/moldb.sqlite" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/work/build-moldb/moldb.sqlite" afterPath="$PROJECT_DIR$/work/build-moldb/moldb.sqlite" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyfant/basic/conversion.py" afterPath="$PROJECT_DIR$/pyfant/basic/conversion.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyfant/downloaders/downnist.py" afterPath="$PROJECT_DIR$/pyfant/downloaders/downnist.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyfant/filetypes/filemoldb.py" afterPath="$PROJECT_DIR$/pyfant/filetypes/filemoldb.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyfant/gui/a_WDBFCF.py" afterPath="$PROJECT_DIR$/pyfant/gui/a_WDBFCF.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/TODO.md" afterPath="$PROJECT_DIR$/TODO.md" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyfant/gui/a_WContinua.py" afterPath="$PROJECT_DIR$/pyfant/gui/a_WContinua.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyfant/gui/a_WDBState.py" afterPath="$PROJECT_DIR$/pyfant/gui/a_WDBState.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyfant/gui/a_WOptionsEditor.py" afterPath="$PROJECT_DIR$/pyfant/gui/a_WOptionsEditor.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyfant/molconsts.py" afterPath="$PROJECT_DIR$/pyfant/molconsts.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyfant/util.py" afterPath="$PROJECT_DIR$/pyfant/util.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/work/build-moldb/cha.dat" afterPath="$PROJECT_DIR$/work/build-moldb/cha.dat" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/work/build-moldb/cha.out" afterPath="$PROJECT_DIR$/work/build-moldb/cha.out" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/work/build-moldb/chb.dat" afterPath="$PROJECT_DIR$/work/build-moldb/chb.dat" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/work/build-moldb/chb.out" afterPath="$PROJECT_DIR$/work/build-moldb/chb.out" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/work/build-moldb/chc.dat" afterPath="$PROJECT_DIR$/work/build-moldb/chc.dat" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/work/build-moldb/chc.out" afterPath="$PROJECT_DIR$/work/build-moldb/chc.out" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/work/build-moldb/cnb.dat" afterPath="$PROJECT_DIR$/work/build-moldb/cnb.dat" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/work/build-moldb/cnb.out" afterPath="$PROJECT_DIR$/work/build-moldb/cnb.out" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/work/build-moldb/copy-moldb-to-default-data-directory.sh" afterPath="$PROJECT_DIR$/work/build-moldb/copy-moldb-to-default-data-directory.sh" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/work/build-moldb/mgha.dat" afterPath="$PROJECT_DIR$/work/build-moldb/mgha.dat" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/work/build-moldb/mghb.dat" afterPath="$PROJECT_DIR$/work/build-moldb/mghb.dat" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/work/build-moldb/mghb.out" afterPath="$PROJECT_DIR$/work/build-moldb/mghb.out" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/work/build-moldb/nha.dat" afterPath="$PROJECT_DIR$/work/build-moldb/nha.dat" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/work/build-moldb/nha.out" afterPath="$PROJECT_DIR$/work/build-moldb/nha.out" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/work/build-moldb/oha.dat" afterPath="$PROJECT_DIR$/work/build-moldb/oha.dat" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/work/build-moldb/oha.out" afterPath="$PROJECT_DIR$/work/build-moldb/oha.out" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/work/build-moldb/sih.dat" afterPath="$PROJECT_DIR$/work/build-moldb/sih.dat" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/work/build-moldb/sih.out" afterPath="$PROJECT_DIR$/work/build-moldb/sih.out" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/work/README" afterPath="$PROJECT_DIR$/work/README" />
     </list>
     <ignored path="astrogear.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -59,7 +39,7 @@
       <content type="file-editors">
         <state>
           <leaf>
-            <file leaf-file-name="build-moldb.py" pinned="false" current-in-tab="true">
+            <file leaf-file-name="build-moldb.py" pinned="false" current-in-tab="false">
               <entry file="file://$PROJECT_DIR$/work/build-moldb/build-moldb.py">
                 <provider selected="true" editor-type-id="text-editor">
                   <state relative-caret-position="613">
@@ -79,11 +59,21 @@
                 </provider>
               </entry>
             </file>
+            <file leaf-file-name="traprbclass.py" pinned="false" current-in-tab="true">
+              <entry file="file://$PROJECT_DIR$/pyfant/run/traprbclass.py">
+                <provider selected="true" editor-type-id="text-editor">
+                  <state relative-caret-position="0">
+                    <caret line="0" column="10" lean-forward="false" selection-start-line="0" selection-start-column="10" selection-end-line="0" selection-end-column="10" />
+                    <folding />
+                  </state>
+                </provider>
+              </entry>
+            </file>
             <file leaf-file-name="filetraprb.py" pinned="false" current-in-tab="false">
               <entry file="file://$PROJECT_DIR$/pyfant/filetypes/filetraprb.py">
                 <provider selected="true" editor-type-id="text-editor">
-                  <state relative-caret-position="1425">
-                    <caret line="158" column="48" lean-forward="false" selection-start-line="158" selection-start-column="48" selection-end-line="158" selection-end-column="48" />
+                  <state relative-caret-position="613">
+                    <caret line="246" column="84" lean-forward="false" selection-start-line="246" selection-start-column="82" selection-end-line="246" selection-end-column="84" />
                     <folding />
                   </state>
                 </provider>
@@ -99,25 +89,23 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="util.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/pyfant/util.py">
+      <file leaf-file-name="gen-scripts-pages.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/docs/gen-scripts-pages.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="225">
-              <caret line="273" column="60" lean-forward="true" selection-start-line="273" selection-start-column="0" selection-end-line="273" selection-end-column="60" />
-              <folding>
-                <element signature="e#113#122#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="360">
+              <caret line="29" column="0" lean-forward="false" selection-start-line="29" selection-start-column="0" selection-end-line="29" selection-end-column="0" />
+              <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="downnist.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/pyfant/downloaders/downnist.py">
+      <file leaf-file-name="util.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/pyfant/util.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="405">
-              <caret line="129" column="9" lean-forward="true" selection-start-line="129" selection-start-column="9" selection-end-line="129" selection-end-column="9" />
+            <state relative-caret-position="290">
+              <caret line="57" column="17" lean-forward="false" selection-start-line="57" selection-start-column="17" selection-end-line="57" selection-end-column="17" />
               <folding>
-                <element signature="e#24#59#0" expanded="true" />
+                <element signature="e#113#122#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -126,18 +114,55 @@
       <file leaf-file-name="molconsts.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/pyfant/molconsts.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="440">
-              <caret line="234" column="86" lean-forward="false" selection-start-line="234" selection-start-column="86" selection-end-line="234" selection-end-column="86" />
+            <state relative-caret-position="290">
+              <caret line="118" column="0" lean-forward="false" selection-start-line="118" selection-start-column="0" selection-end-line="118" selection-end-column="0" />
+              <folding>
+                <element signature="e#0#19#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="a_WOptionsEditor.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/pyfant/gui/a_WOptionsEditor.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="290">
+              <caret line="738" column="0" lean-forward="false" selection-start-line="738" selection-start-column="0" selection-end-line="738" selection-end-column="0" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="filemoldb.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/pyfant/filetypes/filemoldb.py">
+      <file leaf-file-name="TODO.md" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/TODO.md">
+          <provider selected="true" editor-type-id="split-provider[text-editor;MarkdownPreviewEditor]">
+            <state split_layout="FIRST">
+              <first_editor relative-caret-position="390">
+                <caret line="26" column="0" lean-forward="true" selection-start-line="26" selection-start-column="0" selection-end-line="26" selection-end-column="0" />
+                <folding />
+              </first_editor>
+              <second_editor>
+                <js_state />
+              </second_editor>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="a_WContinua.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/pyfant/gui/a_WContinua.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="255">
-              <caret line="298" column="9" lean-forward="true" selection-start-line="298" selection-start-column="9" selection-end-line="298" selection-end-column="9" />
+            <state relative-caret-position="298">
+              <caret line="341" column="0" lean-forward="false" selection-start-line="341" selection-start-column="0" selection-end-line="341" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="re.py" pinned="false" current-in-tab="false">
+        <entry file="file://$USER_HOME$/Programs/miniconda3/lib/python3.6/re.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="343">
+              <caret line="181" column="42" lean-forward="false" selection-start-line="181" selection-start-column="42" selection-end-line="181" selection-end-column="42" />
               <folding />
             </state>
           </provider>
@@ -146,8 +171,8 @@
       <file leaf-file-name="conversion.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/pyfant/basic/conversion.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="225">
-              <caret line="19" column="31" lean-forward="false" selection-start-line="19" selection-start-column="31" selection-end-line="19" selection-end-column="31" />
+            <state relative-caret-position="290">
+              <caret line="217" column="4" lean-forward="false" selection-start-line="217" selection-start-column="4" selection-end-line="217" selection-end-column="4" />
               <folding>
                 <element signature="e#130#139#0" expanded="true" />
               </folding>
@@ -155,34 +180,14 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="a_WDBFCF.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="a_WDBFCF.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/pyfant/gui/a_WDBFCF.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="600">
-              <caret line="88" column="38" lean-forward="true" selection-start-line="88" selection-start-column="38" selection-end-line="88" selection-end-column="38" />
+            <state relative-caret-position="435">
+              <caret line="29" column="71" lean-forward="false" selection-start-line="29" selection-start-column="71" selection-end-line="29" selection-end-column="71" />
               <folding>
                 <element signature="e#0#26#0" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="a_WBase.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../../../../a99/code/a99/gui/a_WBase.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="600">
-              <caret line="43" column="28" lean-forward="true" selection-start-line="43" selection-start-column="28" selection-end-line="43" selection-end-column="28" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="_logpart.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../../../../a99/code/a99/gui/_logpart.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="615">
-              <caret line="53" column="29" lean-forward="false" selection-start-line="53" selection-start-column="29" selection-end-line="53" selection-end-column="29" />
-              <folding />
             </state>
           </provider>
         </entry>
@@ -190,21 +195,11 @@
       <file leaf-file-name="a_WDBState.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/pyfant/gui/a_WDBState.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="600">
-              <caret line="68" column="0" lean-forward="true" selection-start-line="67" selection-start-column="0" selection-end-line="68" selection-end-column="0" />
+            <state relative-caret-position="105">
+              <caret line="33" column="0" lean-forward="false" selection-start-line="33" selection-start-column="0" selection-end-line="33" selection-end-column="0" />
               <folding>
                 <element signature="e#0#26#0" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="traprbclass.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/pyfant/run/traprbclass.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="729">
-              <caret line="105" column="8" lean-forward="false" selection-start-line="105" selection-start-column="8" selection-end-line="105" selection-end-column="8" />
-              <folding />
             </state>
           </provider>
         </entry>
@@ -220,10 +215,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>pf</find>
-      <find>as ph</find>
-      <find>C</find>
-      <find>ft.</find>
       <find>f311</find>
       <find>run-multi</find>
       <find>nulbad</find>
@@ -249,6 +240,10 @@
       <find>parse_A</find>
       <find>conn</find>
       <find>FOR</find>
+      <find>on_download</find>
+      <find>CAMCA</find>
+      <find>SSSSSSS</find>
+      <find>FFF</find>
       <find>print</find>
     </findStrings>
     <replaceStrings>
@@ -273,8 +268,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/pyfant/gui/__init__.py" />
-        <option value="$PROJECT_DIR$/pyfant/gui/a_XPFANT.py" />
         <option value="$PROJECT_DIR$/pyfant/gui/a_XFileAtoms.py" />
         <option value="$PROJECT_DIR$/pyfant/scripts/vald3-to-atoms.py" />
         <option value="$PROJECT_DIR$/docs/source/conf.py" />
@@ -308,9 +301,7 @@
         <option value="$PROJECT_DIR$/pyfant/gui/a_XConvMol.py" />
         <option value="$PROJECT_DIR$/pyfant/scripts/convmol.py" />
         <option value="$PROJECT_DIR$/../../../../a99/code/a99/gui/a_WDBRegistry.py" />
-        <option value="$PROJECT_DIR$/pyfant/gui/a_WDBState.py" />
         <option value="$PROJECT_DIR$/pyfant/gui/a_WDBSystem.py" />
-        <option value="$PROJECT_DIR$/TODO.md" />
         <option value="$PROJECT_DIR$/pyfant/filetypes/filetraprb.py" />
         <option value="$PROJECT_DIR$/docs/source/coding.rst" />
         <option value="$PROJECT_DIR$/../../../../a99/code/a99/gui/xmisc.py" />
@@ -320,10 +311,14 @@
         <option value="$PROJECT_DIR$/pyfant/util.py" />
         <option value="$PROJECT_DIR$/work/build-moldb/build-moldb.py" />
         <option value="$PROJECT_DIR$/pyfant/filetypes/filemoldb.py" />
-        <option value="$PROJECT_DIR$/pyfant/molconsts.py" />
         <option value="$PROJECT_DIR$/pyfant/downloaders/downnist.py" />
         <option value="$PROJECT_DIR$/../../../../a99/code/a99/gui/_logpart.py" />
         <option value="$PROJECT_DIR$/pyfant/gui/a_WDBFCF.py" />
+        <option value="$PROJECT_DIR$/pyfant/gui/a_WDBState.py" />
+        <option value="$PROJECT_DIR$/pyfant/gui/a_WOptionsEditor.py" />
+        <option value="$PROJECT_DIR$/pyfant/gui/a_WContinua.py" />
+        <option value="$PROJECT_DIR$/pyfant/molconsts.py" />
+        <option value="$PROJECT_DIR$/TODO.md" />
       </list>
     </option>
   </component>
@@ -356,17 +351,6 @@
             <path>
               <item name="pyfant" type="b2602c69:ProjectViewProjectNode" />
               <item name="code" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="pyfant" type="b2602c69:ProjectViewProjectNode" />
-              <item name="code" type="462c0819:PsiDirectoryNode" />
-              <item name="work" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="pyfant" type="b2602c69:ProjectViewProjectNode" />
-              <item name="code" type="462c0819:PsiDirectoryNode" />
-              <item name="work" type="462c0819:PsiDirectoryNode" />
-              <item name="build-moldb" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="pyfant" type="b2602c69:ProjectViewProjectNode" />
@@ -635,30 +619,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/docs/source/intro.rst">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="45">
-          <caret line="3" column="29" lean-forward="false" selection-start-line="3" selection-start-column="29" selection-end-line="3" selection-end-column="29" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/docs/source/intro-common.rst">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="345">
-          <caret line="23" column="0" lean-forward="false" selection-start-line="23" selection-start-column="0" selection-end-line="23" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pyfant/kovacs.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/docs/source/convmol.rst">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="45">
@@ -737,14 +697,6 @@
           <folding>
             <element signature="e#0#26#0" expanded="false" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pyfant/gui/a_WOptionsEditor.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="645">
-          <caret line="49" column="0" lean-forward="true" selection-start-line="49" selection-start-column="0" selection-end-line="49" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -848,27 +800,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/docs/examples/more-pyfant/traprb.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="390">
-          <caret line="29" column="0" lean-forward="false" selection-start-line="29" selection-start-column="0" selection-end-line="29" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/TODO.md">
-      <provider selected="true" editor-type-id="split-provider[text-editor;MarkdownPreviewEditor]">
-        <state split_layout="FIRST">
-          <first_editor relative-caret-position="660">
-            <caret line="44" column="0" lean-forward="false" selection-start-line="44" selection-start-column="0" selection-end-line="44" selection-end-column="0" />
-            <folding />
-          </first_editor>
-          <second_editor>
-            <js_state />
-          </second_editor>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/docs/source/coding.rst">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="767">
@@ -925,37 +856,11 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/pyfant/filetypes/filetraprb.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1425">
-          <caret line="158" column="48" lean-forward="false" selection-start-line="158" selection-start-column="48" selection-end-line="158" selection-end-column="48" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/../../../../a99/code/a99/gui/a_WDBRegistry.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="298">
           <caret line="73" column="0" lean-forward="false" selection-start-line="73" selection-start-column="0" selection-end-line="73" selection-end-column="0" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pyfant/run/traprbclass.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="729">
-          <caret line="105" column="8" lean-forward="false" selection-start-line="105" selection-start-column="8" selection-end-line="105" selection-end-column="8" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pyfant/basic/conversion.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="225">
-          <caret line="19" column="31" lean-forward="false" selection-start-line="19" selection-start-column="31" selection-end-line="19" selection-end-column="31" />
-          <folding>
-            <element signature="e#130#139#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -967,18 +872,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/pyfant/molconsts.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="440">
-          <caret line="234" column="86" lean-forward="false" selection-start-line="234" selection-start-column="86" selection-end-line="234" selection-end-column="86" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/pyfant/filetypes/filemoldb.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="255">
-          <caret line="298" column="9" lean-forward="true" selection-start-line="298" selection-start-column="9" selection-end-line="298" selection-end-column="9" />
+          <caret line="298" column="9" lean-forward="false" selection-start-line="298" selection-start-column="9" selection-end-line="298" selection-end-column="9" />
           <folding />
         </state>
       </provider>
@@ -986,29 +883,9 @@
     <entry file="file://$PROJECT_DIR$/pyfant/downloaders/downnist.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="405">
-          <caret line="129" column="9" lean-forward="true" selection-start-line="129" selection-start-column="9" selection-end-line="129" selection-end-column="9" />
+          <caret line="129" column="9" lean-forward="false" selection-start-line="129" selection-start-column="9" selection-end-line="129" selection-end-column="9" />
           <folding>
-            <element signature="e#24#59#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pyfant/util.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="225">
-          <caret line="273" column="60" lean-forward="true" selection-start-line="273" selection-start-column="0" selection-end-line="273" selection-end-column="60" />
-          <folding>
-            <element signature="e#113#122#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pyfant/gui/a_WDBState.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="600">
-          <caret line="68" column="0" lean-forward="true" selection-start-line="67" selection-start-column="0" selection-end-line="68" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#26#0" expanded="true" />
+            <element signature="e#24#59#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1016,7 +893,7 @@
     <entry file="file://$PROJECT_DIR$/../../../../a99/code/a99/gui/a_WBase.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="600">
-          <caret line="43" column="28" lean-forward="true" selection-start-line="43" selection-start-column="28" selection-end-line="43" selection-end-column="28" />
+          <caret line="43" column="28" lean-forward="false" selection-start-line="43" selection-start-column="28" selection-end-line="43" selection-end-column="28" />
           <folding />
         </state>
       </provider>
@@ -1029,13 +906,122 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/pyfant/gui/a_WDBFCF.py">
+    <entry file="file://$PROJECT_DIR$/pyfant/gui/a_WDBState.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="600">
-          <caret line="88" column="38" lean-forward="true" selection-start-line="88" selection-start-column="38" selection-end-line="88" selection-end-column="38" />
+        <state relative-caret-position="105">
+          <caret line="33" column="0" lean-forward="false" selection-start-line="33" selection-start-column="0" selection-end-line="33" selection-end-column="0" />
           <folding>
             <element signature="e#0#26#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pyfant/basic/conversion.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="290">
+          <caret line="217" column="4" lean-forward="false" selection-start-line="217" selection-start-column="4" selection-end-line="217" selection-end-column="4" />
+          <folding>
+            <element signature="e#130#139#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Programs/miniconda3/lib/python3.6/re.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="343">
+          <caret line="181" column="42" lean-forward="false" selection-start-line="181" selection-start-column="42" selection-end-line="181" selection-end-column="42" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pyfant/gui/a_WContinua.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="298">
+          <caret line="341" column="0" lean-forward="false" selection-start-line="341" selection-start-column="0" selection-end-line="341" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pyfant/molconsts.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="290">
+          <caret line="118" column="0" lean-forward="false" selection-start-line="118" selection-start-column="0" selection-end-line="118" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pyfant/gui/a_WDBFCF.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="435">
+          <caret line="29" column="71" lean-forward="false" selection-start-line="29" selection-start-column="71" selection-end-line="29" selection-end-column="71" />
+          <folding>
+            <element signature="e#0#26#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pyfant/filetypes/filetraprb.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="613">
+          <caret line="246" column="84" lean-forward="false" selection-start-line="246" selection-start-column="82" selection-end-line="246" selection-end-column="84" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/docs/examples/more-pyfant/traprb.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="390">
+          <caret line="29" column="0" lean-forward="false" selection-start-line="29" selection-start-column="0" selection-end-line="29" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pyfant/run/traprbclass.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="10" lean-forward="false" selection-start-line="0" selection-start-column="10" selection-end-line="0" selection-end-column="10" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pyfant/util.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="290">
+          <caret line="57" column="17" lean-forward="false" selection-start-line="57" selection-start-column="17" selection-end-line="57" selection-end-column="17" />
+          <folding>
+            <element signature="e#113#122#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/docs/gen-scripts-pages.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="360">
+          <caret line="29" column="0" lean-forward="false" selection-start-line="29" selection-start-column="0" selection-end-line="29" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pyfant/gui/a_WOptionsEditor.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="290">
+          <caret line="738" column="0" lean-forward="false" selection-start-line="738" selection-start-column="0" selection-end-line="738" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/TODO.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;MarkdownPreviewEditor]">
+        <state split_layout="FIRST">
+          <first_editor relative-caret-position="390">
+            <caret line="26" column="0" lean-forward="true" selection-start-line="26" selection-start-column="0" selection-end-line="26" selection-end-column="0" />
+            <folding />
+          </first_editor>
+          <second_editor>
+            <js_state />
+          </second_editor>
         </state>
       </provider>
     </entry>

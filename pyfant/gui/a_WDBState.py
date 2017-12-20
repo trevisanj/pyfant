@@ -60,7 +60,7 @@ class WDBState(WDBRegistry):
 
         if r == QMessageBox.Yes:
             try:
-                nist_data, _, _ = pyfant.get_nist_webbook_constants(formula)
+                nist_data, _, _ = pyfant.get_nist_webbook_constants(formula, flag_parse_state=True)
             except Exception as e:
                 self.add_log_error("Error getting NIST data (see log for more info)", True, e)
             else:
