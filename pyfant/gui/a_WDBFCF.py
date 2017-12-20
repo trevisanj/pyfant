@@ -68,26 +68,27 @@ class WDBFCF(WDBRegistry):
                 kwargs = form.get_kwargs()
 
                 mc = pyfant.MolConsts()
-                mc.populate_all_using_system_row(self._f, row)
 
-                print("MMMMMMMMMMMMMMMMMMMMMMMMM", mc)
+                try:
+                    mc.populate_all_using_system_row(self._f, row)
 
-                traprb = pyfant.run_traprb(mc, None, None, **kwargs)
+                    # TODO maybe intermediate review stage, i.e., allow the user to see the FCFs before inserting
 
-                traprb.load_result()
-                output = traprb.result["output"]
-                print(output.fcfs)
+                    traprb = pyfant.run_traprb(mc, None, None, **kwargs)
 
-            # try:
-            #     nist_data, _, _ = pyfant.get_nist_webbook_constants(formula)
-            # except Exception as e:
-            #     self.add_log_error("Error getting NIST data (see log for more info)", True, e)
-            # else:
-            #     pyfant.insert_states_from_nist(self._f, self._id_system, nist_data, flag_replace=True)
-            #     self._populate()
-            #     n = len(self._data)
-            #     self.add_log("{} state{} successfully downloaded from NIST".
-            #                  format(n, "" if n == 1 else "s"), True)
+                    traprb.load_result()
+                    output = traprb.result["output"]
+
+                    pyfant.insert_fcfs(self._f, self._id_system, output.fcfs, flag_replace=True)
+
+                    self._populate()
+
+                    n = len(output.fcfs)
+                    self.add_log("{} FCF{} successfully inserted".
+                                 format(n, "" if n == 1 else "s"), True)
+                except Exception as e:
+                    self.add_log_error("Error calculating FCFs: '{}'".format(a99.str_exc(e)),
+                                       True, e)
 
     def _show_traprb_parameters_form(self, r):
         # **Note** creates TRAPRBInputState() instance to get default input parameter values

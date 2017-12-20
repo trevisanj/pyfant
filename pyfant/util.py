@@ -13,12 +13,9 @@ import f311
 import sqlite3
 import unicodedata
 
-__all__ = [
-    "run_parallel", "setup_inputs", "copy_star", "link_to_data", "create_or_replace_or_skip_links",
-    "copy_or_skip_files", "insert_from_formula", "insert_states_from_nist", "insert_fcfs",
-    "run_traprb"
-]
-
+__all__ = ["run_parallel", "setup_inputs", "copy_star", "link_to_data",
+           "create_or_replace_or_skip_links", "copy_or_skip_files", "insert_states_from_nist",
+           "insert_fcfs", "insert_molecule_from_nist", "run_traprb", ]
 
 # ##################################################################################################
 # Terminal-based interface
@@ -274,54 +271,6 @@ def _print_skipped(reason):
     a99.get_python_logger().info("   ... SKIPPED ({0!s}).".format(reason))
 
 
-
-def insert_states_from_nist(moldb, id_molecule, nist_data, flag_replace=False):
-    """
-    Inserts downloaded NIST data into table 'state'
-
-    :param moldb: FileMolDB
-    :param id_molecule: int, molecule ID in 'molecule' table
-    :param flag_replace: if states for molecule identified by 'id_molecule' already exists,
-        I may either raise (flag_replace==False) or replace these states
-    :return: None
-    """
-
-
-
-    conn = moldb.get_conn()
-    cursor = conn.cursor()
-    assert isinstance(conn, sqlite3.Connection)
-    assert isinstance(cursor, sqlite3.Cursor)
-
-    n = cursor.execute("select count(*) from state where id_molecule = ?",
-                       (id_molecule,)).fetchone()["count(*)"]
-    if n > 0:
-        if flag_replace:
-            cursor.execute("delete from state where id_molecule = ?", (id_molecule,))
-        else:
-            formula = cursor.execute("select formula from molecule where id = ?",
-                                     (id_molecule,)).fetchone()["formula"]
-            raise RuntimeError("States exist for formula '{}'".format(formula))
-
-
-testar issso
-    for state in nist_data:
-        state_ = list(state)
-        # Figures out "label", "mult", "spdf"
-        s = unicodedata.normalize('NFKD', state[0]).encode('ascii', 'replace').decode()
-        state_.extend([s[0], s[2], pyfant.greek_to_spdf(s[3:s.index("_")])])
-        print("OIOIOIOIOIOI", s)
-
-
-        # **Note** assumes that the columns in data match the
-        # (number of columns in the state table - 2) and their order
-        conn.execute("insert into state values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
-                     [None, id_molecule] + state_ + [""])
-
-    conn.commit()
-    conn.close()
-
-
 def insert_fcfs(moldb, id_system, fcfs, flag_replace=False):
     """
     Inserts Franck-Condon Factors for given system
@@ -353,16 +302,15 @@ def insert_fcfs(moldb, id_system, fcfs, flag_replace=False):
     conn.commit()
 
 
-def insert_from_formula(moldb, formula, flag_do_what_i_can=False, flag_fcf=True, maxv=12):
+def insert_molecule_from_nist(moldb, formula, flag_replace=False, flag_do_what_i_can=True):
     """
-    Inserts molecule into FileMolDB given its formula
+    Retrieves NIST data and inserts new molecule into DB, or updates states if molecule exists
 
     :param moldb: FileMolDB object
     :param formula: str, e.g., "OH"
+    :param flag_replace: applies to states (not molecule entry); passed on to insert_states_from_nist()
     :param flag_do_what_i_can: if set, will insert molecule even if cannot
         download molecular constants from NIST
-    :param flag_fcf: if set, will try to run TRAPRB to calculate the Franck-Condon factors
-    :param maxv: maximum vl and v2l for TRAPRB
     :return: None
     """
     conn = moldb.get_conn()
@@ -370,28 +318,67 @@ def insert_from_formula(moldb, formula, flag_do_what_i_can=False, flag_fcf=True,
     assert isinstance(conn, sqlite3.Connection)
     assert isinstance(cursor, sqlite3.Cursor)
 
-    # Checks if formula already exists
+    id_molecule = None
+    data = None
+    name = "?name?"
     n = conn.execute("select count(*) from molecule where formula = ?", (formula,)).fetchone()["count(*)"]
     if n > 0:
-        raise RuntimeError("Formula '{}' already exists in 'molecule' table".format(formula))
+        id_molecule = conn.execute("select id from molecule where formula = ?", (formula,))
+    else:
+        try:
+            data, header, name = pyfant.get_nist_webbook_constants(formula, flag_unicode=True,
+                                                                   flag_parse_state=True)
+        except:
+            if flag_do_what_i_can:
+                a99.get_python_logger().exception("Could not get NIST constants for formula '{}'".format(formula))
+            else:
+                raise
 
-    name = "?name?"
-    has_nist = False
-    try:
-        data, header, name = pyfant.get_nist_webbook_constants(formula)
-        has_nist = True
-    except:
-        if flag_do_what_i_can:
-            a99.get_python_logger().exception("Could not get NIST constants for formula '{}'".format(formula))
-        else:
-            raise
+    if id_molecule is None:
+        cursor.execute("insert into molecule (formula, name) values (?, ?)", (formula, name))
+        id_molecule = cursor.lastrowid
+        conn.commit()
 
-    cursor.execute("insert into molecule (formula, name) values (?, ?)", (formula, name))
-    id_molecule = cursor.lastrowid
+    if data is not None:
+        insert_states_from_nist(moldb, id_molecule, data, flag_replace)
+
     conn.commit()
 
-    if has_nist:
-        insert_states_from_nist(moldb, id_molecule, data, False)
+
+def insert_states_from_nist(moldb, id_molecule, nist_data, flag_replace=False):
+    """
+    Inserts downloaded NIST data into table 'state'
+
+    :param moldb: FileMolDB
+    :param id_molecule: int, molecule ID in 'molecule' table
+    :param nist_data: list of lists as returned by
+                      get_nist_webbook_constants(..., flag_parse_state=True)
+    :param flag_replace: if states for molecule identified by 'id_molecule' already exists,
+        I may either raise (flag_replace==False) or replace these states
+    :return: None
+    """
+
+    conn = moldb.get_conn()
+    cursor = conn.cursor()
+    assert isinstance(conn, sqlite3.Connection)
+    assert isinstance(cursor, sqlite3.Cursor)
+
+    n = cursor.execute("select count(*) from state where id_molecule = ?",
+                       (id_molecule,)).fetchone()["count(*)"]
+    if n > 0:
+        if flag_replace:
+            cursor.execute("delete from state where id_molecule = ?", (id_molecule,))
+        else:
+            formula = cursor.execute("select formula from molecule where id = ?",
+                                     (id_molecule,)).fetchone()["formula"]
+            raise RuntimeError("States exist for formula '{}'".format(formula))
+
+
+    for state in nist_data:
+        # **Note** assumes that the columns in data match the
+        # (number of columns in the state table - 3) and their order
+        conn.execute("insert into state values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                     [None, id_molecule] + state + [""])
 
     conn.commit()
 

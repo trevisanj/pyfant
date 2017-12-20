@@ -14,38 +14,56 @@ import sqlite3
 import os
 import sys
 
+FORMULAS = ["MgH", "C2", "CN", "CH", "NH", "CO", "OH", "FeH", "TiO", ]
+
+# Electronic systems containing Franck-Condon factors in this directory
+SYSTEMS_MAP = (
+("CH", "cha.out", "A", 2, 2, "X", 2, 1, "Source: 'ATMOS/wrk4/bruno/Mole/Fc'"),  # A2Delta - X2Pi
+("CH", "chb.out", "B", 2, 0, "X", 2, 1, "Source: 'ATMOS/wrk4/bruno/Mole/Fc'"),
+("CH", "chc.out", "C", 2, 0, "X", 2, 1, "Source: 'ATMOS/wrk4/bruno/Mole/Fc'"),
+("CN", "cnb.out", "B", 2, 0, "X", 2, 0, "Source: 'ATMOS/wrk4/bruno/Mole/Fc'"),
+("NH", "nha.out", "A", 3, 1, "X", 3, 0, "Source: 'ATMOS/wrk4/bruno/Mole/Fc'"),
+("OH", "oha.out", "A", 2, 0, "X", 2, 1, "Source: 'ATMOS/wrk4/bruno/Mole/Fc'"),
+("MgH", "mgha.out", "A", 2, 1, "X", 2, 0, "Source: 'ATMOS/wrk4/bruno/Mole/Fc'"),
+("MgH", "mghb.out", "B", 2, 0, "X", 2, 0, "Source: 'ATMOS/wrk4/bruno/Mole/Fc'"),
+("C2", "c2swan.out", "d", 3, 1, "a", 3, 1, "Source: 'new calculations'"),
+)
+
 
 # FileMolecules
 filemol = None
 moldb = None
-
+conn = None
 
 
 def my_info(s):
     a99.get_python_logger().info("[build-moldb] {}".format(s))
 
 
-def insert_molecules():
+def insert_molecules(moldb):
     """Inserts data into the 'molecule' table"""
 
-    # Molecules present in PFANT molecules.dat
-    MOLECULES = [("MgH", "Magnesium monohydride"),
-                 ("C2", "Dicarbon"),
-                 ("CN", "Cyano radical"),
-                 ("CH", "Methylidyne"),
-                 ("NH", "Imidogen"),
-                 ("CO", "Carbon monoxide"),
-                 ("OH", "Hydroxyl radical"),
-                 ("FeH", "Iron hydride"),
-                 ("TiO", "Titanium oxide")]
+    for formula in FORMULAS:
+        my_info("Inserting '{}' + its NIST states ...".format(formula))
+        pyfant.insert_molecule_from_nist(moldb, formula, flag_do_what_i_can=True, flag_replace=True)
 
-    conn.executemany("insert into molecule (formula, name) values (?,?)", MOLECULES)
-    conn.commit()
+    # # Molecules present in PFANT molecules.dat
+    # MOLECULES = [("MgH", "Magnesium monohydride"),
+    #              ("C2", "Dicarbon"),
+    #              ("CN", "Cyano radical"),
+    #              ("CH", "Methylidyne"),
+    #              ("NH", "Imidogen"),
+    #              ("CO", "Carbon monoxide"),
+    #              ("OH", "Hydroxyl radical"),
+    #              ("FeH", "Iron hydride"),
+    #              ("TiO", "Titanium oxide")]
+    #
+    # conn.executemany("insert into molecule (formula, name) values (?,?)", MOLECULES)
+    # conn.commit()
 
 
 def insert_systems():
     """Parses the systems out of the molecules descriptions in the PFANT molecular lines file"""
-
 
     # Collects PFANT systems
     # Iterates through the PFANT molecules to retrieve its systems.
@@ -55,7 +73,7 @@ def insert_systems():
         row = pyfant.MolConsts()
         row.populate_parse_str(molecule.description)
 
-        print("FORMULA {}".format(row["formula"]))
+        my_info("{} [{}]".format(row["formula"], pyfant.molconsts_to_system_str(row)))
 
         id_molecule = conn.execute("select id from molecule where formula = ?",
                                    (row["formula"],)).fetchone()["id"]
@@ -76,27 +94,27 @@ def insert_systems():
 
     conn.commit()
 
-
-def insert_nist_data():
-    """Tries to download data from NIST Web Book online"""
-
-    for row in conn.execute("select id, formula from molecule order by id").fetchall():
-        id_molecule, formula = row["id"], row["formula"]
-        a99.get_python_logger().info("Molecule '{}'...".format(formula))
-        try:
-            data, _, _ = pyfant.get_nist_webbook_constants(formula)
-
-            for state in data:
-                # **Note** assumes that the columns in data match the
-                # (number of columns in the state table - 2) and their order
-                conn.execute("insert into state values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
-                             [None, id_molecule] + state + [""])
-
-            conn.commit()
-
-        except:
-            a99.get_python_logger().exception("Failed for molecule '{}'".format(formula))
-    conn.commit()
+#
+# def insert_nist_data():
+#     """Tries to download data from NIST Web Book online"""
+#
+#     for row in conn.execute("select id, formula from molecule order by id").fetchall():
+#         id_molecule, formula = row["id"], row["formula"]
+#         a99.get_python_logger().info("Molecule '{}'...".format(formula))
+#         try:
+#             data, _, _ = pyfant.get_nist_webbook_constants(formula)
+#
+#             for state in data:
+#                 # **Note** assumes that the columns in data match the
+#                 # (number of columns in the state table - 2) and their order
+#                 conn.execute("insert into state values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+#                              [None, id_molecule] + state + [""])
+#
+#             conn.commit()
+#
+#         except:
+#             a99.get_python_logger().exception("Failed for molecule '{}'".format(formula))
+#     conn.commit()
 
 
 def load_list_file(filename):
@@ -109,7 +127,6 @@ def load_list_file(filename):
     ===end exert===
     """
 
-
     fcfs = OrderedDict()
     with open(filename, "r") as h:
         for line in h:
@@ -121,27 +138,10 @@ def load_list_file(filename):
     return fcfs
 
 
-# Electronic systems
-#
-# # TODO calculate FCFs for Tio, FeH, CO
-SYSTEMS_MAP = (
-("CH", "cha.out", "A", 2, 2, "X", 2, 1, "Source: 'ATMOS/wrk4/bruno/Mole/Fc'"),  # A2Delta - X2Pi
-("CH", "chb.out", "B", 2, 0, "X", 2, 1, "Source: 'ATMOS/wrk4/bruno/Mole/Fc'"),
-("CH", "chc.out", "C", 2, 0, "X", 2, 1, "Source: 'ATMOS/wrk4/bruno/Mole/Fc'"),
-("CN", "cnb.out", "B", 2, 0, "X", 2, 0, "Source: 'ATMOS/wrk4/bruno/Mole/Fc'"),
-("NH", "nha.out", "A", 3, 1, "X", 3, 0, "Source: 'ATMOS/wrk4/bruno/Mole/Fc'"),  # A3Pi - X3Sigma
-("OH", "oha.out", "A", 2, 0, "X", 2, 1, "Source: 'ATMOS/wrk4/bruno/Mole/Fc'"),  # A2Sigma - X2Pi
-("MgH", "mgha.out", "A", 2, 1, "X", 2, 0, "Source: 'ATMOS/wrk4/bruno/Mole/Fc'"),
-("MgH", "mghb.out", "B", 2, 0, "X", 2, 0, "Source: 'ATMOS/wrk4/bruno/Mole/Fc'"),
-("C2", "c2swan.out", "d", 3, 1, "a", 3, 1, "Source: 'new calculations'"),
-)
-
-
 def insert_franck_condon_factors():
-
     for formula, filename, from_label, from_mult, from_spdf, to_label, to_mult, to_spdf, notes in SYSTEMS_MAP:
-
-        my_info("FCFs for system ({}, {}, {}, {}, {}, {}, {})".format(formula, from_label, from_mult, from_spdf, to_label, to_mult, to_spdf))
+        my_info("FCFs for system ({}, {}, {}, {}, {}, {}, {})".
+                format(formula, from_label, from_mult, from_spdf, to_label, to_mult, to_spdf))
 
         id_molecule = conn.execute("select id from molecule where formula = ?",
                                    (formula,)).fetchone()["id"]
@@ -170,7 +170,6 @@ def insert_franck_condon_factors():
 
 
 if __name__ == "__main__":
-
     filename = pyfant.FileMolDB.default_filename
 
     if os.path.isfile(filename):
@@ -190,8 +189,6 @@ if __name__ == "__main__":
     my_info("Creating schema...")
     moldb.create_schema()
 
-
-
     filemol = pyfant.FileMolecules()
     filemol.load(pyfant.get_pfant_data_path("common", "molecules.dat"))
 
@@ -201,12 +198,12 @@ if __name__ == "__main__":
 
 
     my_info("New filename: '{}'".format(moldb.filename))
-    my_info("Inserting molecules...")
-    insert_molecules()
+    my_info("Inserting molecules & NIST states...")
+    insert_molecules(moldb)
     my_info("Inserting systems...")
     insert_systems()
     my_info("Inserting Franck-Condon Factors from Bruno Castilho's work...")
     insert_franck_condon_factors()
 
-    my_info("Inserting data from NIST Chemistry Web Book ({})...".format(pyfant.NIST_URL))
-    insert_nist_data()
+    # my_info("Inserting data from NIST Chemistry Web Book ({})...".format(pyfant.NIST_URL))
+    # insert_nist_data()

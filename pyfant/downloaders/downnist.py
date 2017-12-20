@@ -4,7 +4,8 @@ NIST Downloader
 from robobrowser import RoboBrowser
 import bs4
 import re
-
+import unicodedata
+import pyfant
 
 __all__ = ["get_nist_webbook_constants", "NIST_URL"]
 
@@ -12,13 +13,15 @@ __all__ = ["get_nist_webbook_constants", "NIST_URL"]
 NIST_URL = "http://webbook.nist.gov/chemistry/form-ser.html"
 
 
-def get_nist_webbook_constants(formula, flag_unicode=True):
+def get_nist_webbook_constants(formula, flag_unicode=True, flag_parse_state=False):
     """
     Navigates through NIST webbook pages to retrieve a table of molecular constants
 
     Args:
         formula: example: "OH"
         flag_unicode:
+        flag_parse_state: parses NIST 'State' column and extends each data row with three extra
+                          columns: 'label', 'mult', 'spdf'
 
     Returns: tuple: table (list of lists), header (list of strings), name of molecule
 
@@ -92,18 +95,60 @@ def get_nist_webbook_constants(formula, flag_unicode=True):
         elif len(cols) == 13:
 
             row = [function(ele) for function, ele in zip(functions, cols)]
-            row.append( parse_A(browser, cols[1]))
+            row.append(_parse_A(browser, cols[1]))
             data.append(row)
             n += 1
 
-    # print(plain)
-    #
-    # print(rows_table)
+    if flag_parse_state:
+        _extend_nist_table(data, header)
 
     return data, header, title
 
 
-def parse_A(browser, tag):
+def _extend_nist_table(data, header):
+    """Parses 'State' and adds 3 extra columns to table **in place**
+
+    If parsing fails, (label, mult, spdf) columns for that row will be blank
+    """
+
+    header.extend(["label", "mult", "spdf"])
+
+    for row in data:
+        trio = ("", "", "")
+        try:
+            trio = _nist_str_to_state(row[0])
+        except ValueError:
+            pass
+        row.extend(trio)
+
+
+def _nist_str_to_state(s):
+    """Parses NIST state string into tuple
+
+    **Note** This method will deal with unicode superscript characters
+
+    Args:
+        s: NIST state string such as "E 1Sigma_g+" or "d ¹Sigma_u⁺"
+
+    Return:
+        (label, mult, spdf)
+    """
+
+    s_ = unicodedata.normalize('NFKD', s).encode('ascii', 'replace').decode()
+
+    match = re.match("([A-Za-z])\s*(\d)\s*([A-Za-z]+)", s_)
+
+    if match is None:
+        raise ValueError("Nist 'State' string not recognized: {}".format(s))
+
+    label, _mult, _spdf = match.groups()
+    mult = int(_mult)
+    spdf = pyfant.greek_to_spdf(_spdf)
+
+    return label, mult, spdf
+
+
+def _parse_A(browser, tag):
     """
     Parses the "A" information (A is the "coupling constant")
 

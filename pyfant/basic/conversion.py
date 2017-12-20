@@ -9,6 +9,7 @@ import os
 import shutil
 import sys
 import a99
+import unicodedata
 
 
 __all__ = ["SS_PLAIN", "SS_SUPERSCRIPT", "SS_ALL_SPECIAL", "SS_RAW",
@@ -105,7 +106,6 @@ def molconsts_to_system_str(molconsts, style=SS_ALL_SPECIAL):
         state_to_str(molconsts["from_label"], molconsts["from_mult"], molconsts["from_spdf"], style),
         state_to_str(molconsts["to_label"], molconsts["to_mult"], molconsts["to_spdf"], style),
     )
-
 
 # **        ****                ******        ****                ******        ****
 #   **    **    ******    ******      **    **    ******    ******      **    **    ******    ******

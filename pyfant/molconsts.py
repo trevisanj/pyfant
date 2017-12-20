@@ -219,17 +219,21 @@ class MolConsts(dict):
         self["id_system"] = db.find_id_system(self)
 
     def _populate_ids_state(self, db):
-        """Populates id_statel and id_state2l using from_labdl and to_label"""
+        """Populates id_statel and id_state2l using (from, to)X(label, mult, spdf)"""
 
-        self._i_need(("id_molecule", "from_label", "from_mult", "from _spdf", "to_label", "to_mult", "to_spdf"))
+        self._i_need(("id_molecule", "from_label", "from_mult", "from_spdf", "to_label", "to_mult", "to_spdf"))
 
-        # [(which label, corresponding key), ...]
-        _map = [("from_label", "id_statel"), ("to_label", "id_state2l")]
-        for fn_to_match, fn_dest in _map:
-            one = db.get_conn().execute("select id from state where id_molecule = ? and "
-                                        "State like \"{}%\"".format(self[fn_to_match]),
-                                        (self["id_molecule"],)).fetchone()
-            self[fn_dest] = one["id"] if one is not None else None
+        _map = [("from", "id_statel"), ("to", "id_state2l")]
+        for fromto, idfieldname in _map:
+            fromto_ = (
+            self["id_molecule"], self["{}_label".format(fromto)], self["{}_mult".format(fromto)],
+            self["{}_spdf".format(fromto)])
+            one = db.get_conn().execute(
+                "select id from state where id_molecule = ? and label = ? and mult = ? and spdf = ?",
+                fromto_).fetchone()
+
+            print("BIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIRIBICAMCA", fromto_, one)
+            self[idfieldname] = one["id"] if one is not None else None
 
     def _populate_id_pfantmol(self, db):
         """Populates id_pfantmol using formula, to_*, and from_*"""
