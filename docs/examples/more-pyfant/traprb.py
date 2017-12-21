@@ -6,7 +6,7 @@ Python script to run the TRAPRB code [Jarmain&McCallum1970]
 "TRAPRB: a computer program for molecular transitions." University of Western Ontario (1970)
 """
 
-import f311.pyfant as pf
+import pyfant
 import argparse
 import a99
 import logging
@@ -23,7 +23,7 @@ if __name__ == "__main__":
 
     fn_output = args.fn_output if args.fn_output is not None else args.fn_input+".out"
 
-    e = pf.TRAPRB()
+    e = pyfant.TRAPRB()
     e.fn_input = args.fn_input
     e.fn_output = args.fn_output
     e.run()

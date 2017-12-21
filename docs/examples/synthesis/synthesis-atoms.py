@@ -1,20 +1,19 @@
 """Runs synthesis for specified atomic species separately. No molecules or hydrogen lines."""
 
-import f311.pyfant as pf
-import f311.explorer as ex
+import pyfant
+import f311
 import matplotlib.pyplot as plt
-import f311.filetypes as ft
 import a99
 
 # ["<element name><ionization level>", ...] for which to draw panels
 MY_SPECIES = ["Fe1", "Fe2", "Ca1", "Ca2", "Na1", "Si1"]
 
 if __name__ == "__main__":
-    pf.copy_star(starname="sun-grevesse-1996")
-    pf.link_to_data()
+    pyfant.copy_star(starname="sun-grevesse-1996")
+    pyfant.link_to_data()
 
     # Loads full atomic lines file
-    fatoms = ft.FileAtoms()
+    fatoms = pyfant.FileAtoms()
     fatoms.load()
 
     runnables = []
@@ -22,10 +21,10 @@ if __name__ == "__main__":
         atom = fatoms.find_atom(elem_ioni)
 
         # Creates atomic lines file object containing only one atom
-        fatoms2 = ft.FileAtoms()
+        fatoms2 = pyfant.FileAtoms()
         fatoms2.atoms = [atom]
 
-        ecombo = pf.Combo()
+        ecombo = pyfant.Combo()
         # Overrides file "atoms.dat" with in-memory object
         ecombo.conf.file_atoms = fatoms2
         ecombo.conf.flag_output_to_dir = True
@@ -39,7 +38,7 @@ if __name__ == "__main__":
 
         runnables.append(ecombo)
 
-    pf.run_parallel(runnables)
+    pyfant.run_parallel(runnables)
 
     # Draws figure
     f = plt.figure()
@@ -47,8 +46,8 @@ if __name__ == "__main__":
     for i, (title, ecombo) in enumerate(zip(MY_SPECIES, runnables)):
         ecombo.load_result()
         plt.subplot(2, 3, i+1)
-        ex.draw_spectra_overlapped([ecombo.result["spec"]],
-                                   setup=ex.PlotSpectrumSetup(flag_xlabel=i/3 >= 1, flag_legend=False))
+        f311.draw_spectra_overlapped([ecombo.result["spec"]],
+                                   setup=f311.PlotSpectrumSetup(flag_xlabel=i/3 >= 1, flag_legend=False))
         plt.title(title)
 
     K = 1.

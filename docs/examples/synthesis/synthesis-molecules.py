@@ -1,29 +1,28 @@
 """Runs synthesis for molecular species separately. No atomic nor hydrogen lines."""
 
-import f311.pyfant as pf
-import f311.explorer as ex
 import matplotlib.pyplot as plt
-import f311.filetypes as ft
 import a99
+import pyfant
+import f311
 
 SUBPLOT_NUM_ROWS = 2
 SUBPLOT_NUM_COLS = 2
 
 if __name__ == "__main__":
-    pf.copy_star(starname="sun-grevesse-1996")
-    pf.link_to_data()
+    pyfant.copy_star(starname="sun-grevesse-1996")
+    pyfant.link_to_data()
 
     # Loads full molecular lines file
-    fmol = ft.FileMolecules()
+    fmol = pyfant.FileMolecules()
     fmol.load()
 
 
     runnables = []
     for molecule in fmol:
-        fmol2 = ft.FileMolecules()
+        fmol2 = pyfant.FileMolecules()
         fmol2.molecules = [molecule]
 
-        ecombo = pf.Combo()
+        ecombo = pyfant.Combo()
         # Overrides file "molecules.dat" with in-memory object
         ecombo.conf.file_molecules = fmol2
         ecombo.conf.flag_output_to_dir = True
@@ -40,7 +39,7 @@ if __name__ == "__main__":
 
         runnables.append(ecombo)
 
-    pf.run_parallel(runnables)
+    pyfant.run_parallel(runnables)
 
     num_panels = SUBPLOT_NUM_COLS*SUBPLOT_NUM_ROWS
     num_molecules = len(runnables)
@@ -71,8 +70,8 @@ if __name__ == "__main__":
 
             isubplot = i % num_panels + 1
             plt.subplot(SUBPLOT_NUM_ROWS, SUBPLOT_NUM_COLS, isubplot)
-            ex.draw_spectra_overlapped([ecombo.result["spec"]],
-               setup=ex.PlotSpectrumSetup(flag_xlabel=i/3 >= 1, flag_legend=False))
+            f311.draw_spectra_overlapped([ecombo.result["spec"]],
+               setup=f311.PlotSpectrumSetup(flag_xlabel=i/3 >= 1, flag_legend=False))
 
             _title = fmol[i].description
             if "]" in _title:

@@ -1,20 +1,20 @@
 """Runs synthesis over short wavelength range, then plots normalized and convolved spectrum"""
 
-import f311.pyfant as pf
-import f311.explorer as ex
+import pyfant
+import f311
 import matplotlib.pyplot as plt
 
 
 if __name__ == "__main__":
     # Copies files main.dat and abonds.dat to local directory (for given star)
-    pf.copy_star(starname="sun-grevesse-1996")
+    pyfant.copy_star(starname="sun-grevesse-1996")
     # Creates symbolic links to all non-star-specific files, such as atomic & molecular lines,
     # partition functions, etc.
-    pf.link_to_data()
+    pyfant.link_to_data()
 
     # # First run
     # Creates object that will run the four Fortran executables (innewmarcs, hydro2, pfant, nulbad)
-    obj = pf.Combo()
+    obj = pyfant.Combo()
     # synthesis interval start (angstrom)
     obj.conf.opt.llzero = 6530
     # synthesis interval end (angstrom)
@@ -28,6 +28,6 @@ if __name__ == "__main__":
     print("obj.result = {}".format(obj.result))
     res = obj.result
     plt.figure()
-    ex.draw_spectra_overlapped([res["norm"], res["convolved"]])
+    f311.draw_spectra_overlapped([res["norm"], res["convolved"]])
     plt.savefig("norm-convolved.png")
     plt.show()

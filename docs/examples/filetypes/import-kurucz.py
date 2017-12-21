@@ -12,9 +12,9 @@ This file can be obtained at http://kurucz.harvard.edu/molecules/c2/. First line
 ```
 """
 
-import f311.filetypes as ft
+import f311
 
-f = ft.load_any_file("c2dabrookek.asc")
+f = f311.load_any_file("c2dabrookek.asc")
 
 print(repr(f[0]).replace(", ", ",\n              "))
 
