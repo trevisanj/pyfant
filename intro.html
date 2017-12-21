@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>PyFANT - stellar spectral synthesis and tools &mdash; PyFANT 17.12.21 documentation</title>
+  <title>Introduction &mdash; PyFANT 17.12.21 documentation</title>
   
 
   
@@ -37,8 +37,9 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="PyFANT 17.12.21 documentation" href="#"/>
-        <link rel="next" title="Introduction" href="intro.html"/>
+    <link rel="top" title="PyFANT 17.12.21 documentation" href="index.html"/>
+        <link rel="next" title="Installation" href="install.html"/>
+        <link rel="prev" title="PyFANT - stellar spectral synthesis and tools" href="index.html"/>
     <link href="_static/style.css" rel="stylesheet" type="text/css">
 
 
@@ -59,7 +60,7 @@
           
 
           
-            <a href="#" class="icon icon-home"> PyFANT
+            <a href="index.html" class="icon icon-home"> PyFANT
           
 
           
@@ -93,14 +94,11 @@
               
             
             
-              <ul>
-<li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="coding.html">Coding using the API</a></li>
-<li class="toctree-l1"><a class="reference internal" href="scripts.html">Index of applications (scripts)</a></li>
+              <ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#contact">Contact</a></li>
 </ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="coding.html">Coding using the API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="scripts.html">Index of applications (scripts)</a></li>
@@ -118,7 +116,7 @@
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="#">PyFANT</a>
+          <a href="index.html">PyFANT</a>
         
       </nav>
 
@@ -146,15 +144,15 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="#">Docs</a> &raquo;</li>
+      <li><a href="index.html">Docs</a> &raquo;</li>
         
-      <li>PyFANT - stellar spectral synthesis and tools</li>
+      <li>Introduction</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/intro.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -167,26 +165,22 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="pyfant-stellar-spectral-synthesis-and-tools">
-<h1>PyFANT - stellar spectral synthesis and tools<a class="headerlink" href="#pyfant-stellar-spectral-synthesis-and-tools" title="Permalink to this headline">¶</a></h1>
-<p>Download this documentation in <a class="reference download internal" href="_downloads/PyFANT.pdf" download=""><code class="xref download docutils literal"><span class="pre">PDF</span></code></a>.</p>
-<p>Welcome!</p>
-<p>PyFANT is a Python interface to the <a class="reference external" href="http://trevisanj.github.io/PFANT">PFANT</a> stellar
-spectral synthesis code, with a varied set of extra tools.</p>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="coding.html">Coding using the API</a></li>
-<li class="toctree-l1"><a class="reference internal" href="scripts.html">Index of applications (scripts)</a></li>
-</ul>
-</div>
-<div class="section" id="api-reference">
-<h2>API Reference<a class="headerlink" href="#api-reference" title="Permalink to this headline">¶</a></h2>
-<ul class="simple">
-<li><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a> (all symbols listed alphabetically)</li>
-<li><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a> (whole f311 package tree)</li>
-</ul>
+  <div class="section" id="introduction">
+<h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h1>
+<p>PyFANT is a Python interface to <a class="reference external" href="http://trevisanj.github.io/PFANT">PFANT</a>, a stellar
+spectral synthesis code for Astronomy originally written in Fortran. PyFANT provides
+different ways to run spectral synthesis: command-line or graphical interface; single or batch mode.
+It also includes many additional tools to open, edit, visualize, convert and manipulate data files
+and spectra, and an API (application programming interfce) to create your own spectral
+synthesis applications in Python.</p>
+<p>This documentation addresses coding with the PyFANT API, and provides a reference to the scripts
+included in the <code class="docutils literal"><span class="pre">pyfant</span></code> package.</p>
+<p>For a tutorial on spectral synthesis using PFANT and PyFANT, please visit the PFANT project
+website: <a class="reference external" href="https://trevisanj.github.io/PFANT">https://trevisanj.github.io/PFANT</a>.</p>
+<div class="section" id="contact">
+<h2>Contact<a class="headerlink" href="#contact" title="Permalink to this headline">¶</a></h2>
+<p>For bugs reports, questions, suggestions, etc., please open an issue at the project
+site on GitHub: <a class="reference external" href="http://github.com/trevisanj/pyfant">http://github.com/trevisanj/pyfant</a>.</p>
 </div>
 </div>
 
@@ -200,8 +194,10 @@ spectral synthesis code, with a varied set of extra tools.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="intro.html" class="btn btn-neutral float-right" title="Introduction" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="install.html" class="btn btn-neutral float-right" title="Installation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
+      
+        <a href="index.html" class="btn btn-neutral" title="PyFANT - stellar spectral synthesis and tools" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

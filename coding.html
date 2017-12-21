@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Coding using the API &mdash; PyFANT 17.12.15.0 documentation</title>
+  <title>Coding using the API &mdash; PyFANT 17.12.21 documentation</title>
   
 
   
@@ -37,9 +37,9 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="PyFANT 17.12.15.0 documentation" href="index.html"/>
+    <link rel="top" title="PyFANT 17.12.21 documentation" href="index.html"/>
         <link rel="next" title="Index of applications (scripts)" href="scripts.html"/>
-        <link rel="prev" title="Conversion of molecular lines lists" href="convmol.html"/>
+        <link rel="prev" title="Installation" href="install.html"/>
     <link href="_static/style.css" rel="stylesheet" type="text/css">
 
 
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                17.12.15.0
+                17.12.21
               </div>
             
           
@@ -95,8 +95,8 @@
             
             
               <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="install.html">Pyfant Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="convmol.html">Conversion of molecular lines lists</a></li>
+<li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Coding using the API</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#spectral-synthesis">Spectral synthesis</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#spectral-synthesis-convolutions">Spectral synthesis - convolutions</a></li>
@@ -105,6 +105,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#spectral-synthesis-separate-molecules">Spectral synthesis - Separate molecules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#gaussian-profiles-as-nulbad-outputs">Gaussian profiles as <code class="docutils literal"><span class="pre">nulbad</span></code> outputs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#plot-hydrogen-profiles">Plot hydrogen profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#import-kurucz-molecular-linelist-file">Import Kurucz’ molecular linelist file</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="scripts.html">Index of applications (scripts)</a></li>
@@ -647,6 +648,51 @@ parameter (<a class="reference internal" href="#figsyn5"><span class="std std-nu
 <p class="caption"><span class="caption-number">Figure 8 </span><span class="caption-text">– hydrogen lines profiles as calculated by <code class="docutils literal"><span class="pre">hydro2</span></code>.</span></p>
 </div>
 </div>
+<div class="section" id="import-kurucz-molecular-linelist-file">
+<h2>Import Kurucz’ molecular linelist file<a class="headerlink" href="#import-kurucz-molecular-linelist-file" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This example loads file &quot;c2dabrookek.asc&quot; and prints a memory representation of its first line.</span>
+
+<span class="sd">This file can be obtained at http://kurucz.harvard.edu/molecules/c2/. First lines of file:</span>
+
+<span class="sd">```</span>
+<span class="sd">  287.7558-14.533 23.0  2354.082 24.0 -37095.578 6063a00e1  3d10e3  12 677  34741.495</span>
+<span class="sd">  287.7564-14.955 22.0  2282.704 23.0 -37024.124 6063a00f1  3d10f3  12 677  34741.419</span>
+<span class="sd">  287.7582-14.490 21.0  2214.696 22.0 -36955.900 6063a00e1  3d10e3  12 677  34741.205</span>
+<span class="sd">  287.7613-15.004 24.0  2428.453 25.0 -37169.280 6063a00f1  3d10f3  12 677  34740.828</span>
+<span class="sd">  287.7650-14.899 20.0  2149.765 21.0 -36890.147 6063a00f1  3d10f3  12 677  34740.382</span>
+<span class="sd">```</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">f311.filetypes</span> <span class="k">as</span> <span class="nn">ft</span>
+
+<span class="n">f</span> <span class="o">=</span> <span class="n">ft</span><span class="o">.</span><span class="n">load_any_file</span><span class="p">(</span><span class="s2">&quot;c2dabrookek.asc&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;, &quot;</span><span class="p">,</span> <span class="s2">&quot;,</span><span class="se">\n</span><span class="s2">              &quot;</span><span class="p">))</span>
+
+</pre></div>
+</div>
+<p>This code should print the following:</p>
+<div class="highlight-none"><div class="highlight"><pre><span></span>KuruczMolLine(lambda_=2877.558,
+              loggf=-14.533,
+              J2l=23.0,
+              E2l=2354.082,
+              Jl=24.0,
+              El=37095.578,
+              atomn0=6,
+              atomn1=6,
+              state2l=&#39;a&#39;,
+              v2l=0,
+              lambda_doubling2l=&#39;e&#39;,
+              spin2l=1,
+              statel=&#39;d&#39;,
+              vl=10,
+              lambda_doublingl=&#39;e&#39;,
+              spinl=3,
+              iso=12)
+</pre></div>
+</div>
+</div>
 </div>
 
 
@@ -662,7 +708,7 @@ parameter (<a class="reference internal" href="#figsyn5"><span class="std std-nu
         <a href="scripts.html" class="btn btn-neutral float-right" title="Index of applications (scripts)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="convmol.html" class="btn btn-neutral" title="Conversion of molecular lines lists" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="install.html" class="btn btn-neutral" title="Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -693,7 +739,7 @@ parameter (<a class="reference internal" href="#figsyn5"><span class="std std-nu
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'17.12.15.0',
+            VERSION:'17.12.21',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
