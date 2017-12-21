@@ -14,6 +14,15 @@ included in the ``pyfant`` package.
 For a tutorial on spectral synthesis using PFANT and PyFANT, please visit the PFANT project
 website: `<https://trevisanj.github.io/PFANT>`_.
 
+
+Acknowledgement
+---------------
+
+The project started in 2015 at IAG-USP (Institute of Astronomy, Geophysics and Atmospheric Sciences
+at University of São Paulo, Brazil).
+
+Funded by FAPESP - Research Support Foundation of the State of São Paulo, Brazil (2015-2017).
+
 Contact
 -------
 

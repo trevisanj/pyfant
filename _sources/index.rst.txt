@@ -10,26 +10,13 @@ Welcome!
 PyFANT is a Python interface to the `PFANT <http://trevisanj.github.io/PFANT>`_ stellar
 spectral synthesis code, with a varied set of extra tools.
 
-.. only:: html
+.. toctree::
+   :maxdepth: 1
 
-   .. toctree::
-      :maxdepth: 1
-
-      intro
-      install
-      coding
-      scripts
-
-.. only:: latex
-
-   .. toctree::
-      :maxdepth: 2
-
-      intro
-      install
-      coding
-      scripts
-
+   intro
+   install
+   coding
+   scripts
 
 .. only:: html
 
