@@ -1,32 +1,16 @@
-Pyfant - stellar spectral synthesis and tools
+PyFANT - stellar spectral synthesis and tools
 =============================================
 
 .. only:: html
 
-   Welcome!
+   Download this documentation in :download:`PDF <PyFANT.pdf>`.
 
-   Pyfant is a Python interface to `PFANT <http://trevisanj.github.io/PFANT>`_, a stellar
-   spectral synthesis code for Astronomy originally written in Fortran, with many additional
-   tools to open, edit, visualize, convert and manipulate data files,
-   and an API to create your own spectral synthesis applications in Python.
+Welcome!
 
-   .. toctree::
-      :maxdepth: 1
+PyFANT is a Python interface to the `PFANT <http://trevisanj.github.io/PFANT>`_ stellar
+spectral synthesis code, with a varied set of extra tools.
 
-      install
-      coding
-      convmol
-      scripts
-
-    API Reference
-    -------------
-
-    * :ref:`genindex` (all symbols listed alphabetically)
-    * :ref:`modindex` (whole f311 package tree)
-
-    .. hint:: You can also search using the sidebar box.
-
-.. only:: latex
+.. only:: html
 
    .. toctree::
       :maxdepth: 1
@@ -34,5 +18,24 @@ Pyfant - stellar spectral synthesis and tools
       intro
       install
       coding
-      convmol
       scripts
+
+.. only:: latex
+
+   .. toctree::
+      :maxdepth: 2
+
+      intro
+      install
+      coding
+      scripts
+
+
+.. only:: html
+
+    API Reference
+    -------------
+
+    * :ref:`genindex` (all symbols listed alphabetically)
+    * :ref:`modindex` (whole f311 package tree)
+

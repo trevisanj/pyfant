@@ -28,10 +28,10 @@ setup(
     name=PACKAGE_NAME,
     packages=find_packages(),
     include_package_data=True,
-    version='0.17.12.13.0',
+    version='17.12.21.0',
     license='GNU GPLv3',
     platforms='any',
-    description='Python interface to the PFANT Spectral Synthesis Software + extra tools',
+    description='Python interface to the PFANT spectral synthesis code, with a varied set of extra tools',
     author='Julio Trevisan',
     author_email='juliotrevisan@gmail.com',
     url='https://github.com/trevisanj/pyfant',
@@ -39,7 +39,7 @@ setup(
                "honl-london", "nist", "hitran", "multiplicity", "line strength", "kovacs", "franck-condon"],
     install_requires=["numpy", "scipy", "matplotlib", "astropy", "configobj", "bs4", "lxml",
                       "robobrowser", "requests", "fortranformat", "tabulate", "rows", "pyqt5",
-                      "f311", "a99>=0.17.12.08.4", "airvacuumvald"],
+                      "f311>=17.12.21.0", "airvacuumvald"],
     scripts=scripts
 )
 

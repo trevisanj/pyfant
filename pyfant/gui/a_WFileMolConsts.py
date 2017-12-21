@@ -42,7 +42,7 @@ class WFileMolConsts(a99.WEditor):
 
     def _get_layout_fn_moldb(self):
         help = "This is a file such as '{}', containing a list of diatomic molecules, their electronic systems, and constants for each electronic state.\n\n" \
-               "To create a new such file, or make a copy of Pyfant default one in your local directory, run `moldbed.py` first.".format(pyfant.FileMolDB.default_filename)
+               "To create a new such file, or make a copy of PyFANT default one in your local directory, run `moldbed.py` first.".format(pyfant.FileMolDB.default_filename)
         l = QHBoxLayout()
         a = self.keep_ref(QLabel("Molecular constants database file"))
         w = self.w_fn_moldb = a99.WSelectFile(self.parent_form)
