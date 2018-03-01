@@ -490,8 +490,13 @@ def _decode_mod_record(x, rec, inum):
 def _encode_mod_record(rec, h):
     """Encodes record into open file."""
     assert isinstance(rec, (ModRecord, MooRecord))
-    h.write(_ostr.pack(rec.ntot, rec.teff, rec.glog, rec.asalog,
-                       rec.asalalf, rec.nhe, rec.tit, rec.tiabs))
+
+    tit = rec.tit if isinstance(rec.tit, bytes) else rec.tit.encode("ascii")
+    tiabs = rec.tit if isinstance(rec.tiabs, bytes) else rec.tiabs.encode("ascii")
+
+    s = _ostr.pack(rec.ntot, rec.teff, rec.glog, rec.asalog,
+                       rec.asalalf, rec.nhe, tit, tiabs)
+    h.write(s)
     ny = 5 * rec.ntot
     y = np.reshape(np.vstack([rec.nh, rec.teta, rec.pe, rec.pg, rec.log_tau_ross]).T,
                    ny)
