@@ -60,7 +60,7 @@ if __name__ == "__main__":
         print("\nLooking into directory '{}'...".format(pyfant.get_pfant_data_path()))
         dirnames = pyfant.get_pfant_star_subdirs()
         dirnames.sort()
-        choice = a99.menu("Choose a star", [x.capitalize() for x in dirnames],
+        choice = a99.menu("Choose a star", ["{}{}".format(x[0].upper(), x[1:]) for x in dirnames],
                       cancel_label="quit", flag_allow_empty=True, flag_cancel=False)
         if choice is None or choice <= 0:
             sys.exit()
