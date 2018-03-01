@@ -335,7 +335,7 @@ class WOptionsEditor(a99.WEditor):
         #
         # innewmarcs, pfant
         #
-        self.__add_option(self.w_opa, 'ip', 'opa', False,
+        self.__add_option(self.w_opa, 'ip', 'opa', True,
         'Use MARCS opacities?',
         'Whether or not to include MARCS opacity coefficients (absorption and scattering) '
         'in the continuum.')
@@ -470,16 +470,16 @@ class WOptionsEditor(a99.WEditor):
                               'default: &lt;main_pas&gt; ' + _FROM_MAIN)
         o.flag_main = True
         o.color = COLOR_CONFIG
-        o = self.__add_option(self.w_abs, 'p', 'abs', True,
+        o = self.__add_option(self.w_abs, 'p', 'abs', False,
         'Use MARCS absorption coefficients?',
         'Whether or not to include MARCS <b>absorption</b> coefficients in the continuum'
         '<p>This option only has effect if <em>--opa<em> is True.')
-        o.flag_devel = True
+        o.flag_devel = False
         o = self.__add_option(self.w_sca, 'p', 'sca', True,
         'Use MARCS scattering coefficients?',
         'Whether or not to include MARCS <b>scattering</b> coefficients in the continuum'
         '<p>This option only has effect if <em>--opa<em> is True.')
-        o.flag_devel = True
+        o.flag_devel = False
 
         #
         # pfant, nulbad
