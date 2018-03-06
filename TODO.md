@@ -4,6 +4,8 @@
 
 - test well these GUIs
 
+- tune-zinf.py needs to release memory! With 298000 lines, it started to eat all memory
+
 ## Low priority
 
 - run4.py + fileoptions + x.py tab3: move documentation ifnroamtion to inside fileoptions so that I can publish the descriptions of the parameters in `run4.py --help`
