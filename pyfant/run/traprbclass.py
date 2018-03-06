@@ -20,11 +20,13 @@ class TRAPRB(Runnable):
 
     def __init__(self):
         Runnable.__init__(self)
-        self.exe_path = "fcf"
+        self.exe_path = "traprb"
         self.fn_input = "data.dat"
         self.fn_output = None
         self.flag_log_console = True
         self.flag_log_file = True
+
+        self.__popen = None
 
 
     def run(self):

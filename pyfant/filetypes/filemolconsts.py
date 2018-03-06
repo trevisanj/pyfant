@@ -20,7 +20,10 @@ class FileMolConsts(FilePy):
 
     def _do_load(self, filename):
         module = a99.import_module(filename)
-        self.fn_moldb = module.fn_moldb
+        try:
+            self.fn_moldb = module.fn_moldb
+        except AttributeError:
+            pass
         self._copy_attr(module, "molconsts", MolConsts)
 
     def _do_save_as(self, filename):

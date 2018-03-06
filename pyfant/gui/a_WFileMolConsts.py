@@ -63,7 +63,6 @@ class WFileMolConsts(a99.WEditor):
     def _do_load(self, fobj):
         assert isinstance(fobj, pyfant.FileMolConsts)
         self._f = fobj
-        print("OOOOOOOOOOOOOOOOOOOOOOOOOOO", fobj.fn_moldb)
         self.w_fn_moldb.value = fobj.fn_moldb
         self._do_load_moldb()
         self.w_molconsts.molconsts = fobj.molconsts

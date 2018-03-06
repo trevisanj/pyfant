@@ -6,6 +6,13 @@ This is the Python version of "nulbad", the PFANT convolution-with-Gaussian
 utility. This script ``nulbad.py`` was created in order to support more input
 formats.
 
+On the other hand, it does not open file "main.dat" to get parameters as
+Fortran ``nulbad`` does. The latter also has a re-sampling ability that
+this one doesn't.
+
+The resulting file, compared to Fortran ``nulbad``, is nearly alike (you may see
+a difference around the 6th digit). This one has one more data point at each side.
+
 Supported file formats
 ======================
 

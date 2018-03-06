@@ -27,10 +27,8 @@ class SetOfLines(a99.AttrsPart):
         bbv=None: TODO ?doc? (calculated from diatomic molecular constants)
         ddv=None: TODO ?doc? (calculated from diatomic molecular constants)
         fact=None: TODO ?doc? (usually =1.)
-        state_from=None: Transition letter; however I am not sure whether this is the lower or upper,
-                     but I suspect this is the lower one.
-        state_to=None: Transition letter; however I am not sure whether this is the lower or upper,
-                     but I suspect this is the upper one.
+        state_from=None: letter
+        state_to=None: letter
     """
 
     attrs = ["vl", "v2l", "qqv", "ggv", "bbv", "ddv", "fact", "num_lines", "state_from", "state_to"]
@@ -180,7 +178,7 @@ class Molecule(a99.AttrsPart):
 
         # # "titulo" part
         # (20161206) titulo is now used semantically: it has 3 fields separated by a "#":
-        # 'description # isotopes # transitions'.
+        # 'description # symbols # transitions'.
         #
         # For more information, refer to pfantlib.f90:read_molecules(),
         # look for where variable km_titulo is read from file
