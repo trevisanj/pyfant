@@ -22,7 +22,10 @@
                         [--sca SCA] [--zinf ZINF] [--zph ZPH] [-f FN_ABXFWHM]
                         [-s CUSTOM_SESSION_ID]
     
-    Runs pfant and nulbad in "multi mode" (equivalent to Tab 4 in ``x.py``) (several abundances X FWHM's)
+    Runs pfant and nulbad in "multi mode" (equivalent to Tab 4 in "x.py")
+    
+    This script runs spectral synthesis and convolutions with Gaussian profile for
+    several combinations of (atomic abundance, FWHM)
     
     optional arguments:
       -h, --help            show this help message and exit
