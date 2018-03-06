@@ -3,6 +3,10 @@ Index of applications (scripts)
 
 .. only:: html
 
+    This script was already executed. It can be executed only once.
+    pyfant -- Python interface to the PFANT spectral synthesis software (Fortran)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    
     Graphical applications
     ^^^^^^^^^^^^^^^^^^^^^^
     
@@ -28,9 +32,11 @@ Index of applications (scripts)
     * :doc:`link.py <autoscripts/script-link>`: Creates symbolic links to PFANT data files as an alternative to copying these (sometimes large) files into local directory
     * :doc:`merge-molecules.py <autoscripts/script-merge-molecules>`: Merges several PFANT molecular lines file into a single one
     * :doc:`nist-scraper.py <autoscripts/script-nist-scraper>`: Retrieves and prints a table of molecular constants from the NIST Chemistry Web Book [NISTRef]
+    * :doc:`nulbad.py <autoscripts/script-nulbad>`: Convolve spectrum with Gaussian profile.
     * :doc:`run-multi.py <autoscripts/script-run-multi>`: Runs pfant and nulbad in "multi mode" (equivalent to Tab 4 in "x.py")
     * :doc:`run4.py <autoscripts/script-run4>`: Runs the four Fortran binaries in sequence: `innewmarcs`, `hydro2`, `pfant`, `nulbad`
     * :doc:`vald3-to-atoms.py <autoscripts/script-vald3-to-atoms>`: Converts VALD3 atomic/molecular lines file to PFANT atomic lines file.
+    
     
 
 .. only:: latex
@@ -48,6 +54,7 @@ Index of applications (scripts)
         autoscripts/script-link
         autoscripts/script-merge-molecules
         autoscripts/script-nist-scraper
+        autoscripts/script-nulbad
         autoscripts/script-run-multi
         autoscripts/script-run4
         autoscripts/script-vald3-to-atoms

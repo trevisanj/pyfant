@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Script convmol.py &mdash; PyFANT 18.03.06 documentation</title>
+  <title>&lt;no title&gt; &mdash; PyFANT 18.03.06 documentation</title>
   
 
   
@@ -38,9 +38,6 @@
               href="../genindex.html"/>
         <link rel="search" title="Search" href="../search.html"/>
     <link rel="top" title="PyFANT 18.03.06 documentation" href="../index.html"/>
-        <link rel="up" title="Index of applications (scripts)" href="../scripts.html"/>
-        <link rel="next" title="Script mained.py" href="script-mained.html"/>
-        <link rel="prev" title="Script ated.py" href="script-ated.html"/>
     <link href="../_static/style.css" rel="stylesheet" type="text/css">
 
 
@@ -144,15 +141,13 @@
     
       <li><a href="../index.html">Docs</a> &raquo;</li>
         
-          <li><a href="../scripts.html">Index of applications (scripts)</a> &raquo;</li>
-        
-      <li>Script <code class="docutils literal"><span class="pre">convmol.py</span></code></li>
+      <li>&lt;no title&gt;</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../_sources/autoscripts/script-convmol.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/autoscripts/leave-nulbad.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -165,26 +160,54 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="script-convmol-py">
-<h1>Script <code class="docutils literal"><span class="pre">convmol.py</span></code><a class="headerlink" href="#script-convmol-py" title="Permalink to this headline">¶</a></h1>
-<div class="highlight-none"><div class="highlight"><pre><span></span>usage: convmol.py [-h] [--fn_molconsts [FN_MOLCONSTS]]
-                  [--fn_config [FN_CONFIG]]
+  <div class="highlight-none"><div class="highlight"><pre><span></span>usage: nulbad.py [-h] [--fwhm [FWHM]] [-f [{xy,fits}]] fn_flux [fn_cv]
 
-Conversion of molecular lines data to PFANT format
+Convolve spectrum with Gaussian profile.
+
+This is the Python version of &quot;nulbad&quot;, the PFANT convolution-with-Gaussian
+utility. This script ``nulbad.py`` was created in order to support more input
+formats.
+
+On the other hand, it does not open file &quot;main.dat&quot; to get parameters as
+Fortran ``nulbad`` does. The latter also has a re-sampling ability that
+this one doesn&#39;t.
+
+The resulting file, compared to Fortran ``nulbad``, is nearly alike (you may see
+a difference around the 6th digit). This one has one more data point at each side.
+
+Supported file formats
+======================
+
+    Format                         Input?   Output?  Notes
+    -----------------------------  -------  -------- ---------------------
+    ``pfant`` output               YES      no
+    XY (two-column &quot;lambda-flux&quot;)  YES      YES      default output format
+    FITS                           YES      YES
+
+Examples
+========
+
+  1) Create file &#39;flux.norm.pynulbad.0.08&#39;:
+
+     nulbad.py --fwhm 0.08 flux.norm
+
+  2) Create file &#39;flux.norm.pynulbad.0.08.fits&#39;:
+
+     nulbad.py --fwhm 0.08 -f fits flux.norm
+
+positional arguments:
+  fn_flux               input spectral filename
+  fn_cv                 output file name (default: &lt;fn_flux&gt;.&lt;fwhm&gt;)
 
 optional arguments:
   -h, --help            show this help message and exit
-  --fn_molconsts [FN_MOLCONSTS]
-                        File name for Molecular constants config file (Python
-                        code) (default: configmolconsts.py)
-  --fn_config [FN_CONFIG]
-                        File name for Configuration file for molecular lines
-                        conversion GUI (Python code) (default:
-                        configconvmol.py)
+  --fwhm [FWHM]         full width at half maximum (FWHM) of Gaussian curve
+                        (default: 0.12)
+  -f [{xy,fits}], --format [{xy,fits}]
+                        Output format (default: xy)
 </pre></div>
 </div>
 <p>This script belongs to package <em>pyfant</em></p>
-</div>
 
 
            </div>
@@ -193,15 +216,6 @@ optional arguments:
            </div>
           </div>
           <footer>
-  
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="script-mained.html" class="btn btn-neutral float-right" title="Script mained.py" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="script-ated.html" class="btn btn-neutral" title="Script ated.py" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
-    </div>
   
 
   <hr/>
