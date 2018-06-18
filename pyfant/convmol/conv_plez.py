@@ -1,140 +1,94 @@
-import pyfant
 from .convlog import *
-import numpy as np
 from .conv import *
-
+import pyfant
 
 __all__ = ["ConvPlez"]
 
 
-# TODO This is incomplete: have to sort other things first. The main issue is whether we are going to extarct more than one system at once from one of these multiple-system files
-
 class ConvPlez(Conv):
-    """Converts Plez molecular lines data to PFANT "sets of lines" """
+    """Converts Plez molecular lines data to PFANT "sets of lines"
 
-    def __init__(self, flag_hlf=False, flag_normhlf=False, flag_fcf=False, flag_quiet=False,
-                 fcfs=None, *args, **kwargs):
+        Args:
+            flag_hlf: Whether to calculate the gf's using Honl-London factors or
+                      use Plez's loggf instead
+
+                      ***Note** old format (FilePlezMoleculeOld) does not have loggf information,
+                                therefore the only way to work with the latter file type is
+                                flag_hlf==True
+
+            flag_normhlf: Whether to multiply calculated gf's by normalization factor
+
+            flag_fcf: Whether to multiply calculated gf's by Franck-Condon Factor
+
+            flag_quiet: Will not log exceptions when a molecular line fails
+
+            name: name of molecule+system, e.g., "NH A-X PGopher"
+    """
+
+    def __init__(self, flag_hlf=False, flag_fcf=False, flag_quiet=False, flag_special_fcf=False,
+                 fcfs=None, name="", *args, **kwargs):
         Conv.__init__(self, *args, **kwargs)
         self.flag_hlf = flag_hlf
-        self.flag_normhlf = flag_normhlf
         self.flag_fcf = flag_fcf
         self.flag_quiet = flag_quiet
+        self.flag_special_fcf = flag_special_fcf
         self.fcfs = fcfs
+        self.name = name
 
-
-    def _make_sols(self, lines):
-        from f311 import convmol as cm
+    def _make_sols(self, file):
 
         def append_error(msg):
             log.errors.append("#{}{} line: {}".format(i + 1, a99.ordinal_suffix(i + 1), str(msg)))
 
-        # C     BAND (v',v'')=(VL,V2L)
-        # C     WN: vacuum wavenumber   WL : air wavelength
-        # C     J2L: lower state angular momentum number
-        # C     iso: isotope/ 26: 12C16O, 36: 13C16O, 27: 12C17O, 28: 12C18O
-        # C     ramo: branch, for P: ID=1, for R: ID=2
-        # C     name: file name/ coisovLv2L
-        # C     HL: Honl-London factor
-        # C     FR: oscillator strength
+        if not isinstance(file, pyfant.FilePlezLinelist):
+            raise TypeError("Invalid type for argument 'fileobj': {}".format(type(file).__name__))
 
-        if not isinstance(self.lines, pyfant.FilePlezTiO):
-            raise TypeError("Invalid type for argument 'lines': {}".format(type(lines).__name__))
+        lines = file.molecules[self.name].lines
+        n = len(lines)
 
-        transition_dict = filemoldb.get_transition_dict()
-        linedata = lines.get_numpy_array()
+        STATEL = self.molconsts["from_label"]
+        STATE2L = self.molconsts["to_label"]
 
-        trcols = linedata[["vup", "vlow", "state_from", "state_to"]]
-        trset = np.unique(trcols)
-        # trset = trcols.drop_duplicates()
-        # trset["id_state"] = 0
-        #
-        #
-        # for _, tr in trset.iterrows():
-        #     state_from = tr["state_from"].decode("ascii")
-        #     state_to = tr["state_to"].decode("ascii")
-        #     try:
-        #         molconsts = transition_dict[(molconsts["formula"], state_from, state_to)]
-        #         tr["id_state"] = molconsts["id_state"]
-        #     except KeyError as e:
-        #         msg = "Will have to skip transition: '{}'".format(a99.str_exc(e))
-        #         log.errors.append(msg)
-        #         if not flag_quiet:
-        #             a99.get_python_logger().exception(msg)
-        #         continue
+        mtools = self.kovacs_toolbox()
 
+        # Prepares result
+        sols = ConvSols(self.qgbd_calculator, self.molconsts)
+        log = MolConversionLog(n)
 
+        for i, line in enumerate(lines):
+            branch = line.branch
 
-        sols = []
-
-        S = molconsts.get_S2l()
-        DELTAK = molconsts.get_deltak()
-        fe = molconsts["fe"]
-
-        # TODO of course this hard-wire needs change; now just a text for OH A2Sigma-X2Pi
-        LAML = 0  # Sigma
-        LAM2L = 1 # Pi
-
-        if self.flag_hlf:
-            formulas = ph.doublet.get_honllondon_formulas(LAML, LAM2L)
-        log = MolConversionLog(len(lines))
-
-        for tr in trset:
-            state_from = tr["state_from"].decode("ascii")
-            state_to = tr["state_to"].decode("ascii")
             try:
-                molconsts = transition_dict[(molconsts["formula"], state_from, state_to)]
-            except KeyError as e:
-                msg = "Will have to skip transition: '{}'".format(a99.str_exc(e))
+                sj = 1.
+
+                if self.flag_hlf:
+                    try:
+                        hlf = mtools.get_sj(line.vl, line.v2l, line.J2l, branch)
+                    except pyfant.NoLineStrength:
+                        log.skip_reasons["Cannot calculate HLF"] += 1
+                        continue
+
+                    if hlf < 0:
+                        log.skip_reasons["Negative SJ"] += 1
+                        continue
+
+                    sj *= hlf
+
+                else:
+                    sj *= 10**line.loggf
+
+                if self.flag_fcf:
+                    sj *= self._get_fcf(line.vl, line.v2l, self.flag_special_fcf)
+
+            except Exception as e:
+                reason = a99.str_exc(e)
+                log.skip_reasons[reason] += 1
+                msg = "#{}{} line: {}".format(i + 1, a99.ordinal_suffix(i + 1), reason)
                 log.errors.append(msg)
                 if not self.flag_quiet:
                     a99.get_python_logger().exception(msg)
                 continue
 
-            qgbd = self.calculate_qgbd(tr["vlow"])
-            qqv = qgbd["qv"]
-            ggv = qgbd["gv"]
-            bbv = qgbd["bv"]
-            ddv = qgbd["dv"]
-            sol = pyfant.SetOfLines(tr["vup"], tr["vlow"], qqv, ggv, bbv, ddv, 1., state_from, state_to)
-            sols.append(sol)
+            sols.append_line(line, sj, branch)
 
-            mask = trcols == tr  # Boolean mask for linedata
-            for i, line in enumerate(linedata[mask]):
-                try:
-                    wl = line["lambda_"]
-                    J2l = line["Jlow"]
-                    branch = line["branch"].decode("ascii")
-                    gf = line["gf"]
-
-                    if flag_normhlf:
-                        k = 2./ ((2*S+1) * (2*J2l+1) * (2-DELTAK))
-                    else:
-                        k = 1.
-
-                    if flag_hlf:
-                        raise NotImplementedError("Hönl-London factors not implemented for Plez molecular lines file conversion")
-
-                        # hlf = formulas[branch](line.J2l)
-                        # gf_pfant = hlf*k
-
-                    else:
-                        gf_pfant = k*gf
-
-                    if flag_fcf:
-                        raise RuntimeError("Franck-Condon factors not implemented for Plez molecular lines file conversion")
-
-                        # fcf = pyfant.get_fcf_oh(line.vl, line.v2l)
-                        # gf_pfant *= fcf
-
-                    sol.append_line(wl, gf_pfant, J2l, branch)
-
-
-                except Exception as e:
-                    msg = "#{}{} line: {}".format(i + 1, a99.ordinal_suffix(i + 1), a99.str_exc(e))
-                    log.errors.append(msg)
-                    if not flag_quiet:
-                        a99.get_python_logger().exception(msg)
-                    continue
-
-
-        return (sols, log)
+        return sols, log

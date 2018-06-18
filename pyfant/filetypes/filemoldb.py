@@ -49,6 +49,15 @@ class FileMolDB(FileSQLiteDB):
 
     }
 
+    def get_molconsts(self, s):
+        """Parse string and return MolConsts object."""
+        import pyfant
+        ret = pyfant.MolConsts()
+        ret.populate_all_using_str(self, s)
+        return ret
+
+
+
     def query_molecule(self, **kwargs):
         """Convenience function to query 'molecule' table
 

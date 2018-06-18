@@ -33,6 +33,10 @@ class PlezMolecularLine(PlezLine):
     def __init__(self):
         PlezLine.__init__(self)
         self.branch = ""
+        self.vl = 0
+        self.v2l = 0
+        self.Jl = 0.
+        self.J2l = 0.
 
 
 class PlezSpecies(object):
@@ -124,8 +128,14 @@ class FilePlezLinelist(DataFile):
 
                         if not is_atom:
                             # Get the branch
-                            tmp = s[s.index("'"):]
-                            line.branch = expr_branch.search(tmp).group()
+                            tmp = s[s.index("'"):].strip("'").split()
+                            _branch = tmp[0]
+                            line.branch = expr_branch.search(_branch).group()
+                            line.Jl = float(tmp[2])
+                            line.vl = int(tmp[4])
+                            line.v2l = int(tmp[6])
+                            line.J2l = float(tmp[7])
+
 
                         species.lines.append(line)
 
