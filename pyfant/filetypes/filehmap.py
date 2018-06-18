@@ -65,7 +65,7 @@ class FileHmap(DataFile):
                         continue
 
                     r = HmapRow()
-                    [r.fn, r.na, r.nb, r.clam, r.kiex, r.c1] = line.split()
+                    [r.fn, r.na, r.nb, r.clam, r.kiex, r.c1] = line.split()[:6]
                     [r.na, r.nb] = list(map(int, (r.na, r.nb)))
                     [r.clam, r.kiex, r.c1] = list(map(float, [r.clam, r.kiex, r.c1]))
 
