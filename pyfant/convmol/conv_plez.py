@@ -46,6 +46,9 @@ class ConvPlez(Conv):
         lines = file.molecules[self.name].lines
         n = len(lines)
 
+        if n == 0:
+            raise RuntimeError("Species '{}' has zero lines".format(self.name))
+
         STATEL = self.molconsts["from_label"]
         STATE2L = self.molconsts["to_label"]
 
