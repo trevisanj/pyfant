@@ -66,9 +66,10 @@ class FilePlezLinelist(DataFile):
 
     def _do_load(self, filename):
 
-        #  '0107.000014          '  1        1300
-        #  'NH-ca PGopher'
-        #     3257.93970    1.730   -2.102 .00    3.  0.216E+07 'Pe(2)                0   1.0  e    1  -  0   2.0  e    1 Ram et al.
+         # '0107.000014          '  1       12150
+         # 'NH A-X Fernando et al., 2018, JQSRT, 217,29 '
+         #    3357.55219    0.004   -2.205 .00    3.  0.000E+00 'qR23(0)        0    1.0  e  F2e  -  0    0.0  e  F3e A            X           '
+         #    3349.33946    0.004   -2.625 .00    3.  0.000E+00 'rR3(0)         0    1.0  e  F3e  -  0    0.0  e  F3e       A            X     '
 
         with open(filename, "r") as h:
             self._do_load_h(h, filename)
@@ -132,7 +133,7 @@ class FilePlezLinelist(DataFile):
                             _branch = tmp[0]
                             line.branch = expr_branch.search(_branch).group()
                             line.Jl = float(tmp[2])
-                            line.vl = int(tmp[4])
+                            line.vl = int(tmp[1])
                             line.v2l = int(tmp[6])
                             line.J2l = float(tmp[7])
 
