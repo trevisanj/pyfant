@@ -46,6 +46,20 @@ class FileAbonds(DataFile):
         """Returns length of "ele" attribute."""
         return len(self.ele)
 
+    def __getitem__(self, ele):
+        """Return abundance given element symbol.
+
+        notes_per_ele may be None if index is beyond len.
+        """
+        import pyfant as pf
+        i = self.ele.index(pf.adjust_atomic_symbol(ele))
+        return self.abol[i]
+
+    def __setitem__(self, ele, abol):
+        import pyfant as pf
+        i = self.ele.index(pf.adjust_atomic_symbol(ele))
+        self.abol[i] = abol
+
     def _do_load(self, filename):
         self.abol, self.ele, self.notes_per_ele = [], [], []
 
