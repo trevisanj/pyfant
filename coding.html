@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Coding using the API &mdash; PyFANT 18.03.06 documentation</title>
+  <title>Coding using the API &mdash; PyFANT 19.12.04 documentation</title>
   
 
   
@@ -17,46 +17,39 @@
   
 
   
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
 
-  
-  
     
 
   
-
-  
-  
-    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  
-
-  
-    <link rel="stylesheet" href="_static/custom.css" type="text/css" />
-  
-
-  
-        <link rel="index" title="Index"
-              href="genindex.html"/>
-        <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="PyFANT 18.03.06 documentation" href="index.html"/>
-        <link rel="next" title="Index of applications (scripts)" href="scripts.html"/>
-        <link rel="prev" title="Installation" href="install.html"/>
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Index of applications (scripts)" href="scripts.html" />
+    <link rel="prev" title="Installation" href="install.html" />
     <link href="_static/style.css" rel="stylesheet" type="text/css">
-
-
-  
-  <script src="_static/js/modernizr.min.js"></script>
 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
@@ -70,7 +63,7 @@
             
             
               <div class="version">
-                18.03.06
+                19.12.04
               </div>
             
           
@@ -103,7 +96,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#spectral-synthesis-continuum">Spectral synthesis - Continuum</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#spectral-synthesis-separate-atomic-species">Spectral synthesis - Separate atomic species</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#spectral-synthesis-separate-molecules">Spectral synthesis - Separate molecules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#gaussian-profiles-as-nulbad-outputs">Gaussian profiles as <code class="docutils literal"><span class="pre">nulbad</span></code> outputs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#gaussian-profiles-as-nulbad-outputs">Gaussian profiles as <code class="docutils literal notranslate"><span class="pre">nulbad</span></code> outputs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#plot-hydrogen-profiles">Plot hydrogen profiles</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#import-kurucz-molecular-linelist-file">Import Kurucz’ molecular linelist file</a></li>
 </ul>
@@ -120,7 +113,7 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+      <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="index.html">PyFANT</a>
@@ -128,9 +121,10 @@
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
 
 
@@ -180,7 +174,7 @@ manipulate and save PFANT data files allow for complex batch operations.</p>
 <div class="section" id="spectral-synthesis">
 <h2>Spectral synthesis<a class="headerlink" href="#spectral-synthesis" title="Permalink to this headline">¶</a></h2>
 <p>The following code generates <a class="reference internal" href="#figsyn0"><span class="std std-numref">Figure 1</span></a>.</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;Runs synthesis over short wavelength range, then plots normalized and convolved spectrum&quot;&quot;&quot;</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;Runs synthesis over short wavelength range, then plots normalized and convolved spectrum&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">pyfant</span>
 <span class="kn">import</span> <span class="nn">f311</span>
@@ -217,14 +211,14 @@ manipulate and save PFANT data files allow for complex batch operations.</p>
 </div>
 <div class="figure align-center" id="id1">
 <span id="figsyn0"></span><img alt="_images/norm-convolved.png" src="_images/norm-convolved.png" />
-<p class="caption"><span class="caption-number">Figure 1 </span><span class="caption-text">– <code class="docutils literal"><span class="pre">pfant</span></code> (file “flux.norm”) and <code class="docutils literal"><span class="pre">nulbad</span></code> outputs.</span></p>
+<p class="caption"><span class="caption-number">Figure 1 </span><span class="caption-text">– <code class="docutils literal notranslate"><span class="pre">pfant</span></code> (file “flux.norm”) and <code class="docutils literal notranslate"><span class="pre">nulbad</span></code> outputs.</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
 </div>
 </div>
 <div class="section" id="spectral-synthesis-convolutions">
 <h2>Spectral synthesis - convolutions<a class="headerlink" href="#spectral-synthesis-convolutions" title="Permalink to this headline">¶</a></h2>
 <p>The following example convolves the synthetic spectrum (file “flux.norm”) with Gaussian profiles of
 different FWHMs (<a class="reference internal" href="#figsyn1"><span class="std std-numref">Figure 2</span></a>).</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="ch">#!/usr/bin/env python</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/usr/bin/env python</span>
 
 <span class="sd">&quot;&quot;&quot;Runs synthesis over short wavelength range, then plots normalized and convolved spectrum&quot;&quot;&quot;</span>
 
@@ -276,13 +270,13 @@ different FWHMs (<a class="reference internal" href="#figsyn1"><span class="std 
 </div>
 <div class="figure align-center" id="id2">
 <span id="figsyn1"></span><img alt="_images/many-convs.png" src="_images/many-convs.png" />
-<p class="caption"><span class="caption-number">Figure 2 </span><span class="caption-text">– single <code class="docutils literal"><span class="pre">pfant</span></code> output and several <code class="docutils literal"><span class="pre">nulbad</span></code> outputs.</span></p>
+<p class="caption"><span class="caption-number">Figure 2 </span><span class="caption-text">– single <code class="docutils literal notranslate"><span class="pre">pfant</span></code> output and several <code class="docutils literal notranslate"><span class="pre">nulbad</span></code> outputs.</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
 </div>
 </div>
 <div class="section" id="spectral-synthesis-continuum">
 <h2>Spectral synthesis - Continuum<a class="headerlink" href="#spectral-synthesis-continuum" title="Permalink to this headline">¶</a></h2>
 <p>The following code generates <a class="reference internal" href="#figcont"><span class="std std-numref">Figure 3</span></a>.</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;Runs synthesis over large wavelength range, then plots continuum&quot;&quot;&quot;</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;Runs synthesis over large wavelength range, then plots continuum&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">pyfant</span>
 <span class="kn">import</span> <span class="nn">f311</span>
@@ -326,7 +320,7 @@ different FWHMs (<a class="reference internal" href="#figsyn1"><span class="std 
 </div>
 <div class="figure align-center" id="id3">
 <span id="figcont"></span><img alt="_images/continuum.png" src="_images/continuum.png" />
-<p class="caption"><span class="caption-number">Figure 3 </span><span class="caption-text">– continuum.</span></p>
+<p class="caption"><span class="caption-number">Figure 3 </span><span class="caption-text">– continuum.</span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
 </div>
 </div>
 <div class="section" id="spectral-synthesis-separate-atomic-species">
@@ -335,7 +329,7 @@ different FWHMs (<a class="reference internal" href="#figsyn1"><span class="std 
 (element, ionization level) atomic species.</p>
 <p>The following code calculates isolated atomic spectra for a list of arbitrarily chosen atomic
 species (<a class="reference internal" href="#figatoms"><span class="std std-numref">Figure 4</span></a>).</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;Runs synthesis for specified atomic species separately. No molecules or hydrogen lines.&quot;&quot;&quot;</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;Runs synthesis for specified atomic species separately. No molecules or hydrogen lines.&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">pyfant</span>
 <span class="kn">import</span> <span class="nn">f311</span>
@@ -396,14 +390,14 @@ species (<a class="reference internal" href="#figatoms"><span class="std std-num
 </div>
 <div class="figure align-center" id="id4">
 <span id="figatoms"></span><img alt="_images/synthesis-atoms.png" src="_images/synthesis-atoms.png" />
-<p class="caption"><span class="caption-number">Figure 4 </span><span class="caption-text">– atomic lines synthesized separately for each species.</span></p>
+<p class="caption"><span class="caption-number">Figure 4 </span><span class="caption-text">– atomic lines synthesized separately for each species.</span><a class="headerlink" href="#id4" title="Permalink to this image">¶</a></p>
 </div>
 </div>
 <div class="section" id="spectral-synthesis-separate-molecules">
 <h2>Spectral synthesis - Separate molecules<a class="headerlink" href="#spectral-synthesis-separate-molecules" title="Permalink to this headline">¶</a></h2>
 <p>The following code generates <a class="reference internal" href="#figmol0"><span class="std std-numref">Figure 5</span></a>, <a class="reference internal" href="#figmol1"><span class="std std-numref">Figure 6</span></a>,
 and additional plots not shown here.</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;Runs synthesis for molecular species separately. No atomic nor hydrogen lines.&quot;&quot;&quot;</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;Runs synthesis for molecular species separately. No atomic nor hydrogen lines.&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">import</span> <span class="nn">a99</span>
@@ -488,19 +482,19 @@ and additional plots not shown here.</p>
 </div>
 <div class="figure align-center" id="id5">
 <span id="figmol0"></span><img alt="_images/synthesis-molecules-0.png" src="_images/synthesis-molecules-0.png" />
-<p class="caption"><span class="caption-number">Figure 5 </span><span class="caption-text">– molecular lines synthesized separately for each species</span></p>
+<p class="caption"><span class="caption-number">Figure 5 </span><span class="caption-text">– molecular lines synthesized separately for each species</span><a class="headerlink" href="#id5" title="Permalink to this image">¶</a></p>
 </div>
 <div class="figure align-center" id="id6">
 <span id="figmol1"></span><img alt="_images/synthesis-molecules-1.png" src="_images/synthesis-molecules-1.png" />
-<p class="caption"><span class="caption-number">Figure 6 </span><span class="caption-text">– molecular lines synthesized separately for each species.</span></p>
+<p class="caption"><span class="caption-number">Figure 6 </span><span class="caption-text">– molecular lines synthesized separately for each species.</span><a class="headerlink" href="#id6" title="Permalink to this image">¶</a></p>
 </div>
 </div>
 <div class="section" id="gaussian-profiles-as-nulbad-outputs">
-<h2>Gaussian profiles as <code class="docutils literal"><span class="pre">nulbad</span></code> outputs<a class="headerlink" href="#gaussian-profiles-as-nulbad-outputs" title="Permalink to this headline">¶</a></h2>
-<p><code class="docutils literal"><span class="pre">nulbad</span></code> is one of the Fortran executables of the PFANT package. It is the one that convolves
-the synthetic spectrum calculated by <code class="docutils literal"><span class="pre">pfant</span></code> with a Gaussian profile specified by a “fwhm”
+<h2>Gaussian profiles as <code class="docutils literal notranslate"><span class="pre">nulbad</span></code> outputs<a class="headerlink" href="#gaussian-profiles-as-nulbad-outputs" title="Permalink to this headline">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">nulbad</span></code> is one of the Fortran executables of the PFANT package. It is the one that convolves
+the synthetic spectrum calculated by <code class="docutils literal notranslate"><span class="pre">pfant</span></code> with a Gaussian profile specified by a “fwhm”
 parameter (<a class="reference internal" href="#figsyn5"><span class="std std-numref">Figure 7</span></a>).</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Nulbad&#39;s &quot;impulse response&quot;</span>
 
 <span class="sd">Saves &quot;impulse&quot; spectrum (just a spike at lambda=5000 angstrom) as &quot;flux.norm&quot;,</span>
@@ -558,13 +552,13 @@ parameter (<a class="reference internal" href="#figsyn5"><span class="std std-nu
 </div>
 <div class="figure align-center" id="id7">
 <span id="figsyn5"></span><img alt="_images/gaussian-profiles.png" src="_images/gaussian-profiles.png" />
-<p class="caption"><span class="caption-number">Figure 7 </span><span class="caption-text">– Gaussian profiles illustrated for different FWHMs.</span></p>
+<p class="caption"><span class="caption-number">Figure 7 </span><span class="caption-text">– Gaussian profiles illustrated for different FWHMs.</span><a class="headerlink" href="#id7" title="Permalink to this image">¶</a></p>
 </div>
 </div>
 <div class="section" id="plot-hydrogen-profiles">
 <h2>Plot hydrogen profiles<a class="headerlink" href="#plot-hydrogen-profiles" title="Permalink to this headline">¶</a></h2>
 <p>The following code generates <a class="reference internal" href="#figsyn6"><span class="std std-numref">Figure 8</span></a>.</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Calculates hydrogen lines profiles, then plots them in several 3D subplots</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
@@ -642,12 +636,12 @@ parameter (<a class="reference internal" href="#figsyn5"><span class="std std-nu
 </div>
 <div class="figure align-center" id="id8">
 <span id="figsyn6"></span><img alt="_images/hydrogen-profiles.png" src="_images/hydrogen-profiles.png" />
-<p class="caption"><span class="caption-number">Figure 8 </span><span class="caption-text">– hydrogen lines profiles as calculated by <code class="docutils literal"><span class="pre">hydro2</span></code>.</span></p>
+<p class="caption"><span class="caption-number">Figure 8 </span><span class="caption-text">– hydrogen lines profiles as calculated by <code class="docutils literal notranslate"><span class="pre">hydro2</span></code>.</span><a class="headerlink" href="#id8" title="Permalink to this image">¶</a></p>
 </div>
 </div>
 <div class="section" id="import-kurucz-molecular-linelist-file">
 <h2>Import Kurucz’ molecular linelist file<a class="headerlink" href="#import-kurucz-molecular-linelist-file" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">This example loads file &quot;c2dabrookek.asc&quot; and prints a memory representation of its first line.</span>
 
 <span class="sd">This file can be obtained at http://kurucz.harvard.edu/molecules/c2/. First lines of file:</span>
@@ -670,7 +664,7 @@ parameter (<a class="reference internal" href="#figsyn5"><span class="std std-nu
 </pre></div>
 </div>
 <p>This code should print the following:</p>
-<div class="highlight-none"><div class="highlight"><pre><span></span>KuruczMolLine(lambda_=2877.558,
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>KuruczMolLine(lambda_=2877.558,
               loggf=-14.533,
               J2l=23.0,
               E2l=2354.082,
@@ -694,9 +688,7 @@ parameter (<a class="reference internal" href="#figsyn5"><span class="std std-nu
 
 
            </div>
-           <div class="articleComments">
-            
-           </div>
+           
           </div>
           <footer>
   
@@ -705,7 +697,7 @@ parameter (<a class="reference internal" href="#figsyn5"><span class="std std-nu
         <a href="scripts.html" class="btn btn-neutral float-right" title="Index of applications (scripts)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="install.html" class="btn btn-neutral" title="Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="install.html" class="btn btn-neutral float-left" title="Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -714,11 +706,11 @@ parameter (<a class="reference internal" href="#figsyn5"><span class="std std-nu
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2015-2017, JT.
+        &copy; Copyright 2015-2017, JT
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -731,36 +723,15 @@ parameter (<a class="reference internal" href="#figsyn5"><span class="std std-nu
   
 
 
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'./',
-            VERSION:'18.03.06',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="_static/jquery.js"></script>
-      <script type="text/javascript" src="_static/underscore.js"></script>
-      <script type="text/javascript" src="_static/doctools.js"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="_static/js/theme.js"></script>
-  
-
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
   </script>
+
+  
+  
+    
    
 
 </body>

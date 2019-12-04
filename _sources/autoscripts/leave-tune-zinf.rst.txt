@@ -13,14 +13,10 @@
     This script runs pfant for each atomic line to determine the width of each
     atomic line and thus zinf.
     
-    Note: pfant is run using most of its default settings and will require the
-    following files to exist in the current directory:
-      - main.dat
-      - dissoc.dat
-      - abonds.dat
-      - modeles.mod
-      - partit.dat
-      - absoru2.dat
+    Note: if input files main.dat and abonds.dat are not present in current directory, will copy the
+          Sun data.
+    
+    Note: if modeles.mod is not present in current directory, will run innewmarcs to generate this file.
     
     Note: the precision in the zinf found depends on the calculation step ("pas")
     specified in main.dat. A higher "pas" means lower precision and a tendency to

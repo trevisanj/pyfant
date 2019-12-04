@@ -3,7 +3,6 @@ Index of applications (scripts)
 
 .. only:: html
 
-    This script was already executed. It can be executed only once.
     pyfant -- Python interface to the PFANT spectral synthesis software (Fortran)
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
@@ -35,6 +34,7 @@ Index of applications (scripts)
     * :doc:`nulbad.py <autoscripts/script-nulbad>`: Convolve spectrum with Gaussian profile.
     * :doc:`run-multi.py <autoscripts/script-run-multi>`: Runs pfant and nulbad in "multi mode" (equivalent to Tab 4 in "x.py")
     * :doc:`run4.py <autoscripts/script-run4>`: Runs the four Fortran binaries in sequence: `innewmarcs`, `hydro2`, `pfant`, `nulbad`
+    * :doc:`turbospectrum-to-atoms.py <autoscripts/script-turbospectrum-to-atoms>`: Converts TurboSpectrum atomic lines file to PFANT atomic lines file.
     * :doc:`vald3-to-atoms.py <autoscripts/script-vald3-to-atoms>`: Converts VALD3 atomic/molecular lines file to PFANT atomic lines file.
     
     
@@ -57,6 +57,7 @@ Index of applications (scripts)
         autoscripts/script-nulbad
         autoscripts/script-run-multi
         autoscripts/script-run4
+        autoscripts/script-turbospectrum-to-atoms
         autoscripts/script-vald3-to-atoms
         autoscripts/script-abed
         autoscripts/script-ated
