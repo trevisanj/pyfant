@@ -135,7 +135,7 @@ def vald3_to_atoms(file_obj):
             a.lines.append(line)
     except Exception as e:
         raise type(e)(("Error around %d%s row of VALD3 file" %
-            (r+1, a99.ordinal_suffix(r)))+": "+str(e)).with_traceback(sys.exc_info()[2])
+            (r, a99.ordinal_suffix(r)))+": "+str(e)).with_traceback(sys.exc_info()[2])
     _logger.debug("VALD3-to-atoms conversion successful!")
     _logger.info("Number of lines skipped (molecules): %d" % num_skip_mol)
     _logger.info("Number of lines skipped (ioni > 2): %d" % num_skip_ioni)

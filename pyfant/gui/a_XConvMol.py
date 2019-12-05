@@ -36,7 +36,7 @@ class _DataSource(a99.AttrsPart):
 
 
 # This defines the order of the panels
-_NAMES = ["HITRAN", "VALD3", "Kurucz", "TurboSpectrum", ]
+_NAMES = ["HITRAN", "VALD3", "Kurucz", "Plez", ]
 _SOURCES = OrderedDict([[name, _DataSource(name)] for name in _NAMES])
 
 
@@ -540,16 +540,136 @@ class _WKuruczPanel(a99.WBase):
             cb.blockSignals(save)
 
 
-class _WTurboSpectrumPanel(a99.WBase):
+# class _WPlezPanel(a99.WBase):
+#     def __init__(self, parent):
+#         a99.WBase.__init__(self, parent.parent_form)
+#
+#         self.w_conv = parent
+#
+#         lw = QVBoxLayout()
+#         self.setLayout(lw)
+#
+#         lw.addWidget(self.keep_ref(QLabel("Plez")))
+
+
+class _WPlezPanel(a99.WBase):
+    """
+    This panel allows to load a Plez molecular lines file
+    """
+
+    @property
+    def data(self):
+        """Returns FilePlezLineliesBase or None"""
+        return self._flines
+
+    @property
+    def species(self):
+        return self._get_species()
+
+    @species.setter
+    def species(self, value):
+        self._set_species(value)
+
     def __init__(self, parent):
         a99.WBase.__init__(self, parent.parent_form)
 
         self.w_conv = parent
 
+        self._flines = None  # FilePlezLinelistBase
+        # list of species names, filled when file is loaded
+        self._speciess = []
+
         lw = QVBoxLayout()
         self.setLayout(lw)
 
-        lw.addWidget(self.keep_ref(QLabel("TurboSpectrum")))
+        lw.addWidget(self.keep_ref(QLabel("Plez")))
+
+        lg = QGridLayout()
+        lw.addLayout(lg)
+
+        i_row = 0
+        a = self.keep_ref(QLabel("Plez molecular lines file"))
+        w = self.w_file = a99.WSelectFile(self.parent_form)
+        w.changed.connect(self._file_changed)
+        lg.addWidget(a, i_row, 0)
+        lg.addWidget(w, i_row, 1)
+        i_row += 1
+
+        a = self.keep_ref(QLabel("Species"))
+        w = self.combobox_species = QComboBox()
+        w.currentIndexChanged.connect(self.changed)
+        lg.addWidget(a, i_row, 0)
+        lg.addWidget(w, i_row, 1)
+        i_row += 1
+
+        lw.addSpacerItem(QSpacerItem(0, 0, QSizePolicy.Minimum, QSizePolicy.Expanding))
+
+    def _set_species(self, value):
+        if value is None:
+            idx = 0
+        else:
+            try:
+                idx = self._speciess.index(value)+1
+            except ValueError:
+                idx = 0
+        cb = self.combobox_species
+        if cb.count() > 0:
+            save = cb.blockSignals(True)
+            cb.setCurrentIndex(idx)
+            cb.blockSignals(save)
+
+    def _get_species(self):
+        idx = self.combobox_species.currentIndex()
+        if idx <= 0:
+            return None
+        return self._speciess[idx - 1]
+
+    def _file_changed(self):
+
+        f = None
+        try:
+            f = self._load_lines()
+
+        except Exception as e:
+            self._flines = None
+            self._speciess = []
+            msg = "Error reading contents of file '{}': '{}'".format(self.w_file.value,
+                                                                              a99.str_exc(e))
+            self.add_log_error(msg, True)
+            a99.get_python_logger().exception(msg)
+
+        # Tries to restore iso without much compromise
+        self._set_species(self.w_conv.f.obj["species"])
+        self.w_conv.f.obj["species"] = self._get_species()
+
+        self.w_file.flag_valid = f is not None
+        self.changed.emit()
+
+    def _load_lines(self):
+        filename = self.w_file.value
+        f = self._flines = pyfant.load_plez_mol(filename) if os.path.isfile(filename) else None
+        self.w_file.flag_valid = f is not None
+        self._update_gui_species()
+        return f
+
+    def _update_gui_species(self):
+        """Updates Species combobox"""
+        f = self._flines
+        cb = self.combobox_species
+        save = cb.blockSignals(True)
+        try:
+            cb.clear()
+            if f is not None:
+                # if f.__class__  not in (pyfant.FileKuruczMolecule, pyfant.FileKuruczMolecule1):
+                #     cb.addItem("(all (file is old-format))")
+                # else:
+                self._speciess = list(f.molecules.keys())
+                self._speciess.sort()
+                cb.addItem("(Please select)")
+                cb.addItems([str(x) for x in self._speciess])
+        finally:
+            cb.blockSignals(save)
+
 
 
 class _WConv(a99.WConfigEditor):
@@ -639,7 +759,7 @@ class _WConv(a99.WConfigEditor):
         panels = {}
         panels["HITRAN"] = self.w_hitran = _WHitranPanel(self)
         panels["VALD3"] = self.w_vald3 = _WVald3Panel(self)
-        panels["TurboSpectrum"] = self.w_turbo = _WTurboSpectrumPanel(self)
+        panels["Plez"] = self.w_plez = _WPlezPanel(self)
         panels["Kurucz"] = self.w_kurucz = _WKuruczPanel(self)
         for name in _NAMES:
             ds = _SOURCES[name]
@@ -727,12 +847,6 @@ class _WConv(a99.WConfigEditor):
         i_row += 1
 
 
-
-
-
-
-
-
         # ### Output file specification
 
         w0 = self.w_out = _WSelectSaveFile(self.parent_form)
@@ -759,6 +873,8 @@ class _WConv(a99.WConfigEditor):
             a99.CEMapItem("fn_output", self.w_out, propertyname="value"),
             a99.CEMapItem("kurucz_iso", self.w_kurucz, propertyname="iso"),
             a99.CEMapItem("kurucz_fn_input", self.w_kurucz.w_file, propertyname="value"),
+            a99.CEMapItem("plez_fn_input", self.w_plez.w_file, propertyname="value"),
+            a99.CEMapItem("plez_species", self.w_plez, propertyname="species"),
             a99.CEMapItem("flag_hlf", self),
             a99.CEMapItem("flag_normhlf", self),
             a99.CEMapItem("flag_fcf", self),
@@ -883,7 +999,8 @@ class _WConv(a99.WConfigEditor):
         # (Data source name, Conv class)
         map = dict([("HITRAN", None),
                ("VALD3", None),
-               ("Kurucz", pyfant.ConvKurucz)])
+               ("Kurucz", pyfant.ConvKurucz),
+               ("Plez", pyfant.ConvPlez)])
 
         cls = None
         conv = None
@@ -901,8 +1018,15 @@ class _WConv(a99.WConfigEditor):
                        flag_fcf=self.flag_fcf,
                        flag_special_fcf=self.flag_special_fcf,
                        flag_quiet=self.flag_quiet,
-                       flag_spinl=self.flag_spinl,
-                       iso=w.iso)
+                       )
+
+            if isinstance(conv, pyfant.ConvKurucz):
+                conv.iso = w.iso
+                conv.flag_spinl = self.flag_spinl
+            elif isinstance(conv, pyfant.ConvPlez):
+                print("SSSSSSSSSSSSSSSSSSSSSSS", w.species)
+                conv.name = w.species
+
             conv.fcfs = self.w_molconsts.fcfs
             conv.molconsts = self.w_molconsts.f.molconsts
 
@@ -1020,4 +1144,3 @@ class XConvMol(f311.XFileMainWindow):
 
     def _on_w_conv_changed(self):
         pass
-

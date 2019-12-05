@@ -22,7 +22,7 @@ __all__ = ["kovacs_toolbox", "NoLineStrength", "NO_LINE_STRENGTH"]
 def kovacs_toolbox(molconsts, flag_normalize=None):
     """Factory function that returns a MultiplicityToolbox descendant appropriate to molconsts"""
 
-    C = [_LSTSinglet, _LSTDoublet0, _LSTDoublet1, _LSTTriplet0, _LSTTriplet1]
+    C = [_LSTSinglet0, _LSTSinglet1, _LSTDoublet0, _LSTDoublet1, _LSTTriplet0, _LSTTriplet1]
 
     absDeltaLambda = abs(molconsts["from_spdf"]-molconsts["to_spdf"])
 
@@ -150,9 +150,9 @@ class _LineStrengthToolbox(object):
         LAM2L = molconsts["to_spdf"]
         S = molconsts.get_S2l()
 
-        if abs(LAML - LAM2L) != self.absDeltaLambda:
-            raise ValueError("Invalid Delta Lambda {}. abs(Delta Lambda) must be {}". \
-                             format(LAML-LAM2L, self.absDeltaLambda))
+        if self.absDeltaLambda != "all" and abs(LAML - LAM2L) != self.absDeltaLambda:
+                raise ValueError("Invalid Delta Lambda {}. abs(Delta Lambda) must be {}". \
+                             format(LAML-LAM2L, repr(self.absDeltaLambda)))
 
         if 2*S+1 != self.multiplicity2l:
             raise ValueError("**Sanity check fail**: Class {} expects multiplicity2l = 2*S+1 = {}, got {} instead". \
@@ -221,12 +221,67 @@ class _LineStrengthToolbox(object):
         raise NotImplementedError()
 
 
-# Incomplete class
 class _LSTSinglet(_LineStrengthToolbox):
     absDeltaLambda = "all"
     multiplicityl = 1
     multiplicity2l = 1
     quanta_to_branch = staticmethod(_quanta_to_branch_singlet)
+
+
+class _LSTSinglet0(_LSTSinglet):
+    absDeltaLambda = 0
+    multiplicityl = 1
+    multiplicity2l = 1
+    quanta_to_branch = staticmethod(_quanta_to_branch_singlet)
+
+    def _get_populate_data(self, vl, v2l, J):
+        cc = self._molconsts
+        LAML = cc["from_spdf"]
+        LAM2L = cc["to_spdf"]
+
+
+        # Kovacs Table 3.2
+
+        return (
+         ("P", lambda J: (J+LAML)*(J-LAML)/J),
+         ("Q", lambda J: LAML**2*(2*J+1)/J/(J+1)),
+         ("R", lambda J: (J+LAML+1)*(J-LAML+1)/(J+1)),
+        )
+
+
+class _LSTSinglet1(_LSTSinglet):
+    absDeltaLambda = 1
+    multiplicityl = 1
+    multiplicity2l = 1
+    quanta_to_branch = staticmethod(_quanta_to_branch_singlet)
+
+    def _get_populate_data(self, vl, v2l, J):
+        cc = self._molconsts
+        LAML = cc["from_spdf"]
+        LAM2L = cc["to_spdf"]
+
+        LMIN = min(LAML, LAM2L)
+
+        # Kovacz table 3.4
+        _P = lambda J: (J - LMIN - 1) * (J - LMIN) / (2 * J)
+        _Q = lambda J: (J - LMIN) * (J + LMIN + 1) * (2 * J + 1) / (2 * J * (J + 1))
+        _R = lambda J: (J + LMIN + 1) * (J + LMIN + 2)  / (2 * (J + 1))
+
+        # Resolves the Delta Lambda = LAML - LAM2L
+
+        if LAML > LAM2L:
+            return (
+             ("P", _P),
+             ("Q", _Q),
+             ("R", _R),
+            )
+
+        elif LAML < LAM2L:
+            return (
+             ("P", lambda J: _R(J-1)),
+             ("Q", _Q),
+             ("R", lambda J: _P(J+1)),
+            )
 
 
 class _LSTDoublet(_LineStrengthToolbox):

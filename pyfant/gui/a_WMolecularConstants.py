@@ -142,6 +142,7 @@ class _XHLF(a99.XLogMainWindow):
             self.status("")
         except Exception as E:
             self.add_log_error(a99.str_exc(E), True)
+            a99.get_python_logger().exception("Error calculating HLF")
 
 """
         sbx = self.spinBox_redshift = QDoubleSpinBox()

@@ -40,7 +40,7 @@ class ConvPlez(Conv):
         def append_error(msg):
             log.errors.append("#{}{} line: {}".format(i + 1, a99.ordinal_suffix(i + 1), str(msg)))
 
-        if not isinstance(file, pyfant.FilePlezLinelist):
+        if not isinstance(file, pyfant.FilePlezLinelistBase):
             raise TypeError("Invalid type for argument 'fileobj': {}".format(type(file).__name__))
 
         lines = file.molecules[self.name].lines

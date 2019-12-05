@@ -27,6 +27,7 @@ from .run import *
 from .util import *
 from .convmol import *
 from .from_vald import *
+from .from_turbospectrum import *
 from .molconsts import *
 from .kovacs import *
 from .gui import *
