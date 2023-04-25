@@ -33,6 +33,7 @@ from .kovacs import *
 from .gui import *
 from . import gui
 from .vis import *
+from .misc import *
 
 
 # # Function to access package-specific config file

@@ -28,6 +28,7 @@ from .a_XMolLinesEditor import *
 from .a_XPFANT import *
 from .a_XRunnableManager import *
 from .a_XMulti import *
+from .a_XFileMoleculeHistogram import *
 from . import _shared
 # from .a_WFileAbonds import *
 # from .a_WFileAbXFwhm import *

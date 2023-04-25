@@ -15,7 +15,7 @@ __all__ = ["vald3_to_sols"]
 
 def vald3_to_sols(molconsts, file_vald3, qgbd_calculator):
     """
-    Converts HITRAN molecular lines data to PFANT "sets of lines"
+    Converts VALD3 molecular lines data to PFANT "sets of lines"
 
     Args:
         molconsts: a dict-like object combining field values from tables 'molecule', 'state',

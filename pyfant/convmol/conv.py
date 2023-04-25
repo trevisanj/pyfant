@@ -43,6 +43,8 @@ class Conv(object):
         molconsts: a dict-like object combining field values from tables 'molecule', 'state',
                     'pfantmol', and 'system' from a FileMolDB database
 
+        flag_normhlf: Whether to multiply calculated gf's by normalization factor
+
         fcfs: Franck-Condon Factors (dictionary of floats indexed by (vl, v2l))
     """
 

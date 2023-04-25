@@ -16,8 +16,6 @@ class ConvPlez(Conv):
                                 therefore the only way to work with the latter file type is
                                 flag_hlf==True
 
-            flag_normhlf: Whether to multiply calculated gf's by normalization factor
-
             flag_fcf: Whether to multiply calculated gf's by Franck-Condon Factor
 
             flag_quiet: Will not log exceptions when a molecular line fails
@@ -49,8 +47,8 @@ class ConvPlez(Conv):
         if n == 0:
             raise RuntimeError("Species '{}' has zero lines".format(self.name))
 
-        STATEL = self.molconsts["from_label"]
-        STATE2L = self.molconsts["to_label"]
+        # STATEL = self.molconsts["from_label"]
+        # STATE2L = self.molconsts["to_label"]
 
         mtools = self.kovacs_toolbox()
 

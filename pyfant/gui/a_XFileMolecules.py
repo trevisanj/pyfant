@@ -10,6 +10,7 @@ from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT # as Navigat
 import matplotlib.pyplot as plt
 import numpy as np
 from .a_XMolLinesEditor import *
+from .a_XFileMoleculeHistogram import *
 import os.path
 import webbrowser
 import sys
@@ -17,12 +18,11 @@ from ._shared import *
 import a99
 import pyfant
 
-
 __all__ = ["XFileMolecules"]
 
 
 NUM_PLOTS = len(SOL_HEADERS_PLOT)-1  # -1 because whe "lambda" does not have its plot
-
+MAX_NUM_BINS = 500
 
 class XFileMolecules(QMainWindow):
 
@@ -76,10 +76,46 @@ class XFileMolecules(QMainWindow):
         # ** ** right of splitter
 
         # ** ** ** tab "Molecule info"
+
+        # ** ** ** ** Toolbar with molecule-specific resources
+
+        l2 = self.labelSpinBoxBins = QLabel("&Bins")
+        sb = self.spinBoxBins = QSpinBox()
+        sb.setMaximum(MAX_NUM_BINS)
+        sb.setValue(50)
+        l2.setBuddy(sb)
+
+        am = self.buttonWavelengthHistogram = QPushButton("Wavelength histogram")
+        am.clicked.connect(self.on_buttonWavelengthHistogram_clicked)
+        am.setToolTip("Plots histogram that gives a general profile of where the lines are wavelength-wise")
+
+        self.spacer1625 = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
+
+        l0 = self.layoutMolToolbar = QHBoxLayout()
+        l0.addWidget(l2)
+        l0.addWidget(sb)
+        l0.addWidget(am)
+        l0.addItem(self.spacer1625)
+        a99.set_margin(l0, 1)
+        a = self.widgetMolToolbar = QWidget()
+        a.setLayout(l0)
+        a.setFixedHeight(40)
+
+        self.labelMolInfo = QLabel('Molecule summary report')
         a = self.plainTextEditMolInfo = QPlainTextEdit()
         a.setFont(a99.MONO_FONT)
 
-        # ** ** ** tab "Molecular lines"
+        l = self.layoutMolInfo = QVBoxLayout()
+        a99.set_margin(l, 0)
+        l.setSpacing(1)
+        l.addWidget(self.widgetMolToolbar)
+        l.addWidget(self.labelMolInfo)
+        l.addWidget(self.plainTextEditMolInfo)
+
+        a = self.widgetMolInfo = QWidget()
+        a.setLayout(self.layoutMolInfo)
+
+        # ** ** ** tab "Sets of lines (Alt+L)"
 
         # ** ** ** ** left
 
@@ -188,7 +224,7 @@ class XFileMolecules(QMainWindow):
         a.setStretchFactor(1, 10)
 
         a = self.tabWidgetMol = QTabWidget()
-        a.addTab(self.plainTextEditMolInfo, "Molecule info (Alt+&M)")
+        a.addTab(self.widgetMolInfo, "Molecule info (Alt+&M)")
         a.addTab(self.splitterSol, "Sets of lines (Alt+&L)")
         a.setCurrentIndex(1)
         a.setFont(a99.MONO_FONT)
@@ -358,6 +394,14 @@ class XFileMolecules(QMainWindow):
     def on_listWidgetSol_doubleClicked(self):
         self.edit_sol()
 
+    def on_buttonWavelengthHistogram_clicked(self):
+        f = plt.figure()
+        pyfant.plot_molhistogram(self.mol, num_bins=self.spinBoxBins.value())
+        plt.title(self.mol.description)
+        f.show()
+        # form = XFileMoleculeHistogram(self.mol)
+        # form.show()
+
     # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * #
 
     def load(self, f):
@@ -431,6 +475,7 @@ class XFileMolecules(QMainWindow):
                         for i in range(1, len(SOL_HEADERS_PLOT))]
 
                 i_subplot = 1
+                refaxis = None
                 for i in range(len(map_)):
                     y_label = map_[i][0]
                     pi = self.plot_info[i]
@@ -449,8 +494,9 @@ class XFileMolecules(QMainWindow):
 
                         a99.format_BLB()
 
-                        self.figure.add_subplot(n, 1, i_subplot)
+                        self.figure.add_subplot(n, 1, i_subplot, sharex=refaxis)
                         pi.axis = ax = self.figure.gca()
+                        if i == 0: refaxis = ax  # for sharex next i-iteration
                         ax.clear()
                         ax.plot(x, y, 'k'+('' if len(x) > 1 else 'x'))
                         ax.set_xlabel('Wavelength ($\AA$)')
@@ -664,4 +710,4 @@ class XFileMolecules(QMainWindow):
 
     @staticmethod
     def get_sol_string(index, sol):
-        return "%3d %7s" % (index+1, '(%d)' % len(sol))
+        return "%3d (%2d, %2s) %7s" % (index+1, sol.vl, sol.v2l, '(%d)' % len(sol))

@@ -64,6 +64,7 @@ class FileOptions(FilePy):
         self.fn_abonds    = None
         self.fn_atoms   = None
         self.fn_molecules = None
+        self.fn_mollist = None
         self.fn_lines     = None
         self.fn_log       = None
         self.fn_progress = None

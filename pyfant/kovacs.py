@@ -199,7 +199,9 @@ class _LineStrengthToolbox(object):
         normalization_factor = 1.
         if self._flag_normalize:
             cc = self._molconsts
-            normalization_factor = 2. / ((2 * cc.get_S2l() + 1) * (2 * J + 1) * (2 - cc.get_deltak()))
+            # TODO 20230415 Was 2, I put 1
+            normalization_factor = 1. / ((2 * cc.get_S2l() + 1) * (2 * J + 1) * (2 - cc.get_deltak()))
+            # normalization_factor = 2. / ((2 * cc.get_S2l() + 1) * (2 * J + 1) * (2 - cc.get_deltak()))
 
         for branch, function in data:
             try:
