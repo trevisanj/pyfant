@@ -1,5 +1,5 @@
 from collections import Counter
-import a99
+import a99, tabulate
 
 @a99.froze_it
 class MolConversionLog(object):
@@ -24,3 +24,14 @@ class MolConversionLog(object):
         #
         self.skip_reasons = Counter()
 
+
+    def __str__(self):
+        INDENT = "    "
+        _ret = [f"num_lines: {self.num_lines}; flag_ok: {self.flag_ok}"]
+        if self.skip_reasons:
+            _ret.append("\n*** Skip reasons ***")
+            _ret.append("\n".join([INDENT+line for line in tabulate.tabulate([(k, v) for k, v in self.skip_reasons.items()], ["Reason", "number of occurences"]).split("\n")]))
+        if self.errors:
+            _ret.append("\n*** Errors ***")
+            _ret.append("\n".join([INDENT+line for line in self.errors]))
+        return "\n".join(_ret)

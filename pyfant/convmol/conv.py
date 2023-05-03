@@ -31,6 +31,22 @@ class ConvSols(OrderedDict):
 
         self[sol_key].append_line(line.lambda_, gf_pfant, line.J2l, branch)
 
+    def append_line2(self, vl, v2l, lambda_, sj, jj, branch):
+        """Alernative way to append line, created in 2023. Takes (vl, v2l) and PFANT relevant line-specific info.
+
+        append_line() requires a "line" object which made sense when ConvKurucz was implemented, but unelegant when one
+        already has all the values loose as variables.
+
+        Arguments are as in PFANT molecular linelist files. See filemolecules.py and pfantlib.f90::file_molecules
+        module.
+        """
+        sol_key = (vl, v2l)
+
+        if sol_key not in self:
+            qgbd = self.qgbd_calculator(self.molconsts, v2l)
+            self[sol_key] = pyfant.SetOfLines(vl, v2l, qgbd["qv"], qgbd["gv"], qgbd["bv"], qgbd["dv"], 1.)
+        self[sol_key].append_line(lambda_, sj, jj, branch)
+
 
 class Conv(object):
     # TODO there is a good chance that flag_hlf, flag_fcf, etc. will be moved to this class
@@ -46,13 +62,17 @@ class Conv(object):
         flag_normhlf: Whether to multiply calculated gf's by normalization factor
 
         fcfs: Franck-Condon Factors (dictionary of floats indexed by (vl, v2l))
+
+        flag_quiet: Will not log exceptions when a molecular line fails
     """
 
-    def __init__(self, qgbd_calculator=None, molconsts=None, flag_normhlf=True, fcfs=None):
+    def __init__(self, qgbd_calculator=None, molconsts=None, flag_normhlf=True, fcfs=None, flag_quiet=False, comment=""):
         self.qgbd_calculator = qgbd_calculator if qgbd_calculator else calc_qgbd_tio_like
         self.molconsts = molconsts
         self.fcfs = fcfs
         self.flag_normhlf = flag_normhlf
+        self.flag_quiet = flag_quiet
+        self.comment = comment
 
     def make_file_molecules(self, lines):
         """
@@ -77,6 +97,7 @@ class Conv(object):
         sols_list.sort(key= lambda sol: sol.vl*1000+sol.v2l)
 
         mol = pyfant.molconsts_to_molecule(self.molconsts)
+        if self.comment: mol.description += f"; {self.comment}"
         mol.sol = sols_list
         f = pyfant.FileMolecules()
         now = datetime.datetime.now()
