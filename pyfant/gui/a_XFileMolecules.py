@@ -294,6 +294,9 @@ class XFileMolecules(QMainWindow):
                 if source == self.listWidgetMol:
                     self.delete_mol()
                     return True
+                elif source == self.listWidgetSol:
+                    self.delete_sol()
+                    return True
         return False
 
     def closeEvent(self, event):
@@ -384,9 +387,12 @@ class XFileMolecules(QMainWindow):
     def on_listWidgetSol_customContextMenuRequested(self, position):
         menu = QMenu()
         a_edit = menu.addAction("&Edit")
+        a_delete = menu.addAction("&Delete")
         action = menu.exec_(self.listWidgetSol.mapToGlobal(position))
         if action == a_edit:
             self.edit_sol()
+        elif action == a_delete:
+            self.delete_sol()
 
     def on_listWidgetMol_doubleClicked(self):
         self.edit_mol()
@@ -454,6 +460,9 @@ class XFileMolecules(QMainWindow):
                 w.setCurrentRow(0)
 
     def set_sol(self, j):
+        # TODO what if molecule has no set of lines (SOL)? Actually I can't allow molecule to have 0 SOLs
+        j = min(j, len(self.mol)-1)
+
         self.marker_row = None  # no longer valid, whatever it was
         self.sol_index = j
         self.sol = self.f.molecules[self.mol_index].sol[j]
@@ -584,6 +593,19 @@ class XFileMolecules(QMainWindow):
             # item.setTextColor(QColor(255, 0, 0))
             self.update_sol_info()
             self.update_window_title()
+
+    def delete_sol(self):
+        sol = self.sol
+        if sol is None:
+            return
+        i = self.listWidgetSol.currentRow()
+        if i >= len(self.mol.sol):
+            return
+        del self.mol.sol[i]
+        self.listWidgetSol.takeItem(i)
+        self.flag_changed = True
+        self.update_window_title()
+
 
     # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * # * #
 
