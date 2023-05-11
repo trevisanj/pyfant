@@ -9,12 +9,16 @@ class ConvHITRAN(Conv):
 
     Args:
         strengthfactor: (=1.) all resulting line strengths ("sj") will be multiplied by this factor
+        fe: (=None) if used, replaces fe from molecular constants
         isowant: (=1) isotopologue ID according to HITRAN or literature e.g. [1]. Li et al. 2015 didn't follow
                  HITRAN's isotopologues codes for CO
 
     This conversor expects data in hapi format. The hapi library is provided by HITRAN itself. The way it works is it
     parses all ".par" files in a given directory before you can choose which one to use. Therefore, it may be a good
     idea to isolate the file of interest or create link to file.
+
+    Bothe strengthfactor and fe are ways to achieve the same result (multiply the line strength), but the former applies
+    to sj whereas the latter is recorded as the molecule's "FE"
 
     There is a working example conv_hitran_co.py in examples directory
 
@@ -26,12 +30,13 @@ class ConvHITRAN(Conv):
         [2] Plez's conversor translate_molec_linelists_v16.1.f
     """
 
-    def __init__(self, *args, isowant=1, strengthfactor=1., **kwargs):
+    def __init__(self, *args, isowant=1, strengthfactor=1., fe=None, **kwargs):
         super().__init__(*args, **kwargs)
         if not (1 <= isowant <= 9):
             raise ValueError(f"Invalid 'isowant': {isowant} (must be between 1 and 9)")
         self.isowant = isowant
         self.strengthfactor = strengthfactor
+        self.fe = fe
 
     def _make_sols(self, hapidata):
         """Sets-of-lines maker for ConvHITRAN class

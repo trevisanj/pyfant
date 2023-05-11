@@ -97,6 +97,7 @@ class Conv(object):
         sols_list.sort(key= lambda sol: sol.vl*1000+sol.v2l)
 
         mol = pyfant.molconsts_to_molecule(self.molconsts)
+        if self.fe: mol.fe = self.fe
         if self.comment: mol.description += f"; {self.comment}"
         mol.sol = sols_list
         f = pyfant.FileMolecules()
