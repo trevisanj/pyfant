@@ -49,6 +49,21 @@ class WDBSystemPFANTMolFCF(a99.WBase):
         a = self.title_mol = QLabel(a99.format_title1("Systems"))
         l0.addWidget(a)
 
+        # ### label and edit with copiable system description
+        a = self.label_sysdescr = QLabel("Descriptio&n:")
+        b = self.lineedit_sysdescr = QLineEdit()
+        b.setReadOnly(True)
+        b.setFixedWidth(200)
+        a.setBuddy(b)
+
+        l = self.layout_sysdescr = QHBoxLayout()
+        l.addWidget(a)
+        l.addWidget(b)
+        l.addSpacerItem(QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum))
+
+        l0.addLayout(l)
+
+        # ### Systems registry table
         w = self.w_system = WDBSystem(self.parent_form)
         w.id_changed.connect(self.id_system_changed)
         w.id_changed.connect(self.id_changed)
@@ -109,6 +124,17 @@ class WDBSystemPFANTMolFCF(a99.WBase):
         # self._populate()
 
     def id_system_changed(self):
+        import pyfant
         self.w_pfantmol.set_id_system(self.w_system.id)
         self.w_fcf.set_id_system(self.w_system.id)
+
+        row = self.w_system.row
+        descr = pyfant.molconsts_to_system_str(row, pyfant.SS_PLAIN) if row else ""
+
+        wfilemoldb = self.parent().parent().parent().parent()
+        molrow = wfilemoldb.w_mol.row
+
+        descr_ = "" if not molrow else f"{molrow['formula']} [{descr}]"
+
+        self.lineedit_sysdescr.setText(descr_)
 

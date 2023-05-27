@@ -33,7 +33,7 @@ class ConvPlez(Conv):
         self.fcfs = fcfs
         self.name = name
 
-    def _make_sols(self, file):
+    def _make_sols(self, sols, log, file):
 
         def append_error(msg):
             log.errors.append("#{}{} line: {}".format(i + 1, a99.ordinal_suffix(i + 1), str(msg)))
@@ -42,19 +42,12 @@ class ConvPlez(Conv):
             raise TypeError("Invalid type for argument 'fileobj': {}".format(type(file).__name__))
 
         lines = file.molecules[self.name].lines
-        n = len(lines)
+        n = log.n = len(lines)
 
         if n == 0:
             raise RuntimeError("Species '{}' has zero lines".format(self.name))
 
-        # STATEL = self.molconsts["from_label"]
-        # STATE2L = self.molconsts["to_label"]
-
         mtools = self.kovacs_toolbox()
-
-        # Prepares result
-        sols = ConvSols(self.qgbd_calculator, self.molconsts)
-        log = MolConversionLog(n)
 
         for i, line in enumerate(lines):
             branch = line.branch

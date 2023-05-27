@@ -9,6 +9,13 @@ class MolConversionLog(object):
         """Sums all counts in self.skip_reasons"""
         return sum(self.skip_reasons.values())
 
+    @property
+    def n(self):
+        return self.num_lines
+
+    @n.setter
+    def n(self, x):
+        self.num_lines = x
 
     def __init__(self, num_lines=0, flag_ok=True):
         # Number of lines in input file
@@ -24,10 +31,14 @@ class MolConversionLog(object):
         #
         self.skip_reasons = Counter()
 
+        self.cnt_in = 0
+        self.cnt_out = 0
 
     def __str__(self):
         INDENT = "    "
-        _ret = [f"num_lines: {self.num_lines}; flag_ok: {self.flag_ok}"]
+        n = self.num_lines
+        _ret = [f"num_lines: {n}", f"flag_ok: {self.flag_ok}", f"included: {self.cnt_in}/{n}", f"excluded: {self.cnt_out}/{n}"]
+
         if self.skip_reasons:
             _ret.append("\n*** Skip reasons ***")
             _ret.append("\n".join([INDENT+line for line in tabulate.tabulate([(k, v) for k, v in self.skip_reasons.items()], ["Reason", "number of occurences"]).split("\n")]))

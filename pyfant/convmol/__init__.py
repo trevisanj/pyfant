@@ -9,3 +9,4 @@ from .conv_kurucz import *
 from .conv import *
 from .conv_plez import *
 from .conv_hitran import *
+from .conv_brooke2014 import *

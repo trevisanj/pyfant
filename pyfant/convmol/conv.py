@@ -64,15 +64,27 @@ class Conv(object):
         fcfs: Franck-Condon Factors (dictionary of floats indexed by (vl, v2l))
 
         flag_quiet: Will not log exceptions when a molecular line fails
+
+        fe: (=None) if used, replaces fe from molecular constants
+
     """
 
-    def __init__(self, qgbd_calculator=None, molconsts=None, flag_normhlf=True, fcfs=None, flag_quiet=False, comment=""):
+    def __init__(self, qgbd_calculator=None, molconsts=None, flag_normhlf=True, fcfs=None, flag_quiet=False, fe=None,
+                 comment=""):
         self.qgbd_calculator = qgbd_calculator if qgbd_calculator else calc_qgbd_tio_like
         self.molconsts = molconsts
         self.fcfs = fcfs
         self.flag_normhlf = flag_normhlf
         self.flag_quiet = flag_quiet
         self.comment = comment
+        self.fe = fe
+
+    @staticmethod
+    def get_sj_einstein(A, Jl, J2l, S2l, deltak, nu, strengthfactor):
+        """Calculates SJ and wavelength using Einstein's coefficient "A"."""
+        normalizationfactor = strengthfactor/((2*S2l+1)*(2*J2l+1)*(2-deltak))
+        SJ = normalizationfactor*A*1.499*(2+Jl+1)/nu**2
+        return SJ
 
     def make_file_molecules(self, lines):
         """
@@ -87,8 +99,11 @@ class Conv(object):
             f, log: FileMolecules, MolConversionLog instances
         """
 
+
         # Runs specific conversor to SetOfLines
-        sols, log = self._make_sols(lines)
+        sols = pyfant.ConvSols(self.qgbd_calculator, self.molconsts)
+        log = pyfant.MolConversionLog()
+        self._make_sols(sols, log, lines)
 
         assert isinstance(sols, ConvSols)
         assert isinstance(log, MolConversionLog)
@@ -111,14 +126,16 @@ class Conv(object):
         return pyfant.kovacs_toolbox(self.molconsts, flag_normalize=self.flag_normhlf)
 
     # Must reimplement thig
-    def _make_sols(self, lines):
+    def _make_sols(self, sols, log, lines):
         """Converts molecular lines into a list of SetOfLines object
 
         Args:
+            sols: ConvSols
+            log: MolConversionLog
             lines: see make_file_molecules()
 
         Returns:
-            sols, log: ConvSols, MolConversionLog
+            None
         """
         raise NotImplementedError()
 

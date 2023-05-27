@@ -9,9 +9,6 @@ import a99
 from f311 import DataFile
 import tabulate
 
-
-
-
 @a99.froze_it
 class FileHITRANLinelist(DataFile):
     """

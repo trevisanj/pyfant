@@ -51,9 +51,7 @@ class ConvKurucz(Conv):
         self.fcfs = fcfs
         self.iso = iso
 
-    # TODO looks like this routine is kindda generic
-    # TODO could dismember this later
-    def _make_sols(self, lines):
+    def _make_sols(self, sols, log, lines):
 
         def append_error(msg):
             log.errors.append("#{}{} line: {}".format(i + 1, a99.ordinal_suffix(i + 1), str(msg)))
@@ -64,16 +62,14 @@ class ConvKurucz(Conv):
                "Old-format file does not contain loggf, must activate Hönl-London factors"
 
         lines = lines.lines
-        n = len(lines)
+        log.n = len(lines)
+        if log.n == 0:
+            raise RuntimeError("Zero lines found")
 
         STATEL = self.molconsts["from_label"]
         STATE2L = self.molconsts["to_label"]
 
         mtools = self.kovacs_toolbox()
-
-        # Prepares result
-        sols = ConvSols(self.qgbd_calculator, self.molconsts)
-        log = MolConversionLog(n)
 
         for i, line in enumerate(lines):
             if self.iso and line.iso != self.iso:
@@ -84,15 +80,12 @@ class ConvKurucz(Conv):
                 log.skip_reasons["Transition {}-{}".format(line.statel, line.state2l)] += 1
                 continue
 
-
             branch = mtools.quanta_to_branch(line.Jl, line.J2l,
                 spinl=(None if not self.flag_spinl else line.spinl), spin2l=line.spin2l)
-
 
             # This was only a test, but filters like these may be useful if line.spin2l != line.spinl:
             #     log.skip_reasons["Different spin"] += 1
             #     continue
-
 
             try:
                 sj = 1.
@@ -136,5 +129,3 @@ class ConvKurucz(Conv):
             #
             # sol = sols[sol_key]
             # sol.append_line(wl, gf_pfant, J2l_pfant, branch)
-
-        return sols, log

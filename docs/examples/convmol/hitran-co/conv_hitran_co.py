@@ -8,7 +8,7 @@ import pyfant, a99, os
 DATADIR = "."  # where hapi will look for ".par" files
 DATANAME = "CO_dV11_stable-sample"  # filename minus ".par" extension
 ISOWANT = 1  # see ConvHitran class
-STRENGTHFACTOR = 2.  # see ConvHitran class
+FE = None  # Line strength scaling factor for the whole molecule
 SYSTEMID = "CO [X 1 Sigma - X 1 Sigma]"  # Use moldbed.py to find out
 
 #=== END SETUP
@@ -33,7 +33,7 @@ converter = pyfant.ConvHITRAN(comment=f"from {DATANAME}, iso={ISOWANT}",
                               molconsts=molconsts,
                               flag_quiet=True,
                               isowant=ISOWANT,
-                              strengthfactor=STRENGTHFACTOR)
+                              fe=FE)
 fmol, log = converter.make_file_molecules(hapidata)
 for line in str(log).split("\n"):
     a99.get_python_logger().info(line)

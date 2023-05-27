@@ -1,87 +1,70 @@
-"""Molecular lines converter from HITRAN to PFANT format."""
+"""Molecular lines converter from Brooke2014 to PFANT format."""
 
-__all__ = ["ConvHITRAN"]
+__all__ = ["ConvBrooke2014"]
 
 import a99, airvacuumvald as avv
 from . import Conv
 
-class ConvHITRAN(Conv):
-    """Converts HITRAN molecular lines data to PFANT "sets of lines" using Einstein's coefficients
+
+class ConvBrooke2014(Conv):
+    """Converts Brooke2014 [1] molecular lines data to PFANT "sets of lines" using Einstein's coefficients
 
     Args:
-        strengthfactor: (=1.) all resulting line strengths ("sj") will be multiplied by this factor.
+        strengthfactor: (=1.) all resulting line strengths ("sj") will be multiplied by this factor
                         Note: it is better to use "fe" argument instead
-        isowant: (=1) isotopologue ID according to HITRAN or literature e.g. [1]. Li et al. 2015 didn't follow
-                 HITRAN's isotopologues codes for CO
-
-    This conversor expects data in hapi format. The hapi library is provided by HITRAN itself. The way it works is it
-    parses all ".par" files in a given directory before you can choose which one to use. Therefore, it may be a good
-    idea to isolate the file of interest or create link to file.
 
     Both strengthfactor and fe are ways to achieve the same result (multiply the line strength), but the former applies
     to sj whereas the latter is recorded as the molecule's "FE"
 
-    There is a working example conv_hitran_co.py in examples directory
+    There is a working example conv_brooke2014_cn.py in examples directory
 
     References:
-        [1] Li, G., Gordon, I.E., Rothman, L.S., Tan, Y., Hu, S.M., Kassi, S., Campargue, A. and Medvedev, E.S., 2015.
-        Rovibrational line lists for nine isotopologues of the CO molecule in the X1Σ+ ground electronic state.
-        The Astrophysical Journal Supplement Series, 216(1), p.15.
-
-        [2] Plez's conversor translate_molec_linelists_v16.1.f
+        [1] Brooke, James SA, et al. "Einstein a coefficients and oscillator strengths for the A2Π–X2Σ+(red)
+            and B2Σ+–X2Σ+(violet) systems and rovibrational transitions in the X2Σ+ State of CN."
+            The Astrophysical Journal Supplement Series 210.2 (2014): 23.
     """
 
-    def __init__(self, *args, isowant=1, strengthfactor=1., **kwargs):
+    def __init__(self, *args, strengthfactor=1., **kwargs):
         super().__init__(*args, **kwargs)
-        if not (1 <= isowant <= 9):
-            raise ValueError(f"Invalid 'isowant': {isowant} (must be between 1 and 9)")
-        self.isowant = isowant
         self.strengthfactor = strengthfactor
 
-    def _make_sols(self, sols, log, hapidata):
-        """Sets-of-lines maker for ConvHITRAN class
+    def _make_sols(self, sols, log, f):
+        """Sets-of-lines maker for ConvBrooke2014 class
 
         Args:
-            hapidata: this is hapi.LOCAL_TABLE_CACHE["some_name"]
+            f: FileBrooke2014 instance
         """
         import pyfant
-        hapidata_ = hapidata["data"]
-        n = log.n = len(hapidata_["molec_id"])
-        if n == 0:
-            raise RuntimeError("Zero lines found")
+        assert isinstance(f, pyfant.FileBrooke2014)
 
-        local_iso_id = hapidata_["local_iso_id"]
-        s_vl = hapidata_["global_upper_quanta"]
-        s_v2l = hapidata_["global_lower_quanta"]
-        gp = hapidata_["gp"]
-        gpp = hapidata_["gpp"]
-        a = hapidata_["a"]  # Einstein's coefficient in unit 1/s
-        nu = hapidata_["nu"]  # Wavenumber in unit 1/cm
+        log.n = len(f)
+        if log.n == 0:
+            raise RuntimeError("Zero lines found")
 
         deltak = self.molconsts.get_deltak()
         S2l = self.molconsts.get_S2l()
+        STATEL = self.molconsts["from_label"]
+        STATE2L = self.molconsts["to_label"]
 
-        for i in range(n):
+        for i in range(log.n):
             try:
-                iso = local_iso_id[i]
-                if iso == self.isowant:
+                if f.eSl[i] == STATEL and f.eS2l[i] == STATE2L:
                     log.cnt_in += 1
                 else:
                     log.cnt_out += 1
-                    log.skip_reasons[f"isotopologue {iso}"] += 1
+                    log.skip_reasons[f"wrong electronic states ({f.eSl[i]}, {f.eS2l[i]})"] += 1
                     continue
 
-                vl = int(s_vl[i])
-                v2l = int(s_v2l[i])
-                Jl = (gp[i]-1.)/2.  # Taken from Plez's conversor [2]
-                J2l = (gpp[i]-1.)/2.
+                vl = f.vl[i]
+                v2l = f.v2l[i]
+                Jl = f.Jl[i]
+                J2l = f.J2l[i]
+                A = f.A[i]
+                nu = f.nu[i]
+                SF = self.strengthfactor
 
-                # normalizationfactor = self.strengthfactor/((2*S2l+1)*(2*J2l+1)*(2-deltak))
-                #
-                # SJ = normalizationfactor*a[i]*1.499*(2+Jl+1)/nu[i]**2
-                SJ = self.get_sj_einstein(a[i], Jl, J2l, S2l, deltak, nu[i], self.strengthfactor)
-
-                lambda_ = avv.vacuum_to_air(1e8/nu[i])
+                SJ = self.get_sj_einstein(A, Jl, J2l, S2l, deltak, nu, SF)
+                lambda_ = avv.vacuum_to_air(1e8/nu)
 
             except Exception as e:
                 reason = a99.str_exc(e)
@@ -92,8 +75,7 @@ class ConvHITRAN(Conv):
                     a99.get_python_logger().exception(msg)
                 continue
 
-            # TODO skipping the branch altogether: PFANT does not care really
-            sols.append_line2(vl, v2l, lambda_, SJ, J2l, "-")
+            sols.append_line2(vl, v2l, lambda_, SJ, J2l, f.branch[i])
 
         return sols, log
 
@@ -166,7 +148,7 @@ class ConvHITRAN(Conv):
 #   'gamma_air': 'Air-broadened Lorentzian half-width at half-maximum at p = 1 atm and T = 296 K',
 #   'gp': 'Upper state degeneracy',
 #   'local_iso_id': 'Integer ID of a particular Isotopologue, unique only to a given molecule, in order or abundance (1 = most abundant)',
-#   'molec_id': 'The HITRAN integer ID for this molecule in all its isotopologue forms',
+#   'molec_id': 'The Brooke2014 integer ID for this molecule in all its isotopologue forms',
 #   'sw': 'Line intensity, multiplied by isotopologue abundance, at T = 296 K',
 #   'local_lower_quanta': 'Rotational, hyperfine and other quantum numbers and labels for the lower state of a transition',
 #   'local_upper_quanta': 'Rotational, hyperfine and other quantum numbers and labels for the upper state of a transition',
@@ -196,12 +178,12 @@ class ConvHITRAN(Conv):
 #=======================================================================================================================
 # (20230503) Old code from 2017, didn't delete yet, maybe todo cleanup
 # """
-# HITRAN-specific conversion
+# Brooke2014-specific conversion
 #
 # References:
-#   [1] Rothman, Laurence S., et al. "The HITRAN 2004 molecular spectroscopic database."
+#   [1] Rothman, Laurence S., et al. "The Brooke2014 2004 molecular spectroscopic database."
 #       Journal of Quantitative Spectroscopy and Radiative Transfer 96.2 (2005): 139-204.
-#   [2] extraehitran.f (First version: Jorge Melendez-Moreno, January 1999)
+#   [2] extraeBrooke2014.f (First version: Jorge Melendez-Moreno, January 1999)
 # """
 #
 # # TODO not working
@@ -213,7 +195,7 @@ class ConvHITRAN(Conv):
 # import pyfant
 #
 #
-# __all__ = ["hitran_to_sols"]
+# __all__ = ["Brooke2014_to_sols"]
 #
 #
 # _OH_BRANCH_MAP_OH = {"QQ": "Q", "PP": "P", "RR": "R"}
@@ -302,9 +284,9 @@ class ConvHITRAN(Conv):
 # _CLASS_DICT = dict(sum([[(mol, callable_) for mol in mols] for mols, callable_ in __CLASS_MAP], []))
 #
 #
-# def hitran_to_sols(molconsts, lines, qgbd_calculator):
+# def Brooke2014_to_sols(molconsts, lines, qgbd_calculator):
 #     """
-#     Converts HITRAN molecular lines data to PFANT "sets of lines"
+#     Converts Brooke2014 molecular lines data to PFANT "sets of lines"
 #
 #     Args:
 #         molconsts: a dict-like object combining field values from tables 'molecule', 'state',
