@@ -50,7 +50,7 @@ class WDBSystemPFANTMolFCF(a99.WBase):
         l0.addWidget(a)
 
         # ### label and edit with copiable system description
-        a = self.label_sysdescr = QLabel("Descriptio&n:")
+        a = self.label_sysdescr = QLabel("System descriptio&n:")
         b = self.lineedit_sysdescr = QLineEdit()
         b.setReadOnly(True)
         b.setFixedWidth(200)

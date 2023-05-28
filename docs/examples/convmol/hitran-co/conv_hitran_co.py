@@ -9,7 +9,7 @@ DATADIR = "."  # where hapi will look for ".par" files
 DATANAME = "CO_dV11_stable-sample"  # filename minus ".par" extension
 ISOWANT = 1  # see ConvHitran class
 FE = None  # Line strength scaling factor for the whole molecule
-SYSTEMID = "CO [X 1 Sigma - X 1 Sigma]"  # Use moldbed.py to find out
+SYSTEMDESCR = "CO [X 1 Sigma - X 1 Sigma]"  # Use moldbed.py --> "System description" box
 
 #=== END SETUP
 
@@ -21,7 +21,7 @@ try:
 except FileNotFoundError:
     fmoldb.init_default()
 
-molconsts = fmoldb.get_molconsts(SYSTEMID)
+molconsts = fmoldb.get_molconsts(SYSTEMDESCR)
 molconsts.None_to_zero()
 
 hapi.VARIABLES['BACKEND_DATABASE_NAME'] = DATADIR

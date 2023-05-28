@@ -5,8 +5,8 @@ import pyfant, a99, os
 #=== BEGIN SETUP ===
 
 INPUTFILENAME = "CN1214-Brookeetal-2014-list-sample.txt"
-FE = None  # Line strength scaling factor for the whole molecule
-SYSTEMID = "CN [A 2 Pi - X 2 Sigma]"  # Use moldbed.py to find out
+FE = 2.  # Line strength scaling factor for the whole molecule
+SYSTEMDESCR = "CN [A 2 Pi - X 2 Sigma]"  # Use moldbed.py --> "System description" box
 
 _temp = os.path.split(INPUTFILENAME)[1]
 outputfilename = _temp[:_temp.index(".")]+".PFANT.dat"
@@ -21,7 +21,7 @@ try:
 except FileNotFoundError:
     fmoldb.init_default()
 
-molconsts = fmoldb.get_molconsts(SYSTEMID)
+molconsts = fmoldb.get_molconsts(SYSTEMDESCR)
 molconsts.None_to_zero()
 
 f = pyfant.FileBrooke2014()

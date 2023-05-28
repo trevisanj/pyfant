@@ -49,14 +49,18 @@ class FileMolDB(FileSQLiteDB):
 
     }
 
-    def get_molconsts(self, s):
-        """Parse string and return MolConsts object."""
+    def get_molconsts(self, system_str):
+        """
+        Parses string and return MolConsts object.
+
+        Args:
+            system_str: system description as found in moldbed.py --> "System description" box. For example,
+                        "MgH [A 2 Pi - X 2 Sigma]". Also returned by MolConsts.get_str()
+        """
         import pyfant
         ret = pyfant.MolConsts()
-        ret.populate_all_using_str(self, s)
+        ret.populate_all_using_str(self, system_str)
         return ret
-
-
 
     def query_molecule(self, **kwargs):
         """Convenience function to query 'molecule' table
