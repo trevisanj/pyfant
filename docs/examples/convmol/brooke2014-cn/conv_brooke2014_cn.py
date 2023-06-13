@@ -29,11 +29,12 @@ f.load(INPUTFILENAME)
 
 
 converter = pyfant.ConvBrooke2014(comment=f"from {INPUTFILENAME}",
-                              molconsts=molconsts,
-                              flag_quiet=True,
-                              fe=FE)
-fmol, log = converter.make_file_molecules(f)
-for line in str(log).split("\n"):
+                                  mode=pyfant.ConvMode.HLF,
+                                  molconsts=molconsts,
+                                  flag_quiet=True,
+                                  fe=FE,)
+fmol = converter.make_file_molecules(f)
+for line in str(converter.log).split("\n"):
     a99.get_python_logger().info(line)
 fmol.save_as(outputfilename)
 

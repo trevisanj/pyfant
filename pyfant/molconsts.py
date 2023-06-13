@@ -197,9 +197,15 @@ class MolConsts(dict):
                 if row is None:
                     raise ValueError("Invalid {}: id {} does not exist in table '{}'".format(keyname, id_, tablename))
 
-                for fieldname in ti:
+                for fieldname, fieldspecs in ti.items():
                     if not fieldname.startswith("id"):
-                        self[prefix + fieldname] = row[fieldname]
+                        # 20230612: convert empty string ('') to None
+                        value = row[fieldname]
+                        if fieldspecs["type"] == "real" and isinstance(value, str) and value == "":
+                            value = None
+
+
+                        self[prefix + fieldname] = value
 
             self[keyname] = id_
 

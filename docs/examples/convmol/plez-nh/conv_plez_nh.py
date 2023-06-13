@@ -33,7 +33,7 @@ fplez.load(INPUTFILENAME)
 # Obs: name must match species name in original bsyn file
 converter = pyfant.ConvPlez(name="NH A-X PGopher", molconsts=molconsts)
 
-fmol, log = converter.make_file_molecules(fplez)
+fmol = converter.make_file_molecules(fplez)
 fmol.save_as(outputfilename)
 
 #=== END CONVERSION ===

@@ -38,13 +38,17 @@ class ConvHITRAN(Conv):
         self.isowant = isowant
         self.strengthfactor = strengthfactor
 
-    def _make_sols(self, sols, log, hapidata):
+    def _make_sols(self, hapidata):
         """Sets-of-lines maker for ConvHITRAN class
 
         Args:
             hapidata: this is hapi.LOCAL_TABLE_CACHE["some_name"]
         """
         import pyfant
+
+        log = self.log
+        sols = self.sols
+
         hapidata_ = hapidata["data"]
         n = log.n = len(hapidata_["molec_id"])
         if n == 0:
@@ -67,7 +71,6 @@ class ConvHITRAN(Conv):
                 if iso == self.isowant:
                     log.cnt_in += 1
                 else:
-                    log.cnt_out += 1
                     log.skip_reasons[f"isotopologue {iso}"] += 1
                     continue
 

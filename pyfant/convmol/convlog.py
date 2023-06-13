@@ -32,12 +32,11 @@ class MolConversionLog(object):
         self.skip_reasons = Counter()
 
         self.cnt_in = 0
-        self.cnt_out = 0
 
     def __str__(self):
         INDENT = "    "
         n = self.num_lines
-        _ret = [f"num_lines: {n}", f"flag_ok: {self.flag_ok}", f"included: {self.cnt_in}/{n}", f"excluded: {self.cnt_out}/{n}"]
+        _ret = [f"num_lines: {n}", f"flag_ok: {self.flag_ok}", f"included: {self.cnt_in}/{n}", f"excluded: {n-self.cnt_in}/{n}"]
 
         if self.skip_reasons:
             _ret.append("\n*** Skip reasons ***")

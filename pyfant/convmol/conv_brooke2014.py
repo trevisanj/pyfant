@@ -2,19 +2,13 @@
 
 __all__ = ["ConvBrooke2014"]
 
-import a99, airvacuumvald as avv
-from . import Conv
+import a99, math
+import airvacuumvald as avv
+from .conv import *
 
 
 class ConvBrooke2014(Conv):
-    """Converts Brooke2014 [1] molecular lines data to PFANT "sets of lines" using Einstein's coefficients
-
-    Args:
-        strengthfactor: (=1.) all resulting line strengths ("sj") will be multiplied by this factor
-                        Note: it is better to use "fe" argument instead
-
-    Both strengthfactor and fe are ways to achieve the same result (multiply the line strength), but the former applies
-    to sj whereas the latter is recorded as the molecule's "FE"
+    """Converts Brooke2014 [1] molecular lines data to PFANT "sets of lines"
 
     There is a working example conv_brooke2014_cn.py in examples directory
 
@@ -24,11 +18,10 @@ class ConvBrooke2014(Conv):
             The Astrophysical Journal Supplement Series 210.2 (2014): 23.
     """
 
-    def __init__(self, *args, strengthfactor=1., **kwargs):
+    def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.strengthfactor = strengthfactor
 
-    def _make_sols(self, sols, log, f):
+    def _make_sols(self, f):
         """Sets-of-lines maker for ConvBrooke2014 class
 
         Args:
@@ -37,21 +30,23 @@ class ConvBrooke2014(Conv):
         import pyfant
         assert isinstance(f, pyfant.FileBrooke2014)
 
+        log = self.log
+        sols = self.sols
+
         log.n = len(f)
         if log.n == 0:
             raise RuntimeError("Zero lines found")
 
-        deltak = self.molconsts.get_deltak()
-        S2l = self.molconsts.get_S2l()
+        if self.mode != ConvMode.HLF:
+            deltak = self.molconsts.get_deltak()
+            S2l = self.molconsts.get_S2l()
+
         STATEL = self.molconsts["from_label"]
         STATE2L = self.molconsts["to_label"]
 
         for i in range(log.n):
             try:
-                if f.eSl[i] == STATEL and f.eS2l[i] == STATE2L:
-                    log.cnt_in += 1
-                else:
-                    log.cnt_out += 1
+                if not (f.eSl[i] == STATEL and f.eS2l[i] == STATE2L):
                     log.skip_reasons[f"wrong electronic states ({f.eSl[i]}, {f.eS2l[i]})"] += 1
                     continue
 
@@ -59,23 +54,37 @@ class ConvBrooke2014(Conv):
                 v2l = f.v2l[i]
                 Jl = f.Jl[i]
                 J2l = f.J2l[i]
-                A = f.A[i]
-                nu = f.nu[i]
-                SF = self.strengthfactor
-
-                SJ = self.get_sj_einstein(A, Jl, J2l, S2l, deltak, nu, SF)
+                branch = f.branch[i]
+                nu = f.nu_obs_or_calc(i)
                 lambda_ = avv.vacuum_to_air(1e8/nu)
 
+                if self.mode == ConvMode.HLF:
+                    SJ, flag_error = self._get_hlf(vl, v2l, J2l, branch)
+                    if flag_error: continue
+                else:
+                    A = f.A[i]
+                    # Prefers observed position, otherwise calculated
+                    SF = self.strengthfactor
+
+                    if nu < 0:
+                        log.skip_reasons["Negative wavenumber"] += 1
+                        continue
+
+                    SJ = self.get_sj_einstein(A, Jl, J2l, S2l, deltak, nu, SF)
+
+                log.cnt_in += 1
+
             except Exception as e:
+                print("CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC")
+                raise
                 reason = a99.str_exc(e)
                 log.skip_reasons[reason] += 1
                 msg = "#{}{} line: {}".format(i+1, a99.ordinal_suffix(i+1), reason)
                 log.errors.append(msg)
                 if not self.flag_quiet:
                     a99.get_python_logger().exception(msg)
-                continue
-
-            sols.append_line2(vl, v2l, lambda_, SJ, J2l, f.branch[i])
+            else:
+                sols.append_line2(vl, v2l, lambda_, SJ, J2l, branch)
 
         return sols, log
 

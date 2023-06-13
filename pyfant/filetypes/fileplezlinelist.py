@@ -8,7 +8,6 @@ import a99
 from f311 import DataFile
 import io
 import os
-from collections import defaultdict
 import re
 
 
@@ -32,10 +31,9 @@ class PlezLine(object):
         self.lambda_ = 1.
         self.chiex = 1.
         self.loggf = 1.
-        self.gu = 1.
         self.fdamp = 1.
+        self.gu = 1.
         self.raddmp = 1.
-
 
 class PlezAtomicLine(PlezLine):
     pass
@@ -52,12 +50,20 @@ class PlezMolecularLine(PlezLine):
 
 
 class PlezSpecies(object):
-    def __init__(self, name="", lines=None):
+    def __init__(self, elstring, ion, name, lines=None):
         if lines is None:
             lines = []
 
+        self.elstring = elstring
+        self.ion = ion
         self.name = name
         self.lines = lines
+
+    def __len__(self):
+        return len(self.lines)
+
+    def __iter__(self):
+        return iter(self.lines)
 
 
 class FilePlezLinelistBase(DataFile):
@@ -79,11 +85,10 @@ class FilePlezLinelist(FilePlezLinelistBase):
     def __init__(self):
         DataFile.__init__(self)
 
-        self.molecules = defaultdict(lambda: PlezSpecies())
-        self.atoms = defaultdict(lambda: PlezSpecies())
+        self.molecules = dict()
+        self.atoms = dict()
 
         self.expr_branch = re.compile("[PQRS]\d*")  # regular expression to find the branch
-
 
     def _do_load(self, filename):
         with open(filename, "r") as h:
@@ -93,7 +98,7 @@ class FilePlezLinelist(FilePlezLinelistBase):
         self._do_process_line_molecule(species, line, s)
 
     def _do_process_line_molecule(self, species, line, s):
-        raise NotImplementedError()
+        pass  # 20230605 no need to raise here raise NotImplementedError()
 
     def _do_load_h(self, h, filename):
         r = 0  # counts rows of file
@@ -120,15 +125,23 @@ class FilePlezLinelist(FilePlezLinelistBase):
                         if state == EXP_SPECIES or state == EXP_ANY:
                             # New species to come
 
-                            # Determine whether atom or molecule
+                            s_ = s[1:]
+                            elstring = s_[:s_.index("'")].strip()
+                            s__ = s_[s_.index("'")+1:]
+                            ion, nline = [int(x.strip()) for x in s__.split(" ") if x.strip()]
+                            print(elstring, ion, nline)
+                            print("ASDASDaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+
+
+                            # Determines whether atom or molecule
                             atnumber = int(s[1:s.index(".")])
                             is_atom = atnumber <= 92
 
                             state = EXP_NAME
 
                         elif EXP_NAME:
-                            name = s.strip("'")
-                            species = self.atoms[name] if is_atom else self.molecules[name]
+                            name = s.strip("'").strip()
+                            species = self._get_species(is_atom, elstring, ion, name)
 
                             a99.get_python_logger().info(
                                  "Loading '{}': species '{}'".format(filename, name))
@@ -143,7 +156,7 @@ class FilePlezLinelist(FilePlezLinelistBase):
                         # Read 6 numeric values then something between quotes
                         line = PlezAtomicLine() if is_atom else PlezMolecularLine()
 
-                        line.lambda_, line.chiex, line.loggf, line.gu, line.fdamp, line.raddmp = \
+                        line.lambda_, line.chiex, line.loggf, line.fdamp, line.gu, line.raddmp = \
                             [float(x) for x in s[:s.index("'")].split()]
 
                         if not is_atom:
@@ -164,6 +177,29 @@ class FilePlezLinelist(FilePlezLinelistBase):
         except Exception as e:
             raise RuntimeError("Error around %d%s row of file '%s': \"%s\"" %
                                (r + 1, a99.ordinal_suffix(r + 1), filename, a99.str_exc(e))) from e
+
+    def _get_species(self, is_atom, elstring, ion, name):
+        """Returns PlezSpecies instance, creating one if necessary."""
+        list_ = self.atoms if is_atom else self.molecules
+        try:
+            ret = list_[elstring]
+        except KeyError:
+            ret = PlezSpecies(elstring, ion, name)
+            list_[elstring] = ret
+        return ret
+
+
+    def _do_save_as(self, filename):
+        def save_species(h, species):
+            a99.write_lf(h, f"'{species.elstring}' {species.ion} {len(species)}")
+            a99.write_lf(h, f"'{species.name}'")
+            for line in species:
+                a99.write_lf(h, f"{line.lambda_:13.3f} {line.chiex:9.3f} {line.loggf:9.3f} {line.fdamp:7.2f} {line.gu:7.1f} {line.raddmp:10.3e}")
+        with open(filename, "w") as h:
+            for species in self.atoms.values():
+                save_species(h, species)
+            for species in self.molecules.values():
+                save_species(h, species)
 
 
 @a99.froze_it
@@ -242,8 +278,8 @@ class FilePlezLinelist1(FilePlezLinelistBase):
     def __init__(self):
         DataFile.__init__(self)
 
-        self.molecules = defaultdict(lambda: PlezSpecies())
-        self.atoms = defaultdict(lambda: PlezSpecies())
+        self.molecules = {}
+        self.atoms = {}
 
     def _do_load(self, filename):
         with open(filename, "r") as h:

@@ -2,12 +2,8 @@
 
 __all__ = ["FileBrooke2014"]
 
-import a99
+import a99, math
 from f311 import DataFile
-import io
-import os
-from collections import defaultdict
-import re
 
 
 @a99.froze_it
@@ -40,13 +36,24 @@ class FileBrooke2014(DataFile):
         self.Nl = []  # Upper state N level
         self.N2l = []  # Lower state N level
         # self.lmbdam  = []  # wavelength in angstrom
-        self.nu = []  # wavenumber in cm^-1
+        self.nu_obs = []  # observed wavenumber in cm^-1
+        self.nu_calc = []  # calculated wavenumber in cm^-1
         self.A = []  # Einstein A value
         self.Des = []  # Transition description
         self.branch = []  # Branch taken from description (above)
 
     def __len__(self):
         return len(self.eSl)
+
+    def nu_obs_or_calc(self, i):
+        """Returns observed or calculated wavenumber.
+
+        Preference is observed, but if not present, returns calculated."""
+
+        nu = self.nu_obs[i]
+        if math.isnan(nu):
+            nu = self.nu_calc[i]
+        return nu
 
     def _do_load(self, filename):
         with open(filename, "r") as h:
@@ -66,7 +73,12 @@ class FileBrooke2014(DataFile):
                         self.J2l.append(float(line[16:21]))
                         self.pl.append(line[26:27])
                         self.p2l.append(line[28:29])
-                        self.nu.append(float(line[50:60]))
+                        try:
+                            nu_obs = float(line[38:49])
+                        except ValueError:
+                            nu_obs = float("nan")
+                        self.nu_obs.append(nu_obs)
+                        self.nu_calc.append(float(line[50:60]))
                         self.A.append(float(line[81:93]))
 
                         Des = line[107:118]
