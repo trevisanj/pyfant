@@ -10,25 +10,18 @@ class ConvPlez(Conv):
     Converts Plez molecular lines data to PFANT "sets of lines"
 
         Args:
-            flag_fcf: Whether to multiply calculated gf's by Franck-Condon Factor
-                      (only makes sense when mode==ConvMode.HLF)
-
-            name: species name within Plez's file. Examples: "NH A-X PGopher", "Sneden web" etc.
-
-            strengthfactor: (=1.) all resulting line strengths ("sj") will be multiplied by this factor.
-                Note: it is better to use "fe" argument instead
+            species: species name within Plez's file. Examples: "NH A-X PGopher", "Sneden web" etc.
+            flag_filter_labels: whether to filter lines by labels [taken from self.molconsts e.g. ("A", "X")].
 
     ***Note** old format (FilePlezMoleculeOld) does not have loggf information,
               therefore the only way to work with the latter file type is
               mode==CONVPLEZMODE_HLF
     """
 
-    def __init__(self, *args, flag_fcf=False,
-                 name="", strengthfactor=1., **kwargs):
+    def __init__(self, *args, species="", flag_filter_labels=False, **kwargs):
         Conv.__init__(self, *args, **kwargs)
-        self.flag_fcf = flag_fcf
-        self.name = name
-        self.strengthfactor = strengthfactor
+        self.species = species
+        self.flag_filter_labels = flag_filter_labels
 
 
     def _make_sols(self, file):
@@ -42,11 +35,11 @@ class ConvPlez(Conv):
         if not isinstance(file, pyfant.FilePlezLinelistBase):
             raise TypeError("Invalid type for argument 'fileobj': {}".format(type(file).__name__))
 
-        lines = file.molecules[self.name].lines
+        lines = file.molecules[self.species].lines
         n = log.n = len(lines)
 
         if n == 0:
-            raise RuntimeError("Species '{}' has zero lines".format(self.name))
+            raise RuntimeError("Species '{}' has zero lines".format(self.species))
 
         if self.mode == ConvMode.HLF:
             mtools = self.kovacs_toolbox()
@@ -54,11 +47,19 @@ class ConvPlez(Conv):
             deltak = self.molconsts.get_deltak()
             S2l = self.molconsts.get_S2l()
 
+        if self.flag_filter_labels:
+            from_label = self.molconsts["from_label"]
+            to_label = self.molconsts["to_label"]
+
         for i, line in enumerate(lines):
             branch = line.branch
+            sj = self.strengthfactor
 
             try:
-                sj = self.strengthfactor
+                if self.flag_filter_labels:
+                    if line.from_label != from_label or line.to_label != to_label:
+                        log.skip_reasons[f"Wrong system: {line.from_label}-{line.to_label}"] += 1
+                        continue
 
                 if self.mode == ConvMode.HLF:
                     try:
@@ -83,11 +84,11 @@ class ConvPlez(Conv):
                         line.Jl = line.J2l = J
                         line.vl = line.v2l = 0
 
-                        if not branch:
-                            branch = "-"
+                    if not branch:
+                        branch = "-"
 
-                        normalizationfactor = self.get_normalizationfactor(line.J2l, S2l, deltak, self.strengthfactor)
-                        sj *= normalizationfactor*10**line.loggf
+                    normalizationfactor = self.get_normalizationfactor(line.J2l, S2l, deltak, self.strengthfactor)
+                    sj *= normalizationfactor*10**line.loggf
 
             except Exception as e:
                 reason = a99.str_exc(e)
@@ -99,5 +100,6 @@ class ConvPlez(Conv):
                 continue
             else:
                 sols.append_line(line, sj, branch)
+                log.cnt_in += 1
 
         return sols, log

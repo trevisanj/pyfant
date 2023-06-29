@@ -201,6 +201,41 @@ def parse_system_str(string):
     return pieces
 
 
+def parse_label_mult_spdf(s):
+    """Parses strings such as "A 2 SIGMA", "b3Sigmag-", "a3Piu" ...
+
+    Returns: (label, multiplicity, spdf)
+
+    Examples:
+        'A 2 SIGMA' --> ('A', 2, 0)
+        'b3Sigmag-' --> ('b', 3, 0)
+        'a3Piu' --> ('a', 3, 1)
+
+    Note: This routine is more complete than parse_system_str() (the latter cannot parse Greek letters with subsequent
+    trailing letter (e.g. Piu)
+
+    Note: I wrote this to parse file '12C12C_15000-17500_P-BR.bsyn' and similar, but later realized I just need the
+          "label", so ended up not using this function, although it works.
+    """
+
+    s = s.strip()
+
+    expr = re.compile("([a-zA-Z])\s*(\d+)\s*([a-zA-Z]+)")
+    groups = expr.search(s)
+    label, _mult, _spdf = [groups[i] for i in range(1, 4)]
+    mult = int(_mult)
+    _spdf_ = _spdf.capitalize()
+    spdf = None
+    for i, greek in enumerate(("Sigma", "Pi", "Delta", "Phi")):
+        if _spdf_.startswith(greek):
+            spdf = i
+            break
+    if spdf is None:
+        raise ValueError(f"Invalid greek letter in '{s}'")
+    return label, mult, spdf
+
+
+
 def split_molecules_description(descr):
     """Breaks PFANT molecule description into "(name) (system) (optional notes)" --> (name, system, notes)
 
@@ -263,6 +298,42 @@ def symbols_to_formula(symbols):
         return "{}{}".format(symbols_[0], "2")
     else:
         return "".join(symbols_)
+
+
+def parse_label_mult_spdf(s):
+    """Parses strings such as "A 2 SIGMA", "b3Sigmag-", "a3Piu" ...
+
+    Returns: (label, multiplicity, spdf)
+
+    Note: This routine is more complete than parse_system_str() (the latter cannot parse Greek letters with subsequent
+    trailing letter (e.g. Piu)
+    """
+
+    s = s.strip()
+
+    expr = re.compile("([a-zA-Z])\s*(\d+)\s*([a-zA-Z]+)")
+    groups = expr.search(string)
+    if groups is not None:
+        _pieces = groups[1:4]
+    else:
+        # Initial and final state are the same. Example "12C16O INFRARED [X 1 SIGMA+]"
+        expr = re.compile("\[\s*([a-zA-Z])\s*(\d+)\s*([a-zA-Z0-9]+)[+-]{0,1}\s*\]")
+
+        groups = expr.search(string)
+        if groups is not None:
+            _pieces = [groups[i] for i in range(1, 4)] * 2
+
+        if groups is None:
+            raise ValueError("Could not understand str '{}'".format(string))
+
+
+    pieces = [f(piece) for f, piece in zip(_PSS_TRANSFORMS, _pieces)]
+
+    return pieces
+
+
+
+
 
 # **        ****                ******        ****                ******        ****
 #   **    **    ******    ******      **    **    ******    ******      **    **    ******    ******

@@ -126,6 +126,10 @@ class Runnable(object):
     def run(self):
         raise NotImplementedError()
 
+    def clean(self):
+        """Deletes session directory"""
+        self.sid.clean()
+
     def kill(self):
         raise NotImplementedError()
 
@@ -145,10 +149,6 @@ class Runnable(object):
         self._error_message = ""
         if self.sid.id:
             self.sid.clean(False)
-
-    def clean(self, *args):
-        """Wraps self.sid.clean(). See ftpyfant.SID"""
-        self.sid.clean(*args)
 
     def _get_sid(self):
         raise NotImplementedError()
@@ -221,6 +221,10 @@ class PFANTExecutable(Runnable):
             self.__run()
         finally:
             self.conf.close_popen_text_dest()
+
+    def clean(self):
+        """Deletes session directory"""
+        self.sid.clean()
 
     def run_from_combo(self):
         """Alternative to run executable (called from Combo class).

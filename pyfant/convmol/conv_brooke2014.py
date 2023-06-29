@@ -47,7 +47,7 @@ class ConvBrooke2014(Conv):
         for i in range(log.n):
             try:
                 if not (f.eSl[i] == STATEL and f.eS2l[i] == STATE2L):
-                    log.skip_reasons[f"wrong electronic states ({f.eSl[i]}, {f.eS2l[i]})"] += 1
+                    log.skip_reasons[f"Wrong system: {f.eSl[i]}-{f.eS2l[i]}"] += 1
                     continue
 
                 vl = f.vl[i]
@@ -72,11 +72,7 @@ class ConvBrooke2014(Conv):
 
                     SJ = self.get_sj_einstein(A, Jl, J2l, S2l, deltak, nu, SF)
 
-                log.cnt_in += 1
-
             except Exception as e:
-                print("CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC")
-                raise
                 reason = a99.str_exc(e)
                 log.skip_reasons[reason] += 1
                 msg = "#{}{} line: {}".format(i+1, a99.ordinal_suffix(i+1), reason)
@@ -85,6 +81,7 @@ class ConvBrooke2014(Conv):
                     a99.get_python_logger().exception(msg)
             else:
                 sols.append_line2(vl, v2l, lambda_, SJ, J2l, branch)
+                log.cnt_in += 1
 
         return sols, log
 

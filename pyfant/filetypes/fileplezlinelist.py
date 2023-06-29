@@ -2,7 +2,8 @@
 
 
 __all__ = ["PlezAtomicLine", "PlezMolecularLine", "PlezSpecies", "FilePlezLinelist", "FilePlezLinelist1",
-           "FilePlezLinelistBase", "load_plez_mol", "FilePlezLinelistN14H", "FilePlezLinelist12C16OLi2015"]
+           "FilePlezLinelistBase", "load_plez_mol", "FilePlezLinelistN14H", "FilePlezLinelist12C16OLi2015",
+           "FilePlezLinelistC2"]
 
 import a99
 from f311 import DataFile
@@ -129,9 +130,6 @@ class FilePlezLinelist(FilePlezLinelistBase):
                             elstring = s_[:s_.index("'")].strip()
                             s__ = s_[s_.index("'")+1:]
                             ion, nline = [int(x.strip()) for x in s__.split(" ") if x.strip()]
-                            print(elstring, ion, nline)
-                            print("ASDASDaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
-
 
                             # Determines whether atom or molecule
                             atnumber = int(s[1:s.index(".")])
@@ -144,7 +142,7 @@ class FilePlezLinelist(FilePlezLinelistBase):
                             species = self._get_species(is_atom, elstring, ion, name)
 
                             a99.get_python_logger().info(
-                                 "Loading '{}': species '{}'".format(filename, name))
+                                 "Loading '{}': species '{}' ('{}')".format(filename, elstring, name))
 
                             state = EXP_ANY
 
@@ -156,8 +154,13 @@ class FilePlezLinelist(FilePlezLinelistBase):
                         # Read 6 numeric values then something between quotes
                         line = PlezAtomicLine() if is_atom else PlezMolecularLine()
 
-                        line.lambda_, line.chiex, line.loggf, line.fdamp, line.gu, line.raddmp = \
-                            [float(x) for x in s[:s.index("'")].split()]
+                        # Description string after 6th value is not mandatory
+                        if "'" in s:
+                            line.lambda_, line.chiex, line.loggf, line.fdamp, line.gu, line.raddmp = \
+                                [float(x) for x in s[:s.index("'")].split()]
+                        else:
+                            line.lambda_, line.chiex, line.loggf, line.fdamp, line.gu, line.raddmp = \
+                                [float(x) for x in s.split()]
 
                         if not is_atom:
                             self._process_line_molecule(species, line, s)
@@ -175,6 +178,7 @@ class FilePlezLinelist(FilePlezLinelistBase):
                     ii = 0
 
         except Exception as e:
+            raise
             raise RuntimeError("Error around %d%s row of file '%s': \"%s\"" %
                                (r + 1, a99.ordinal_suffix(r + 1), filename, a99.str_exc(e))) from e
 
@@ -201,6 +205,11 @@ class FilePlezLinelist(FilePlezLinelistBase):
             for species in self.molecules.values():
                 save_species(h, species)
 
+    def molecule_by_index(self, i):
+        return list(self.molecules.values())[i]
+
+    def atom_by_index(self, i):
+        return list(self.atoms.values())[i]
 
 @a99.froze_it
 class FilePlezLinelistN14H(FilePlezLinelist):
@@ -251,6 +260,17 @@ class FilePlezLinelist12C16OLi2015(FilePlezLinelist):
     #                                                                            0123456789012345678901234567890123456789012345678901234567890123456789
     #                                                                            0         1         2         3         4         5         6
 
+    #'0606.012012 ' 1 24212
+    #'EXOMOL '
+    #   15000.04111    3.417   -3.130 .00   25.  0.100E+01 'X' 'X'   0.0    1.0 '    23  12.0 F1e  +   b3Sigmag-  - 19  11.0 F2e  -       a3Piu   '
+    #   15000.05881    1.724   -8.590 .00   81.  0.100E+01 'X' 'X'   0.0    1.0 '     9  40.0 F1e  +   b3Sigmag-  -  7  39.0 F2e  -       a3Piu   '
+    #   15000.15088    1.954   -4.438 .00  139.  0.100E+01 'X' 'X'   0.0    1.0 '     7  69.0 F1f  +   b3Sigmag-  -  6  70.0 F1f  -       a3Piu   '
+    #   15000.33324    1.443   -2.043 .00   79.  0.100E+01 'X' 'X'   0.0    1.0 '     5  39.0 F1e  -       A1Piu  -  5  40.0 F0e  +   X1Sigmag+   '
+    #   15000.34819    1.954   -4.474 .00  137.  0.100E+01 'X' 'X'   0.0    1.0 '     7  68.0 F0e  +   b3Sigmag-  -  6  69.0 F0e  -       a3Piu   '
+    #   15000.36067    2.522   -9.903 .00  185.  0.100E+01 'X' 'X'   0.0    1.0 '     7  92.0 F1e  +   b3Sigmag-  -  2  93.0 F2e  -       a3Piu   '
+
+
+
 
 
     # OBS: (2023-04-04) VERY IMPORTANT I think positions 1 and 5 would give further branch information for doublet, triplet etc.
@@ -267,6 +287,65 @@ class FilePlezLinelist12C16OLi2015(FilePlezLinelist):
         line.Jl = float(comments[16:22])
         line.v2l = int(comments[40:43])
         line.J2l = float(comments[43:49])
+
+
+@a99.froze_it
+class FilePlezLinelistC2(FilePlezLinelist):
+    """
+    Deals with .bsyn C2 files (see description).
+
+    This class was made to deal with the following files:
+        - 12C12C_15000-17500_P-BR.bsyn
+        - 12C13C_15000-17500_P-BR.bsyn
+        - 13C13C_15000-17500_P-BR.bsyn
+    """
+
+    # '0606.012012 ' 1 24212
+    # 'EXOMOL '
+    #   15000.04111    3.417   -3.130 .00   25.  0.100E+01 'X' 'X'   0.0    1.0 '    23  12.0 F1e  +   b3Sigmag-  - 19  11.0 F2e  -       a3Piu   '
+    #   15000.05881    1.724   -8.590 .00   81.  0.100E+01 'X' 'X'   0.0    1.0 '     9  40.0 F1e  +   b3Sigmag-  -  7  39.0 F2e  -       a3Piu   '
+    #   15000.15088    1.954   -4.438 .00  139.  0.100E+01 'X' 'X'   0.0    1.0 '     7  69.0 F1f  +   b3Sigmag-  -  6  70.0 F1f  -       a3Piu   '
+    #   15000.33324    1.443   -2.043 .00   79.  0.100E+01 'X' 'X'   0.0    1.0 '     5  39.0 F1e  -       A1Piu  -  5  40.0 F0e  +   X1Sigmag+   '
+    #   15000.34819    1.954   -4.474 .00  137.  0.100E+01 'X' 'X'   0.0    1.0 '     7  68.0 F0e  +   b3Sigmag-  -  6  69.0 F0e  -       a3Piu   '
+    #   15000.36067    2.522   -9.903 .00  185.  0.100E+01 'X' 'X'   0.0    1.0 '     7  92.0 F1e  +   b3Sigmag-  -  2  93.0 F2e  -       a3Piu   '
+
+    #'0606.012013 ' 1 51113
+    #'EXOMOL '
+    #   15000.00151    3.598   -5.105 .00  157.  0.100E+01 'X' 'X'   0.0    1.0 '    18  78.0 F0e  +   b3Sigmag-  - 15  79.0 F0e  -       a3Piu   '
+    #   15000.00567    0.469   -3.448 .00    3.  0.100E+01 'X' 'X'   0.0    1.0 '     3   1.0 F1f  +   b3Sigmag-  -  2   0.0 F0f  -       a3Piu   '
+    #   15000.01264    0.488   -3.181 .00   23.  0.100E+01 'X' 'X'   0.0    1.0 '     3  11.0 F1e  -   b3Sigmag-  -  2  10.0 F0e  +       a3Piu   '
+    #   15000.08361    3.396   -2.187 .00   69.  0.100E+01 'X' 'X'   0.0    1.0 '    22  34.0 F0e  +   b3Sigmag-  - 18  34.0 F2f  -       a3Piu   '
+
+    #'0606.013013 ' 1 54388
+    #'EXOMOL '
+    #   15000.02834    3.306   -2.835 .00   21.  0.100E+01 'X' 'X'   0.0    1.0 '    23  10.0 F1f  -   b3Sigmag-  - 19  10.0 F0e  +       a3Piu   '
+    #   15000.06192    1.757   -6.268 .00   95.  0.100E+01 'X' 'X'   0.0    1.0 '     9  47.0 F1f  +   b3Sigmag-  -  7  47.0 F0e  -       a3Piu   '
+    #   15000.09163    1.087   -6.495 .00  151.  0.100E+01 'X' 'X'   0.0    1.0 '     1  75.0 F0e  -   b3Sigmag-  -  0  75.0 F1f  +       a3Piu   '
+    #   15000.15101    2.122   -6.552 .00  135.  0.100E+01 'X' 'X'   0.0    1.0 '     9  67.0 F0e  -   b3Sigmag-  -  8  66.0 F0e  +       a3Piu   '
+    #                                                                                 |     |                        |     |
+    #                                                                                vl    Jl                      v2l   J2l
+    #                                                                            0123456789012345678901234567890123456789012345678901234567890123456789
+    #                                                                            0         1         2         3         4         5         6
+
+    def _do_process_line_molecule(self, species, line, s):
+        # this will give the clean comments section for a line as in sample above
+        comments = s.split("'")[5]
+
+        line.branch = "-"
+
+        row = [x for x in comments.split(" ") if x]
+        line.vl = int(row[0])
+        line.Jl = float(row[1])
+        line.v2l = int(row[6])
+        line.J2l = float(row[7])
+        line.from_label = row[4][0]
+        line.to_label = row[10][0]
+        # line.vl = int(comments[0:6])
+        # line.Jl = float(comments[6:12])
+        # line.v2l = int(comments[34:37])
+        # line.J2l = float(comments[37:43])
+        # line.from_label = comments[22]
+        # line.to_label = comments[57]
 
 
 @a99.froze_it
