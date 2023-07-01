@@ -25,9 +25,29 @@ FOR_NULBAD = 3
 _sequence_dict = {"innewmarcs": FOR_INNEWMARCS, "hydro2": FOR_HYDRO2, "pfant": FOR_PFANT, "nulbad": FOR_NULBAD}
 
 def translate_sequence(sequence):
-    """Convenience/tolerance function to convert strings with executable names to FOR_*"""
-    ret = []
-    return [_sequence_dict[x] if isinstance(x, str) else x for x in sequence]
+    """
+    Convenience/tolerance function to convert strings with executable names to FOR_*
+
+    Args:
+        sequence: examples:
+            ["innewmarcs", "hydro2", "pfant", "nulbad"]
+            [FOR_INNEWMARCS, FOR_HYDRO2, FOR_PFANT, FOR_NULBAD]
+            [True, True, True, True]
+            1111
+            "1111"
+            (all these examples evaluate to [FOR_INNEWMARCS, FOR_HYDRO2, FOR_PFANT, FOR_NULBAD])
+    """
+
+    if isinstance(sequence, int):
+        sequence = f"{sequence:04}"
+
+    if isinstance(sequence, str):
+        ret = [i for i, b in enumerate(sequence) if int(b)]
+    else:
+        ret = [_sequence_dict[x] if isinstance(x, str) else i if isinstance(x, bool) else x
+               for i, x in enumerate(sequence) if not isinstance(x, bool) or x]
+    return ret
+
 
 @a99.froze_it
 class SID(object):

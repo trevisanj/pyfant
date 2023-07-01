@@ -34,9 +34,11 @@ converter = pyfant.ConvHITRAN(comment=f"from {DATANAME}, iso={ISOWANT}",
                               flag_quiet=True,
                               isowant=ISOWANT,
                               fe=FE)
-fmol, log = converter.make_file_molecules(hapidata)
-for line in str(log).split("\n"):
+fmol = converter.make_file_molecules(hapidata)
+
+for line in str(converter.log).split("\n"):
     a99.get_python_logger().info(line)
+
 fmol.save_as(f"{DATANAME}.PFANT.dat")
 
 #=== END CONVERSION ===

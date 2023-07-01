@@ -135,6 +135,11 @@ class FilePlezLinelist(FilePlezLinelistBase):
                             atnumber = int(s[1:s.index(".")])
                             is_atom = atnumber <= 92
 
+                            if is_atom:
+                                elstring = f"{elstring:>02}"
+                            else:
+                                elstring = f"{elstring:>011}"
+
                             state = EXP_NAME
 
                         elif EXP_NAME:

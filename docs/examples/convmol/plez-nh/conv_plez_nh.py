@@ -3,7 +3,7 @@ Converts Plez's Turbospectrum file to PFANT format using sample file derived fro
 (system 'NH A-X PGopher').
 """
 
-import pyfant, os
+import pyfant, os, a99
 
 #=== BEGIN SETUP ===
 
@@ -31,9 +31,14 @@ fplez = pyfant.FilePlezLinelistN14H()
 fplez.load(INPUTFILENAME)
 
 # Obs: name must match species name in original bsyn file
-converter = pyfant.ConvPlez(name="NH A-X PGopher", molconsts=molconsts)
+converter = pyfant.ConvPlez(species="0107.000014", molconsts=molconsts)
 
 fmol = converter.make_file_molecules(fplez)
+
+for line in str(converter.log).split("\n"):
+    a99.get_python_logger().info(line)
+
+
 fmol.save_as(outputfilename)
 
 #=== END CONVERSION ===
