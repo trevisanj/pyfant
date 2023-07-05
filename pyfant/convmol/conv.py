@@ -90,6 +90,8 @@ class Conv(object):
         flag_fcf: Whether to multiply calculated gf's by Franck-Condon Factor
                   (only makes sense when mode==ConvMode.HLF)
 
+        flag_filter_labels: whether to filter lines by labels [taken from self.molconsts e.g. ("A", "X")].
+
         moldb: FileMolDB instance to automatically get information from (for example will take FCF's if needed)
 
     Both strengthfactor and fe are ways to achieve the same result (multiply the line strength), but the former applies
@@ -98,6 +100,7 @@ class Conv(object):
 
     def __init__(self, mode=ConvMode.HLF, qgbd_calculator=None, molconsts=None, flag_norm_sj=True, fcfs=None,
                  flag_quiet=False, fe=None, flag_special_fcf=False, comment="", strengthfactor=1., flag_fcf=False,
+                 flag_filter_labels=True,
                  moldb=None):
         self.mode = mode
         self.qgbd_calculator = qgbd_calculator if qgbd_calculator else calc_qgbd_tio_like
@@ -110,6 +113,7 @@ class Conv(object):
         self.flag_special_fcf = flag_special_fcf
         self.strengthfactor = strengthfactor
         self.flag_fcf = flag_fcf
+        self.flag_filter_labels = flag_filter_labels
 
         if flag_fcf and fcfs is None:
             if not moldb:
@@ -124,8 +128,8 @@ class Conv(object):
     @staticmethod
     def get_sj_einstein(A, Jl, J2l, S2l, deltak, nu, strengthfactor):
         """Calculates SJ and wavelength using Einstein's coefficient "A"."""
-        normalizationfactor = Conv.get_normalizationfactor(int(J2l), S2l, deltak, strengthfactor)
-        SJ = normalizationfactor*A*1.499*(2+Jl+1)/nu**2
+        normalizationfactor = Conv.get_normalizationfactor(J2l, S2l, deltak, strengthfactor)
+        SJ = normalizationfactor*A*1.499*(2*Jl+1)/nu**2
         return SJ
 
     @staticmethod

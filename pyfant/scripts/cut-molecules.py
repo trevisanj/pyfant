@@ -1,11 +1,9 @@
-#!/usr/bin/env python
+7#!/usr/bin/env python
 """
 Cuts molecular lines file to wavelength interval specified
 
 The interval is [llzero, llfin]
 """
-
-# TODO add this functionality to mled.py
 
 import argparse
 import logging

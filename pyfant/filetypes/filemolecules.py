@@ -31,7 +31,7 @@ class SetOfLines(a99.AttrsPart):
         state_to=None: letter
     """
 
-    attrs = ["vl", "v2l", "qqv", "ggv", "bbv", "ddv", "fact", "num_lines", "state_from", "state_to"]
+    attrs = ["vl", "v2l", "qqv", "ggv", "bbv", "ddv", "fact", "num_lines", "state_from", "state_to", "llzero", "llfin"]
 
     @property
     def llzero(self):
@@ -86,11 +86,11 @@ class SetOfLines(a99.AttrsPart):
                 obj[fieldname] = value
             yield obj
 
-    def cut(self, lzero, lfin):
+    def cut(self, lzero, lfin, jjmax=None):
         """Reduces the number of lines to only the ones whose lmbdam is inside [lzero, lfin]"""
         l, s, j, b = [], [], [], []
         for _l, _s, _j, _b in zip(self.lmbdam, self.sj, self.jj, self.branch):
-            if lzero <= _l <= lfin:
+            if lzero <= _l <= lfin and (jjmax is None or _j <= jjmax):
                 l.append(_l)
                 s.append(_s)
                 j.append(_j)
@@ -116,7 +116,7 @@ class SetOfLines(a99.AttrsPart):
 @a99.froze_it
 class Molecule(a99.AttrsPart):
     attrs = ["description", "symbols", "fe", "do", "mm", "am", "bm", "ua", "ub",
-             "te", "cro", "s", "nv", "num_lines"]
+             "te", "cro", "s", "nv", "num_lines", "llzero", "llfin"]
 
     @property
     def llzero(self):
@@ -212,11 +212,11 @@ class Molecule(a99.AttrsPart):
         return self.sol.__getitem__(*args)
 
 
-    def cut(self, lzero, lfin):
+    def cut(self, lzero, lfin, jjmax=None):
         """Reduces the number of lines to only the ones whose lmbdam is inside [lzero, lfin]"""
 
         for i in reversed(list(range(len(self)))):
-            self.sol[i].cut(lzero, lfin)
+            self.sol[i].cut(lzero, lfin, jjmax)
             if len(self.sol[i]) == 0:
                 del self.sol[i]
 
@@ -348,12 +348,12 @@ class FileMolecules(DataFile):
     def __getitem__(self, *args):
         return self.molecules.__getitem__(*args)
 
-    def cut(self, lzero, lfin):
+    def cut(self, lzero, lfin, jjmax=None):
         """Reduces the number of lines to only the ones whose lmbdam is inside [lzero, lfin]"""
 
         for i in reversed(list(range(len(self)))):
             m = self.molecules[i]
-            m.cut(lzero, lfin)
+            m.cut(lzero, lfin, jjmax)
             if len(m) == 0:
                 del self.molecules[i]
 
@@ -489,7 +489,7 @@ class FileMolecules(DataFile):
             a99.write_lf(h, self.titm)
             a99.write_lf(h, " ".join([str(x.nv) for x in self.molecules]))
             for i_m, m in enumerate(self.molecules):
-                a99.get_python_logger().info("Saving '{}': molecule {}/{}".format(filename, i_m+1, len(self.molecules)))
+                # todo cleanup a99.get_python_logger().info("Saving '{}': molecule {}/{}".format(filename, i_m+1, len(self.molecules)))
 
                 # # Assembles "titulo"
                 # ## Transitions

@@ -12,7 +12,7 @@ class FileMollist(DataFile):
     """
     List of PFANT molecular lines files
     """
-
+    flag_collect = False  # too generic, left out of file type auto-detection
     default_filename = "mollist.dat"
     attrs = ["filenames"]
 
@@ -31,7 +31,7 @@ class FileMollist(DataFile):
         with open(filename, "r") as h:
             for line in h:
                 line = line.strip()
-                if not line.startswith("#"):
+                if not line.startswith("#") and len(line) > 0:
                     self.filenames.append(line)
 
     def _do_save_as(self, filename):

@@ -11,18 +11,15 @@ class ConvPlez(Conv):
 
         Args:
             species: species name within Plez's file. Examples: "NH A-X PGopher", "Sneden web" etc.
-            flag_filter_labels: whether to filter lines by labels [taken from self.molconsts e.g. ("A", "X")].
 
     ***Note** old format (FilePlezMoleculeOld) does not have loggf information,
               therefore the only way to work with the latter file type is
               mode==CONVPLEZMODE_HLF
     """
 
-    def __init__(self, *args, species="", flag_filter_labels=False, **kwargs):
+    def __init__(self, *args, species="", **kwargs):
         Conv.__init__(self, *args, **kwargs)
         self.species = species
-        self.flag_filter_labels = flag_filter_labels
-
 
     def _make_sols(self, file):
 

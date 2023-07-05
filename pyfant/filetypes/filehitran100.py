@@ -1,18 +1,19 @@
-# Represents file parsed by HITRAN's "hapi"
-#
-# This class was creates mainly to fulfill existing structure in "convmol" framework, namely Conv._to_sols() expects
-# a "file" class. However, load() is dummy
-__all__ = ["FileHITRANLinelist"]
+# 20230705 This is one project to try to reproduce Jorge's OH, but I don't know if it is necessary (I am now working
+# with new HITRAN 160-column files, which seem to have similar (and more) information)
 
+__all__ = ["FileHITRAN100"]
 
 import a99
 from f311 import DataFile
 import tabulate
 
 @a99.froze_it
-class FileHITRANLinelist(DataFile):
+class FileHITRAN100(DataFile):
     """
-    HITRAN linelist
+    HITRAN's 100-column format
+
+    References:
+        [1] Jorge Melendez's work on OH: hitranOH.dat, extraeOH.f
     """
 
     def __init__(self):

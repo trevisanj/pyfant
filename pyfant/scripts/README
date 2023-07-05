@@ -1,0 +1,1 @@
+Scripts starting with a "_" are not installed when running setup.py, but as a general rule should work nevertheless

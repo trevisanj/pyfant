@@ -282,6 +282,8 @@ class Conf(object):
         self.file_atoms = None
         # ## FileMolecules instance
         self.file_molecules = None
+        # ## FileMollist instance
+        self.file_mollist = None
 
         # # Command-line options
         self.__opt = pyfant.FileOptions()
@@ -462,7 +464,7 @@ class Conf(object):
         executables. To be called *before* create_data_files
 
         Args:
-            sequence: list containing one or more i_* values such as innewmarcs etc
+            sequence: list containing one or more i_* values such as innewmarcs etc.
             opt:
             sid:
 
