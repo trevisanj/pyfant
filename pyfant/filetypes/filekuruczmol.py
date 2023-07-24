@@ -1,6 +1,3 @@
-"""VALD3 atomic or molecular lines file"""
-
-
 __all__ = ["KuruczMolLine", "KuruczMolLineOld", "KuruczMolLineOld1", "FileKuruczMolecule", "FileKuruczMoleculeOld",
            "FileKuruczMoleculeBase", "load_kurucz_mol", "FileKuruczMoleculeOld1", "FileKuruczMolecule1"]
 
@@ -8,26 +5,64 @@ import a99
 from f311 import DataFile
 import io
 import os
-from collections import namedtuple
+from dataclasses import dataclass
+from typing import Any
 
 
 # Will update progress status every time the following number of lines is read from file
 _PROGRESS_INDICATOR_PERIOD = 1030 * 5
 
 
-KuruczMolLine = namedtuple("KuruczMolLine",
-    ["lambda_", "loggf", "J2l", "E2l", "Jl", "El", "atomn0", "atomn1", "state2l", "v2l",
-    "lambda_doubling2l", "spin2l", "statel", "vl", "lambda_doublingl", "spinl", "iso", ])
+@dataclass
+class KuruczMolLine:
+    lambda_: Any
+    loggf: Any
+    J2l: Any
+    E2l: Any
+    Jl: Any
+    El: Any
+    atomn0: Any
+    atomn1: Any
+    state2l: Any
+    v2l: Any
+    lambda_doubling2l: Any
+    spin2l: Any
+    statel: Any
+    vl: Any
+    lambda_doublingl: Any
+    spinl: Any
+    iso: Any
+    rest: Any
 
 
-KuruczMolLineOld = namedtuple("KuruczMolLineOld",
-                              ["lambda_", "J2l", "Jl", "atomn0", "atomn1", "state2l", "v2l",
-                               "lambda_doubling2l", "spin2l", "statel", "vl", "lambda_doublingl",
-                               "spinl", ])
+@dataclass
+class KuruczMolLineOld:
+    lambda_: Any
+    J2l: Any
+    Jl: Any
+    atomn0: Any
+    atomn1: Any
+    state2l: Any
+    v2l: Any
+    lambda_doubling2l: Any
+    spin2l: Any
+    statel: Any
+    vl: Any
+    lambda_doublingl: Any
+    spinl: Any
 
-KuruczMolLineOld1 = namedtuple("KuruczMolLineOld1",
-                              ["lambda_", "J2l", "Jl", "state2l", "v2l", "spin2l", "statel", "vl",
-                               "spinl", ])
+
+@dataclass
+class KuruczMolLineOld1:
+    lambda_: Any
+    J2l: Any
+    Jl: Any
+    state2l: Any
+    v2l: Any
+    spin2l: Any
+    statel: Any
+    vl: Any
+    spinl: Any
 
 
 def load_kurucz_mol(filename):
@@ -95,8 +130,17 @@ class FileKuruczMolecule(FileKuruczMoleculeBase):
         #   205.0076 -7.931  3.5   201.931  2.5  48964.990 108X00e1   A07e1   16
         #   205.0652 -7.621  4.5   355.915  4.5  49105.280 108X00f1   A07e1   16
         #   205.0652 -7.621  4.5   355.915  4.5  49105.280 108X00f1   A07e1   16
+        #
+        # Another sample from file cnax12brookek.asc
+        #  1500.0057 -3.734  7.5-35901.223  6.5 -42566.043 607X20f2   A22f2   12 617 K
+        #  1500.0122 -1.704100.5-34572.316101.5 -41237.107 607X09 2   A10f2   12 617 K
+        #  1500.0307 -2.220 84.5-33050.728 85.5 -39715.437 607X11f2   A12f2   12 617 K
+        #  1500.0701 -5.367 56.5-29897.673 57.5 -36562.207 607X13f2   A14f1   12 617 K
+        #  1500.0896 -3.745 95.5-22615.737 96.5  29280.184 607X03f2   A03f1   12 617 K BR
+        #
         # 1         11     18   23        33   38         49          61      69 1-based
         # 0         10     17   22        32   37         48          60      68 0-based
+        # 01234567890123456789012345678901234567890123456789012345678901234567890123456789
         #
         # FORMAT(F10.4.F7.3,F5.1,F10.3,F5.1,F11.3,I4,A1,I2,A1,I1,3X,A1,I2,A1,I1,3X,I2)
         # "
@@ -124,14 +168,16 @@ class FileKuruczMolecule(FileKuruczMoleculeBase):
                 if len(s) == 0:
                     break
 
-                # Kurucz: "negative energies are predicted or extrapolated"
+                # Kurucz: "negative energies are predicted or extrapolated" ...
                 # (http: // kurucz.harvard.edu / linelists.html)
                 E2l = float(s[22:32])
-                if E2l < 0:
-                    E2l = -E2l
+                # (20230720) ... but it doesn't mean that I need to invert the value: loader should be as impartial as
+                #            possible
+                # if E2l < 0:
+                #     E2l = -E2l
                 El = float(s[37:48])
-                if El < 0:
-                    El = -El
+                # if El < 0:
+                #     El = -El
 
                 try:
                     spin2l = int(s[56:57])
@@ -144,23 +190,24 @@ class FileKuruczMolecule(FileKuruczMoleculeBase):
                     spinl = 0
 
                 line = KuruczMolLine(
-                    float(s[0:10]) * 10,
-                    float(s[10:17]),
-                    float(s[17:22]),
-                    E2l,
-                    float(s[32:37]),
-                    El,
-                    int(s[48:50]),
-                    int(s[50:52]),
-                    s[52:53],
-                    int(s[53:55]),
-                    s[55:56],
-                    spin2l,
-                    s[60:61],
-                    int(s[61:63]),
-                    s[63:64],
-                    spinl,
-                    int(s[68:70]), )
+                    lambda_=float(s[0:10]) * 10,
+                    loggf=float(s[10:17]),
+                    J2l=float(s[17:22]),
+                    E2l=E2l,
+                    Jl=float(s[32:37]),
+                    El=El,
+                    atomn0=int(s[48:50]),
+                    atomn1=int(s[50:52]),
+                    state2l=s[52:53],
+                    v2l=int(s[53:55]),
+                    lambda_doubling2l=s[55:56],
+                    spin2l=spin2l,
+                    statel=s[60:61],
+                    vl=int(s[61:63]),
+                    lambda_doublingl=s[63:64],
+                    spinl=spinl,
+                    iso=int(s[68:70]),
+                    rest=s[70:])
 
 
                 self.lines.append(line)
@@ -178,6 +225,20 @@ class FileKuruczMolecule(FileKuruczMoleculeBase):
             #     e)).with_traceback(sys.exc_info()[2])
             raise RuntimeError("Error around %d%s row of file '%s': \"%s\"" %
                                (r + 1, a99.ordinal_suffix(r + 1), filename, a99.str_exc(e))) from e
+
+
+    def _do_save_as(self, filename):
+        with open(filename, "w") as h:
+            for l in self.lines:
+                #  1500.0896 -3.745 95.5-22615.737 96.5  29280.184 607X03f2   A03f1   12 617 K BR
+                a99.write_lf(h, f"{l.lambda_/10:10.4f}{l.loggf:7.3f}{l.J2l:5.1f}{l.E2l:10.3f}{l.Jl:5.1f}{l.El:11.3f}"
+                                f"{l.atomn0:2d}{l.atomn1:02d}{l.state2l:1s}{l.v2l:02d}{l.lambda_doubling2l:1s}"
+                                f"{l.spin2l:1d}   {l.statel:1s}{l.vl:02d}{l.lambda_doublingl:1s}{l.spinl:1d}"
+                                f"   {l.iso:2d}{l.rest}")
+
+
+ # 15000.896 -3.745 95.5 22615.737 96.5  29280.184 607X 3f2   A 3f112 617 K BR
+ # 1500.0896 -3.745 95.5-22615.737 96.5  29280.184 607X03f2   A03f1   12 617 K BR
 
 
 @a99.froze_it
@@ -395,12 +456,6 @@ class FileKuruczMoleculeOld1(FileKuruczMoleculeBase):
                     break
 
 
-                """
-                KuruczMolLineOld1 = namedtuple("KuruczMolLineOld1",
-                              ["lambda_", "J2l", "Jl", "state2l", "v2l", "spin2l", "statel", "vl",
-                               "spinl", ])
-
-                """
 
 
                 line = KuruczMolLineOld1(

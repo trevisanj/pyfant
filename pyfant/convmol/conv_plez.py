@@ -32,7 +32,10 @@ class ConvPlez(Conv):
         if not isinstance(file, pyfant.FilePlezLinelistBase):
             raise TypeError("Invalid type for argument 'fileobj': {}".format(type(file).__name__))
 
-        lines = file.molecules[self.species].lines
+        try:
+            lines = file.molecules[self.species].lines
+        except KeyError:
+            raise KeyError(f"Species '{self.species}' not found in {list(file.molecules.keys())}")
         n = log.n = len(lines)
 
         if n == 0:
@@ -45,12 +48,15 @@ class ConvPlez(Conv):
             S2l = self.molconsts.get_S2l()
 
         if self.flag_filter_labels:
+            if self.mode == ConvMode.EINSTEIN_MINIMAL:
+                raise ValueError(f"mode==ConvMode.EINSTEIN_MINIMAL and flag_filter_label==True are incompatible")
+
             from_label = self.molconsts["from_label"]
             to_label = self.molconsts["to_label"]
 
         for i, line in enumerate(lines):
             branch = line.branch
-            sj = self.strengthfactor
+            sj = 1.
 
             try:
                 if self.flag_filter_labels:
@@ -71,9 +77,6 @@ class ConvPlez(Conv):
 
                     sj *= hlf
 
-                    if self.flag_fcf:
-                        sj *= self._get_fcf(line.vl, line.v2l)
-
                 else:
                     if self.mode == ConvMode.EINSTEIN_MINIMAL:
                         J = (line.gu-1.)/2.
@@ -84,8 +87,10 @@ class ConvPlez(Conv):
                     if not branch:
                         branch = "-"
 
-                    normalizationfactor = self.get_normalizationfactor(line.J2l, S2l, deltak, self.strengthfactor)
+                    normalizationfactor = self.get_normalizationfactor(line.J2l, S2l, deltak)
                     sj *= normalizationfactor*10**line.loggf
+
+                self.append_line(line, sj, branch)
 
             except Exception as e:
                 reason = a99.str_exc(e)
@@ -95,8 +100,5 @@ class ConvPlez(Conv):
                 if not self.flag_quiet:
                     a99.get_python_logger().exception(msg)
                 continue
-            else:
-                sols.append_line(line, sj, branch)
-                log.cnt_in += 1
 
         return sols, log

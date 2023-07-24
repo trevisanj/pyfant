@@ -31,7 +31,6 @@ class ConvBrooke2014(Conv):
         assert isinstance(f, pyfant.FileBrooke2014)
 
         log = self.log
-        sols = self.sols
 
         log.n = len(f)
         if log.n == 0:
@@ -44,33 +43,31 @@ class ConvBrooke2014(Conv):
         STATEL = self.molconsts["from_label"]
         STATE2L = self.molconsts["to_label"]
 
-        for i in range(log.n):
+        for i, line in enumerate(f.lines):
             try:
-                if not (f.eSl[i] == STATEL and f.eS2l[i] == STATE2L):
-                    log.skip_reasons[f"Wrong system: {f.eSl[i]}-{f.eS2l[i]}"] += 1
+                if self.flag_filter_labels and not (line.eSl == STATEL and line.eS2l == STATE2L):
+                    log.skip_reasons[f"Wrong system: {line.eSl}-{line.eS2l}"] += 1
                     continue
 
-                vl = f.vl[i]
-                v2l = f.v2l[i]
-                Jl = f.Jl[i]
-                J2l = f.J2l[i]
-                branch = f.branch[i]
+                vl = line.vl
+                v2l = line.v2l
+                Jl = line.Jl
+                J2l = line.J2l
+                branch = line.branch
                 nu = f.nu_obs_or_calc(i)
                 lambda_ = avv.vacuum_to_air(1e8/nu)
 
+                if nu < 0:
+                    log.skip_reasons["Negative wavenumber"] += 1
+                    continue
+
                 if self.mode == ConvMode.HLF:
-                    SJ, flag_error = self._get_hlf(vl, v2l, J2l, branch)
-                    if flag_error: continue
+                    sj = self.get_hlf(vl, v2l, J2l, branch)
                 else:
-                    A = f.A[i]
-                    # Prefers observed position, otherwise calculated
-                    SF = self.strengthfactor
+                    A = line.A
+                    sj = self.get_sj_einstein(A, Jl, J2l, S2l, deltak, nu)
 
-                    if nu < 0:
-                        log.skip_reasons["Negative wavenumber"] += 1
-                        continue
-
-                    SJ = self.get_sj_einstein(A, Jl, J2l, S2l, deltak, nu, SF)
+                self.append_line2(vl, v2l, lambda_, sj, J2l, branch)
 
             except Exception as e:
                 reason = a99.str_exc(e)
@@ -79,11 +76,6 @@ class ConvBrooke2014(Conv):
                 log.errors.append(msg)
                 if not self.flag_quiet:
                     a99.get_python_logger().exception(msg)
-            else:
-                sols.append_line2(vl, v2l, lambda_, SJ, J2l, branch)
-                log.cnt_in += 1
-
-        return sols, log
 
 
 # === SAMPLES ==========================================================================================================

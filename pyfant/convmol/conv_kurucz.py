@@ -9,8 +9,6 @@ class ConvKurucz(Conv):
     """Converts Kurucz molecular lines data to PFANT "sets of lines"
 
         Args:
-            flag_fcf: Whether to multiply calculated gf's by Franck-Condon Factor
-
             flag_spinl: Whether or not to use the spinl of the Kurucz line list
                         for branch determination (spin2l is always used). Effect:
 
@@ -29,11 +27,9 @@ class ConvKurucz(Conv):
 
     """
 
-    def __init__(self, flag_fcf=False, flag_spinl=False, fcfs=None, iso=None, *args, **kwargs):
+    def __init__(self, flag_spinl=False, iso=None, *args, **kwargs):
         Conv.__init__(self, *args, **kwargs)
-        self.flag_fcf = flag_fcf
         self.flag_spinl = flag_spinl
-        self.fcfs = fcfs
         self.iso = iso
 
     def _make_sols(self, lines):
@@ -46,13 +42,23 @@ class ConvKurucz(Conv):
 
         if not isinstance(lines, pyfant.FileKuruczMoleculeBase):
             raise TypeError("Invalid type for argument 'fileobj': {}".format(type(lines).__name__))
-        assert self.mode == ConvMode.HLF or isinstance(lines, pyfant.FileKuruczMolecule), \
-               "Old-format file does not contain loggf, must activate Hönl-London factors"
+        if self.mode == ConvMode.F:
+            if not isinstance(lines, pyfant.FileKuruczMolecule):
+                raise ValueError("Old-format file does not contain oscillator strength")
+
+            deltak = self.molconsts.get_deltak()
+            S2l = self.molconsts.get_S2l()
+        elif self.mode == ConvMode.HLF:
+            pass
+        else:
+            raise ValueError(f"mode=={self.mode} not implemented")
+
 
         lines = lines.lines
         log.n = len(lines)
         if log.n == 0:
             raise RuntimeError("Zero lines found")
+
 
         STATEL = self.molconsts["from_label"]
         STATE2L = self.molconsts["to_label"]
@@ -76,26 +82,13 @@ class ConvKurucz(Conv):
             #     continue
 
             try:
-                sj = 1.
-
-                if self.flag_hlf:
-                    try:
-                        hlf = mtools.get_sj(line.vl, line.v2l, line.J2l, branch)
-                    except pyfant.NoLineStrength:
-                        log.skip_reasons["Cannot calculate HLF"] += 1
-                        continue
-
-                    if hlf < 0:
-                        log.skip_reasons["Negative SJ"] += 1
-                        continue
-
-                    sj *= hlf
-
+                if self.mode == ConvMode.HLF:
+                    sj = self.get_hlf(line.vl, line.v2l, line.J2l, branch)
                 else:
-                    sj *= 10**line.loggf
+                    k = 1/((2*S2l+1)*(2-deltak)*(2*line.J2l+1))
+                    sj = k*10**line.loggf
 
-                if self.flag_fcf:
-                    sj *= self._get_fcf(line.vl, line.v2l)
+                self.append_line(line, sj, branch)
 
             except Exception as e:
                 reason = a99.str_exc(e)
@@ -105,15 +98,3 @@ class ConvKurucz(Conv):
                 if not self.flag_quiet:
                     a99.get_python_logger().exception(msg)
                 continue
-
-            sols.append_line(line, sj, branch)
-
-            # sol_key = "%3d%3d" % (line.vl, line.v2l)  # (v', v'') transition (v_sup, v_inf)
-            # raise RuntimeError("Como que o calculate_qgbd esta fazendo, sendo que o dicionario molconsts agora tem prefixos to e from?")
-            # if sol_key not in sols:
-            #     qgbd = self._calculate_qgbd(line.v2l)
-            #     sols[sol_key] = pyfant.SetOfLines(line.vl, line.v2l,
-            #                                   qgbd["qv"], qgbd["gv"], qgbd["bv"], qgbd["dv"], 1.)
-            #
-            # sol = sols[sol_key]
-            # sol.append_line(wl, gf_pfant, J2l_pfant, branch)

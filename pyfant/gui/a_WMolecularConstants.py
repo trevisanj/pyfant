@@ -8,6 +8,10 @@ import tabulate
 
 __all__ = ["WMolecularConstants"]
 
+
+# Max J2l / "JJ" for the HLF window
+MAX_JJ = 200
+
 # Spacing for grid layouts
 _LAYSP_GRID = 4
 # Margin for grid layouts
@@ -122,7 +126,7 @@ class _XHLF(a99.XLogMainWindow):
                             continue
 
                     rows, header = [], None
-                    for J in range(40):
+                    for J in range(MAX_JJ+1):
                         mtools = pyfant.kovacs_toolbox(molconsts, flag_normalize=True)
                         mtools.populate(vl, v2l, J)
 

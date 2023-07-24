@@ -4,7 +4,42 @@ __all__ = ["FileBrooke2014"]
 
 import a99, math
 from f311 import DataFile
+from dataclasses import dataclass
 
+@dataclass
+class FileBrooke2014Line:
+    # Upper electronic state
+    eSl: str
+    # Lower electronic state
+    eS2l: str
+    # Upper state vibrational level
+    vl: int
+    # Lower state vibrational level
+    v2l: int
+    # Upper state J level
+    Jl: float
+    # Lower state J level
+    J2l: float
+    # Upper state parity
+    pl: str
+    # Lower state parity
+    p2l: str
+    # observed wavenumber in cm^-1
+    nu_obs: float
+    # calculated wavenumber in cm^-1
+    nu_calc: float
+    # Einstein A value
+    A: float
+    # Transition description
+    Des: str
+    # Branch taken from description (above)
+    branch: str
+
+    def nu_obs_or_calc(self):
+        nu = self.nu_obs
+        if math.isnan(nu):
+            nu = self.nu_calc
+        return nu
 
 @a99.froze_it
 class FileBrooke2014(DataFile):
@@ -24,74 +59,56 @@ class FileBrooke2014(DataFile):
 
     def __init__(self):
         DataFile.__init__(self)
-
-        self.eSl = []  # Upper electronic state
-        self.eS2l = []  # Lower electronic state
-        self.vl = []  # Upper state vibrational level
-        self.v2l = []  # Lower state vibrational level
-        self.Jl = []  # Upper state J level
-        self.J2l = []  # Lower state J level
-        self.pl = []  # Upper state parity
-        self.p2l = []  # Lower state parity
-        self.Nl = []  # Upper state N level
-        self.N2l = []  # Lower state N level
-        # self.lmbdam  = []  # wavelength in angstrom
-        self.nu_obs = []  # observed wavenumber in cm^-1
-        self.nu_calc = []  # calculated wavenumber in cm^-1
-        self.A = []  # Einstein A value
-        self.Des = []  # Transition description
-        self.branch = []  # Branch taken from description (above)
+        self.lines = []
 
     def __len__(self):
-        return len(self.eSl)
+        return len(self.lines)
 
     def nu_obs_or_calc(self, i):
         """Returns observed or calculated wavenumber.
 
         Preference is observed, but if not present, returns calculated."""
 
-        nu = self.nu_obs[i]
-        if math.isnan(nu):
-            nu = self.nu_calc[i]
-        return nu
+        return self.lines[i].nu_obs_or_calc()
 
     def _do_load(self, filename):
         with open(filename, "r") as h:
             state = "line"
             k = -1
-            for i, line in enumerate(h):
+            for i, s in enumerate(h):
                 try:
-                    if i == 0 and line[:5] == "Title":
+                    if i == 0 and s[:5] == "Title":
                         state = "exp_note4"
                     if state == "line":
                         k += 1
-                        self.eSl.append(line[0:1])
-                        self.eS2l.append(line[2:3])
-                        self.vl.append(int(line[4:6]))
-                        self.v2l.append(int(line[7:9]))
-                        self.Jl.append(float(line[10:15]))
-                        self.J2l.append(float(line[16:21]))
-                        self.pl.append(line[26:27])
-                        self.p2l.append(line[28:29])
+
                         try:
-                            nu_obs = float(line[38:49])
+                            nu_obs = float(s[38:49])
                         except ValueError:
                             nu_obs = float("nan")
-                        self.nu_obs.append(nu_obs)
-                        self.nu_calc.append(float(line[50:60]))
-                        self.A.append(float(line[81:93]))
+                        Des = s[107:118]
 
-                        Des = line[107:118]
-                        self.Des.append(Des)
-
-                        branch = Des[1:Des.index("(")]
-                        self.branch.append(branch)
+                        line = FileBrooke2014Line(nu_obs = nu_obs,
+                                                  eSl=s[0:1],
+                                                  eS2l=s[2:3],
+                                                  vl=int(s[4:6]),
+                                                  v2l=int(s[7:9]),
+                                                  Jl=float(s[10:15]),
+                                                  J2l=float(s[16:21]),
+                                                  pl=s[26:27],
+                                                  p2l=s[28:29],
+                                                  nu_calc=float(s[50:60]),
+                                                  A=float(s[81:93]),
+                                                  Des=Des,
+                                                  branch=Des[1:Des.index("(")],
+                                                  )
+                        self.lines.append(line)
 
                     elif state == "exp_note4":
-                        if line[:8] == "Note (4)":
+                        if s[:8] == "Note (4)":
                             state = "exp_dashes"
                     elif state == "exp_dashes":
-                        if line[:8] == "--------":
+                        if s[:8] == "--------":
                             state = "line"
 
                 except Exception as e:

@@ -431,7 +431,11 @@ class Nulbad(PFANTExecutable):
     def load_result(self):
         file_sp = pyfant.FileSpectrumNulbad()
         filepath = self.conf.get_nulbad_output_filepath()
-        file_sp.load(filepath)
+        try:
+            file_sp.load(filepath)
+        except:
+            print("WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW")
+            raise
         self.convolved = file_sp.spectrum
         self._result["convolved"] = file_sp.spectrum
 

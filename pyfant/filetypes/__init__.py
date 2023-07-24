@@ -23,3 +23,4 @@ from .fileplezlinelist import *
 from .filebrooke2014 import *
 from .filemollist import *
 from .filehitran160 import *
+from .filecojm1998 import *

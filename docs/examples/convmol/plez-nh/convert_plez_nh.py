@@ -31,7 +31,8 @@ fplez = pyfant.FilePlezLinelistN14H()
 fplez.load(INPUTFILENAME)
 
 # Obs: name must match species name in original bsyn file
-converter = pyfant.ConvPlez(species="0107.000014", molconsts=molconsts)
+converter = pyfant.ConvPlez(species="0107.000014",
+                            molconsts=molconsts,)
 
 fmol = converter.make_file_molecules(fplez)
 

@@ -28,7 +28,7 @@ setup(
     name=PACKAGE_NAME,
     packages=find_packages(),
     include_package_data=True,
-    version='23.7.4.0',
+    version='23.7.24.0',
     license='GNU GPLv3',
     platforms='any',
     description='Python interface to the PFANT spectral synthesis code, with a varied set of extra tools',
@@ -39,7 +39,7 @@ setup(
                "honl-london", "nist", "hitran", "multiplicity", "line strength", "kovacs", "franck-condon"],
     install_requires=["numpy", "scipy", "matplotlib", "astropy", "configobj", "bs4", "lxml",
                       "robobrowser", "requests", "fortranformat", "tabulate", "rows", "pyqt5",
-                      "f311>=18.3.1.0", "airvacuumvald"],
+                      "f311>18.3.1.0", "airvacuumvald"],
     scripts=scripts
 )
 

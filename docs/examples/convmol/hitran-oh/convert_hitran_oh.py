@@ -40,18 +40,19 @@ print(tabulate.tabulate(rows, ["name", "value"]))
 
 
 # Loads HITRAN file
-f = pyfant.FileHITRAN160()
+f = pyfant.FileHITRANHITRAN()
 f.load(os.path.join(DATADIR, INPUTFILENAME))
 
 # Finally the conversion
-converter = pyfant.ConvHITRAN(comment=f"from {INPUTFILENAME}, iso={ISOWANT}",
-                              molconsts=molconsts,
-                              flag_quiet=True,
-                              isowant=ISOWANT,
-                              strengthfactor=STRENGTHFACTOR,
-                              fe=FE,
-                              mode=pyfant.ConvMode.EINSTEIN,
-                              flag_filter_labels=True)
+converter = pyfant.ConvHITRAN160(molcomment=f"from {INPUTFILENAME}, iso={ISOWANT}",
+                                 molconsts=molconsts,
+                                 flag_quiet=True,
+                                 isowant=ISOWANT,
+                                 strengthfactor=STRENGTHFACTOR,
+                                 fe=FE,
+                                 mode=pyfant.ConvMode.EINSTEIN,
+                                 flag_jl_from_branch=True,
+                                 flag_filter_labels=True)
 fmol = converter.make_file_molecules(f)
 print("\n"+"\n".join(a99.format_box("Conversion log"))+"\n"+str(converter.log))
 

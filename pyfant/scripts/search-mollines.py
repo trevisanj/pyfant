@@ -42,18 +42,18 @@ def main(args):
 
     mols = []
     rows = []
-    header = ["Molecule #", "vl", "v2l", "lmbdam", "sj", "jj", "branch"]
-    floatfmts = ["", "", "", ".4f", "", "", ""]
+    header = ["Molecule #", "Set-of-lines #", "vl", "v2l", "lmbdam", "sj", "jj", "branch"]
+    floatfmts = ["", "", "", "", ".4f", "", "", ""]
 
     for i_m, mol in enumerate(f.molecules):
         found = False
-        for sol_ in mol.sol:
+        for i_s, sol_ in enumerate(mol.sol):
             for i, (lmbdam, sj, jj, branch) in enumerate(zip(sol_.lmbdam, sol_.sj, sol_.jj, sol_.branch)):
                 if l0 <= lmbdam <= l1:
-                    rows.append([i_m, sol_.vl, sol_.v2l, lmbdam, sj, jj, branch])
+                    rows.append([i_m+1, i_s+1, sol_.vl, sol_.v2l, lmbdam, sj, jj, branch])
 
                     if not found:
-                        mols.append([i_m, mol.description])
+                        mols.append([i_m+1, mol.description])
                         found = True
 
     pprint("\n"+"\n".join(a99.format_box("Lines found")))

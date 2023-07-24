@@ -28,7 +28,7 @@ f = pyfant.FileBrooke2014()
 f.load(INPUTFILENAME)
 
 
-converter = pyfant.ConvBrooke2014(comment=f"from {INPUTFILENAME}",
+converter = pyfant.ConvBrooke2014(molcomment=f"from {INPUTFILENAME}",
                                   mode=pyfant.ConvMode.HLF,
                                   molconsts=molconsts,
                                   flag_quiet=True,
