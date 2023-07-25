@@ -1,3 +1,5 @@
+# Conversion from hapi-loaded data was discontinued: conv_hitran160.py now
+
 # """Molecular lines converter from HITRAN to PFANT format."""
 #
 # __all__ = ["ConvHITRAN"]
