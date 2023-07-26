@@ -4,6 +4,11 @@ import logging
 # Tests importing packages robobrowser and bs4, requirements for downloaders
 flag_ok = True
 try:
+    try:
+        import werkzeug
+        werkzeug.cached_property = werkzeug.utils.cached_property
+    except AttributeError:
+        pass
     from robobrowser import RoboBrowser
     del RoboBrowser
 except ImportError as e:

@@ -300,36 +300,37 @@ def symbols_to_formula(symbols):
         return "".join(symbols_)
 
 
-def parse_label_mult_spdf(s):
-    """Parses strings such as "A 2 SIGMA", "b3Sigmag-", "a3Piu" ...
-
-    Returns: (label, multiplicity, spdf)
-
-    Note: This routine is more complete than parse_system_str() (the latter cannot parse Greek letters with subsequent
-    trailing letter (e.g. Piu)
-    """
-
-    s = s.strip()
-
-    expr = re.compile("([a-zA-Z])\s*(\d+)\s*([a-zA-Z]+)")
-    groups = expr.search(string)
-    if groups is not None:
-        _pieces = groups[1:4]
-    else:
-        # Initial and final state are the same. Example "12C16O INFRARED [X 1 SIGMA+]"
-        expr = re.compile("\[\s*([a-zA-Z])\s*(\d+)\s*([a-zA-Z0-9]+)[+-]{0,1}\s*\]")
-
-        groups = expr.search(string)
-        if groups is not None:
-            _pieces = [groups[i] for i in range(1, 4)] * 2
-
-        if groups is None:
-            raise ValueError("Could not understand str '{}'".format(string))
-
-
-    pieces = [f(piece) for f, piece in zip(_PSS_TRANSFORMS, _pieces)]
-
-    return pieces
+# (20230725) THIS WAS ABANDONED TODO CLEANUP
+#  def parse_label_mult_spdf(s):
+#     """Parses strings such as "A 2 SIGMA", "b3Sigmag-", "a3Piu" ...
+#
+#     Returns: (label, multiplicity, spdf)
+#
+#     Note: This routine is more complete than parse_system_str() (the latter cannot parse Greek letters with subsequent
+#     trailing letter (e.g. Piu)
+#     """
+#
+#     s = s.strip()
+#
+#     expr = re.compile("([a-zA-Z])\s*(\d+)\s*([a-zA-Z]+)")
+#     groups = expr.search(string)
+#     if groups is not None:
+#         _pieces = groups[1:4]
+#     else:
+#         # Initial and final state are the same. Example "12C16O INFRARED [X 1 SIGMA+]"
+#         expr = re.compile("\[\s*([a-zA-Z])\s*(\d+)\s*([a-zA-Z0-9]+)[+-]{0,1}\s*\]")
+#
+#         groups = expr.search(string)
+#         if groups is not None:
+#             _pieces = [groups[i] for i in range(1, 4)] * 2
+#
+#         if groups is None:
+#             raise ValueError("Could not understand str '{}'".format(string))
+#
+#
+#     pieces = [f(piece) for f, piece in zip(_PSS_TRANSFORMS, _pieces)]
+#
+#     return pieces
 
 
 

@@ -231,7 +231,8 @@ def create_or_replace_or_skip_links(ff, dest_dir="."):
                 a99.create_symlink(f, ptd)
                 a99.get_python_logger().info("   ... %s link" % s_action)
             except Exception as e:
-                a99.print_error("Error creating link: %s" % str(e))
+                a99.print_error("Error creating link: %s" % a99.str_exc(e))
+                raise
 
 
 def copy_or_skip_files(ff, dest_dir="."):
