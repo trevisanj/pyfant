@@ -1,10 +1,8 @@
 Installation
 ============
 
-If you have both **Python 3** and **PFANT** installed, then simply type::
-
-    pip install pyfant
-
+.. note:: As of July 2023, the recommended Python version is 3.11 running in Anaconda/Miniconda environment
+          (see `F311` instructions below).
 
 Pre-requisites
 --------------
@@ -12,23 +10,31 @@ Pre-requisites
 PFANT
 ~~~~~
 
-The PFANT spectral synthesis software installation instructions can be found at
+The PFANT spectral synthesis software (Fortran) installation instructions can be found at
 `<http://trevisanj.github.io/PFANT/install.html>`_.
 
-Python 3
-~~~~~~~~
+F311
+~~~~
 
-If you need to set up your Python 3 environment, one option is to visit project F311
-installation instructions at `<http://trevisanj.github.io/f311/install.html>`_. That page also
-provides a troubleshooting section that applies.
+Before installing PyFANT, please follow the instructions to install the ``f311`` package here: `<http://trevisanj.github.io/f311/install.html>`_.
+``f311`` is a requisite.
+
+Installing PyFANT
+-----------------
+
+Installing PyFANT in the majority of cases
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Once ``f311`` is installed, you can install `PyFANT` like this::
+
+    pip install pyfant
 
 Installing PyFANT in developer mode
------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-This is an alternative to the "pip" at the beginning of this section.
-Use this option if you would like to download and modify the Python source code.
+This is an alternative to `pip` which allows one to browse and modify the Python source code.
 
-First clone the "pyfant" GitHub repository:
+First clone the `pyfant` GitHub repository:
 
 .. code:: shell
 
@@ -40,16 +46,28 @@ or
 
    git clone http://github.com/trevisanj/pyfant
 
-Then, install PyFANT in **developer** mode:
+Then, install PyFANT in **developer mode**:
 
 .. code:: shell
 
    cd pyfant
    python setup.py develop
 
-Upgrade ``pyfant``
-------------------
+Upgrading package ``pyfant``
+--------------------------
 
+If package ``pyfant`` is already installed, but you need to install a new version, please follow these instructions.
+
+Upgrading in the majority of cases
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Package ``pyfant`` can be upgraded to a new version by typing::
 
     pip install pyfant --upgrade
+
+Upgrading PyFANT in developer mode
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Enter the `pyfant` repository (directory) cloned from Github, then type::
+
+    git pull
+    python setup.py develop

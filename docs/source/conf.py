@@ -61,7 +61,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'PyFANT'
-copyright = '2015-2017, JT'
+copyright = '2015-2023, JT'
 author = 'JT'
 
 # The version info for the project you're documenting, acts as replacement for
@@ -151,7 +151,7 @@ html_static_path = ['_static']
 # -- Options for HTMLHelp output ------------------------------------------
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'f311doc'
+htmlhelp_basename = 'pyfantdoc'
 
 
 # -- Options for LaTeX output ---------------------------------------------
