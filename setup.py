@@ -38,8 +38,8 @@ setup(
     keywords= ['astronomy', "stellar", "spectroscopy", "spectral", "synthesis",
                "honl-london", "nist", "hitran", "multiplicity", "line strength", "kovacs", "franck-condon"],
     install_requires=["numpy", "scipy", "matplotlib", "astropy", "configobj", "bs4", "lxml",
-                      "robobrowser", "requests", "fortranformat", "tabulate", "rows", "pyqt5",
-                      "f311>18.3.1.0", "airvacuumvald"],
+                      "robobrowser", "requests", "fortranformat", "tabulate", "rows",
+                      "f311>=23.7.27.0", "airvacuumvald"],
     scripts=scripts
 )
 
