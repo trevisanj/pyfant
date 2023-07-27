@@ -16,8 +16,7 @@ The PFANT spectral synthesis software (Fortran) installation instructions can be
 F311
 ~~~~
 
-Before installing PyFANT, please follow the instructions to install the ``f311`` package here: `<http://trevisanj.github.io/f311/install.html>`_.
-``f311`` is a requisite.
+Before installing PyFANT, please follow the instructions to install the ``f311`` package at `<http://trevisanj.github.io/f311/install.html>`_.
 
 Installing PyFANT
 -----------------
