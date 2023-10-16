@@ -80,7 +80,8 @@ class ConvPlez(Conv):
                 else:
                     if self.mode == ConvMode.EINSTEIN_MINIMAL:
                         J = (line.gu-1.)/2.
-                        if J < 0: J = 0
+                        if J < 0:
+                            J = 0
                         line.Jl = line.J2l = J
                         line.vl = line.v2l = 0
 

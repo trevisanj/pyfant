@@ -24,8 +24,8 @@ def load_plez_mol(filename):
         FilePlezLinelistBase
     """
     import f311
-    return f311.load_with_classes(filename, [FilePlezLinelist, FilePlezLinelist1])
-
+    return f311.load_with_classes(filename, [FilePlezLinelistN14H, FilePlezLinelist12C16OLi2015, FilePlezLinelistC2,
+                                             FilePlezLinelist1, FilePlezLinelist,])
 
 class PlezLine(object):
     def __init__(self):
@@ -35,6 +35,7 @@ class PlezLine(object):
         self.fdamp = 1.
         self.gu = 1.
         self.raddmp = 1.
+
 
 class PlezAtomicLine(PlezLine):
     pass
@@ -51,6 +52,16 @@ class PlezMolecularLine(PlezLine):
 
 
 class PlezSpecies(object):
+    @property
+    def llzero(self):
+        """Minimum wavelength"""
+        return min([line.lambda_ for line in self.lines])
+
+    @property
+    def llfin(self):
+        """Maximum wavelength"""
+        return max([line.lambda_ for line in self.lines])
+
     def __init__(self, elstring, ion, name, lines=None):
         if lines is None:
             lines = []
@@ -65,6 +76,11 @@ class PlezSpecies(object):
 
     def __iter__(self):
         return iter(self.lines)
+
+    def cut(self, lzero, lfin):
+        """Reduces the number of lines to only the ones whose lmbdam is inside [lzero, lfin]"""
+
+        self.lines = [line for line in self.lines if lzero <= line.lambda_ <= lfin]
 
 
 class FilePlezLinelistBase(DataFile):
@@ -215,6 +231,20 @@ class FilePlezLinelist(FilePlezLinelistBase):
 
     def atom_by_index(self, i):
         return list(self.atoms.values())[i]
+
+    def cut(self, lzero, lfin):
+        """Reduces the number of lines to only the ones whose lmbdam is inside [lzero, lfin]"""
+
+        def cut1(attrname):
+            attr = getattr(self, attrname)
+            for k, v in list(attr.items()):
+                v.cut(lzero, lfin)
+                if len(v) == 0:
+                    del attr[k]
+
+        cut1("atoms")
+        cut1("molecules")
+
 
 @a99.froze_it
 class FilePlezLinelistN14H(FilePlezLinelist):

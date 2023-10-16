@@ -1,7 +1,6 @@
 __all__ = ["FileMolecules", "Molecule", "SetOfLines", "molconsts_to_molecule"]
 
 
-
 import sys
 import numpy as np
 import a99
