@@ -90,7 +90,7 @@ if __name__ == "__main__":
 
     # Scatter figure
     fig = plt.figure()
-    ax = fig.gca(projection='3d')
+    ax = fig.add_subplot(projection='3d')
     markers = cycle("ov^<>p*+x")
     for r, name in records:
         ax.scatter([r.teff], [r.glog], [r.asalog],
@@ -102,7 +102,7 @@ if __name__ == "__main__":
     ax.set_xlabel('teff')
     ax.set_ylabel('glog')
     ax.set_zlabel('asalog')
-    fig.canvas.set_window_title('teff-glog-asalog scatterplot')
+    fig.canvas.setWindowTitle('teff-glog-asalog scatterplot')
     plt.legend(loc=0)
 
     # Another figure

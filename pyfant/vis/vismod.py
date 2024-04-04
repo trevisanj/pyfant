@@ -86,7 +86,7 @@ class VisMarcsSaveAsMod(Vis):
 
 def _plot_mod_record(title, r):
     f, axarr = plt.subplots(5, sharex=True)
-    f.canvas.set_window_title(title)
+    f.canvas.setWindowTitle(title)
     x = np.linspace(1, r.ntot, r.ntot)
 
     axarr[0].plot(x, r.nh)
@@ -128,8 +128,8 @@ class VisModCurves(Vis):
             fig = plt.figure()
             if self.parent_form:
                 fig.canvas.setParent(self.parent_form)
-            ax = fig.gca(projection='3d')
-            fig.canvas.set_window_title('{0!s} -- {1!s}'.format(self.title, var))
+            ax = fig.add_subplot(projection='3d')
+            fig.canvas.setWindowTitle('{0!s} -- {1!s}'.format(self.title, var))
             rr = m.records
 
             for i, r in enumerate(rr):
@@ -160,12 +160,12 @@ class VisGrid(Vis):
 
         # teff-glog-asalog scatterplot
         fig = plt.figure()
-        ax = fig.gca(projection='3d')
+        ax = fig.add_subplot(projection='3d')
         ax.scatter(asalog, teff, glog, c='r', s=60, marker='o')
         ax.set_xlabel('asalog ([Fe/H] relative to Sun)')
         ax.set_ylabel('teff')
         ax.set_zlabel('glog')
-        fig.canvas.set_window_title(self.title+" -- asalog-teff-glog scatterplot")
+        fig.canvas.setWindowTitle(self.title+" -- asalog-teff-glog scatterplot")
         plt.tight_layout()
         plt.show()
 
@@ -194,7 +194,7 @@ class VisVector(Vis):
             axarr[i].plot(x, v)
             axarr[i].set_ylabel(a)
         axarr[len(ll)-1].set_xlabel("Record #")
-        f.canvas.set_window_title("{0!s} -- {1!s}".format(self.title, 'one-value-per-model'))
+        f.canvas.setWindowTitle("{0!s} -- {1!s}".format(self.title, 'one-value-per-model'))
         plt.tight_layout()
 
         plt.show()
@@ -238,7 +238,7 @@ class VisOpa(Vis):
         axarr[3, 0].set_xlabel("Layer #")
         axarr[3, 1].set_xlabel("Layer #")
 
-        f.canvas.set_window_title("{0!s} -- {1!s}".format(self.title, 'one-value-per-model'))
+        f.canvas.setWindowTitle("{0!s} -- {1!s}".format(self.title, 'one-value-per-model'))
         plt.tight_layout()
 
         #################
@@ -254,8 +254,8 @@ class VisOpa(Vis):
             fig = plt.figure()
             if self.parent_form:
                 fig.canvas.setParent(self.parent_form)
-            ax = fig.gca(projection='3d')
-            fig.canvas.set_window_title('{0!s} -- {1!s}'.format(self.title, var))
+            ax = fig.add_subplot(projection='3d')
+            fig.canvas.setWindowTitle('{0!s} -- {1!s}'.format(self.title, var))
 
             for k in range(obj.ndp):
                 y = np.ones(len(x)) * (k + 1)

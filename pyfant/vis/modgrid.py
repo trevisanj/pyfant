@@ -9,7 +9,7 @@ def plot_mod_grid(ff, title=None):
     """Plots Teff x glog x metallicity in 3D"""
 
     fig = plt.figure()
-    ax = fig.gca(projection='3d')
+    ax = fig.add_subplot(projection='3d')
     teff, glog, asalog = [], [], []
     for f in ff:
         assert isinstance(f, pyfant.FileModBin)
@@ -21,5 +21,5 @@ def plot_mod_grid(ff, title=None):
     ax.set_xlabel('teff')
     ax.set_ylabel('glog')
     ax.set_zlabel('asalog')
-    fig.canvas.set_window_title('teff-glog-asalog scatterplot')
+    fig.canvas.setWindowTitle('teff-glog-asalog scatterplot')
     plt.show()

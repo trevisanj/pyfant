@@ -24,9 +24,9 @@ class VisFileToH(Vis):
     def _do_use(self, r):
         fig = plt.figure()
         mpl.rcParams['legend.fontsize'] = 10
-        fig.canvas.set_window_title(self.title)  # requires the Axes3D module
+        fig.canvas.setWindowTitle(self.title)  # requires the Axes3D module
         # requires the Axes3D module
-        ax = fig.gca(projection='3d')
+        ax = fig.add_subplot(projection='3d')
         draw_toh(r, ax)
         # ax.set_zlabel('log10(Intensity)')
         # ax.set_zlabel('?')
