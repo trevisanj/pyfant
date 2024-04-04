@@ -28,7 +28,7 @@ setup(
     name=PACKAGE_NAME,
     packages=find_packages(),
     include_package_data=True,
-    version='23.7.26.0',
+    version='24.4.4.0',
     license='GNU GPLv3',
     platforms='any',
     description='Python interface to the PFANT spectral synthesis code, with a varied set of extra tools',
