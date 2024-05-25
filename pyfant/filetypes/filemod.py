@@ -262,10 +262,16 @@ class FileOpa(DataFile):
 
         with open(filename, "rb") as h:
             self.mcode, self.ndp, self.swave = struct.unpack("1x 4s 5s 10s", h.readline().strip(b"\n"))
+
             if self.mcode != b"MRXF":
                 # Does not satisfy magic string
                 raise RuntimeError("Model code '{0!s}' is not 'MRXF'".format(self.mcode))
+
             self.ndp = int(self.ndp)
+
+            if self.ndp != NTOT:
+                raise RuntimeError(f"Number of depth points is {self.ndp}, but should be {NTOT}")
+
             self.swave = float(self.swave)
 
             self.nwav = int(h.readline())
@@ -438,16 +444,20 @@ class FileMoo(DataFile):
 
         with open(filename, "wb") as h:
             for i, rec in enumerate(self.records):
-                assert rec.ntot == NTOT, \
-                    "Number of layers be {0:d}, not {1:d}".format(NTOT, rec.ntot)
-                assert rec.nwav == NWAV, \
-                    "Number of wavelengths must be {0:d}, not {1:d}".format(NWAV, rec.nwav)
+                if rec.ntot != NTOT:
+                    raise RuntimeError("Number of layers be {0:d}, not {1:d}".format(NTOT, rec.ntot))
+                if rec.nwav != NWAV:
+                    raise RuntimeError("Number of wavelengths must be {0:d}, not {1:d}".format(NWAV, rec.nwav))
 
                 _encode_mod_record(rec, h)
 
                 ostr = struct.Struct('<f i')
                 h.write(ostr.pack(rec.swave, rec.nwav))
-                h.write(struct.pack("<"+"f"*rec.ntot, *rec.ops))
+                try:
+                    h.write(struct.pack("<"+"f"*rec.ntot, *rec.ops))
+                except:
+                    print("OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOLHA")
+                    raise
                 s_temp ="<"+"f"*(rec.nwav*rec.ntot)
 
 

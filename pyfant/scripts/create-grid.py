@@ -36,7 +36,7 @@ import os
 import sys
 import a99
 import pyfant
-
+import tabulate
 
 a99.logging_level = logging.INFO
 a99.flag_log_file = True
@@ -69,6 +69,7 @@ if __name__ == "__main__":
     print("{0:d} file{1!s} matching pattern '{2!s}'".format(n, "s" if n != 1 else "", args.pattern))
 
     records = []
+    skipped, reasons = [], []
     for filename in filenames:
         if args.mode == "opa":
             name = os.path.splitext(os.path.basename(filename))[0]
@@ -81,8 +82,10 @@ if __name__ == "__main__":
                 r = pyfant.MooRecord()
                 r.from_marcs_files(f, g)
                 records.append(r)
-            except:
-                logger.exception("Error loading file '{0!s}', skipping...".format(filename))
+            except BaseException as e:
+                logger.exception("Error loading '{0!s}', skipping...".format(name))
+                skipped.append(name)
+                reasons.append(str(e))
         else:
             nameext = os.path.basename(filename)
             print("Considering file '{0!s}'+('.mod', '.opa') ...".format(nameext))
@@ -95,9 +98,10 @@ if __name__ == "__main__":
                     f = pyfant.FileModBin()
                     f.load(filename)
                     records.extend(f.records)
-            except:
+            except BaseException as e:
                 logger.exception("Error loading file '{0!s}', skipping...".format(filename))
-
+                skipped.append(filename)
+                reasons.append(str(e))
 
     if len(records) == 0:
         print("No valid models found, nothing to save.")
@@ -111,5 +115,11 @@ if __name__ == "__main__":
         g = pyfant.FileModBin()
     g.records = records
     g.save_as(args.fn_output)
+
+    if skipped:
+        logger.info("\n".join(a99.format_box(f"Files skipped ({len(skipped)})")))
+        logger.info(tabulate.tabulate(zip(skipped, reasons), ["Name", "Reason"]))
+
+    logger.info(f"Final number of records: {len(records)}")
 
     print("Successfully created file '{0!s}'".format(args.fn_output))
