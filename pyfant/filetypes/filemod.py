@@ -183,7 +183,6 @@ class FileModTxt(DataFile):
             # calculates nh using the formula in "transosmarcsok3.f"
             r.nh = rhox*(6.022142e23*h_frac)
 
-
         self.record = r
 
 
