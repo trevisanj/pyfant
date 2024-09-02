@@ -6,7 +6,7 @@ __all__ = ["FileAbXFwhm"]
 
 from f311 import FilePy
 from ..basic import adjust_atomic_symbol
-import imp
+import importlib
 import numpy as np
 import a99
 
