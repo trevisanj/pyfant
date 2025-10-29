@@ -52,6 +52,7 @@ if __name__ == "__main__":
     parser.add_argument('-m', '--mode', type=str, nargs="?", default="opa",
      choices=["opa", "modtxt", "modbin"],
      help='working mode (see description above)')
+
     VDOM = "\"grid.moo\" or \"grid.mod\", depending on mode"
     parser.add_argument('fn_output', type=str, help='output file name', nargs="?",
      default=VDOM)
